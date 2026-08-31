@@ -22,6 +22,9 @@ namespace Settlement_Services.Framework
         public static void NotifyDeliveredHome(ServiceJobRecord job) =>
             Messages.Message("SettlementServices.Message.DeliveredHome".Translate(), MessageTypeDefOf.NeutralEvent, historical: false);
 
+        public static void NotifyRecoveryCaravanCreated(ServiceJobRecord job) =>
+            Messages.Message("SettlementServices.Message.RecoveryCaravanCreated".Translate(), MessageTypeDefOf.PositiveEvent, historical: false);
+
         public static void NotifyFailed(ServiceJobRecord job) =>
             Send(job, "SettlementServices.Letter.FailedLabel", "SettlementServices.Letter.FailedText", LetterDefOf.NegativeEvent);
 

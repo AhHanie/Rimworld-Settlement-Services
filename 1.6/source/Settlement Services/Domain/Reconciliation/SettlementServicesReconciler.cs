@@ -20,7 +20,7 @@ namespace Settlement_Services.Domain.Reconciliation
 
             foreach (ServiceJobRecord job in component.JobsRaw)
             {
-                if (SkipsReconciliation(job.status)) continue;
+                if (ServiceJobStatusMachine.IsTerminal(job.status)) continue;
 
                 SettlementServiceDef def = DefDatabase<SettlementServiceDef>.GetNamedSilentFail(job.serviceDefName);
                 if (def == null)
@@ -54,15 +54,10 @@ namespace Settlement_Services.Domain.Reconciliation
                 {
                     FailJob(component, job, "SettlementServices.Error.TargetNoLongerExists");
                     failedJobs++;
-                    continue;
-                }
-
-                if (WorldObjectLookup.ResolveSettlement(job.settlementWorldObjectId) == null)
-                {
-                    FailJob(component, job, "SettlementServices.Error.SettlementNoLongerExists");
-                    failedJobs++;
                 }
             }
+
+            failedJobs += DetectAndHandleMissingProviders(component);
 
             List<SettlementRecord> toDrop = component.SettlementRecordsRaw
                 .Where(r => WorldObjectLookup.ResolveSettlement(r.settlementWorldObjectId) == null
@@ -94,16 +89,33 @@ namespace Settlement_Services.Domain.Reconciliation
             }
         }
 
+        public static int DetectAndHandleMissingProviders(SettlementServicesWorldComponent component)
+        {
+            List<ServiceJobRecord> unresolved = component.AllJobs.Where(j => !ServiceJobStatusMachine.IsTerminal(j.status)).ToList();
+            if (unresolved.Count == 0) return 0;
+
+            int affected = 0;
+            foreach (int settlementWorldObjectId in unresolved.Select(j => j.settlementWorldObjectId).Distinct().ToList())
+            {
+                Settlement settlement = WorldObjectLookup.ResolveSettlement(settlementWorldObjectId);
+                if (settlement != null)
+                {
+                    component.RecordSettlementTileSnapshot(settlementWorldObjectId, settlement.Tile);
+                    continue;
+                }
+
+                ServiceJobRecord withTile = unresolved.FirstOrDefault(j => j.settlementWorldObjectId == settlementWorldObjectId && j.settlementTile.Valid);
+                PlanetTile tile = withTile?.settlementTile ?? PlanetTile.Invalid;
+                affected += unresolved.Count(j => j.settlementWorldObjectId == settlementWorldObjectId);
+                SettlementServiceOrchestrator.HandleSettlementDestroyed(component, settlementWorldObjectId, tile);
+            }
+            return affected;
+        }
+
         private static bool StillEligible(string defName)
         {
             SettlementSpecialtyDef def = DefDatabase<SettlementSpecialtyDef>.GetNamedSilentFail(defName);
             return def != null;
-        }
-
-        private static bool SkipsReconciliation(ServiceJobStatus status)
-        {
-            return status == ServiceJobStatus.Completed || status == ServiceJobStatus.Collected
-                || status == ServiceJobStatus.Cancelled || status == ServiceJobStatus.Failed;
         }
 
         private static void FailJob(SettlementServicesWorldComponent component, ServiceJobRecord job, string errorKey)

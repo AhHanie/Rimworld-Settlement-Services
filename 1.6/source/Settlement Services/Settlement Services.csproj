@@ -149,6 +149,7 @@
     <Compile Include="Framework\Payment\CaravanInventoryTransfer.cs" />
     <Compile Include="Framework\Custody\TargetCustodyService.cs" />
     <Compile Include="Framework\Custody\ServicePawnCaravanReturn.cs" />
+    <Compile Include="Framework\SettlementLifecycle\WorldObject_Destroy_ServiceRecoveryPatch.cs" />
     <Compile Include="Framework\SettlementServiceNotifier.cs" />
     <Compile Include="Framework\Registry\SettlementServiceRegistry.cs" />
     <Compile Include="Framework\Registry\ISettlementServiceProvider.cs" />

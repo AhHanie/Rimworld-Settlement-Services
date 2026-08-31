@@ -51,6 +51,7 @@ namespace Settlement_Services.Framework
 
             return domain.CreateJob(
                 request.settlement.ID,
+                request.settlement.Tile,
                 def.defName,
                 request.channel,
                 snapshots,
@@ -243,7 +244,14 @@ namespace Settlement_Services.Framework
             if (job == null) return;
 
             RefundConsumedPlayerSuppliedInputsForMissingRecipe(domain, job, errorKey);
+            ApplyRefundAndReleaseReservations(domain, job, refundFraction);
 
+            bool neverReserved = job.status == ServiceJobStatus.Drafted || job.status == ServiceJobStatus.Quoted;
+            RouteToTerminalOrCollectible(domain, job, errorKey, neverReserved ? ServiceJobStatus.Cancelled : ServiceJobStatus.Failed);
+        }
+
+        private static void ApplyRefundAndReleaseReservations(SettlementServicesWorldComponent domain, ServiceJobRecord job, float refundFraction = 1f)
+        {
             if (job.acceptedQuote != null && job.acceptedQuote.totalCost > 0 && refundFraction > 0f)
             {
                 var ctx = new ServiceJobContext(domain, job);
@@ -252,10 +260,51 @@ namespace Settlement_Services.Framework
                 if (refundAmount > 0) provider.Refund(refundAmount, ctx);
             }
 
-            domain.ReleaseAllReservations(jobId);
+            domain.ReleaseAllReservations(job.jobId);
+        }
 
-            bool neverReserved = job.status == ServiceJobStatus.Drafted || job.status == ServiceJobStatus.Quoted;
-            RouteToTerminalOrCollectible(domain, job, errorKey, neverReserved ? ServiceJobStatus.Cancelled : ServiceJobStatus.Failed);
+        public static void HandleSettlementDestroyed(SettlementServicesWorldComponent domain, int settlementWorldObjectId, PlanetTile settlementTile)
+        {
+            if (domain == null || settlementWorldObjectId < 0) return;
+
+            domain.RecordSettlementTileSnapshot(settlementWorldObjectId, settlementTile);
+
+            List<ServiceJobRecord> affectedJobs = domain.JobsForSettlement(settlementWorldObjectId)
+                .Where(j => !ServiceJobStatusMachine.IsTerminal(j.status))
+                .ToList();
+            if (affectedJobs.Count == 0) return;
+
+            List<ServiceJobRecord> custodyJobs = affectedJobs.Where(j => j.targetInCustody || !j.results.NullOrEmpty()).ToList();
+            List<ServiceJobRecord> emptyJobs = affectedJobs.Where(j => !custodyJobs.Contains(j)).ToList();
+
+            foreach (ServiceJobRecord job in affectedJobs)
+                ApplyRefundAndReleaseReservations(domain, job);
+
+            if (custodyJobs.Count > 0)
+            {
+                PlanetTile tile = settlementTile.Valid ? settlementTile : custodyJobs[0].settlementTile;
+                bool recovered = TargetCustodyService.TryCreateRecoveryCaravanAndCollectAll(custodyJobs, tile);
+
+                foreach (ServiceJobRecord job in custodyJobs)
+                {
+                    job.lastErrorKey = "SettlementServices.Error.SettlementNoLongerExists";
+                    domain.TryTransition(job.jobId, ServiceJobStatus.AwaitingCollection);
+                    if (!recovered) TargetCustodyService.QueueHomeDeliveryForJob(domain, job);
+                    domain.TryTransition(job.jobId, ServiceJobStatus.Collected);
+                }
+
+                if (recovered) SettlementServiceNotifier.NotifyRecoveryCaravanCreated(custodyJobs[0]);
+                else SettlementServiceNotifier.NotifyDeliveredHome(custodyJobs[0]);
+            }
+
+            foreach (ServiceJobRecord job in emptyJobs)
+            {
+                job.lastErrorKey = "SettlementServices.Error.SettlementNoLongerExists";
+                bool neverReserved = job.status == ServiceJobStatus.Drafted || job.status == ServiceJobStatus.Quoted;
+                ServiceJobStatus terminalStatus = neverReserved ? ServiceJobStatus.Cancelled : ServiceJobStatus.Failed;
+                domain.TryTransition(job.jobId, terminalStatus);
+                if (terminalStatus == ServiceJobStatus.Failed) SettlementServiceNotifier.NotifyFailed(job);
+            }
         }
 
         private static void RefundConsumedPlayerSuppliedInputsForMissingRecipe(SettlementServicesWorldComponent domain, ServiceJobRecord job, string errorKey)

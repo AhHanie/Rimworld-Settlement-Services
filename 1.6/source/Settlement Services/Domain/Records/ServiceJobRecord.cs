@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using RimWorld.Planet;
 using Verse;
 using Settlement_Services.Domain;
 using Settlement_Services.Framework.Dto;
@@ -10,6 +11,7 @@ namespace Settlement_Services.Domain.Records
         public int jobId;
         public int schemaVersion;
         public int settlementWorldObjectId = -1;
+        public PlanetTile settlementTile = PlanetTile.Invalid;
 
         public ServiceJobStatus status;
         public int createdTick;
@@ -62,6 +64,7 @@ namespace Settlement_Services.Domain.Records
             Scribe_Values.Look(ref jobId, "jobId");
             Scribe_Values.Look(ref schemaVersion, "schemaVersion", 1);
             Scribe_Values.Look(ref settlementWorldObjectId, "settlementWorldObjectId", -1);
+            Scribe_Values.Look(ref settlementTile, "settlementTile", PlanetTile.Invalid);
             Scribe_Values.Look(ref status, "status");
             Scribe_Values.Look(ref createdTick, "createdTick");
             Scribe_Values.Look(ref statusChangedTick, "statusChangedTick");

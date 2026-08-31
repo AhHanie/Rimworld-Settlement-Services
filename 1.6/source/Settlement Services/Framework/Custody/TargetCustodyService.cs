@@ -104,6 +104,65 @@ namespace Settlement_Services.Framework.Custody
             }
         }
 
+        public static bool TryCreateRecoveryCaravanAndCollectAll(List<ServiceJobRecord> jobs, PlanetTile tile)
+        {
+            if (!tile.Valid || !tile.LayerDef.canFormCaravans) return false;
+
+            var pawns = new List<Pawn>();
+            var items = new List<Thing>();
+            foreach (ServiceJobRecord job in jobs)
+            {
+                CollectRecoverable(job.Targets, pawns, items);
+                CollectRecoverable(job.results, pawns, items);
+            }
+
+            if (pawns.Count == 0) return false;
+
+            foreach (Thing item in items)
+            {
+                if (CaravanInventoryUtility.FindPawnToMoveInventoryTo(item, pawns, null) == null) return false;
+            }
+
+            Caravan caravan = CaravanMaker.MakeCaravan(Enumerable.Empty<Pawn>(), Faction.OfPlayer, tile, true);
+            foreach (Pawn pawn in pawns) ReturnPawnToCaravan(caravan, pawn);
+
+            foreach (Thing item in items)
+            {
+                SettlementServicesWorldComponent.Current.ReleaseItemCustody(item);
+                CaravanInventoryUtility.GiveThing(caravan, item);
+            }
+
+            caravan.Name = CaravanNameGenerator.GenerateCaravanName(caravan);
+
+            foreach (ServiceJobRecord job in jobs)
+            {
+                job.targetInCustody = false;
+                job.results.Clear();
+            }
+
+            return true;
+        }
+
+        private static void CollectRecoverable(IEnumerable<TargetSnapshot> snapshots, List<Pawn> pawns, List<Thing> items)
+        {
+            if (snapshots == null) return;
+
+            foreach (TargetSnapshot snapshot in snapshots)
+            {
+                Thing thing = snapshot?.liveThing;
+                if (thing == null || thing.Destroyed) continue;
+
+                if (thing is Pawn pawn)
+                {
+                    if (!pawn.Dead) pawns.Add(pawn);
+                }
+                else
+                {
+                    items.Add(thing);
+                }
+            }
+        }
+
         public static bool TryDeliverHome(TargetSnapshot snapshot)
         {
             Thing thing = snapshot.liveThing;

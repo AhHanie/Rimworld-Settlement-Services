@@ -81,6 +81,7 @@ namespace Settlement_Services.Domain
             FlushPendingHomeDeliveries();
             PruneResolvedJobs();
             if (Find.TickManager.TicksGame % TickInterval != 0) return;
+            SettlementServicesReconciler.DetectAndHandleMissingProviders(this);
             SettlementServiceJobScheduler.TickAll(this, TickInterval);
         }
 
@@ -211,6 +212,18 @@ namespace Settlement_Services.Domain
                 : (IReadOnlyList<ServiceJobRecord>)Array.Empty<ServiceJobRecord>();
         }
 
+        public void RecordSettlementTileSnapshot(int settlementWorldObjectId, PlanetTile tile)
+        {
+            if (!tile.Valid) return;
+            if (!jobsBySettlement.TryGetValue(settlementWorldObjectId, out List<ServiceJobRecord> list)) return;
+
+            foreach (ServiceJobRecord job in list)
+            {
+                if (ServiceJobStatusMachine.IsTerminal(job.status)) continue;
+                job.settlementTile = tile;
+            }
+        }
+
         public IReadOnlyList<ServiceJobRecord> ActiveJobs => activeJobsIndex;
 
         public IReadOnlyList<ServiceJobRecord> AllJobs => jobs;
@@ -230,7 +243,7 @@ namespace Settlement_Services.Domain
             return jobsById.TryGetValue(jobId, out ServiceJobRecord job) ? job : null;
         }
 
-        public ServiceJobRecord CreateJob(int settlementWorldObjectId, string serviceDefName, RequestChannel channel, List<TargetSnapshot> targets, int quantity = 1,
+        public ServiceJobRecord CreateJob(int settlementWorldObjectId, PlanetTile settlementTile, string serviceDefName, RequestChannel channel, List<TargetSnapshot> targets, int quantity = 1,
             int requesterCaravanId = -1, string requesterFactionLoadId = null, string requesterCaravanSnapshotLabel = null)
         {
             List<TargetSnapshot> normalizedTargets = targets ?? new List<TargetSnapshot>();
@@ -239,6 +252,7 @@ namespace Settlement_Services.Domain
                 jobId = nextJobId++,
                 schemaVersion = SchemaVersion.Current,
                 settlementWorldObjectId = settlementWorldObjectId,
+                settlementTile = settlementTile,
                 status = ServiceJobStatus.Drafted,
                 createdTick = Find.TickManager.TicksGame,
                 statusChangedTick = Find.TickManager.TicksGame,

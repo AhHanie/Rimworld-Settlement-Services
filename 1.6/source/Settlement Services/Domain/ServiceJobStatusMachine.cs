@@ -34,5 +34,9 @@ namespace Settlement_Services.Domain
             job.statusChangedTick = Find.TickManager.TicksGame;
             return true;
         }
+
+        public static bool IsTerminal(ServiceJobStatus status) =>
+            status == ServiceJobStatus.Completed || status == ServiceJobStatus.Collected
+            || status == ServiceJobStatus.Cancelled || status == ServiceJobStatus.Failed;
     }
 }
