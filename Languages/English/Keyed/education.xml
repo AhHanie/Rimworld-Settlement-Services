@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
-    <SettlementServices.LineItem.SkillLesson>skill lesson</SettlementServices.LineItem.SkillLesson>
-    <SettlementServices.LineItem.Apprenticeship>apprenticeship</SettlementServices.LineItem.Apprenticeship>
+    <SettlementServices.LineItem.SkillLesson>Skill lesson</SettlementServices.LineItem.SkillLesson>
+    <SettlementServices.LineItem.Apprenticeship>Apprenticeship</SettlementServices.LineItem.Apprenticeship>
     <SettlementServices.Label.SkillChoice>Skill</SettlementServices.Label.SkillChoice>
     <SettlementServices.Label.LessonIntensityChoice>Intensity</SettlementServices.Label.LessonIntensityChoice>
     <SettlementServices.Label.LessonIntensity.Brief>Brief</SettlementServices.Label.LessonIntensity.Brief>

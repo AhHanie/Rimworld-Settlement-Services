@@ -31,9 +31,9 @@
     <SettlementServices.Error.DuplicateTarget>The same target was selected more than once.</SettlementServices.Error.DuplicateTarget>
     <SettlementServices.Error.InvalidQuantity>The requested quantity is not valid.</SettlementServices.Error.InvalidQuantity>
     <SettlementServices.LineItem.SpecialtyModifier>Settlement specialty</SettlementServices.LineItem.SpecialtyModifier>
-    <SettlementServices.LineItem.ReputationModifier>faction relations</SettlementServices.LineItem.ReputationModifier>
+    <SettlementServices.LineItem.ReputationModifier>Faction relations</SettlementServices.LineItem.ReputationModifier>
     <SettlementServices.LineItem.PriorityTier>Priority surcharge</SettlementServices.LineItem.PriorityTier>
-    <SettlementServices.LineItem.InvestmentDiscount>settlement investment</SettlementServices.LineItem.InvestmentDiscount>
+    <SettlementServices.LineItem.InvestmentDiscount>Settlement investment</SettlementServices.LineItem.InvestmentDiscount>
     <SettlementServices.Letter.ReadyForCollectionLabel>Service complete</SettlementServices.Letter.ReadyForCollectionLabel>
     <SettlementServices.Letter.ReadyForCollectionText>A service at a settlement has finished. Send a caravan to collect the result.</SettlementServices.Letter.ReadyForCollectionText>
     <SettlementServices.Letter.InterruptedLabel>Service interrupted</SettlementServices.Letter.InterruptedLabel>
@@ -43,13 +43,13 @@
     <SettlementServices.Message.Completed>A settlement service has finished.</SettlementServices.Message.Completed>
     <SettlementServices.Message.DeliveredHome>A settlement that was holding your property no longer exists; it has been delivered to your colony instead.</SettlementServices.Message.DeliveredHome>
     <SettlementServices.Message.ShuttleMergeSkipped>A returning pawn's caravan was not merged with another waiting shuttle caravan at the settlement, to avoid losing a passenger shuttle. Merge them manually if desired.</SettlementServices.Message.ShuttleMergeSkipped>
-    <SettlementServices.Status.Drafted>drafted</SettlementServices.Status.Drafted>
-    <SettlementServices.Status.Quoted>quoted</SettlementServices.Status.Quoted>
-    <SettlementServices.Status.Reserved>reserved</SettlementServices.Status.Reserved>
-    <SettlementServices.Status.Active>active</SettlementServices.Status.Active>
-    <SettlementServices.Status.AwaitingCollection>awaiting collection</SettlementServices.Status.AwaitingCollection>
-    <SettlementServices.Status.Completed>completed</SettlementServices.Status.Completed>
-    <SettlementServices.Status.Collected>collected</SettlementServices.Status.Collected>
-    <SettlementServices.Status.Cancelled>cancelled</SettlementServices.Status.Cancelled>
-    <SettlementServices.Status.Failed>failed</SettlementServices.Status.Failed>
+    <SettlementServices.Status.Drafted>Drafted</SettlementServices.Status.Drafted>
+    <SettlementServices.Status.Quoted>Quoted</SettlementServices.Status.Quoted>
+    <SettlementServices.Status.Reserved>Reserved</SettlementServices.Status.Reserved>
+    <SettlementServices.Status.Active>Active</SettlementServices.Status.Active>
+    <SettlementServices.Status.AwaitingCollection>Awaiting collection</SettlementServices.Status.AwaitingCollection>
+    <SettlementServices.Status.Completed>Completed</SettlementServices.Status.Completed>
+    <SettlementServices.Status.Collected>Collected</SettlementServices.Status.Collected>
+    <SettlementServices.Status.Cancelled>Cancelled</SettlementServices.Status.Cancelled>
+    <SettlementServices.Status.Failed>Failed</SettlementServices.Status.Failed>
 </LanguageData>

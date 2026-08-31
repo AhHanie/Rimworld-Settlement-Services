@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
-    <SettlementServices.Header.NoFaction>independent settlement</SettlementServices.Header.NoFaction>
+    <SettlementServices.Header.NoFaction>Independent settlement</SettlementServices.Header.NoFaction>
     <SettlementServices.Header.FactionNameWithTechLevel>{0} ({1})</SettlementServices.Header.FactionNameWithTechLevel>
     <SettlementServices.Header.SpecialtiesLabel>Specialties:</SettlementServices.Header.SpecialtiesLabel>
-    <SettlementServices.Header.NoSpecialties>no specialties</SettlementServices.Header.NoSpecialties>
+    <SettlementServices.Header.NoSpecialties>No specialties</SettlementServices.Header.NoSpecialties>
     <SettlementServices.Header.HiddenSpecialtyCount>+{0}</SettlementServices.Header.HiddenSpecialtyCount>
     <SettlementServices.SpecialtyTooltip.ServicesUnlocked>Services unlocked</SettlementServices.SpecialtyTooltip.ServicesUnlocked>
     <SettlementServices.SpecialtyTooltip.HospitalityPackagesUnlocked>Hospitality packages unlocked</SettlementServices.SpecialtyTooltip.HospitalityPackagesUnlocked>

@@ -5,7 +5,7 @@
     <SettlementServices.Error.NoAndroidPartsInstallable>This android has no installable parts right now.</SettlementServices.Error.NoAndroidPartsInstallable>
     <SettlementServices.Error.AndroidPartNoLongerInstallable>That android part is no longer installable.</SettlementServices.Error.AndroidPartNoLongerInstallable>
     <SettlementServices.Error.AndroidNoNeutrolossNeeded>This android doesn't need a neutroamine top-up.</SettlementServices.Error.AndroidNoNeutrolossNeeded>
-    <SettlementServices.Label.AndroidPartInstallChoice>part to install</SettlementServices.Label.AndroidPartInstallChoice>
-    <SettlementServices.LineItem.AndroidPartInstallMaterials>part materials</SettlementServices.LineItem.AndroidPartInstallMaterials>
-    <SettlementServices.LineItem.AndroidNeutroamineTopUp>neutroamine</SettlementServices.LineItem.AndroidNeutroamineTopUp>
+    <SettlementServices.Label.AndroidPartInstallChoice>Part to install</SettlementServices.Label.AndroidPartInstallChoice>
+    <SettlementServices.LineItem.AndroidPartInstallMaterials>Part materials</SettlementServices.LineItem.AndroidPartInstallMaterials>
+    <SettlementServices.LineItem.AndroidNeutroamineTopUp>Neutroamine</SettlementServices.LineItem.AndroidNeutroamineTopUp>
 </LanguageData>

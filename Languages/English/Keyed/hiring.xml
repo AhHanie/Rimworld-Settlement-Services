@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
-    <SettlementServices.LineItem.ContractorWage>contractor wage</SettlementServices.LineItem.ContractorWage>
+    <SettlementServices.LineItem.ContractorWage>Contractor wage</SettlementServices.LineItem.ContractorWage>
     <SettlementServices.Label.CandidateChoice>Candidate</SettlementServices.Label.CandidateChoice>
     <SettlementServices.Label.HireModeChoice>Arrangement</SettlementServices.Label.HireModeChoice>
     <SettlementServices.Label.CandidateOption>{0} {1} ({2} silver)</SettlementServices.Label.CandidateOption>

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
-    <SettlementServices.Command.Services>services</SettlementServices.Command.Services>
+    <SettlementServices.Command.Services>Services</SettlementServices.Command.Services>
     <SettlementServices.Command.ServicesDesc>Browse and request services from this settlement.</SettlementServices.Command.ServicesDesc>
     <SettlementServices.Command.TravelingToVisitServices>Traveling to visit for services</SettlementServices.Command.TravelingToVisitServices>
     <SettlementServices.Command.NoNegotiator>No eligible pawn in this caravan can negotiate.</SettlementServices.Command.NoNegotiator>
-    <SettlementServices.Command.Invest>invest</SettlementServices.Command.Invest>
+    <SettlementServices.Command.Invest>Invest</SettlementServices.Command.Invest>
     <SettlementServices.Command.InvestDesc>Make a settlement-specific investment for a decaying discount on future services here.</SettlementServices.Command.InvestDesc>
     <SettlementServices.Command.TravelingToInvest>Traveling to invest in settlement</SettlementServices.Command.TravelingToInvest>
     <SettlementServices.Command.ContactSettlement>Contact settlement</SettlementServices.Command.ContactSettlement>
     <SettlementServices.Command.ContactSettlementDesc>Reach a faction settlement remotely for Settlement Services, without needing to send a caravan.</SettlementServices.Command.ContactSettlementDesc>
-    <SettlementServices.Command.Collect>collect</SettlementServices.Command.Collect>
+    <SettlementServices.Command.Collect>Collect</SettlementServices.Command.Collect>
     <SettlementServices.Command.CollectDesc>Collect the results of finished services from this settlement into your caravan.</SettlementServices.Command.CollectDesc>
     <SettlementServices.Label.NoServicesInCategory>This settlement offers no services in this category yet.</SettlementServices.Label.NoServicesInCategory>
-    <SettlementServices.Label.NoTargetSelected>none selected</SettlementServices.Label.NoTargetSelected>
+    <SettlementServices.Label.NoTargetSelected>None selected</SettlementServices.Label.NoTargetSelected>
     <SettlementServices.Label.Target>Target</SettlementServices.Label.Target>
     <SettlementServices.Label.SuppliedInputs>Supply your own materials</SettlementServices.Label.SuppliedInputs>
     <SettlementServices.Label.PriorityTier>Priority</SettlementServices.Label.PriorityTier>
@@ -35,28 +35,28 @@
     <SettlementServices.Message.ServiceRequested>Service requested.</SettlementServices.Message.ServiceRequested>
     <SettlementServices.Message.InvestmentMade>Investment made at {0}.</SettlementServices.Message.InvestmentMade>
     <SettlementServices.Message.JobsCollected>Collected {0} finished service(s).</SettlementServices.Message.JobsCollected>
-    <SettlementServices.Label.TargetRule.None>none</SettlementServices.Label.TargetRule.None>
-    <SettlementServices.Label.TargetRule.Pawn>colonist</SettlementServices.Label.TargetRule.Pawn>
-    <SettlementServices.Label.TargetRule.Animal>animal</SettlementServices.Label.TargetRule.Animal>
-    <SettlementServices.Label.TargetRule.Item>item</SettlementServices.Label.TargetRule.Item>
-    <SettlementServices.Label.TargetRule.Mech>mech</SettlementServices.Label.TargetRule.Mech>
-    <SettlementServices.Label.TargetRule.Vehicle>vehicle</SettlementServices.Label.TargetRule.Vehicle>
-    <SettlementServices.Label.GroupingOption.Settlement>settlement</SettlementServices.Label.GroupingOption.Settlement>
-    <SettlementServices.Label.GroupingOption.Category>category</SettlementServices.Label.GroupingOption.Category>
-    <SettlementServices.Label.GroupingOption.Status>status</SettlementServices.Label.GroupingOption.Status>
-    <SettlementServices.Label.GroupingOption.None>none</SettlementServices.Label.GroupingOption.None>
-    <SettlementServices.Label.ReadyToCollect>ready to collect</SettlementServices.Label.ReadyToCollect>
-    <SettlementServices.Label.NotYetStarted>not yet started</SettlementServices.Label.NotYetStarted>
-    <SettlementServices.Label.CompletionEstimate>ready in {0}</SettlementServices.Label.CompletionEstimate>
-    <SettlementServices.Label.UnknownSettlement>unknown settlement</SettlementServices.Label.UnknownSettlement>
-    <SettlementServices.Label.UnknownService>unknown service</SettlementServices.Label.UnknownService>
-    <SettlementServices.Label.NoTarget>none</SettlementServices.Label.NoTarget>
+    <SettlementServices.Label.TargetRule.None>None</SettlementServices.Label.TargetRule.None>
+    <SettlementServices.Label.TargetRule.Pawn>Colonist</SettlementServices.Label.TargetRule.Pawn>
+    <SettlementServices.Label.TargetRule.Animal>Animal</SettlementServices.Label.TargetRule.Animal>
+    <SettlementServices.Label.TargetRule.Item>Item</SettlementServices.Label.TargetRule.Item>
+    <SettlementServices.Label.TargetRule.Mech>Mech</SettlementServices.Label.TargetRule.Mech>
+    <SettlementServices.Label.TargetRule.Vehicle>Vehicle</SettlementServices.Label.TargetRule.Vehicle>
+    <SettlementServices.Label.GroupingOption.Settlement>Settlement</SettlementServices.Label.GroupingOption.Settlement>
+    <SettlementServices.Label.GroupingOption.Category>Category</SettlementServices.Label.GroupingOption.Category>
+    <SettlementServices.Label.GroupingOption.Status>Status</SettlementServices.Label.GroupingOption.Status>
+    <SettlementServices.Label.GroupingOption.None>None</SettlementServices.Label.GroupingOption.None>
+    <SettlementServices.Label.ReadyToCollect>Ready to collect</SettlementServices.Label.ReadyToCollect>
+    <SettlementServices.Label.NotYetStarted>Not yet started</SettlementServices.Label.NotYetStarted>
+    <SettlementServices.Label.CompletionEstimate>Ready in {0}</SettlementServices.Label.CompletionEstimate>
+    <SettlementServices.Label.UnknownSettlement>Unknown settlement</SettlementServices.Label.UnknownSettlement>
+    <SettlementServices.Label.UnknownService>Unknown service</SettlementServices.Label.UnknownService>
+    <SettlementServices.Label.NoTarget>None</SettlementServices.Label.NoTarget>
     <SettlementServices.Label.NoServicesToShow>No services to show yet. Visit a settlement to request one.</SettlementServices.Label.NoServicesToShow>
     <SettlementServices.Label.NoKnownServicesToShow>No known services yet.</SettlementServices.Label.NoKnownServicesToShow>
     <SettlementServices.Label.ContactSettlementOption>{0} ({1})</SettlementServices.Label.ContactSettlementOption>
     <SettlementServices.Label.ViewMode.Jobs>View: Jobs</SettlementServices.Label.ViewMode.Jobs>
     <SettlementServices.Label.ViewMode.KnownServices>View: Known services</SettlementServices.Label.ViewMode.KnownServices>
-    <SettlementServices.Label.All>all</SettlementServices.Label.All>
+    <SettlementServices.Label.All>All</SettlementServices.Label.All>
     <SettlementServices.Label.GroupBy>Group by: {0}</SettlementServices.Label.GroupBy>
     <SettlementServices.Label.FilterSettlement>Settlement: {0}</SettlementServices.Label.FilterSettlement>
     <SettlementServices.Label.FilterCategory>Category: {0}</SettlementServices.Label.FilterCategory>

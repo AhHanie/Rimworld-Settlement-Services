@@ -6,7 +6,7 @@
     <SettlementServices.Error.VehicleNeedsNoRepairs>This vehicle needs no repairs.</SettlementServices.Error.VehicleNeedsNoRepairs>
     <SettlementServices.Error.NoVehicleUpgradesAvailable>No upgrades are currently available for this vehicle.</SettlementServices.Error.NoVehicleUpgradesAvailable>
     <SettlementServices.Error.VehicleUpgradeNoLongerAvailable>The selected upgrade is no longer available for this vehicle.</SettlementServices.Error.VehicleUpgradeNoLongerAvailable>
-    <SettlementServices.LineItem.VehicleFuelTopUp>fuel</SettlementServices.LineItem.VehicleFuelTopUp>
-    <SettlementServices.LineItem.VehicleUpgradeMaterials>upgrade materials</SettlementServices.LineItem.VehicleUpgradeMaterials>
-    <SettlementServices.Label.VehicleUpgradeChoice>upgrade</SettlementServices.Label.VehicleUpgradeChoice>
+    <SettlementServices.LineItem.VehicleFuelTopUp>Fuel</SettlementServices.LineItem.VehicleFuelTopUp>
+    <SettlementServices.LineItem.VehicleUpgradeMaterials>Upgrade materials</SettlementServices.LineItem.VehicleUpgradeMaterials>
+    <SettlementServices.Label.VehicleUpgradeChoice>Upgrade</SettlementServices.Label.VehicleUpgradeChoice>
 </LanguageData>

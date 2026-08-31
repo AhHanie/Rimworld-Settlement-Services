@@ -3,9 +3,9 @@
     <SettlementServices.Label.XenogermChoice>Xenogerm</SettlementServices.Label.XenogermChoice>
     <SettlementServices.Label.XenotypeChoice>Xenotype</SettlementServices.Label.XenotypeChoice>
     <SettlementServices.Label.BiosculpterCycleChoice>Cycle</SettlementServices.Label.BiosculpterCycleChoice>
-    <SettlementServices.Label.BiosculpterCycle.Medic>general healing</SettlementServices.Label.BiosculpterCycle.Medic>
-    <SettlementServices.Label.BiosculpterCycle.Regeneration>regeneration</SettlementServices.Label.BiosculpterCycle.Regeneration>
-    <SettlementServices.Label.BiosculpterCycle.AgeReversal>age reversal</SettlementServices.Label.BiosculpterCycle.AgeReversal>
+    <SettlementServices.Label.BiosculpterCycle.Medic>General healing</SettlementServices.Label.BiosculpterCycle.Medic>
+    <SettlementServices.Label.BiosculpterCycle.Regeneration>Regeneration</SettlementServices.Label.BiosculpterCycle.Regeneration>
+    <SettlementServices.Label.BiosculpterCycle.AgeReversal>Age reversal</SettlementServices.Label.BiosculpterCycle.AgeReversal>
     <SettlementServices.Error.InvalidGeneTarget>Only a colonist, prisoner, or slave can be a gene target.</SettlementServices.Error.InvalidGeneTarget>
     <SettlementServices.Error.InXenogerminationComa>This pawn is in xenogermination coma.</SettlementServices.Error.InXenogerminationComa>
     <SettlementServices.Error.ResultingMetabolismTooLow>The resulting metabolism would be too low.</SettlementServices.Error.ResultingMetabolismTooLow>
