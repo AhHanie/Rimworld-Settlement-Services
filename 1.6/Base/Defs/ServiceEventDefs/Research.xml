@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Research_BreakthroughDiscussion</defName>
+    <disabled>true</disabled>
+    <label>breakthrough discussion</label>
+    <description>A late-night discussion with the settlement's researchers turns into a genuine breakthrough.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Education</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <experienceSkillDefName>Intellectual</experienceSkillDefName>
+      <experienceAmount>100</experienceAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Research_OutdatedMaterial</defName>
+    <disabled>true</disabled>
+    <label>outdated material</label>
+    <description>Some of the reference material turns out to be outdated, and the session gets less out of it than hoped.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Education</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <experienceSkillDefName>Intellectual</experienceSkillDefName>
+      <experienceAmount>25</experienceAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Research_GuestResearcher</defName>
+    <disabled>true</disabled>
+    <label>guest researcher</label>
+    <description>A visiting researcher pitches in and speeds the whole session along.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Education</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <durationDeltaTicks>-15000</durationDeltaTicks>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Research_TechnicalDebate</defName>
+    <disabled>true</disabled>
+    <label>technical debate</label>
+    <description>A spirited technical debate breaks out, and your colonist comes away having learned something from it.</description>
+    <weightClass>Social</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Education</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <experienceSkillDefName>Intellectual</experienceSkillDefName>
+      <experienceAmount>60</experienceAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Research_AcademicContact</defName>
+    <disabled>true</disabled>
+    <label>academic contact</label>
+    <description>Your colonist makes a useful academic contact who mentions other settlements worth visiting.</description>
+    <weightClass>Discovery</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Education</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <referralCategoryDefName>SettlementService_Education</referralCategoryDefName>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Research_SharedDiscovery</defName>
+    <disabled>true</disabled>
+    <label>shared discovery</label>
+    <description>The session leads to a genuine shared discovery, and the settlement is delighted to have had a hand in it.</description>
+    <weightClass>RareExceptional</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.05</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Education</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <goodwillDelta>2</goodwillDelta>
+      <experienceSkillDefName>Intellectual</experienceSkillDefName>
+      <experienceAmount>150</experienceAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+</Defs>

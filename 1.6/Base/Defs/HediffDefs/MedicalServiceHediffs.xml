@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <HediffDef>
+    <defName>SettlementService_SurgicalComplication</defName>
+    <label>surgical complication</label>
+    <description>A minor complication from a recent procedure. Uncomfortable, but not dangerous, and it fades on its own.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <isBad>true</isBad>
+    <comps>
+      <li Class="HediffCompProperties_Disappears">
+        <disappearsAfterTicks>60000</disappearsAfterTicks>
+        <showRemainingTime>true</showRemainingTime>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <painFactor>1.15</painFactor>
+      </li>
+    </stages>
+  </HediffDef>
+
+</Defs>

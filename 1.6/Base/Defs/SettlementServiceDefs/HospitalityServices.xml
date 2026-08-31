@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_Lodging</defName>
+    <category>SettlementService_Hospitality</category>
+    <label>lodging</label>
+    <description>Book lodging for your pawns at this settlement. Checkout is at 7:00 AM local time, so booking later in the day shortens the first night. Guests are fully fed, rested, and made comfortable for the length of their stay, with food priced and reserved from the settlement's actual food stock based on the nutrition needed to feed the guest throughout the stay. Add optional packages such as recreation, a spa visit, an evening at the tavern, or private time, each billed separately. Guests who book a three-night stay leave in noticeably better spirits, and those who book a full week leave even happier still.</description>
+    <workerClass>Settlement_Services.Services.Hospitality.LodgingServiceWorker</workerClass>
+    <requiredTechLevel>Neolithic</requiredTechLevel>
+    <minimumCost>20</minimumCost>
+    <wealthScale>0.01</wealthScale>
+    <duration>60000</duration> <!-- one night -->
+    <targetRule>Pawn</targetRule>
+    <batchMode>Targets</batchMode>
+    <priorityTiers>
+      <li>
+        <key>ThreeNights</key>
+        <label>Three-night stay</label>
+        <costSurchargePct>2.0</costSurchargePct>
+        <durationMultiplier>3.0</durationMultiplier>
+      </li>
+      <li>
+        <key>OneWeek</key>
+        <label>One-week stay</label>
+        <costSurchargePct>6.0</costSurchargePct>
+        <durationMultiplier>7.0</durationMultiplier>
+      </li>
+    </priorityTiers>
+    <iconTexPath>SettlementServices/UI/Icons/lodging</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

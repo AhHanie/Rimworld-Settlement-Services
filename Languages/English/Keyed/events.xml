@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Letter.ServiceEventLabel>Service event: {0}</SettlementServices.Letter.ServiceEventLabel>
+    <SettlementServices.Letter.ServiceEventText>{0}
+
+{1}</SettlementServices.Letter.ServiceEventText>
+    <SettlementServices.Letter.ServiceEventChoiceLabel>Service opportunity: {0}</SettlementServices.Letter.ServiceEventChoiceLabel>
+    <SettlementServices.Letter.ServiceEventChoiceText>{0}
+
+{1}</SettlementServices.Letter.ServiceEventChoiceText>
+    <SettlementServices.EventChoice.TakeTheOpening>Take the opening</SettlementServices.EventChoice.TakeTheOpening>
+    <SettlementServices.EventChoice.KeepOriginalPlan>Keep the original plan</SettlementServices.EventChoice.KeepOriginalPlan>
+    <SettlementServices.EventChoice.ExtendPlacement>Extend the placement</SettlementServices.EventChoice.ExtendPlacement>
+    <SettlementServices.EventChoice.DeclineExtension>Decline</SettlementServices.EventChoice.DeclineExtension>
+    <SettlementServices.EventChoice.PayForUpgrade>Pay for the upgrade</SettlementServices.EventChoice.PayForUpgrade>
+    <SettlementServices.EventChoice.DeclineUpgrade>Decline</SettlementServices.EventChoice.DeclineUpgrade>
+    <SettlementServices.EventChoice.AcceptBetterContractor>Accept the better contractor</SettlementServices.EventChoice.AcceptBetterContractor>
+    <SettlementServices.EventChoice.KeepOriginalContractor>Keep the original contractor</SettlementServices.EventChoice.KeepOriginalContractor>
+</LanguageData>

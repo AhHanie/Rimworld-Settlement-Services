@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Label.ImplantChoice>Implant</SettlementServices.Label.ImplantChoice>
+    <SettlementServices.Error.NoUrgentTreatmentNeeded>Nothing life-threatening or bleeding to stabilize.</SettlementServices.Error.NoUrgentTreatmentNeeded>
+    <SettlementServices.Error.NothingToTreat>No treatable condition found.</SettlementServices.Error.NothingToTreat>
+    <SettlementServices.Error.NoCompatibleImplants>No compatible implant or body part available for this patient.</SettlementServices.Error.NoCompatibleImplants>
+    <SettlementServices.Error.ConflictingSurgeries>Two or more selected operations affect the same body part chain and cannot be performed together.</SettlementServices.Error.ConflictingSurgeries>
+    <SettlementServices.LineItem.SurgeryPart>Implant: {0}</SettlementServices.LineItem.SurgeryPart>
+    <SettlementServices.Label.SurgeryPlayerSuppliedExplanation>The caravan may bring a compatible listed part instead of buying one. Assign it below in Supply your own materials: once assigned, only the operation charge remains.</SettlementServices.Label.SurgeryPlayerSuppliedExplanation>
+</LanguageData>

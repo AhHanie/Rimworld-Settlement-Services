@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ThoughtDef>
+    <defName>SettlementServiceEvent_Hospitality_Meditation</defName>
+    <durationDays>2</durationDays>
+    <stackLimit>2</stackLimit>
+    <stages>
+      <li>
+        <label>meditation retreat</label>
+        <description>I spent time at a settlement's meditation retreat. It cleared my mind.</description>
+        <baseMoodEffect>4</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+</Defs>

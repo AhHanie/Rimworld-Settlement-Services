@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Label.IdeologyChoice>Target ideoligion</SettlementServices.Label.IdeologyChoice>
+    <SettlementServices.Error.RequiresIdeology>This service requires the Ideology DLC.</SettlementServices.Error.RequiresIdeology>
+    <SettlementServices.Error.InvalidConversionTarget>This pawn cannot be converted.</SettlementServices.Error.InvalidConversionTarget>
+    <SettlementServices.Error.IdeoClassicModeActive>This service is unavailable under classic Ideoligion mode.</SettlementServices.Error.IdeoClassicModeActive>
+    <SettlementServices.Error.NoIdeologyOffered>This settlement has no ideoligion to offer this pawn.</SettlementServices.Error.NoIdeologyOffered>
+    <SettlementServices.Error.TargetIdeologyNoLongerExists>The chosen ideoligion no longer exists.</SettlementServices.Error.TargetIdeologyNoLongerExists>
+    <SettlementServices.Message.ConversionSucceeded>{0} has converted to {1} (certainty {2}).</SettlementServices.Message.ConversionSucceeded>
+</LanguageData>

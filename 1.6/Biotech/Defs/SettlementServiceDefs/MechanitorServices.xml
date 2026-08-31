@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_MechRepair</defName>
+    <category>SettlementService_Technical</category>
+    <label>mech repair</label>
+    <description>Have the settlement's mechanitors patch up a damaged caravan mech: injuries healed, missing parts restored. Does not replace a missing weapon.</description>
+    <workerClass>Settlement_Services.Services.Mechanitor.MechRepairServiceWorker</workerClass>
+    <requiredTechLevel>Spacer</requiredTechLevel>
+    <requiredCapabilityTags>
+      <li>MechanitorServices</li>
+    </requiredCapabilityTags>
+    <minimumCost>40</minimumCost>
+    <wealthScale>0.005</wealthScale>
+    <duration>60000</duration>    <!-- baseline for RepairFactor == 1, roughly a third of a day -->
+    <targetRule>Mech</targetRule>
+    <batchMode>Targets</batchMode>
+    <iconTexPath>SettlementServices/UI/Icons/wrench</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_MechRecharge</defName>
+    <category>SettlementService_Technical</category>
+    <label>mech recharge</label>
+    <description>Plug a caravan mech into the settlement's charging bay until its energy cell is full.</description>
+    <workerClass>Settlement_Services.Services.Mechanitor.MechRechargeServiceWorker</workerClass>
+    <requiredTechLevel>Spacer</requiredTechLevel>
+    <requiredCapabilityTags>
+      <li>MechanitorServices</li>
+    </requiredCapabilityTags>
+    <minimumCost>15</minimumCost>
+    <wealthScale>0.005</wealthScale>
+    <duration>5000</duration>    <!-- baseline ~2 hours for DurationFactor == 1, a mech at 50% energy deficit -->
+    <targetRule>Mech</targetRule>
+    <batchMode>Targets</batchMode>
+    <iconTexPath>SettlementServices/UI/Icons/lightning-charge</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

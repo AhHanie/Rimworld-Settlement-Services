@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_AndroidRepair</defName>
+    <category>SettlementService_Technical</category>
+    <label>android repair</label>
+    <description>Have the settlement patch up a damaged android's injuries. Missing or still-organic body parts are handled by android part installation instead.</description>
+    <workerClass>Settlement_Services.Services.Android.AndroidRepairServiceWorker</workerClass>
+    <requiredTechLevel>Ultra</requiredTechLevel>
+    <minimumGoodwill>25</minimumGoodwill>
+    <minimumCost>35</minimumCost>
+    <wealthScale>0.001</wealthScale>
+    <duration>20000</duration>    <!-- baseline for RepairFactor == 1 -->
+    <targetRule>Android</targetRule>
+    <batchMode>Targets</batchMode>
+    <disabled>true</disabled>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_AndroidPartInstall</defName>
+    <category>SettlementService_Technical</category>
+    <label>android part install</label>
+    <description>Have the settlement fabricate and install a missing or still-organic android body part.</description>
+    <workerClass>Settlement_Services.Services.Android.AndroidPartInstallServiceWorker</workerClass>
+    <requiredTechLevel>Ultra</requiredTechLevel>
+    <minimumGoodwill>35</minimumGoodwill>
+    <minimumCost>60</minimumCost>
+    <wealthScale>0.0015</wealthScale>
+    <duration>30000</duration>
+    <targetRule>Android</targetRule>
+    <batchMode>Targets</batchMode>
+    <disabled>true</disabled>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_AndroidNeutroamineTopUp</defName>
+    <category>SettlementService_Technical</category>
+    <label>neutroamine top-up</label>
+    <description>Administer neutroamine to a caravan android whose neutroamine circulation is running low. Only relevant to androids with neutroamine circulation.</description>
+    <workerClass>Settlement_Services.Services.Android.AndroidNeutroamineServiceWorker</workerClass>
+    <requiredTechLevel>Ultra</requiredTechLevel>
+    <minimumGoodwill>20</minimumGoodwill>
+    <minimumCost>15</minimumCost>
+    <wealthScale>0.0005</wealthScale>
+    <duration>5000</duration>    <!-- baseline for DurationFactor == 1 -->
+    <targetRule>Android</targetRule>
+    <batchMode>Targets</batchMode>
+    <disabled>true</disabled>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

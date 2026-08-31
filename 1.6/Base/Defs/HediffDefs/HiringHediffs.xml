@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <HediffDef>
+    <defName>SettlementService_TemporaryContract</defName>
+    <label>temporary contract</label>
+    <description>Marks a pawn as a settlement contractor working under a fixed-term agreement rather than a permanent colonist. The contract ends automatically when it expires.</description>
+    <hediffClass>Settlement_Services.Services.Hiring.Hediff_TemporaryContract</hediffClass>
+    <isBad>false</isBad>
+    <tendable>false</tendable>
+    <scenarioCanAdd>false</scenarioCanAdd>
+  </HediffDef>
+
+</Defs>

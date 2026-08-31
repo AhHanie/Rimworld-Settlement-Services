@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{93E8DCD2-917E-4884-8B8C-F047618AD01E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Settlement_Services</RootNamespace>
+    <AssemblyName>Settlement Services</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>embedded</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Base\Assemblies\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Base\Assemblies\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\..\..\..\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputModule">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.InputModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Mod.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="SupportLog.cs" />
+    <Compile Include="ModSettings.cs" />
+    <Compile Include="ModSettingsWindow.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+
+    <Compile Include="Domain\RequestChannel.cs" />
+    <Compile Include="Domain\ServiceJobStatus.cs" />
+    <Compile Include="Domain\SchemaVersion.cs" />
+    <Compile Include="Domain\TargetSnapshot.cs" />
+    <Compile Include="Domain\ServiceJobStatusMachine.cs" />
+    <Compile Include="Domain\SettlementServicesWorldComponent.cs" />
+    <Compile Include="Domain\Records\SettlementRecord.cs" />
+    <Compile Include="Domain\Records\InvestmentRecord.cs" />
+    <Compile Include="Domain\Records\HiringCandidateRecord.cs" />
+    <Compile Include="Domain\Records\ServiceJobRecord.cs" />
+    <Compile Include="Domain\Records\DiscoveryRecord.cs" />
+    <Compile Include="Domain\Records\ServiceEventOutcomeRecord.cs" />
+    <Compile Include="Domain\Records\ReservationRecord.cs" />
+    <Compile Include="Domain\Records\SettlementCapabilityRecord.cs" />
+    <Compile Include="Domain\Records\StockRecord.cs" />
+    <Compile Include="Domain\Migration\ISettlementServiceMigration.cs" />
+    <Compile Include="Domain\Migration\SettlementServiceMigrationRegistry.cs" />
+    <Compile Include="Domain\Reconciliation\SettlementServicesReconciler.cs" />
+    <Compile Include="Domain\WorldObjectLookup.cs" />
+    <Compile Include="Domain\IdeoLookup.cs" />
+
+    <Compile Include="Framework\Defs\SettlementServiceDef.cs" />
+    <Compile Include="Framework\Defs\ServiceBatchMode.cs" />
+    <Compile Include="Framework\Defs\ServiceCategoryDef.cs" />
+    <Compile Include="Framework\Defs\ServicePriorityTierDef.cs" />
+    <Compile Include="Framework\Defs\ServiceStockRequirement.cs" />
+    <Compile Include="Framework\Defs\ServiceTargetRule.cs" />
+    <Compile Include="Framework\Defs\ServiceEventDef.cs" />
+    <Compile Include="Framework\Defs\ServiceEventWeightClass.cs" />
+    <Compile Include="Framework\Defs\ServiceEventTriggerPhase.cs" />
+    <Compile Include="Framework\Defs\ServiceEventEffects.cs" />
+    <Compile Include="Framework\Defs\ServiceEventChoice.cs" />
+    <Compile Include="Framework\Defs\SettlementSpecialtyDef.cs" />
+    <Compile Include="Framework\Defs\SettlementCapabilityModifiers.cs" />
+    <Compile Include="Framework\Defs\SpecialtyStockModifier.cs" />
+    <Compile Include="Framework\Defs\SettlementStockCategoryDef.cs" />
+    <Compile Include="Framework\Defs\SettlementStockItem.cs" />
+    <Compile Include="Framework\Defs\SettlementStockItemTier.cs" />
+    <Compile Include="Framework\Defs\CraftingCommissionExtension.cs" />
+    <Compile Include="Framework\Defs\CraftingCommissionRecipeDef.cs" />
+    <Compile Include="Framework\Workers\SettlementServiceWorker.cs" />
+    <Compile Include="Framework\Workers\SettlementServiceContext.cs" />
+    <Compile Include="Framework\Workers\ServiceJobContext.cs" />
+    <Compile Include="Framework\Workers\Results\ServiceAvailabilityReport.cs" />
+    <Compile Include="Framework\Workers\Results\ServiceInputPlan.cs" />
+    <Compile Include="Framework\Workers\Results\ServiceStartResult.cs" />
+    <Compile Include="Framework\Workers\Results\ServiceTickResult.cs" />
+    <Compile Include="Framework\Workers\Results\ServiceCompletionResult.cs" />
+    <Compile Include="Framework\Workers\Results\ServiceCancelResult.cs" />
+    <Compile Include="Framework\Dto\SettlementServiceRequest.cs" />
+    <Compile Include="Framework\Dto\SettlementServiceQuote.cs" />
+    <Compile Include="Framework\Dto\ServiceLineItem.cs" />
+    <Compile Include="Framework\Dto\ServiceTargetSelection.cs" />
+    <Compile Include="Framework\Dto\ServiceTargetOptionSelection.cs" />
+    <Compile Include="Framework\Dto\ServiceUnitQuote.cs" />
+    <Compile Include="Framework\Dto\ServiceDisplayOption.cs" />
+    <Compile Include="Framework\Dto\CraftingCommissionLine.cs" />
+    <Compile Include="Framework\Dto\CraftingMaterialRequirement.cs" />
+    <Compile Include="Framework\Dto\CraftingProductionOperation.cs" />
+    <Compile Include="Framework\Dto\CraftingProductionPlan.cs" />
+    <Compile Include="Framework\Pricing\IServicePricingContext.cs" />
+    <Compile Include="Framework\Pricing\ServicePricingEngine.cs" />
+    <Compile Include="Framework\Pricing\WealthScaling.cs" />
+    <Compile Include="Framework\Pricing\GoodwillBands.cs" />
+    <Compile Include="Framework\Pricing\SettlementServiceDifficultyExtension.cs" />
+    <Compile Include="Framework\Investment\InvestmentPricing.cs" />
+    <Compile Include="Framework\Investment\SettlementInvestmentService.cs" />
+    <Compile Include="Framework\Payment\IServicePaymentProvider.cs" />
+    <Compile Include="Framework\Payment\CaravanSilverPaymentProvider.cs" />
+    <Compile Include="Framework\Payment\HomeColonySilverPaymentProvider.cs" />
+    <Compile Include="Framework\Payment\CaravanInventoryTransfer.cs" />
+    <Compile Include="Framework\Custody\TargetCustodyService.cs" />
+    <Compile Include="Framework\Custody\ServicePawnCaravanReturn.cs" />
+    <Compile Include="Framework\SettlementServiceNotifier.cs" />
+    <Compile Include="Framework\Registry\SettlementServiceRegistry.cs" />
+    <Compile Include="Framework\Registry\ISettlementServiceProvider.cs" />
+    <Compile Include="Framework\Registry\SettlementServiceDefValidation.cs" />
+    <Compile Include="Framework\Compat\DubsBadHygieneAdapter.cs" />
+    <Compile Include="Framework\Compat\VehicleFrameworkAdapter.cs" />
+    <Compile Include="Framework\Compat\AndroidsAdapter.cs" />
+    <Compile Include="Framework\Registry\ServiceEventDefValidation.cs" />
+    <Compile Include="Framework\Events\ServiceEventEligibility.cs" />
+    <Compile Include="Framework\Events\ServiceEventRegistry.cs" />
+    <Compile Include="Framework\Events\ServiceEventRollService.cs" />
+    <Compile Include="Framework\Events\ServiceEventEffectApplier.cs" />
+    <Compile Include="Framework\Events\ServiceReferralResolver.cs" />
+    <Compile Include="Framework\Events\ServiceQuestHookEffect.cs" />
+    <Compile Include="Framework\Events\ChoiceLetter_ServiceEvent.cs" />
+    <Compile Include="Framework\Compat\SettlementServicesModCompat.cs" />
+    <Compile Include="Framework\Api\SettlementServicesApi.cs" />
+    <Compile Include="Framework\SettlementServiceOrchestrator.cs" />
+    <Compile Include="Framework\ServiceBatchPlanner.cs" />
+    <Compile Include="Framework\ServiceBatchAllocationContext.cs" />
+    <Compile Include="Framework\SettlementServiceJobScheduler.cs" />
+    <Compile Include="Framework\Specialty\SettlementSpecialtyGenerator.cs" />
+    <Compile Include="Framework\Specialty\SettlementSpecialtyService.cs" />
+    <Compile Include="Framework\Stock\SettlementStockCatalog.cs" />
+    <Compile Include="Framework\Stock\SettlementStockEffectiveSettings.cs" />
+    <Compile Include="Framework\Stock\SettlementStockItemReference.cs" />
+    <Compile Include="Framework\Stock\SettlementStockService.cs" />
+    <Compile Include="Framework\Stock\StockAllocationResult.cs" />
+    <Compile Include="Framework\Stock\StockAllocationLedger.cs" />
+    <Compile Include="Framework\Stock\StockAvailabilityReport.cs" />
+    <Compile Include="Framework\Validation\SettlementServiceValidator.cs" />
+
+    <Compile Include="UI\ServiceRequestSession.cs" />
+    <Compile Include="UI\ServiceCandidacyService.cs" />
+    <Compile Include="UI\ServiceCaravanTargetSelector.cs" />
+    <Compile Include="UI\ServiceStockInputPicker.cs" />
+    <Compile Include="UI\ServiceUITextures.cs" />
+    <Compile Include="UI\SettlementSpecialtyTooltip.cs" />
+    <Compile Include="UI\ServiceDiscoveryFormatting.cs" />
+    <Compile Include="UI\Audio\ServiceSoundtrackController.cs" />
+    <Compile Include="UI\Audio\ServiceSoundtrackFade.cs" />
+    <Compile Include="UI\Audio\ServiceSoundtrackWindowPatches.cs" />
+    <Compile Include="UI\Dialog_SettlementServices.cs" />
+    <Compile Include="UI\Dialog_ServiceRequestDetail.cs" />
+    <Compile Include="UI\Dialog_CraftingCommissionItemPicker.cs" />
+    <Compile Include="UI\Dialog_SettlementInvestment.cs" />
+    <Compile Include="UI\ServiceConfirmationFlow.cs" />
+    <Compile Include="UI\Interaction\CaravanArrivalAction_VisitServices.cs" />
+    <Compile Include="UI\Interaction\CaravanArrivalAction_InvestInSettlement.cs" />
+    <Compile Include="UI\Interaction\Settlement_ServicesInteraction_Patch.cs" />
+    <Compile Include="UI\Interaction\CommsConsole_ServicesPatch.cs" />
+
+    <Compile Include="UI\ServiceDiscoveryRecorder.cs" />
+    <Compile Include="UI\Overview\ServiceOverviewFormatting.cs" />
+    <Compile Include="UI\Overview\ServiceOverviewEntry.cs" />
+    <Compile Include="UI\Overview\ServiceDiscoveryOverviewEntry.cs" />
+    <Compile Include="UI\Overview\ServiceOverviewQueryService.cs" />
+    <Compile Include="UI\Overview\MainTabWindow_ServiceOverview.cs" />
+    <Compile Include="UI\Interaction\Settlement_ServicesInspectString_Patch.cs" />
+
+    <Compile Include="Debug\SettlementCapabilityDebugAction.cs" />
+    <Compile Include="Debug\ServiceRecordsDebugAction.cs" />
+    <Compile Include="Debug\ServiceEventDebugAction.cs" />
+    <Compile Include="Debug\ServiceBalanceReportDebugAction.cs" />
+    <Compile Include="Debug\CaravanSilverDebugGizmoPatch.cs" />
+    <Compile Include="Debug\SettlementSpecialtyDebugGizmoPatch.cs" />
+    <Compile Include="Debug\ResourceListingDebugAction.cs" />
+
+<Compile Include="Services\Medical\MedicalQualityService.cs" />
+    <Compile Include="Services\Medical\MedicalInputPlanning.cs" />
+    <Compile Include="Services\Medical\MedicalTreatabilityService.cs" />
+    <Compile Include="Services\Medical\SurgeryOptionService.cs" />
+    <Compile Include="Services\Medical\UrgentStabilizationServiceWorker.cs" />
+    <Compile Include="Services\Medical\ExtendedTreatmentServiceWorker.cs" />
+    <Compile Include="Services\Medical\SurgeryServiceWorker.cs" />
+
+    <Compile Include="Services\Genetics\GeneEligibilityService.cs" />
+    <Compile Include="Services\Genetics\GeneOptionService.cs" />
+    <Compile Include="Services\Genetics\GeneCatalogService.cs" />
+    <Compile Include="Services\Genetics\BiosculpterCycleService.cs" />
+    <Compile Include="Services\Genetics\GeneImplantationServiceWorker.cs" />
+    <Compile Include="Services\Genetics\GeneticAugmentationServiceWorker.cs" />
+    <Compile Include="Services\Genetics\GeneExtractionServiceWorker.cs" />
+    <Compile Include="Services\Genetics\BiosculpterTreatmentServiceWorker.cs" />
+
+    <Compile Include="Services\Education\EducationQualityService.cs" />
+    <Compile Include="Services\Education\EducationExperienceCalculator.cs" />
+    <Compile Include="Services\Education\SkillEligibilityService.cs" />
+    <Compile Include="Services\Education\AnimalTrainingOptionService.cs" />
+    <Compile Include="Services\Education\SkillLessonServiceDef.cs" />
+    <Compile Include="Services\Education\SkillLessonServiceWorker.cs" />
+    <Compile Include="Services\Education\ApprenticeshipServiceWorker.cs" />
+    <Compile Include="Services\Education\ResearchSeminarServiceWorker.cs" />
+    <Compile Include="Services\Education\AnimalTrainingServiceWorker.cs" />
+
+    <Compile Include="Services\Hospitality\SubstanceEligibilityService.cs" />
+    <Compile Include="Services\Hospitality\LodgingServiceWorker.cs" />
+    <Compile Include="Services\Hospitality\HospitalityPackageDef.cs" />
+    <Compile Include="Services\Hospitality\HospitalityPackagePricing.cs" />
+    <Compile Include="Services\Hospitality\HospitalityPackageDefOf.cs" />
+    <Compile Include="Services\Hospitality\HospitalityPackageRegistry.cs" />
+    <Compile Include="Services\Hospitality\HospitalityPackageDefValidation.cs" />
+    <Compile Include="Services\Hospitality\HospitalityInputPlanning.cs" />
+
+    <Compile Include="Services\Ideology\IdeologyConversionServiceWorker.cs" />
+
+    <Compile Include="Services\Crafting\CraftingCommissionCatalog.cs" />
+    <Compile Include="Services\Crafting\CraftingCommissionRecipe.cs" />
+    <Compile Include="Services\Crafting\CraftingRecipeDependencyIndex.cs" />
+    <Compile Include="Services\Crafting\CraftingMaterialPlanner.cs" />
+    <Compile Include="Services\Crafting\CraftingProductionPlanner.cs" />
+    <Compile Include="Services\Crafting\CraftingProductionPlanValidator.cs" />
+    <Compile Include="Services\Crafting\CraftingCommissionWorkloadPlanner.cs" />
+    <Compile Include="Services\Crafting\CraftingQualityService.cs" />
+    <Compile Include="Services\Crafting\CraftingStockRequirements.cs" />
+    <Compile Include="Services\Crafting\CraftingMaterialPreview.cs" />
+    <Compile Include="Services\Crafting\CraftingCommissionServiceWorker.cs" />
+
+    <Compile Include="Services\Hiring\HiringCandidateGenerator.cs" />
+    <Compile Include="Services\Hiring\Hediff_TemporaryContract.cs" />
+    <Compile Include="Services\Hiring\HiringServiceWorker.cs" />
+
+
+    <Compile Include="Services\Vehicle\VehicleMaterialPlanner.cs" />
+    <Compile Include="Services\Vehicle\VehicleFuelServiceWorker.cs" />
+    <Compile Include="Services\Vehicle\VehicleRepairServiceWorker.cs" />
+    <Compile Include="Services\Vehicle\VehicleUpgradeServiceWorker.cs" />
+
+    <Compile Include="Services\Mechanitor\MechRepairServiceWorker.cs" />
+    <Compile Include="Services\Mechanitor\MechRechargeServiceWorker.cs" />
+
+    <Compile Include="Services\Android\AndroidMaterialPlanner.cs" />
+    <Compile Include="Services\Android\AndroidRepairServiceWorker.cs" />
+    <Compile Include="Services\Android\AndroidPartInstallServiceWorker.cs" />
+    <Compile Include="Services\Android\AndroidNeutroamineServiceWorker.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

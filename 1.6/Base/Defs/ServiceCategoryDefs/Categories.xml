@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.ServiceCategoryDef>
+    <defName>SettlementService_Medical</defName>
+    <label>medical</label>
+    <description>Treatment, surgery, and care services performed by settlement medical staff.</description>
+    <order>10</order>
+    <iconTexPath>SettlementServices/UI/Icons/medical-stethoscope</iconTexPath>
+  </Settlement_Services.Framework.Defs.ServiceCategoryDef>
+
+  <Settlement_Services.Framework.Defs.ServiceCategoryDef>
+    <defName>SettlementService_Education</defName>
+    <label>education</label>
+    <description>Skill training, research assistance, and animal training offered by a settlement.</description>
+    <order>20</order>
+    <iconTexPath>SettlementServices/UI/Icons/student</iconTexPath>
+  </Settlement_Services.Framework.Defs.ServiceCategoryDef>
+
+  <Settlement_Services.Framework.Defs.ServiceCategoryDef>
+    <defName>SettlementService_Hospitality</defName>
+    <label>hospitality</label>
+    <description>Recreation, lodging, and social services a settlement extends to visitors.</description>
+    <order>30</order>
+    <iconTexPath>SettlementServices/UI/Icons/hotel</iconTexPath>
+  </Settlement_Services.Framework.Defs.ServiceCategoryDef>
+
+  <Settlement_Services.Framework.Defs.ServiceCategoryDef>
+    <defName>SettlementService_Ideology</defName>
+    <label>ideology</label>
+    <description>Conversion, ritual, and belief-related services tied to a settlement's ideoligion.</description>
+    <order>40</order>
+    <iconTexPath>SettlementServices/UI/Icons/meditate</iconTexPath>
+  </Settlement_Services.Framework.Defs.ServiceCategoryDef>
+
+  <Settlement_Services.Framework.Defs.ServiceCategoryDef>
+    <defName>SettlementService_Crafting</defName>
+    <label>crafting</label>
+    <description>Commissioned goods produced to order by settlement crafters.</description>
+    <order>50</order>
+    <iconTexPath>SettlementServices/UI/Icons/tools</iconTexPath>
+  </Settlement_Services.Framework.Defs.ServiceCategoryDef>
+
+  <Settlement_Services.Framework.Defs.ServiceCategoryDef>
+    <defName>SettlementService_Animals</defName>
+    <label>animals</label>
+    <description>Veterinary and handling services for animals.</description>
+    <order>60</order>
+    <iconTexPath>SettlementServices/UI/Icons/animal-dog</iconTexPath>
+  </Settlement_Services.Framework.Defs.ServiceCategoryDef>
+
+  <Settlement_Services.Framework.Defs.ServiceCategoryDef>
+    <defName>SettlementService_Technical</defName>
+    <label>technical</label>
+    <description>Repair, fabrication, and mechanitor-adjacent technical services.</description>
+    <order>70</order>
+    <iconTexPath>SettlementServices/UI/Icons/engineer</iconTexPath>
+  </Settlement_Services.Framework.Defs.ServiceCategoryDef>
+
+  <Settlement_Services.Framework.Defs.ServiceCategoryDef>
+    <defName>SettlementService_Logistics</defName>
+    <label>logistics</label>
+    <description>Temporary hiring and transport services.</description>
+    <order>80</order>
+    <iconTexPath>SettlementServices/UI/Icons/car</iconTexPath>
+  </Settlement_Services.Framework.Defs.ServiceCategoryDef>
+
+  <Settlement_Services.Framework.Defs.ServiceCategoryDef>
+    <defName>SettlementService_Specialists</defName>
+    <label>specialists</label>
+    <description>Rare, faction-specific, or otherwise uncategorized specialist services.</description>
+    <order>90</order>
+    <iconTexPath>SettlementServices/UI/Icons/worker</iconTexPath>
+  </Settlement_Services.Framework.Defs.ServiceCategoryDef>
+
+</Defs>

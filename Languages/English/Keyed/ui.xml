@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Command.Services>services</SettlementServices.Command.Services>
+    <SettlementServices.Command.ServicesDesc>Browse and request services from this settlement.</SettlementServices.Command.ServicesDesc>
+    <SettlementServices.Command.TravelingToVisitServices>Traveling to visit for services</SettlementServices.Command.TravelingToVisitServices>
+    <SettlementServices.Command.NoNegotiator>No eligible pawn in this caravan can negotiate.</SettlementServices.Command.NoNegotiator>
+    <SettlementServices.Command.Invest>invest</SettlementServices.Command.Invest>
+    <SettlementServices.Command.InvestDesc>Make a settlement-specific investment for a decaying discount on future services here.</SettlementServices.Command.InvestDesc>
+    <SettlementServices.Command.TravelingToInvest>Traveling to invest in settlement</SettlementServices.Command.TravelingToInvest>
+    <SettlementServices.Command.ContactSettlement>Contact settlement</SettlementServices.Command.ContactSettlement>
+    <SettlementServices.Command.ContactSettlementDesc>Reach a faction settlement remotely for Settlement Services, without needing to send a caravan.</SettlementServices.Command.ContactSettlementDesc>
+    <SettlementServices.Command.Collect>collect</SettlementServices.Command.Collect>
+    <SettlementServices.Command.CollectDesc>Collect the results of finished services from this settlement into your caravan.</SettlementServices.Command.CollectDesc>
+    <SettlementServices.Label.NoServicesInCategory>This settlement offers no services in this category yet.</SettlementServices.Label.NoServicesInCategory>
+    <SettlementServices.Label.NoTargetSelected>none selected</SettlementServices.Label.NoTargetSelected>
+    <SettlementServices.Label.Target>Target</SettlementServices.Label.Target>
+    <SettlementServices.Label.SuppliedInputs>Supply your own materials</SettlementServices.Label.SuppliedInputs>
+    <SettlementServices.Label.PriorityTier>Priority</SettlementServices.Label.PriorityTier>
+    <SettlementServices.Label.BaselineTier>Standard</SettlementServices.Label.BaselineTier>
+    <SettlementServices.Label.PriorityTierMinimumGoodwill>Requires at least {0} goodwill.</SettlementServices.Label.PriorityTierMinimumGoodwill>
+    <SettlementServices.Label.TotalCost>Total: {0} silver</SettlementServices.Label.TotalCost>
+    <SettlementServices.Label.ExpectedDuration>Expected duration: {0}</SettlementServices.Label.ExpectedDuration>
+    <SettlementServices.Label.Quantity>Quantity</SettlementServices.Label.Quantity>
+    <SettlementServices.Label.UnitPrice>{0} x {1} silver each</SettlementServices.Label.UnitPrice>
+    <SettlementServices.Label.PerTargetPrice>{0}: {1} silver</SettlementServices.Label.PerTargetPrice>
+    <SettlementServices.Label.QuantityTarget>{0}x commissioned</SettlementServices.Label.QuantityTarget>
+    <SettlementServices.Label.TargetPlusOthers>{0} + {1} others</SettlementServices.Label.TargetPlusOthers>
+    <SettlementServices.Label.PerTargetOptionsHeading>Options for {0}</SettlementServices.Label.PerTargetOptionsHeading>
+    <SettlementServices.Label.NoTargetsForPerTargetOptions>Select a target to configure options.</SettlementServices.Label.NoTargetsForPerTargetOptions>
+    <SettlementServices.Button.Confirm>Confirm</SettlementServices.Button.Confirm>
+    <SettlementServices.Button.Invest>Invest</SettlementServices.Button.Invest>
+    <SettlementServices.Message.NoEligibleTargets>Nothing in your caravan is eligible for this service.</SettlementServices.Message.NoEligibleTargets>
+    <SettlementServices.Message.TargetNoLongerEligible>The selected target is no longer available. Choose again.</SettlementServices.Message.TargetNoLongerEligible>
+    <SettlementServices.Message.RequestFailed>This request could not be completed.</SettlementServices.Message.RequestFailed>
+    <SettlementServices.Message.ServiceRequested>Service requested.</SettlementServices.Message.ServiceRequested>
+    <SettlementServices.Message.InvestmentMade>Investment made at {0}.</SettlementServices.Message.InvestmentMade>
+    <SettlementServices.Message.JobsCollected>Collected {0} finished service(s).</SettlementServices.Message.JobsCollected>
+    <SettlementServices.Label.TargetRule.None>none</SettlementServices.Label.TargetRule.None>
+    <SettlementServices.Label.TargetRule.Pawn>colonist</SettlementServices.Label.TargetRule.Pawn>
+    <SettlementServices.Label.TargetRule.Animal>animal</SettlementServices.Label.TargetRule.Animal>
+    <SettlementServices.Label.TargetRule.Item>item</SettlementServices.Label.TargetRule.Item>
+    <SettlementServices.Label.TargetRule.Mech>mech</SettlementServices.Label.TargetRule.Mech>
+    <SettlementServices.Label.TargetRule.Vehicle>vehicle</SettlementServices.Label.TargetRule.Vehicle>
+    <SettlementServices.Label.GroupingOption.Settlement>settlement</SettlementServices.Label.GroupingOption.Settlement>
+    <SettlementServices.Label.GroupingOption.Category>category</SettlementServices.Label.GroupingOption.Category>
+    <SettlementServices.Label.GroupingOption.Status>status</SettlementServices.Label.GroupingOption.Status>
+    <SettlementServices.Label.GroupingOption.None>none</SettlementServices.Label.GroupingOption.None>
+    <SettlementServices.Label.ReadyToCollect>ready to collect</SettlementServices.Label.ReadyToCollect>
+    <SettlementServices.Label.NotYetStarted>not yet started</SettlementServices.Label.NotYetStarted>
+    <SettlementServices.Label.CompletionEstimate>ready in {0}</SettlementServices.Label.CompletionEstimate>
+    <SettlementServices.Label.UnknownSettlement>unknown settlement</SettlementServices.Label.UnknownSettlement>
+    <SettlementServices.Label.UnknownService>unknown service</SettlementServices.Label.UnknownService>
+    <SettlementServices.Label.NoTarget>none</SettlementServices.Label.NoTarget>
+    <SettlementServices.Label.NoServicesToShow>No services to show yet. Visit a settlement to request one.</SettlementServices.Label.NoServicesToShow>
+    <SettlementServices.Label.NoKnownServicesToShow>No known services yet.</SettlementServices.Label.NoKnownServicesToShow>
+    <SettlementServices.Label.ContactSettlementOption>{0} ({1})</SettlementServices.Label.ContactSettlementOption>
+    <SettlementServices.Label.ViewMode.Jobs>View: Jobs</SettlementServices.Label.ViewMode.Jobs>
+    <SettlementServices.Label.ViewMode.KnownServices>View: Known services</SettlementServices.Label.ViewMode.KnownServices>
+    <SettlementServices.Label.All>all</SettlementServices.Label.All>
+    <SettlementServices.Label.GroupBy>Group by: {0}</SettlementServices.Label.GroupBy>
+    <SettlementServices.Label.FilterSettlement>Settlement: {0}</SettlementServices.Label.FilterSettlement>
+    <SettlementServices.Label.FilterCategory>Category: {0}</SettlementServices.Label.FilterCategory>
+    <SettlementServices.Label.FilterTarget>Target: {0}</SettlementServices.Label.FilterTarget>
+    <SettlementServices.Label.FilterStatus>Status: {0}</SettlementServices.Label.FilterStatus>
+    <SettlementServices.Button.Jump>Jump</SettlementServices.Button.Jump>
+    <SettlementServices.Label.KnownServicesInPerson>Known services (discovered in person): {0}</SettlementServices.Label.KnownServicesInPerson>
+    <SettlementServices.Label.KnownServicesRemote>Known services (discovered remotely): {0}</SettlementServices.Label.KnownServicesRemote>
+    <SettlementServices.Label.YourServices>Your services here: {0}</SettlementServices.Label.YourServices>
+    <SettlementServices.Label.InvestmentDialogTitle>Invest in {0}</SettlementServices.Label.InvestmentDialogTitle>
+    <SettlementServices.Label.InvestmentCost>Investment cost: {0} silver</SettlementServices.Label.InvestmentCost>
+    <SettlementServices.Label.InvestmentStatusNone>No active investment at this settlement.</SettlementServices.Label.InvestmentStatusNone>
+    <SettlementServices.Label.InvestmentStatusExpired>Investment fully decayed. Reinvest to restore the discount.</SettlementServices.Label.InvestmentStatusExpired>
+    <SettlementServices.Label.InvestmentStatusActive>Investment discount: {0} ({1} days remaining)</SettlementServices.Label.InvestmentStatusActive>
+</LanguageData>

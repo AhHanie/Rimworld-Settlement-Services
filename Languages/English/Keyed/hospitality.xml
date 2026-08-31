@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Label.SubstanceChoice>Substance</SettlementServices.Label.SubstanceChoice>
+    <SettlementServices.Button.AddGroupMember>Add another guest</SettlementServices.Button.AddGroupMember>
+    <SettlementServices.Error.NoSubstanceAvailable>This settlement has no recreational substance available at your visit.</SettlementServices.Error.NoSubstanceAvailable>
+    <SettlementServices.Error.AdultsOnly>This service is only available to adult pawns.</SettlementServices.Error.AdultsOnly>
+    <SettlementServices.LineItem.LodgingFood>Food</SettlementServices.LineItem.LodgingFood>
+    <SettlementServices.LineItem.HospitalityPackage>{0}</SettlementServices.LineItem.HospitalityPackage>
+    <SettlementServices.LineItem.HospitalitySubstance>{0}</SettlementServices.LineItem.HospitalitySubstance>
+</LanguageData>

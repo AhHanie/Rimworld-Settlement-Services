@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Settings.SectionPricing>Pricing</SettlementServices.Settings.SectionPricing>
+    <SettlementServices.Settings.WealthPriceScalePct>Wealth-based price scaling: {0}</SettlementServices.Settings.WealthPriceScalePct>
+    <SettlementServices.Settings.WealthPriceScalePct.Tooltip>Multiplies the wealth-based portion of every service's price (each service adds a small percentage of your total colony wealth on top of its minimum cost; this scales that percentage up or down). 100% leaves service pricing at its default balance.</SettlementServices.Settings.WealthPriceScalePct.Tooltip>
+    <SettlementServices.Settings.GoodwillDiscountScalePct>Goodwill discount scale: {0}</SettlementServices.Settings.GoodwillDiscountScalePct>
+    <SettlementServices.Settings.GoodwillDiscountScalePct.Tooltip>Scales how much a settlement's price discounts to you at +20/+40/+60/+80/+100 goodwill. 100% is the default balance; 0% removes goodwill's effect on price entirely.</SettlementServices.Settings.GoodwillDiscountScalePct.Tooltip>
+    <SettlementServices.Settings.InvestmentCostScalePct>Investment cost scale: {0}</SettlementServices.Settings.InvestmentCostScalePct>
+    <SettlementServices.Settings.InvestmentCostScalePct.Tooltip>Scales the silver cost of investing in a settlement (default: 1% of total player wealth x the difficulty multiplier).</SettlementServices.Settings.InvestmentCostScalePct.Tooltip>
+    <SettlementServices.Settings.InvestmentDiscountScalePct>Investment discount scale: {0}</SettlementServices.Settings.InvestmentDiscountScalePct>
+    <SettlementServices.Settings.InvestmentDiscountScalePct.Tooltip>Scales the discount a fresh investment grants (default: 15% off, before decay).</SettlementServices.Settings.InvestmentDiscountScalePct.Tooltip>
+    <SettlementServices.Settings.InvestmentDecayDurationScalePct>Investment decay duration scale: {0}</SettlementServices.Settings.InvestmentDecayDurationScalePct>
+    <SettlementServices.Settings.InvestmentDecayDurationScalePct.Tooltip>Scales how long an investment takes to fully decay (default: about 30 in-game days).</SettlementServices.Settings.InvestmentDecayDurationScalePct.Tooltip>
+    <SettlementServices.Settings.SectionDifficulty>Per-difficulty price multipliers</SettlementServices.Settings.SectionDifficulty>
+    <SettlementServices.Settings.DifficultyMultiplier>{0}: {1}</SettlementServices.Settings.DifficultyMultiplier>
+    <SettlementServices.Settings.DifficultyMultiplier.Tooltip>Multiplies the wealth-based price surcharge when this difficulty is active. 100% applies no extra scaling beyond the wealth-based surcharge itself.</SettlementServices.Settings.DifficultyMultiplier.Tooltip>
+    <SettlementServices.Settings.SectionFramework>Framework</SettlementServices.Settings.SectionFramework>
+    <SettlementServices.Settings.ServiceEventFrequencyPct>Service event frequency: {0}</SettlementServices.Settings.ServiceEventFrequencyPct>
+    <SettlementServices.Settings.ServiceEventFrequencyPct.Tooltip>How often paid services can trigger a bonus or complication beyond their normal outcome, relative to each service's own default rate.</SettlementServices.Settings.ServiceEventFrequencyPct.Tooltip>
+    <SettlementServices.Settings.SoundtrackEnabled>Play settlement services soundtrack</SettlementServices.Settings.SoundtrackEnabled>
+    <SettlementServices.Settings.SoundtrackEnabled.Tooltip>Fade in a short ambient loop while browsing a settlement's services menu, and fade normal music back in when you close it.</SettlementServices.Settings.SoundtrackEnabled.Tooltip>
+</LanguageData>

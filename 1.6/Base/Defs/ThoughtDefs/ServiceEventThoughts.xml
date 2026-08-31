@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ThoughtDef>
+    <defName>SettlementServiceEvent_PositiveExperience</defName>
+    <durationDays>1.5</durationDays>
+    <stackLimit>3</stackLimit>
+    <stages>
+      <li>
+        <label>pleasant experience</label>
+        <description>Something good happened to me while I was dealing with a settlement's services.</description>
+        <baseMoodEffect>3</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>SettlementServiceEvent_NegativeExperience</defName>
+    <durationDays>1.5</durationDays>
+    <stackLimit>3</stackLimit>
+    <stages>
+      <li>
+        <label>unpleasant experience</label>
+        <description>Something unpleasant happened to me while I was dealing with a settlement's services.</description>
+        <baseMoodEffect>-3</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>SettlementServiceEvent_AdultRecreation_Positive</defName>
+    <durationDays>2</durationDays>
+    <stackLimit>2</stackLimit>
+    <stages>
+      <li>
+        <label>spent time with someone</label>
+        <description>I spent some private time with someone at a settlement. It was nice to feel wanted.</description>
+        <baseMoodEffect>6</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>SettlementServiceEvent_AdultRecreation_PartnerStrayed</defName>
+    <durationDays>4</durationDays>
+    <stackLimit>1</stackLimit>
+    <stages>
+      <li>
+        <label>my partner strayed</label>
+        <description>My partner spent private time with someone else while away. That stings.</description>
+        <baseMoodEffect>-8</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+</Defs>

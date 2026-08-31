@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_IdeologyConversion</defName>
+    <category>SettlementService_Ideology</category>
+    <label>ideology conversion</label>
+    <description>Leave a colonist, prisoner, or slave with the settlement's own believers for a time. They will bring your pawn around to their ideoligion, and your pawn will adopt the selected ideoligion once the stay concludes.</description>
+    <workerClass>Settlement_Services.Services.Ideology.IdeologyConversionServiceWorker</workerClass>
+    <requiredCapabilityTags>
+      <li>IdeologicalServices</li>
+    </requiredCapabilityTags>
+    <minimumCost>150</minimumCost>
+    <wealthScale>0.03</wealthScale>
+    <duration>180000</duration> <!-- 3 days -->
+    <targetRule>Pawn</targetRule>
+    <batchMode>Targets</batchMode>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

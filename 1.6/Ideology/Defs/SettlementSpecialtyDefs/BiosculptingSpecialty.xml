@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+    <defName>SettlementSpecialty_BiosculptingClinic</defName>
+    <label>biosculpting clinic</label>
+    <description>This settlement maintains biosculpter pods, offering biosculpting treatments no ordinary clinic can provide.</description>
+    <iconTexPath>SettlementServices/UI/Icons/spa</iconTexPath>
+    <selectionWeight>0.5</selectionWeight>
+    <minTechLevel>Industrial</minTechLevel>
+    <modifiers>
+      <capabilityTags>
+        <li>BiosculptingServices</li>
+      </capabilityTags>
+      <qualityOffset>0.15</qualityOffset>
+      <relevantCategoryDefNames>
+        <li>SettlementService_Medical</li>
+      </relevantCategoryDefNames>
+    </modifiers>
+    <stockModifiers>
+      <li>
+        <stockCategoryDefName>SettlementStock_Medicine</stockCategoryDefName>
+        <capacityMultiplier>1.3</capacityMultiplier>
+        <refreshRateMultiplier>1.2</refreshRateMultiplier>
+      </li>
+    </stockModifiers>
+    <disabled>true</disabled>
+  </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+
+</Defs>

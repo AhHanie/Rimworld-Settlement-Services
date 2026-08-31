@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_ProstheticsAndBionics"]/stockItems</xpath>
+    <value>
+      <li>
+        <thingDefName>DetoxifierLung</thingDefName>
+        <capacity>4</capacity>
+        <refreshAmount>1</refreshAmount>
+        <refreshIntervalTicks>300000</refreshIntervalTicks>
+        <minFactionTechLevel>Spacer</minFactionTechLevel>
+      </li>
+      <li>
+        <thingDefName>DetoxifierKidney</thingDefName>
+        <capacity>4</capacity>
+        <refreshAmount>1</refreshAmount>
+        <refreshIntervalTicks>300000</refreshIntervalTicks>
+        <minFactionTechLevel>Spacer</minFactionTechLevel>
+      </li>
+    </value>
+  </Operation>
+
+</Patch>

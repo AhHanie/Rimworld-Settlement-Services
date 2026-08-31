@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Apprenticeship_MentorBond</defName>
+    <disabled>true</disabled>
+    <label>mentor bond</label>
+    <description>Your colonist and their mentor strike up a genuine rapport during the placement.</description>
+    <weightClass>Social</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Education</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <thoughtDefName>SettlementServiceEvent_PositiveExperience</thoughtDefName>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Apprenticeship_GenerousMentor</defName>
+    <disabled>true</disabled>
+    <label>generous mentor</label>
+    <description>The mentor goes out of their way to pass on extra know-how.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Education</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <experienceSkillDefName>Intellectual</experienceSkillDefName>
+      <experienceAmount>80</experienceAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Apprenticeship_AdditionalDuties</defName>
+    <disabled>true</disabled>
+    <label>additional duties</label>
+    <description>The mentor asks your colonist to stick around for a few additional duties before wrapping up.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Education</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <durationDeltaTicks>15000</durationDeltaTicks>
+      <refundAmount>10</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Apprenticeship_OutstandingWork</defName>
+    <disabled>true</disabled>
+    <label>outstanding work</label>
+    <description>Your colonist's work during the placement impresses everyone watching.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Education</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <refundAmount>10</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Apprenticeship_JobOffer</defName>
+    <disabled>true</disabled>
+    <label>job offer</label>
+    <description>The settlement offers to extend the placement a while longer in exchange for more experience. Extend it, or wrap up as originally planned.</description>
+    <weightClass>Opportunity</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.4</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Education</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <choices>
+      <li>
+        <labelKey>SettlementServices.EventChoice.ExtendPlacement</labelKey>
+        <effects>
+          <durationDeltaTicks>20000</durationDeltaTicks>
+          <experienceSkillDefName>Intellectual</experienceSkillDefName>
+          <experienceAmount>100</experienceAmount>
+        </effects>
+      </li>
+      <li>
+        <labelKey>SettlementServices.EventChoice.DeclineExtension</labelKey>
+        <effects>
+          <refundAmount>0</refundAmount>
+        </effects>
+      </li>
+    </choices>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Apprenticeship_CulturalExchange</defName>
+    <disabled>true</disabled>
+    <label>cultural exchange</label>
+    <description>The placement turns into a bit of a cultural exchange, and both sides come away better for it.</description>
+    <weightClass>Social</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Education</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <thoughtDefName>SettlementServiceEvent_PositiveExperience</thoughtDefName>
+      <goodwillDelta>1</goodwillDelta>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Apprenticeship_ApprenticeIncident</defName>
+    <disabled>true</disabled>
+    <label>apprentice incident</label>
+    <description>A minor mishap during training sets the schedule back a bit.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Education</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <durationDeltaTicks>15000</durationDeltaTicks>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Apprenticeship_GraduationCelebration</defName>
+    <disabled>true</disabled>
+    <label>graduation celebration</label>
+    <description>The settlement throws a small celebration to mark the end of the placement.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Education</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <thoughtDefName>SettlementServiceEvent_PositiveExperience</thoughtDefName>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+</Defs>

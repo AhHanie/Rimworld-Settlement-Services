@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Medical_ExceptionalTreatment</defName>
+    <disabled>true</disabled>
+    <label>exceptional treatment</label>
+    <description>The medical staff handle the case with unusual skill, finishing well ahead of schedule.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Medical</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <durationDeltaTicks>-10000</durationDeltaTicks>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Medical_JuniorDoctor</defName>
+    <disabled>true</disabled>
+    <label>junior doctor</label>
+    <description>A junior doctor handles the case under supervision, and the settlement discounts the visit accordingly.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Medical</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <refundAmount>10</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Medical_GoodBedsideManner</defName>
+    <disabled>true</disabled>
+    <label>good bedside manner</label>
+    <description>The attending staff put your colonist at ease throughout the whole procedure.</description>
+    <weightClass>Social</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Medical</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <thoughtDefName>SettlementServiceEvent_PositiveExperience</thoughtDefName>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Medical_PoorBedsideManner</defName>
+    <disabled>true</disabled>
+    <label>poor bedside manner</label>
+    <description>The attending staff are brusque and dismissive throughout the procedure.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.4</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Medical</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <thoughtDefName>SettlementServiceEvent_NegativeExperience</thoughtDefName>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Medical_PainManagement</defName>
+    <disabled>true</disabled>
+    <label>pain management</label>
+    <description>The staff send your colonist off with a mild, short-lived analgesic to ease the trip home.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Medical</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <hediffDefName>SettlementServiceEvent_PainRelief</hediffDefName>
+      <hediffSeverity>0.5</hediffSeverity>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Medical_TreatmentComplication</defName>
+    <disabled>true</disabled>
+    <label>treatment complication</label>
+    <description>The treatment turns out to be more involved than first thought.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Medical</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <durationDeltaTicks>15000</durationDeltaTicks>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Medical_FreeConsultation</defName>
+    <disabled>true</disabled>
+    <label>free consultation</label>
+    <description>The doctor throws in a free consultation on top of the requested treatment.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Medical</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <refundAmount>10</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Medical_ResearchVolunteer</defName>
+    <disabled>true</disabled>
+    <label>medical research volunteer</label>
+    <description>Your colonist agrees to answer a few questions for the settlement's own medical records, and picks up a little insight in the process.</description>
+    <weightClass>Discovery</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>0.4</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Medical</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <refundAmount>10</refundAmount>
+      <experienceSkillDefName>Intellectual</experienceSkillDefName>
+      <experienceAmount>50</experienceAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+</Defs>

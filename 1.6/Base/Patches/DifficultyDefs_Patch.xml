@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/DifficultyDef[defName="Peaceful"]</xpath>
+    <value>
+      <modExtensions>
+        <li Class="Settlement_Services.Framework.Pricing.SettlementServiceDifficultyExtension">
+          <settlementPriceMultiplier>0.5</settlementPriceMultiplier>
+        </li>
+      </modExtensions>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/DifficultyDef[defName="Easy"]</xpath>
+    <value>
+      <modExtensions>
+        <li Class="Settlement_Services.Framework.Pricing.SettlementServiceDifficultyExtension">
+          <settlementPriceMultiplier>0.75</settlementPriceMultiplier>
+        </li>
+      </modExtensions>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/DifficultyDef[defName="Medium"]</xpath>
+    <value>
+      <modExtensions>
+        <li Class="Settlement_Services.Framework.Pricing.SettlementServiceDifficultyExtension">
+          <settlementPriceMultiplier>1.0</settlementPriceMultiplier>
+        </li>
+      </modExtensions>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/DifficultyDef[defName="Rough"]</xpath>
+    <value>
+      <modExtensions>
+        <li Class="Settlement_Services.Framework.Pricing.SettlementServiceDifficultyExtension">
+          <settlementPriceMultiplier>1.0</settlementPriceMultiplier>
+        </li>
+      </modExtensions>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/DifficultyDef[defName="Hard"]</xpath>
+    <value>
+      <modExtensions>
+        <li Class="Settlement_Services.Framework.Pricing.SettlementServiceDifficultyExtension">
+          <settlementPriceMultiplier>1.25</settlementPriceMultiplier>
+        </li>
+      </modExtensions>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/DifficultyDef[defName="Extreme"]</xpath>
+    <value>
+      <modExtensions>
+        <li Class="Settlement_Services.Framework.Pricing.SettlementServiceDifficultyExtension">
+          <settlementPriceMultiplier>1.5</settlementPriceMultiplier>
+        </li>
+      </modExtensions>
+    </value>
+  </Operation>
+
+</Patch>

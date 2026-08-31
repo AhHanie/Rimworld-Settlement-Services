@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+    <defName>SettlementSpecialty_IdeologicalCenter</defName>
+    <label>ideological center</label>
+    <description>This settlement is a seat of its faction's ideology, offering ideological services rooted in its beliefs.</description>
+    <iconTexPath>SettlementServices/UI/Icons/meditate</iconTexPath>
+    <selectionWeight>0.6</selectionWeight>
+    <requiresFactionHasIdeo>true</requiresFactionHasIdeo>
+    <modifiers>
+      <capabilityTags>
+        <li>IdeologicalServices</li>
+      </capabilityTags>
+    </modifiers>
+  </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+
+</Defs>

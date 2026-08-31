@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_MetallicMaterials"]/stockItems</xpath>
+    <value>
+      <li>
+        <thingDefName>Bioferrite</thingDefName>
+        <capacity>50</capacity>
+        <refreshAmount>10</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Industrial</minFactionTechLevel>
+        <techLevelTiers>
+          <li>
+            <minFactionTechLevel>Spacer</minFactionTechLevel>
+            <capacity>100</capacity>
+            <refreshAmount>20</refreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+          </li>
+          <li>
+            <minFactionTechLevel>Ultra</minFactionTechLevel>
+            <capacity>200</capacity>
+            <refreshAmount>40</refreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+          </li>
+        </techLevelTiers>
+      </li>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_ProstheticsAndBionics"]/stockItems</xpath>
+    <value>
+      <li>
+        <thingDefName>GhoulPlating</thingDefName>
+        <capacity>1</capacity>
+        <refreshAmount>1</refreshAmount>
+        <refreshIntervalTicks>300000</refreshIntervalTicks>
+        <minFactionTechLevel>Industrial</minFactionTechLevel>
+      </li>
+      <li>
+        <thingDefName>GhoulBarbs</thingDefName>
+        <capacity>1</capacity>
+        <refreshAmount>1</refreshAmount>
+        <refreshIntervalTicks>300000</refreshIntervalTicks>
+        <minFactionTechLevel>Industrial</minFactionTechLevel>
+      </li>
+      <li>
+        <thingDefName>AdrenalHeart</thingDefName>
+        <capacity>1</capacity>
+        <refreshAmount>1</refreshAmount>
+        <refreshIntervalTicks>300000</refreshIntervalTicks>
+        <minFactionTechLevel>Industrial</minFactionTechLevel>
+      </li>
+      <li>
+        <thingDefName>CorrosiveHeart</thingDefName>
+        <capacity>1</capacity>
+        <refreshAmount>1</refreshAmount>
+        <refreshIntervalTicks>300000</refreshIntervalTicks>
+        <minFactionTechLevel>Industrial</minFactionTechLevel>
+      </li>
+      <li>
+        <thingDefName>MetalbloodHeart</thingDefName>
+        <capacity>1</capacity>
+        <refreshAmount>1</refreshAmount>
+        <refreshIntervalTicks>300000</refreshIntervalTicks>
+        <minFactionTechLevel>Industrial</minFactionTechLevel>
+      </li>
+      <li>
+        <thingDefName>RevenantVertebrae</thingDefName>
+        <capacity>1</capacity>
+        <refreshAmount>1</refreshAmount>
+        <refreshIntervalTicks>300000</refreshIntervalTicks>
+        <minFactionTechLevel>Industrial</minFactionTechLevel>
+      </li>
+    </value>
+  </Operation>
+
+</Patch>

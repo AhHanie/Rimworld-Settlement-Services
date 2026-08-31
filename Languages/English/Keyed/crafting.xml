@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Label.CraftingStuffChoice>Material</SettlementServices.Label.CraftingStuffChoice>
+    <SettlementServices.LineItem.CraftingMaterials>Settlement-supplied materials</SettlementServices.LineItem.CraftingMaterials>
+    <SettlementServices.Error.NoCraftableItemsAvailable>This settlement has nothing it can commission for you.</SettlementServices.Error.NoCraftableItemsAvailable>
+    <SettlementServices.Error.CommissionedItemNoLongerAvailable>The commissioned item can no longer be produced.</SettlementServices.Error.CommissionedItemNoLongerAvailable>
+    <SettlementServices.Error.NoCommissionItemsSelected>Add at least one item to commission.</SettlementServices.Error.NoCommissionItemsSelected>
+    <SettlementServices.Label.CommissionedItems>Commissioned items</SettlementServices.Label.CommissionedItems>
+    <SettlementServices.Label.NoCommissionItemsYet>No items commissioned yet.</SettlementServices.Label.NoCommissionItemsYet>
+    <SettlementServices.Label.AddCommissionItemTitle>Add item</SettlementServices.Label.AddCommissionItemTitle>
+    <SettlementServices.Label.CommissionSearchLabel>Search:</SettlementServices.Label.CommissionSearchLabel>
+    <SettlementServices.Label.NoCommissionSearchResults>No matching items.</SettlementServices.Label.NoCommissionSearchResults>
+    <SettlementServices.Label.NoCommissionItemSelected>Select an item from the list.</SettlementServices.Label.NoCommissionItemSelected>
+    <SettlementServices.Label.EffectiveCrafterSkill>Effective crafter skill: {0}</SettlementServices.Label.EffectiveCrafterSkill>
+    <SettlementServices.Label.CrafterSkillLevelHeader>Crafter skill level</SettlementServices.Label.CrafterSkillLevelHeader>
+    <SettlementServices.Button.AddCommissionItem>Add item</SettlementServices.Button.AddCommissionItem>
+    <SettlementServices.Button.RemoveCommissionItem>Remove</SettlementServices.Button.RemoveCommissionItem>
+    <SettlementServices.Label.ProductionPlan>Production plan</SettlementServices.Label.ProductionPlan>
+    <SettlementServices.Label.IntermediateOperation>Make {0} x{1}</SettlementServices.Label.IntermediateOperation>
+    <SettlementServices.Label.RawMaterials>Raw materials</SettlementServices.Label.RawMaterials>
+    <SettlementServices.Label.RawMaterialLine>{0} x{1}</SettlementServices.Label.RawMaterialLine>
+    <SettlementServices.Error.NoNestedCraftingPath>The settlement has no way to produce or acquire one of the required materials.</SettlementServices.Error.NoNestedCraftingPath>
+    <SettlementServices.Label.CrafterCount>Crafters</SettlementServices.Label.CrafterCount>
+    <SettlementServices.Label.CraftingAssignedCrafters>Assigned crafters: {0}</SettlementServices.Label.CraftingAssignedCrafters>
+    <SettlementServices.Label.CraftingLongestWorkload>Longest crafter workload: {0}</SettlementServices.Label.CraftingLongestWorkload>
+    <SettlementServices.Label.CraftingBilledCrafterDays>Billed crafter-days: {0}</SettlementServices.Label.CraftingBilledCrafterDays>
+    <SettlementServices.Label.CrafterWorkloadLine>Crafter {0}: {1}</SettlementServices.Label.CrafterWorkloadLine>
+    <SettlementServices.Error.InvalidCrafterCount>Select at least one crafter.</SettlementServices.Error.InvalidCrafterCount>
+    <SettlementServices.Error.TooManyCrafters>There are not enough separate crafting tasks to assign that many crafters.</SettlementServices.Error.TooManyCrafters>
+    <SettlementServices.Label.CraftingMaterialsFromCaravan>Materials from caravan</SettlementServices.Label.CraftingMaterialsFromCaravan>
+    <SettlementServices.Label.CraftingMaterialsFromCaravanExplanation>Selected materials are removed from the caravan only when you confirm the commission. The settlement supplies whatever quantity you do not.</SettlementServices.Label.CraftingMaterialsFromCaravanExplanation>
+    <SettlementServices.Label.CraftingMaterialsPlanBlocked>The settlement cannot complete this order alone. Supply the material below to continue planning.</SettlementServices.Label.CraftingMaterialsPlanBlocked>
+    <SettlementServices.Label.CraftingMaterialRequiredCarried>Required {0}, carried {1}</SettlementServices.Label.CraftingMaterialRequiredCarried>
+    <SettlementServices.Label.CraftingMaterialSettlementSupplies>Settlement supplies {0}</SettlementServices.Label.CraftingMaterialSettlementSupplies>
+    <SettlementServices.Label.CraftingMaterialAdditionalNeeded>Additional material needed</SettlementServices.Label.CraftingMaterialAdditionalNeeded>
+</LanguageData>

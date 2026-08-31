@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.LineItem.SkillLesson>skill lesson</SettlementServices.LineItem.SkillLesson>
+    <SettlementServices.LineItem.Apprenticeship>apprenticeship</SettlementServices.LineItem.Apprenticeship>
+    <SettlementServices.Label.SkillChoice>Skill</SettlementServices.Label.SkillChoice>
+    <SettlementServices.Label.LessonIntensityChoice>Intensity</SettlementServices.Label.LessonIntensityChoice>
+    <SettlementServices.Label.LessonIntensity.Brief>Brief</SettlementServices.Label.LessonIntensity.Brief>
+    <SettlementServices.Label.LessonIntensity.Standard>Standard</SettlementServices.Label.LessonIntensity.Standard>
+    <SettlementServices.Label.LessonIntensity.Intensive>Intensive</SettlementServices.Label.LessonIntensity.Intensive>
+    <SettlementServices.Label.ResearchProjectChoice>Research project</SettlementServices.Label.ResearchProjectChoice>
+    <SettlementServices.Error.NoTrainableSkills>This pawn has no skill that can currently be trained.</SettlementServices.Error.NoTrainableSkills>
+    <SettlementServices.Label.EducationPreviewPrompt>Select a skill and intensity to preview experience.</SettlementServices.Label.EducationPreviewPrompt>
+    <SettlementServices.Label.EducationBaseServiceXp>Base service XP: {0}</SettlementServices.Label.EducationBaseServiceXp>
+    <SettlementServices.Label.EducationPassionNone>Passion: none</SettlementServices.Label.EducationPassionNone>
+    <SettlementServices.Label.EducationPassionMinor>Passion: minor (learns faster)</SettlementServices.Label.EducationPassionMinor>
+    <SettlementServices.Label.EducationPassionMajor>Passion: major (learns much faster)</SettlementServices.Label.EducationPassionMajor>
+    <SettlementServices.Label.EducationEstimatedXp>Estimated XP received now: {0}</SettlementServices.Label.EducationEstimatedXp>
+    <SettlementServices.Error.NoResearchProjectAvailable>No research project is currently available to advance.</SettlementServices.Error.NoResearchProjectAvailable>
+    <SettlementServices.Label.ResearchSeminarPreview>Research reward: {0}-{1} research points</SettlementServices.Label.ResearchSeminarPreview>
+    <SettlementServices.Error.NoTrainableBehaviors>This animal has no behaviour that can currently be trained.</SettlementServices.Error.NoTrainableBehaviors>
+    <SettlementServices.Error.NoBehaviorsSelectedForAnimal>Select at least one behaviour for this animal.</SettlementServices.Error.NoBehaviorsSelectedForAnimal>
+</LanguageData>

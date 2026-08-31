@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ThoughtDef>
+    <defName>SettlementServiceEvent_Hospitality_Spa</defName>
+    <durationDays>2</durationDays>
+    <stackLimit>2</stackLimit>
+    <stages>
+      <li>
+        <label>spa and bathhouse</label>
+        <description>I had a spa and bathhouse session at the settlement. I feel relaxed and refreshed.</description>
+        <baseMoodEffect>5</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>SettlementServiceEvent_Hospitality_Tavern</defName>
+    <durationDays>1.5</durationDays>
+    <stackLimit>3</stackLimit>
+    <stages>
+      <li>
+        <label>evening at the tavern</label>
+        <description>I spent an evening at the settlement's tavern, drinking and socializing with the locals.</description>
+        <baseMoodEffect>3</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>SettlementServiceEvent_Hospitality_ExtendedStay_ThreeNights</defName>
+    <durationDays>4</durationDays>
+    <stackLimit>1</stackLimit>
+    <stages>
+      <li>
+        <label>three-night stay</label>
+        <description>I got to enjoy a proper three-night stay at the settlement, rather than rushing through it in a single night.</description>
+        <baseMoodEffect>5</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>SettlementServiceEvent_Hospitality_ExtendedStay_OneWeek</defName>
+    <durationDays>7</durationDays>
+    <stackLimit>1</stackLimit>
+    <stages>
+      <li>
+        <label>one-week stay</label>
+        <description>I got to enjoy a full week at the settlement. It was exactly the break I needed.</description>
+        <baseMoodEffect>10</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+</Defs>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <SongDef>
+    <defName>SettlementServicesSoundtrack_Animal</defName>
+    <clipPath>SettlementServices/animal-tech-loop</clipPath>
+    <volume>0.7</volume>
+    <playOnMap>false</playOnMap>
+  </SongDef>
+
+  <SongDef>
+    <defName>SettlementServicesSoundtrack_Neolithic</defName>
+    <clipPath>SettlementServices/neolithic-tech-loop</clipPath>
+    <volume>0.7</volume>
+    <playOnMap>false</playOnMap>
+  </SongDef>
+
+  <SongDef>
+    <defName>SettlementServicesSoundtrack_Medieval</defName>
+    <clipPath>SettlementServices/medieval-tech-loop</clipPath>
+    <volume>0.7</volume>
+    <playOnMap>false</playOnMap>
+  </SongDef>
+
+  <SongDef>
+    <defName>SettlementServicesSoundtrack_Industrial</defName>
+    <clipPath>SettlementServices/industrial-tech-loop</clipPath>
+    <volume>0.7</volume>
+    <playOnMap>false</playOnMap>
+  </SongDef>
+
+  <SongDef>
+    <defName>SettlementServicesSoundtrack_Spacer</defName>
+    <clipPath>SettlementServices/spacer-tech-loop</clipPath>
+    <volume>0.7</volume>
+    <playOnMap>false</playOnMap>
+  </SongDef>
+
+  <SongDef>
+    <defName>SettlementServicesSoundtrack_Ultra</defName>
+    <clipPath>SettlementServices/ultra-tech-loop</clipPath>
+    <volume>0.7</volume>
+    <playOnMap>false</playOnMap>
+  </SongDef>
+
+  <SongDef>
+    <defName>SettlementServicesSoundtrack_Archotech</defName>
+    <clipPath>SettlementServices/archotech-tech-loop</clipPath>
+    <volume>0.7</volume>
+    <playOnMap>false</playOnMap>
+  </SongDef>
+
+</Defs>

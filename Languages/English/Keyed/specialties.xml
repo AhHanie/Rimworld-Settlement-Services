@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Header.NoFaction>independent settlement</SettlementServices.Header.NoFaction>
+    <SettlementServices.Header.FactionNameWithTechLevel>{0} ({1})</SettlementServices.Header.FactionNameWithTechLevel>
+    <SettlementServices.Header.SpecialtiesLabel>Specialties:</SettlementServices.Header.SpecialtiesLabel>
+    <SettlementServices.Header.NoSpecialties>no specialties</SettlementServices.Header.NoSpecialties>
+    <SettlementServices.Header.HiddenSpecialtyCount>+{0}</SettlementServices.Header.HiddenSpecialtyCount>
+    <SettlementServices.SpecialtyTooltip.ServicesUnlocked>Services unlocked</SettlementServices.SpecialtyTooltip.ServicesUnlocked>
+    <SettlementServices.SpecialtyTooltip.HospitalityPackagesUnlocked>Hospitality packages unlocked</SettlementServices.SpecialtyTooltip.HospitalityPackagesUnlocked>
+    <SettlementServices.SpecialtyTooltip.QualityModifier>Quality: {0}</SettlementServices.SpecialtyTooltip.QualityModifier>
+    <SettlementServices.SpecialtyTooltip.PriceModifier>Price: {0}</SettlementServices.SpecialtyTooltip.PriceModifier>
+    <SettlementServices.SpecialtyTooltip.DurationModifier>Duration: {0}</SettlementServices.SpecialtyTooltip.DurationModifier>
+    <SettlementServices.SpecialtyTooltip.StockCapacity>{0} capacity: {1}</SettlementServices.SpecialtyTooltip.StockCapacity>
+    <SettlementServices.SpecialtyTooltip.StockRefresh>{0} restock rate: {1}</SettlementServices.SpecialtyTooltip.StockRefresh>
+    <SettlementServices.SpecialtyEffect.IndustrialHubCraftingCeiling>Raises the settlement's crafting commission tech ceiling by one tech level.</SettlementServices.SpecialtyEffect.IndustrialHubCraftingCeiling>
+    <SettlementServices.SpecialtyEffect.WeaponsmithCraftingCeiling>Raises the settlement's weapon crafting commission tech ceiling by one tech level.</SettlementServices.SpecialtyEffect.WeaponsmithCraftingCeiling>
+</LanguageData>

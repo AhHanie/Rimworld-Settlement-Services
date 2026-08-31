@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+    <defName>SettlementSpecialty_MechanitorEnclave</defName>
+    <label>mechanitor enclave</label>
+    <description>This settlement is home to a community of mechanitors, offering mechanitor services no ordinary settlement can provide.</description>
+    <iconTexPath>SettlementServices/UI/Icons/mechanoid</iconTexPath>
+    <selectionWeight>0.6</selectionWeight>
+    <minTechLevel>Spacer</minTechLevel>
+    <modifiers>
+      <capabilityTags>
+        <li>MechanitorServices</li>
+      </capabilityTags>
+      <relevantCategoryDefNames>
+        <li>SettlementService_Technical</li>
+      </relevantCategoryDefNames>
+    </modifiers>
+  </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+
+  <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+    <defName>SettlementSpecialty_GeneticsLab</defName>
+    <label>genetics lab</label>
+    <description>This settlement operates a fully equipped gene bank, offering advanced genetic treatments no ordinary clinic can provide.</description>
+    <iconTexPath>SettlementServices/UI/Icons/genetics</iconTexPath>
+    <selectionWeight>0.5</selectionWeight>
+    <minTechLevel>Spacer</minTechLevel>
+    <modifiers>
+      <capabilityTags>
+        <li>AdvancedGenetics</li>
+      </capabilityTags>
+      <qualityOffset>0.15</qualityOffset>
+      <relevantCategoryDefNames>
+        <li>SettlementService_Medical</li>
+      </relevantCategoryDefNames>
+    </modifiers>
+    <stockModifiers>
+      <li>
+        <stockCategoryDefName>SettlementStock_Medicine</stockCategoryDefName>
+        <capacityMultiplier>1.5</capacityMultiplier>
+        <refreshRateMultiplier>1.3</refreshRateMultiplier>
+      </li>
+    </stockModifiers>
+    <disabled>true</disabled>
+  </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+
+</Defs>

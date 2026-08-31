@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Animal_ExperiencedVeterinarian</defName>
+    <disabled>true</disabled>
+    <label>experienced veterinarian</label>
+    <description>An experienced veterinarian happens to be on hand and speeds things along.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Animals</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <durationDeltaTicks>-15000</durationDeltaTicks>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Animal_DifficultPatient</defName>
+    <disabled>true</disabled>
+    <label>difficult patient</label>
+    <description>The animal is more skittish than expected, and handling it takes longer.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Animals</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <durationDeltaTicks>15000</durationDeltaTicks>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Animal_HiddenInjuryFound</defName>
+    <disabled>true</disabled>
+    <label>hidden injury found</label>
+    <description>The handler finds and treats a minor hidden injury at no extra charge.</description>
+    <weightClass>Discovery</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Animals</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <refundAmount>10</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Animal_FreeGrooming</defName>
+    <disabled>true</disabled>
+    <label>free grooming</label>
+    <description>The handler gives the bonded caretaker a few tips on grooming, at no extra charge.</description>
+    <weightClass>Social</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Animals</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <thoughtDefName>SettlementServiceEvent_PositiveExperience</thoughtDefName>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Animal_RareMedicineRequired</defName>
+    <disabled>true</disabled>
+    <label>rare medicine required</label>
+    <description>Treating the animal properly calls for a rarer medicine than usual, and takes longer to source.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Animals</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <durationDeltaTicks>10000</durationDeltaTicks>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Animal_CenterReferral</defName>
+    <disabled>true</disabled>
+    <label>animal center referral</label>
+    <description>The handler mentions another settlement with a better-equipped animal center.</description>
+    <weightClass>Discovery</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Animals</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <referralCategoryDefName>SettlementService_Animals</referralCategoryDefName>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+</Defs>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+    <defName>SettlementSpecialty_MedicalCenter</defName>
+    <label>medical center</label>
+    <description>This settlement maintains a well-equipped hospital and skilled medical staff, offering faster and higher-quality medical services with deeper reserves of medicine and prosthetics.</description>
+    <iconTexPath>SettlementServices/UI/Icons/hospital</iconTexPath>
+    <selectionWeight>1.0</selectionWeight>
+    <minTechLevel>Medieval</minTechLevel>
+    <modifiers>
+      <qualityOffset>0.15</qualityOffset>
+      <durationMultiplierOffset>-0.15</durationMultiplierOffset>
+      <relevantCategoryDefNames>
+        <li>SettlementService_Medical</li>
+      </relevantCategoryDefNames>
+    </modifiers>
+    <stockModifiers>
+      <li>
+        <stockCategoryDefName>SettlementStock_Medicine</stockCategoryDefName>
+        <capacityMultiplier>1.5</capacityMultiplier>
+        <refreshRateMultiplier>1.5</refreshRateMultiplier>
+      </li>
+      <li>
+        <stockCategoryDefName>SettlementStock_ProstheticsAndBionics</stockCategoryDefName>
+        <capacityMultiplier>2.0</capacityMultiplier>
+        <refreshRateMultiplier>1.5</refreshRateMultiplier>
+      </li>
+    </stockModifiers>
+  </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+
+  <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+    <defName>SettlementSpecialty_University</defName>
+    <label>university</label>
+    <description>This settlement hosts scholars and archives, unlocking advanced training and research services other settlements cannot offer.</description>
+    <iconTexPath>SettlementServices/UI/Icons/lab-research</iconTexPath>
+    <selectionWeight>1.0</selectionWeight>
+    <minTechLevel>Industrial</minTechLevel>
+    <modifiers>
+      <capabilityTags>
+        <li>Research</li>
+      </capabilityTags>
+      <qualityOffset>0.1</qualityOffset>
+      <relevantCategoryDefNames>
+        <li>SettlementService_Education</li>
+      </relevantCategoryDefNames>
+    </modifiers>
+  </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+
+  <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+    <defName>SettlementSpecialty_IndustrialHub</defName>
+    <label>industrial hub</label>
+    <description>This settlement runs heavy manufacturing and maintains deeper reserves of the materials and components its industry relies on.</description>
+    <iconTexPath>SettlementServices/UI/Icons/industry</iconTexPath>
+    <selectionWeight>1.0</selectionWeight>
+    <minTechLevel>Industrial</minTechLevel>
+    <modifiers>
+      <capabilityTags>
+        <li>EliteCrafting</li>
+      </capabilityTags>
+      <priceModifierPct>-0.1</priceModifierPct>
+      <relevantCategoryDefNames>
+        <li>SettlementService_Crafting</li>
+        <li>SettlementService_Technical</li>
+      </relevantCategoryDefNames>
+    </modifiers>
+    <tooltipEffectKeys>
+      <li>SettlementServices.SpecialtyEffect.IndustrialHubCraftingCeiling</li>
+    </tooltipEffectKeys>
+    <stockModifiers>
+      <li>
+        <stockCategoryDefName>SettlementStock_MetallicMaterials</stockCategoryDefName>
+        <capacityMultiplier>1.75</capacityMultiplier>
+        <refreshRateMultiplier>1.5</refreshRateMultiplier>
+      </li>
+      <li>
+        <stockCategoryDefName>SettlementStock_Components</stockCategoryDefName>
+        <capacityMultiplier>1.75</capacityMultiplier>
+        <refreshRateMultiplier>1.5</refreshRateMultiplier>
+      </li>
+      <li>
+        <stockCategoryDefName>SettlementStock_Chemfuel</stockCategoryDefName>
+        <capacityMultiplier>1.5</capacityMultiplier>
+        <refreshRateMultiplier>1.3</refreshRateMultiplier>
+      </li>
+      <li>
+        <stockCategoryDefName>SettlementStock_Textiles</stockCategoryDefName>
+        <capacityMultiplier>1.5</capacityMultiplier>
+        <refreshRateMultiplier>1.3</refreshRateMultiplier>
+      </li>
+      <li>
+        <stockCategoryDefName>SettlementStock_Leather</stockCategoryDefName>
+        <capacityMultiplier>1.5</capacityMultiplier>
+        <refreshRateMultiplier>1.3</refreshRateMultiplier>
+      </li>
+      <li>
+        <stockCategoryDefName>SettlementStock_Wood</stockCategoryDefName>
+        <capacityMultiplier>1.5</capacityMultiplier>
+        <refreshRateMultiplier>1.3</refreshRateMultiplier>
+      </li>
+    </stockModifiers>
+  </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+
+  <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+    <defName>SettlementSpecialty_Weaponsmith</defName>
+    <label>weaponsmith</label>
+    <description>This settlement is home to renowned weaponsmiths, able to take commissions for finer weapons than most settlements can produce.</description>
+    <iconTexPath>SettlementServices/UI/Icons/hammer</iconTexPath>
+    <selectionWeight>1.0</selectionWeight>
+    <minTechLevel>Medieval</minTechLevel>
+    <modifiers>
+      <capabilityTags>
+        <li>WeaponCommission</li>
+      </capabilityTags>
+      <qualityOffset>0.1</qualityOffset>
+      <priceModifierPct>-0.05</priceModifierPct>
+      <relevantCategoryDefNames>
+        <li>SettlementService_Crafting</li>
+      </relevantCategoryDefNames>
+    </modifiers>
+    <tooltipEffectKeys>
+      <li>SettlementServices.SpecialtyEffect.WeaponsmithCraftingCeiling</li>
+    </tooltipEffectKeys>
+  </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+
+  <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+    <defName>SettlementSpecialty_AnimalCenter</defName>
+    <label>animal center</label>
+    <description>This settlement keeps skilled handlers and well-tended pens, offering faster and higher-quality animal services.</description>
+    <iconTexPath>SettlementServices/UI/Icons/animal-dog</iconTexPath>
+    <selectionWeight>1.2</selectionWeight>
+    <minTechLevel>Neolithic</minTechLevel>
+    <modifiers>
+      <capabilityTags>
+        <li>AnimalHandling</li>
+      </capabilityTags>
+      <durationMultiplierOffset>-0.1</durationMultiplierOffset>
+      <relevantCategoryDefNames>
+        <li>SettlementService_Animals</li>
+      </relevantCategoryDefNames>
+    </modifiers>
+  </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+
+  <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+    <defName>SettlementSpecialty_Resort</defName>
+    <label>resort</label>
+    <description>This settlement is a popular destination for rest and recreation, offering cheaper and faster hospitality services.</description>
+    <iconTexPath>SettlementServices/UI/Icons/resort</iconTexPath>
+    <selectionWeight>1.2</selectionWeight>
+    <minTechLevel>Neolithic</minTechLevel>
+    <modifiers>
+      <capabilityTags>
+        <li>Hospitality</li>
+      </capabilityTags>
+      <priceModifierPct>0.1</priceModifierPct>
+      <relevantCategoryDefNames>
+        <li>SettlementService_Hospitality</li>
+      </relevantCategoryDefNames>
+    </modifiers>
+  </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+
+  <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+    <defName>SettlementSpecialty_LaborMarket</defName>
+    <label>labor market</label>
+    <description>This settlement has a pool of independent workers willing to take short-term contracts elsewhere.</description>
+    <iconTexPath>SettlementServices/UI/Icons/worker</iconTexPath>
+    <selectionWeight>1.0</selectionWeight>
+    <minTechLevel>Neolithic</minTechLevel>
+    <modifiers>
+      <capabilityTags>
+        <li>ContractorServices</li>
+      </capabilityTags>
+      <relevantCategoryDefNames>
+        <li>SettlementService_Logistics</li>
+      </relevantCategoryDefNames>
+    </modifiers>
+    <disabled>true</disabled>
+  </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+
+</Defs>

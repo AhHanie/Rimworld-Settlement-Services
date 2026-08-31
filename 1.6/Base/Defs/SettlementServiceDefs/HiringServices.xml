@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_TemporaryHiring</defName>
+    <category>SettlementService_Logistics</category>
+    <label>temporary hiring</label>
+    <description>Hire a settlement contractor on a fixed-term contract. They will join your caravan or travel to your home base and work there until the contract ends, then leave automatically.</description>
+    <workerClass>Settlement_Services.Services.Hiring.HiringServiceWorker</workerClass>
+    <requiredCapabilityTags>
+      <li>ContractorServices</li>
+    </requiredCapabilityTags>
+    <minimumCost>150</minimumCost>
+    <wealthScale>0.001</wealthScale>
+    <duration>0</duration>    <!-- negotiation and handoff are instant; contract length is tracked on the hired pawn itself -->
+    <targetRule>None</targetRule>
+    <priorityTiers>
+      <li>
+        <key>Short</key>
+        <label>Short-term (about 3 days)</label>
+        <durationMultiplier>0.6</durationMultiplier>
+      </li>
+      <li>
+        <key>Standard</key>
+        <label>Standard (about 5 days)</label>
+        <durationMultiplier>1.0</durationMultiplier>
+      </li>
+      <li>
+        <key>Long</key>
+        <label>Long-term (about 9 days)</label>
+        <durationMultiplier>1.8</durationMultiplier>
+        <costSurchargePct>0.2</costSurchargePct>
+        <minimumGoodwill>20</minimumGoodwill>
+      </li>
+    </priorityTiers>
+    <disabled>true</disabled>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Error.MechNeedsNoRepairs>This mech needs no repairs.</SettlementServices.Error.MechNeedsNoRepairs>
+    <SettlementServices.Error.MechEnergyAlreadyFull>This mech's energy cell is already full.</SettlementServices.Error.MechEnergyAlreadyFull>
+</LanguageData>

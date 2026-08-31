@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hospitality_RoomUpgrade</defName>
+    <disabled>true</disabled>
+    <label>room upgrade</label>
+    <description>The innkeeper bumps your party up to a better room at no extra charge.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Hospitality</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <refundAmount>10</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hospitality_ExcellentMeal</defName>
+    <disabled>true</disabled>
+    <label>excellent meal</label>
+    <description>The kitchen sends out a genuinely excellent meal.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Hospitality</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <thoughtDefName>SettlementServiceEvent_PositiveExperience</thoughtDefName>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hospitality_PoorMeal</defName>
+    <disabled>true</disabled>
+    <label>poor meal</label>
+    <description>The kitchen has an off night, and the meal shows it.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.4</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Hospitality</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <thoughtDefName>SettlementServiceEvent_NegativeExperience</thoughtDefName>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hospitality_LocalCuisine</defName>
+    <disabled>true</disabled>
+    <label>local cuisine</label>
+    <description>Your colonist gets introduced to a local dish they wouldn't have tried otherwise.</description>
+    <weightClass>Social</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Hospitality</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <thoughtDefName>SettlementServiceEvent_PositiveExperience</thoughtDefName>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hospitality_OverbookedInn</defName>
+    <disabled>true</disabled>
+    <label>overbooked inn</label>
+    <description>The inn is more overbooked than expected, and your stay takes a little longer to sort out.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Hospitality</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <durationDeltaTicks>10000</durationDeltaTicks>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hospitality_LongStayDiscount</defName>
+    <disabled>true</disabled>
+    <label>long-stay discount</label>
+    <description>The innkeeper offers a small discount for your continued patronage.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Hospitality</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <refundAmount>10</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hospitality_InvitationBack</defName>
+    <disabled>true</disabled>
+    <label>invitation back</label>
+    <description>The settlement extends a genuine invitation to visit again.</description>
+    <weightClass>Social</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Hospitality</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <goodwillDelta>1</goodwillDelta>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hospitality_SilverWindfall</defName>
+    <disabled>true</disabled>
+    <label>silver windfall</label>
+    <description>A friendly local insists on paying your pawn back for a small favor.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.5</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Hospitality</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <refundAmount>15</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hospitality_MinorInjury</defName>
+    <disabled>true</disabled>
+    <label>minor mishap</label>
+    <description>A pawn slightly injures themselves during their stay.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.3</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Hospitality</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <hediffDefName>Bruise</hediffDefName>
+      <hediffSeverity>0.05</hediffSeverity>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+</Defs>

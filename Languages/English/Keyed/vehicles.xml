@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Error.VehicleHasNoFuelTank>This vehicle has no fuel tank.</SettlementServices.Error.VehicleHasNoFuelTank>
+    <SettlementServices.Error.VehicleFuelNotStocked>This vehicle's fuel type isn't stocked by any settlement.</SettlementServices.Error.VehicleFuelNotStocked>
+    <SettlementServices.Error.VehicleFuelAlreadyFull>This vehicle's tank is already full.</SettlementServices.Error.VehicleFuelAlreadyFull>
+    <SettlementServices.Error.VehicleNeedsNoRepairs>This vehicle needs no repairs.</SettlementServices.Error.VehicleNeedsNoRepairs>
+    <SettlementServices.Error.NoVehicleUpgradesAvailable>No upgrades are currently available for this vehicle.</SettlementServices.Error.NoVehicleUpgradesAvailable>
+    <SettlementServices.Error.VehicleUpgradeNoLongerAvailable>The selected upgrade is no longer available for this vehicle.</SettlementServices.Error.VehicleUpgradeNoLongerAvailable>
+    <SettlementServices.LineItem.VehicleFuelTopUp>fuel</SettlementServices.LineItem.VehicleFuelTopUp>
+    <SettlementServices.LineItem.VehicleUpgradeMaterials>upgrade materials</SettlementServices.LineItem.VehicleUpgradeMaterials>
+    <SettlementServices.Label.VehicleUpgradeChoice>upgrade</SettlementServices.Label.VehicleUpgradeChoice>
+</LanguageData>

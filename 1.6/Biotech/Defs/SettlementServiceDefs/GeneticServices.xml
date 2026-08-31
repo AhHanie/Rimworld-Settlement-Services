@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_GeneImplantation</defName>
+    <category>SettlementService_Medical</category>
+    <label>gene implantation</label>
+    <description>Implant a xenogerm you already carry into a colonist, prisoner, or slave. The settlement provides the surgical facility and consumables; you supply the genes.</description>
+    <workerClass>Settlement_Services.Services.Genetics.GeneImplantationServiceWorker</workerClass>
+    <requiredTechLevel>Spacer</requiredTechLevel>
+    <requiredCapabilityTags>
+      <li>AdvancedGenetics</li>
+    </requiredCapabilityTags>
+    <minimumGoodwill>40</minimumGoodwill>
+    <minimumCost>200</minimumCost>
+    <wealthScale>0.004</wealthScale>
+    <duration>60000</duration>    <!-- 1 day -->
+    <targetRule>Pawn</targetRule>
+    <stockRequirements>
+      <li>
+        <stockCategoryDefName>SettlementStock_Medicine</stockCategoryDefName>
+        <amount>3</amount>
+      </li>
+    </stockRequirements>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+    <disabled>true</disabled>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_GeneticAugmentation</defName>
+    <category>SettlementService_Medical</category>
+    <label>genetic augmentation</label>
+    <description>Choose from the settlement's own catalog of xenotypes and have its genetics lab implant a freshly assembled xenogerm on the spot. No xenogerm of your own required.</description>
+    <workerClass>Settlement_Services.Services.Genetics.GeneticAugmentationServiceWorker</workerClass>
+    <requiredTechLevel>Spacer</requiredTechLevel>
+    <requiredCapabilityTags>
+      <li>AdvancedGenetics</li>
+    </requiredCapabilityTags>
+    <minimumGoodwill>40</minimumGoodwill>
+    <minimumCost>350</minimumCost>
+    <wealthScale>0.005</wealthScale>
+    <duration>90000</duration>    <!-- 1.5 days -->
+    <targetRule>Pawn</targetRule>
+    <batchMode>Targets</batchMode>
+    <stockRequirements>
+      <li>
+        <stockCategoryDefName>SettlementStock_Medicine</stockCategoryDefName>
+        <amount>4</amount>
+      </li>
+    </stockRequirements>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+    <disabled>true</disabled>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_GeneExtraction</defName>
+    <category>SettlementService_Medical</category>
+    <label>gene extraction</label>
+    <description>Have a copy of a colonist's, prisoner's, or slave's genes drawn off into a genepack you keep. The donor's own non-archite genes are temporarily suppressed while they regrow.</description>
+    <workerClass>Settlement_Services.Services.Genetics.GeneExtractionServiceWorker</workerClass>
+    <requiredTechLevel>Spacer</requiredTechLevel>
+    <requiredCapabilityTags>
+      <li>AdvancedGenetics</li>
+    </requiredCapabilityTags>
+    <minimumGoodwill>40</minimumGoodwill>
+    <minimumCost>150</minimumCost>
+    <wealthScale>0.003</wealthScale>
+    <duration>30000</duration>    <!-- half a day -->
+    <targetRule>Pawn</targetRule>
+    <batchMode>Targets</batchMode>
+    <stockRequirements>
+      <li>
+        <stockCategoryDefName>SettlementStock_Medicine</stockCategoryDefName>
+        <amount>2</amount>
+      </li>
+    </stockRequirements>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+    <disabled>true</disabled>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

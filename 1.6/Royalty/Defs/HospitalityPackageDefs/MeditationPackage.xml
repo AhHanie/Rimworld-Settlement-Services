@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Services.Hospitality.HospitalityPackageDef>
+    <defName>HospitalityPackage_Meditation</defName>
+    <label>meditation retreat</label>
+    <description>A quiet retreat offered by settlements with the right cultural or psychic traditions. Provides a mood benefit and a little extra focus.</description>
+    <minimumCost>25</minimumCost>
+    <wealthScale>0.01</wealthScale>
+    <restoredNeedDefNames>
+      <li>Joy</li>
+      <li>Psyfocus</li>
+    </restoredNeedDefNames>
+    <thoughtDefName>SettlementServiceEvent_Hospitality_Meditation</thoughtDefName>
+    <requiredCapabilityTags>
+      <li>Hospitality</li>
+    </requiredCapabilityTags>
+  </Settlement_Services.Services.Hospitality.HospitalityPackageDef>
+
+</Defs>

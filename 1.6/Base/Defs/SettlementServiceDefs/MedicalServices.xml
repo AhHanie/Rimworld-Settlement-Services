@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_UrgentStabilization</defName>
+    <category>SettlementService_Medical</category>
+    <label>urgent stabilization</label>
+    <description>Emergency care to stop immediate death risk. Not a cure: the underlying injury remains, but the patient is safe to travel again.</description>
+    <workerClass>Settlement_Services.Services.Medical.UrgentStabilizationServiceWorker</workerClass>
+    <requiredTechLevel>Neolithic</requiredTechLevel>
+    <minimumCost>40</minimumCost>
+    <wealthScale>0.02</wealthScale>
+    <duration>7500</duration>
+    <targetRule>Pawn</targetRule>
+    <batchMode>Targets</batchMode>
+    <iconTexPath>SettlementServices/UI/Icons/ambulance</iconTexPath>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_UrgentVeterinaryStabilization</defName>
+    <category>SettlementService_Animals</category>
+    <label>urgent veterinary stabilization</label>
+    <description>Emergency care to stop an animal's immediate death risk. Not a cure: the underlying injury remains, but the animal is safe to travel again.</description>
+    <workerClass>Settlement_Services.Services.Medical.UrgentStabilizationServiceWorker</workerClass>
+    <requiredTechLevel>Neolithic</requiredTechLevel>
+    <minimumCost>30</minimumCost>
+    <wealthScale>0.01</wealthScale>
+    <duration>5000</duration>
+    <targetRule>Animal</targetRule>
+    <batchMode>Targets</batchMode>
+    <iconTexPath>SettlementServices/UI/Icons/ambulance</iconTexPath>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_ExtendedTreatment</defName>
+    <category>SettlementService_Medical</category>
+    <label>extended treatment</label>
+    <description>A five-day treatment plan that automatically cures every ordinary injury and curable disease and tends every condition that can only be managed, not cured. Long-term rehabilitation takes longer but also cures addictions. The patient stays with the settlement's medical staff for the duration and is returned once care is complete.</description>
+    <workerClass>Settlement_Services.Services.Medical.ExtendedTreatmentServiceWorker</workerClass>
+    <requiredTechLevel>Medieval</requiredTechLevel>
+    <minimumCost>60</minimumCost>
+    <wealthScale>0.03</wealthScale>
+    <duration>300000</duration>    <!-- 5 days -->
+    <targetRule>Pawn</targetRule>
+    <batchMode>Targets</batchMode>
+    <priorityTiers>
+      <li>
+        <key>Priority</key>
+        <label>Priority care</label>
+        <durationMultiplier>0.6</durationMultiplier>
+        <costSurchargePct>0.5</costSurchargePct>
+        <minimumGoodwill>60</minimumGoodwill>
+      </li>
+      <li>
+        <key>Rehabilitation</key>
+        <label>Long-term rehabilitation</label>
+        <durationMultiplier>2.0</durationMultiplier>
+        <costSurchargePct>0.5</costSurchargePct>
+      </li>
+    </priorityTiers>
+    <iconTexPath>SettlementServices/UI/Icons/doctor</iconTexPath>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_ExtendedVeterinaryTreatment</defName>
+    <category>SettlementService_Animals</category>
+    <label>extended veterinary treatment</label>
+    <description>A five-day treatment plan that automatically cures every ordinary injury and curable disease and tends every condition that can only be managed, not cured. Long-term rehabilitation takes longer but also cures addictions. The animal stays with the settlement's handlers for the duration and is returned once care is complete.</description>
+    <workerClass>Settlement_Services.Services.Medical.ExtendedTreatmentServiceWorker</workerClass>
+    <requiredTechLevel>Medieval</requiredTechLevel>
+    <minimumCost>45</minimumCost>
+    <wealthScale>0.02</wealthScale>
+    <duration>300000</duration>    <!-- 5 days -->
+    <targetRule>Animal</targetRule>
+    <batchMode>Targets</batchMode>
+    <priorityTiers>
+      <li>
+        <key>Priority</key>
+        <label>Priority care</label>
+        <durationMultiplier>0.6</durationMultiplier>
+        <costSurchargePct>0.5</costSurchargePct>
+        <minimumGoodwill>60</minimumGoodwill>
+      </li>
+      <li>
+        <key>Rehabilitation</key>
+        <label>Long-term rehabilitation</label>
+        <durationMultiplier>2.0</durationMultiplier>
+        <costSurchargePct>0.5</costSurchargePct>
+      </li>
+    </priorityTiers>
+    <iconTexPath>SettlementServices/UI/Icons/doctor</iconTexPath>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_Surgery</defName>
+    <category>SettlementService_Medical</category>
+    <label>surgery</label>
+    <description>Install a prosthetic or bionic body part. Lists only implants and body parts compatible with the patient; medicine and the implant itself are consumed from settlement stock or the caravan's own supply. A caravan may also bring a compatible listed part itself: assigned as a supplied material, it is not billed as an implant, and only the operation charge remains.</description>
+    <workerClass>Settlement_Services.Services.Medical.SurgeryServiceWorker</workerClass>
+    <requiredTechLevel>Industrial</requiredTechLevel>
+    <minimumCost>150</minimumCost>
+    <wealthScale>0.03</wealthScale>
+    <duration>120000</duration>    <!-- 2 days -->
+    <targetRule>Pawn</targetRule>
+    <batchMode>Targets</batchMode>
+    <stockRequirements>
+      <li>
+        <stockCategoryDefName>SettlementStock_Medicine</stockCategoryDefName>
+        <amount>2</amount>
+      </li>
+    </stockRequirements>
+    <iconTexPath>SettlementServices/UI/Icons/surgery</iconTexPath>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_VeterinarySurgery</defName>
+    <category>SettlementService_Animals</category>
+    <label>veterinary surgery</label>
+    <description>Install a prosthetic or bionic body part on an animal. Lists only implants and body parts compatible with the patient; medicine and the implant itself are consumed from settlement stock or the caravan's own supply. A caravan may also bring a compatible listed part itself: assigned as a supplied material, it is not billed as an implant, and only the operation charge remains.</description>
+    <workerClass>Settlement_Services.Services.Medical.SurgeryServiceWorker</workerClass>
+    <requiredTechLevel>Industrial</requiredTechLevel>
+    <requiredCapabilityTags>
+      <li>AnimalHandling</li>
+    </requiredCapabilityTags>
+    <minimumCost>130</minimumCost>
+    <wealthScale>0.03</wealthScale>
+    <duration>120000</duration>
+    <targetRule>Animal</targetRule>
+    <batchMode>Targets</batchMode>
+    <stockRequirements>
+      <li>
+        <stockCategoryDefName>SettlementStock_Medicine</stockCategoryDefName>
+        <amount>2</amount>
+      </li>
+    </stockRequirements>
+    <iconTexPath>SettlementServices/UI/Icons/surgery</iconTexPath>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

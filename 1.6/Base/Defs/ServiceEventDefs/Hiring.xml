@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hiring_ExceptionalCandidate</defName>
+    <disabled>true</disabled>
+    <label>exceptional candidate</label>
+    <description>An unusually capable candidate is available, and offers a lower rate to secure the work.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Logistics</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <refundAmount>10</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hiring_CheapCandidate</defName>
+    <disabled>true</disabled>
+    <label>cheap candidate</label>
+    <description>A candidate looking for quick work undercuts the going rate.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Logistics</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <refundAmount>10</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hiring_ExpensiveExpert</defName>
+    <disabled>true</disabled>
+    <label>expensive expert</label>
+    <description>A well-known expert is the only one available right now, and everyone knows it.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>0.4</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Logistics</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <refundAmount>0</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hiring_ContractDiscount</defName>
+    <disabled>true</disabled>
+    <label>contract discount</label>
+    <description>The settlement offers a small discount to keep their people working.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Logistics</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <refundAmount>10</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hiring_GoodReputation</defName>
+    <disabled>true</disabled>
+    <label>good reputation</label>
+    <description>The contractor speaks well of you afterward, and it gets around the settlement.</description>
+    <weightClass>Social</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Logistics</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <goodwillDelta>1</goodwillDelta>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hiring_LastMinuteAvailability</defName>
+    <disabled>true</disabled>
+    <label>last-minute availability</label>
+    <description>A better contractor just became available. Bring them on now, or keep the original arrangement.</description>
+    <weightClass>Opportunity</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>0.4</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Logistics</li>
+    </eligibleCategoryDefNames>
+    <choices>
+      <li>
+        <labelKey>SettlementServices.EventChoice.AcceptBetterContractor</labelKey>
+        <effects>
+          <durationDeltaTicks>-10000</durationDeltaTicks>
+        </effects>
+      </li>
+      <li>
+        <labelKey>SettlementServices.EventChoice.KeepOriginalContractor</labelKey>
+        <effects>
+          <refundAmount>0</refundAmount>
+        </effects>
+      </li>
+    </choices>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hiring_FormerContractorReturns</defName>
+    <disabled>true</disabled>
+    <label>former contractor returns</label>
+    <description>A contractor your colonist worked with before recognizes them and catches up.</description>
+    <weightClass>Social</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Logistics</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <thoughtDefName>SettlementServiceEvent_PositiveExperience</thoughtDefName>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hiring_Referral</defName>
+    <disabled>true</disabled>
+    <label>referral</label>
+    <description>The contractor mentions another settlement worth hiring from.</description>
+    <weightClass>Discovery</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Logistics</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <referralCategoryDefName>SettlementService_Logistics</referralCategoryDefName>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+</Defs>

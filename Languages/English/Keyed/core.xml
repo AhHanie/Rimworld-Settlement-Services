@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.LoadingLabel>Settlement Services Loading</SettlementServices.LoadingLabel>
+    <SettlementServices.SettingsTitle>Settlement Services</SettlementServices.SettingsTitle>
+    <SettlementServices.Error.ServiceNoLongerExists>This service no longer exists (its mod may have been removed).</SettlementServices.Error.ServiceNoLongerExists>
+    <SettlementServices.Error.TargetNoLongerExists>The target of this service no longer exists.</SettlementServices.Error.TargetNoLongerExists>
+    <SettlementServices.Error.SettlementNoLongerExists>The settlement offering this service no longer exists.</SettlementServices.Error.SettlementNoLongerExists>
+    <SettlementServices.Error.InsufficientCaravanSilver>Your caravan does not have enough silver.</SettlementServices.Error.InsufficientCaravanSilver>
+    <SettlementServices.Error.InsufficientHomeSilver>Your colony does not have enough stored silver.</SettlementServices.Error.InsufficientHomeSilver>
+    <SettlementServices.Error.TechLevelTooLow>This settlement's tech level is too low to offer this service.</SettlementServices.Error.TechLevelTooLow>
+    <SettlementServices.Error.InsufficientGoodwill>Your goodwill with this settlement is too low for this service.</SettlementServices.Error.InsufficientGoodwill>
+    <SettlementServices.Error.InsufficientStock>This settlement does not currently have enough supplies for this service.</SettlementServices.Error.InsufficientStock>
+    <SettlementServices.Error.FactionHostile>This faction is hostile to you.</SettlementServices.Error.FactionHostile>
+    <SettlementServices.Error.FactionTypeNotEligible>This settlement's faction cannot offer this service.</SettlementServices.Error.FactionTypeNotEligible>
+    <SettlementServices.Error.SpecialtyRequired>This settlement lacks the specialty required for this service.</SettlementServices.Error.SpecialtyRequired>
+    <SettlementServices.Error.InvalidTarget>This service does not accept the selected target.</SettlementServices.Error.InvalidTarget>
+    <SettlementServices.Error.RemoteNotSupported>This service cannot be requested remotely.</SettlementServices.Error.RemoteNotSupported>
+    <SettlementServices.Error.RemoteRequiresIndustrialSettlement>This settlement is not advanced enough for remote contact.</SettlementServices.Error.RemoteRequiresIndustrialSettlement>
+    <SettlementServices.Error.RemoteRequiresCommsConsole>You need a powered comms console to make this request.</SettlementServices.Error.RemoteRequiresCommsConsole>
+    <SettlementServices.Error.NoContactableSettlements>No Industrial-or-higher settlement can currently be reached.</SettlementServices.Error.NoContactableSettlements>
+    <SettlementServices.Error.RemoteRequiresPhysicalPresence>This service requires a physical caravan visit.</SettlementServices.Error.RemoteRequiresPhysicalPresence>
+    <SettlementServices.Error.PriorityTierRequiresHigherGoodwill>Your goodwill with this settlement is too low for this priority tier.</SettlementServices.Error.PriorityTierRequiresHigherGoodwill>
+    <SettlementServices.Error.CaravanNoLongerExists>The requesting caravan no longer exists.</SettlementServices.Error.CaravanNoLongerExists>
+    <SettlementServices.Error.InsufficientPlayerSuppliedInput>Your caravan no longer carries the required materials.</SettlementServices.Error.InsufficientPlayerSuppliedInput>
+    <SettlementServices.Error.TargetNotInCaravan>The target is no longer with your caravan.</SettlementServices.Error.TargetNotInCaravan>
+    <SettlementServices.Error.TargetAlreadyInUse>This target is already committed to another service.</SettlementServices.Error.TargetAlreadyInUse>
+    <SettlementServices.Error.CancelledByPlayer>Cancelled.</SettlementServices.Error.CancelledByPlayer>
+    <SettlementServices.Error.BatchNotSupported>This service does not support multiple targets at once.</SettlementServices.Error.BatchNotSupported>
+    <SettlementServices.Error.NoTargetSelected>Select a target first.</SettlementServices.Error.NoTargetSelected>
+    <SettlementServices.Error.BatchCountExceedsMaximum>Too many at once; this service has a lower maximum.</SettlementServices.Error.BatchCountExceedsMaximum>
+    <SettlementServices.Error.DuplicateTarget>The same target was selected more than once.</SettlementServices.Error.DuplicateTarget>
+    <SettlementServices.Error.InvalidQuantity>The requested quantity is not valid.</SettlementServices.Error.InvalidQuantity>
+    <SettlementServices.LineItem.SpecialtyModifier>Settlement specialty</SettlementServices.LineItem.SpecialtyModifier>
+    <SettlementServices.LineItem.ReputationModifier>faction relations</SettlementServices.LineItem.ReputationModifier>
+    <SettlementServices.LineItem.PriorityTier>Priority surcharge</SettlementServices.LineItem.PriorityTier>
+    <SettlementServices.LineItem.InvestmentDiscount>settlement investment</SettlementServices.LineItem.InvestmentDiscount>
+    <SettlementServices.Letter.ReadyForCollectionLabel>Service complete</SettlementServices.Letter.ReadyForCollectionLabel>
+    <SettlementServices.Letter.ReadyForCollectionText>A service at a settlement has finished. Send a caravan to collect the result.</SettlementServices.Letter.ReadyForCollectionText>
+    <SettlementServices.Letter.InterruptedLabel>Service interrupted</SettlementServices.Letter.InterruptedLabel>
+    <SettlementServices.Letter.InterruptedText>A service at a settlement was interrupted before finishing. You have been refunded; send a caravan to collect what was left behind.</SettlementServices.Letter.InterruptedText>
+    <SettlementServices.Letter.FailedLabel>Service failed</SettlementServices.Letter.FailedLabel>
+    <SettlementServices.Letter.FailedText>A settlement service could not be completed and you have been refunded.</SettlementServices.Letter.FailedText>
+    <SettlementServices.Message.Completed>A settlement service has finished.</SettlementServices.Message.Completed>
+    <SettlementServices.Message.DeliveredHome>A settlement that was holding your property no longer exists; it has been delivered to your colony instead.</SettlementServices.Message.DeliveredHome>
+    <SettlementServices.Message.ShuttleMergeSkipped>A returning pawn's caravan was not merged with another waiting shuttle caravan at the settlement, to avoid losing a passenger shuttle. Merge them manually if desired.</SettlementServices.Message.ShuttleMergeSkipped>
+    <SettlementServices.Status.Drafted>drafted</SettlementServices.Status.Drafted>
+    <SettlementServices.Status.Quoted>quoted</SettlementServices.Status.Quoted>
+    <SettlementServices.Status.Reserved>reserved</SettlementServices.Status.Reserved>
+    <SettlementServices.Status.Active>active</SettlementServices.Status.Active>
+    <SettlementServices.Status.AwaitingCollection>awaiting collection</SettlementServices.Status.AwaitingCollection>
+    <SettlementServices.Status.Completed>completed</SettlementServices.Status.Completed>
+    <SettlementServices.Status.Collected>collected</SettlementServices.Status.Collected>
+    <SettlementServices.Status.Cancelled>cancelled</SettlementServices.Status.Cancelled>
+    <SettlementServices.Status.Failed>failed</SettlementServices.Status.Failed>
+</LanguageData>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Crafting_ExceptionalQuality</defName>
+    <disabled>true</disabled>
+    <label>exceptional quality</label>
+    <description>The crafter takes particular pride in this commission and produces exceptional work.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Crafting</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <qualityOffset>1</qualityOffset>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Crafting_PoorMaterialBatch</defName>
+    <disabled>true</disabled>
+    <label>poor material batch</label>
+    <description>A batch of raw materials turns out to be poor quality, slowing the work down.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Crafting</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <durationDeltaTicks>15000</durationDeltaTicks>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Crafting_EarlyCompletion</defName>
+    <disabled>true</disabled>
+    <label>early completion</label>
+    <description>The commission comes together faster than expected.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Crafting</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <durationDeltaTicks>-15000</durationDeltaTicks>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Crafting_WorkshopDelay</defName>
+    <disabled>true</disabled>
+    <label>workshop delay</label>
+    <description>The workshop is tied up with other commissions ahead of yours.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Crafting</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <durationDeltaTicks>15000</durationDeltaTicks>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Crafting_BulkOrderDiscount</defName>
+    <disabled>true</disabled>
+    <label>bulk order discount</label>
+    <description>The workshop offers a discount for keeping their crafters busy.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Crafting</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <refundAmount>15</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Crafting_RareMaterialAvailable</defName>
+    <disabled>true</disabled>
+    <label>rare material available</label>
+    <description>The workshop happens to have a batch of unusually good material on hand.</description>
+    <weightClass>Discovery</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Crafting</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <refundAmount>10</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Crafting_CommissionShowcase</defName>
+    <disabled>true</disabled>
+    <label>commission showcase</label>
+    <description>The finished commission gets showcased around the settlement, and word spreads about your patronage.</description>
+    <weightClass>Social</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Crafting</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <goodwillDelta>1</goodwillDelta>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Crafting_MasterCrafterAvailable</defName>
+    <disabled>true</disabled>
+    <label>master crafter available</label>
+    <description>A master crafter offers to personally take on the commission, for a price. Pay for the upgrade, or stick with the original crafter.</description>
+    <weightClass>Opportunity</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>0.4</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Crafting</li>
+    </eligibleCategoryDefNames>
+    <choices>
+      <li>
+        <labelKey>SettlementServices.EventChoice.PayForUpgrade</labelKey>
+        <effects>
+          <qualityOffset>1</qualityOffset>
+        </effects>
+      </li>
+      <li>
+        <labelKey>SettlementServices.EventChoice.DeclineUpgrade</labelKey>
+        <effects>
+          <refundAmount>0</refundAmount>
+        </effects>
+      </li>
+    </choices>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+</Defs>

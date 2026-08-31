@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+    <name>Settlement Services</name>
+    <author>Sk</author>
+    <packageId>sk.settlementservices</packageId>
+    <supportedVersions>
+        <li>1.6</li>
+    </supportedVersions>
+    <description>Turns faction settlements into places that offer paid services instead of only trade and combat. Request medical care, training, hospitality, crafting commissions, and more; prices scale with your colony's wealth and the game's difficulty, and what's on offer depends on a settlement's faction, technology, and specialties.</description>
+    <modVersion>1.0.0</modVersion>
+    <url>https://steamcommunity.com/sharedfiles/filedetails/?id=3793497508</url>
+    <modDependencies>
+        <li>
+            <packageId>brrainz.harmony</packageId>
+            <displayName>Harmony</displayName>
+            <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+            <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+        </li>
+    </modDependencies>
+</ModMetaData>

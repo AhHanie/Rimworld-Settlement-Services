@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Generic_RepeatCustomer</defName>
+    <disabled>true</disabled>
+    <label>repeat customer</label>
+    <description>The provider recognizes you as a returning customer and knocks a little off the price.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <appliesToAllCategories>true</appliesToAllCategories>
+    <effects>
+      <refundAmount>10</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Generic_QuietDay</defName>
+    <disabled>true</disabled>
+    <label>quiet day</label>
+    <description>The settlement has spare capacity and completes the service faster.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <appliesToAllCategories>true</appliesToAllCategories>
+    <effects>
+      <durationDeltaTicks>-15000</durationDeltaTicks>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Generic_BusySeason</defName>
+    <disabled>true</disabled>
+    <label>busy season</label>
+    <description>The settlement is busier than expected, and your service is taking longer to get to.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <appliesToAllCategories>true</appliesToAllCategories>
+    <effects>
+      <durationDeltaTicks>15000</durationDeltaTicks>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Generic_WordOfMouth</defName>
+    <disabled>true</disabled>
+    <label>word of mouth</label>
+    <description>Word spreads that you're a good customer to have around, and the settlement warms to you slightly.</description>
+    <weightClass>Social</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <appliesToAllCategories>true</appliesToAllCategories>
+    <effects>
+      <goodwillDelta>1</goodwillDelta>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Generic_BadImpression</defName>
+    <disabled>true</disabled>
+    <label>bad impression</label>
+    <description>Something about the exchange rubs the settlement the wrong way.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.4</selectionWeight>
+    <appliesToAllCategories>true</appliesToAllCategories>
+    <effects>
+      <goodwillDelta>-1</goodwillDelta>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Generic_ComplimentaryService</defName>
+    <disabled>true</disabled>
+    <label>complimentary service</label>
+    <description>The settlement throws in a little extra at no charge, as a courtesy.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <appliesToAllCategories>true</appliesToAllCategories>
+    <effects>
+      <refundAmount>15</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Generic_UnexpectedOpening</defName>
+    <disabled>true</disabled>
+    <label>unexpected opening</label>
+    <description>A higher-tier appointment opened up at the last minute. Take it for a better outcome at extra cost, or stick with what you already agreed to.</description>
+    <weightClass>Opportunity</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>0.4</selectionWeight>
+    <appliesToAllCategories>true</appliesToAllCategories>
+    <choices>
+      <li>
+        <labelKey>SettlementServices.EventChoice.TakeTheOpening</labelKey>
+        <effects>
+          <durationDeltaTicks>-10000</durationDeltaTicks>
+          <goodwillDelta>1</goodwillDelta>
+        </effects>
+      </li>
+      <li>
+        <labelKey>SettlementServices.EventChoice.KeepOriginalPlan</labelKey>
+        <effects>
+          <refundAmount>0</refundAmount>
+        </effects>
+      </li>
+    </choices>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Generic_SpecialistUnavailable</defName>
+    <disabled>true</disabled>
+    <label>specialist unavailable</label>
+    <description>The specialist you were counting on is unavailable. Wait for them, or accept whoever is on hand at a discount.</description>
+    <weightClass>Opportunity</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>0.4</selectionWeight>
+    <appliesToAllCategories>true</appliesToAllCategories>
+    <choices>
+      <li>
+        <labelKey>SettlementServices.EventChoice.KeepOriginalPlan</labelKey>
+        <effects>
+          <durationDeltaTicks>10000</durationDeltaTicks>
+        </effects>
+      </li>
+      <li>
+        <labelKey>SettlementServices.EventChoice.AcceptBetterContractor</labelKey>
+        <effects>
+          <refundAmount>10</refundAmount>
+        </effects>
+      </li>
+    </choices>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Generic_PreferredCustomer</defName>
+    <disabled>true</disabled>
+    <label>preferred customer</label>
+    <description>The settlement marks you down as a preferred customer before the work even begins.</description>
+    <weightClass>Social</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <appliesToAllCategories>true</appliesToAllCategories>
+    <effects>
+      <goodwillDelta>1</goodwillDelta>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Generic_CommunityRequest</defName>
+    <disabled>true</disabled>
+    <label>community request</label>
+    <description>Someone in the settlement mentions a small favor they could use help with someday.</description>
+    <weightClass>Discovery</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.4</selectionWeight>
+    <appliesToAllCategories>true</appliesToAllCategories>
+    <effects>
+      <goodwillDelta>1</goodwillDelta>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Generic_SettlementUpgrade</defName>
+    <disabled>true</disabled>
+    <label>settlement upgrade</label>
+    <description>Flush with the proceeds of a good trading run, the settlement invests in itself and remembers you were part of that windfall.</description>
+    <weightClass>RareExceptional</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.05</selectionWeight>
+    <appliesToAllCategories>true</appliesToAllCategories>
+    <effects>
+      <goodwillDelta>2</goodwillDelta>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+</Defs>

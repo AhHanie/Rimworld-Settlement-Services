@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.LineItem.ContractorWage>contractor wage</SettlementServices.LineItem.ContractorWage>
+    <SettlementServices.Label.CandidateChoice>Candidate</SettlementServices.Label.CandidateChoice>
+    <SettlementServices.Label.HireModeChoice>Arrangement</SettlementServices.Label.HireModeChoice>
+    <SettlementServices.Label.CandidateOption>{0} {1} ({2} silver)</SettlementServices.Label.CandidateOption>
+    <SettlementServices.Label.HiringTierStandard>Competent</SettlementServices.Label.HiringTierStandard>
+    <SettlementServices.Label.HiringTierSkilled>Skilled</SettlementServices.Label.HiringTierSkilled>
+    <SettlementServices.Label.HiringTierExpert>Expert</SettlementServices.Label.HiringTierExpert>
+    <SettlementServices.Label.HireModeJoinCaravan>Join my caravan</SettlementServices.Label.HireModeJoinCaravan>
+    <SettlementServices.Label.HireModeTravelHome>Travel to my home base</SettlementServices.Label.HireModeTravelHome>
+    <SettlementServices.Label.AllowHazardousWork>Permit hazardous work (firefighting, hunting, construction)</SettlementServices.Label.AllowHazardousWork>
+    <SettlementServices.Error.NoCandidatesAvailable>This settlement has no contractors currently available.</SettlementServices.Error.NoCandidatesAvailable>
+    <SettlementServices.Error.CandidateNoLongerAvailable>This candidate is no longer available.</SettlementServices.Error.CandidateNoLongerAvailable>
+    <SettlementServices.Error.CandidateRefusesHazardousWork>This candidate will not accept hazardous work.</SettlementServices.Error.CandidateRefusesHazardousWork>
+    <SettlementServices.Error.NoRequesterCaravan>No caravan is present to join.</SettlementServices.Error.NoRequesterCaravan>
+    <SettlementServices.Error.NoHomeMapForTravel>You have no home base for a contractor to travel to.</SettlementServices.Error.NoHomeMapForTravel>
+    <SettlementServices.Message.ContractorHired>{0} has agreed to work for you under a temporary contract.</SettlementServices.Message.ContractorHired>
+    <SettlementServices.Message.ContractExpired>{0}'s contract has ended, and they have left.</SettlementServices.Message.ContractExpired>
+    <SettlementServices.Message.ContractVoidedHostile>{0}'s home settlement has turned hostile, ending their contract early.</SettlementServices.Message.ContractVoidedHostile>
+</LanguageData>
