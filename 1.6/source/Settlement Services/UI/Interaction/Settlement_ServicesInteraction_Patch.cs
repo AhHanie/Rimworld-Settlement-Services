@@ -90,7 +90,8 @@ namespace Settlement_Services.UI.Interaction
         {
             foreach (FloatMenuOption option in __result) yield return option;
             foreach (FloatMenuOption option in CaravanArrivalAction_VisitServices.GetFloatMenuOptions(caravan, __instance)) yield return option;
-            foreach (FloatMenuOption option in CaravanArrivalAction_InvestInSettlement.GetFloatMenuOptions(caravan, __instance)) yield return option;
+            // TODO: Re-enable the investment float-menu option after the investment flow has been fully tested.
+            // foreach (FloatMenuOption option in CaravanArrivalAction_InvestInSettlement.GetFloatMenuOptions(caravan, __instance)) yield return option;
         }
     }
 }
