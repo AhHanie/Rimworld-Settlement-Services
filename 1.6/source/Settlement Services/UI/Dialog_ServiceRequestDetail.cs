@@ -597,7 +597,7 @@ namespace Settlement_Services.UI
             {
                 Color prevColor = GUI.color;
                 GUI.color = ColorLibrary.RedReadable;
-                foreach (string errorKey in quote.validationErrors) listing.Label(errorKey.Translate());
+                foreach (string errorKey in quote.validationErrors) listing.Label(ServiceErrorFormatting.Format(errorKey, session.def, session.settlement));
                 GUI.color = prevColor;
                 return;
             }

@@ -219,11 +219,12 @@ namespace Settlement_Services.UI
         {
             bool unavailable = ServiceCandidacyService.TryGetUnavailableReason(def, contextTemplate.settlement, out string reasonKey);
             Texture2D icon = ServiceUITextures.Resolve(def.iconTexPath ?? selectedCategory.iconTexPath);
-            if (DrawSelectableRow(rect, def.LabelCap, icon, false, unavailable, unavailable ? reasonKey : null))
+            string tooltip = unavailable ? ServiceErrorFormatting.Format(reasonKey, def, contextTemplate.settlement) : null;
+            if (DrawSelectableRow(rect, def.LabelCap, icon, false, unavailable, tooltip))
                 OpenDetail(def);
         }
 
-        private static bool DrawSelectableRow(Rect rect, string label, Texture2D icon, bool selected, bool grayedOut, string tooltipKey)
+        private static bool DrawSelectableRow(Rect rect, string label, Texture2D icon, bool selected, bool grayedOut, string tooltip)
         {
             if (selected) Widgets.DrawOptionBackground(rect, true);
             else Widgets.DrawHighlightIfMouseover(rect);
@@ -246,7 +247,7 @@ namespace Settlement_Services.UI
             Text.Anchor = TextAnchor.UpperLeft;
             GUI.color = labelPrevColor;
 
-            if (!tooltipKey.NullOrEmpty()) TooltipHandler.TipRegion(rect, tooltipKey.Translate());
+            if (!tooltip.NullOrEmpty()) TooltipHandler.TipRegion(rect, tooltip);
 
             bool clicked = Widgets.ButtonInvisible(rect);
             if (clicked) SoundDefOf.Click.PlayOneShotOnCamera();

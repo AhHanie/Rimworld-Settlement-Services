@@ -5,26 +5,17 @@
     <defName>SettlementService_BiosculpterTreatment</defName>
     <category>SettlementService_Medical</category>
     <label>biosculpter treatment</label>
-    <description>Undergo a biosculpter pod cycle: general healing, regrowth of a missing body part, or age reversal, chosen at request time.</description>
+    <description>Undergo a biosculpter pod cycle: regrowth of a missing body part (bioregeneration) or age reversal, chosen at request time.</description>
     <workerClass>Settlement_Services.Services.Genetics.BiosculpterTreatmentServiceWorker</workerClass>
     <requiredTechLevel>Industrial</requiredTechLevel>
-    <requiredCapabilityTags>
-      <li>BiosculptingServices</li>
-    </requiredCapabilityTags>
     <minimumGoodwill>40</minimumGoodwill>
     <minimumCost>180</minimumCost>
-    <wealthScale>0.0035</wealthScale>
-    <duration>120000</duration>    <!-- 2 days -->
+    <wealthScale>0.06</wealthScale>
+    <duration>1500000</duration>    <!-- 25 days; fallback only, the worker computes the actual selected-cycle duration -->
     <targetRule>Pawn</targetRule>
     <batchMode>Targets</batchMode>
-    <stockRequirements>
-      <li>
-        <stockCategoryDefName>SettlementStock_Medicine</stockCategoryDefName>
-        <amount>3</amount>
-      </li>
-    </stockRequirements>
     <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
-    <disabled>true</disabled>
+    <iconTexPath>SettlementServices/UI/Icons/biosculpter</iconTexPath>
   </Settlement_Services.Framework.Defs.SettlementServiceDef>
 
 </Defs>

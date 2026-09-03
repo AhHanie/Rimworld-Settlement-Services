@@ -1,25 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
+using UnityEngine;
 using Verse;
+using Settlement_Services.Framework;
+using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Workers;
 using Settlement_Services.Framework.Workers.Results;
-using Settlement_Services.Services.Medical;
 
 namespace Settlement_Services.Services.Genetics
 {
     public class BiosculpterTreatmentServiceWorker : SettlementServiceWorker
     {
         private const string CycleGroupKey = "SettlementServices.Label.BiosculpterCycleChoice";
-        private const int MedicineAmount = 3;
-
-        private static readonly (string key, string labelKey)[] Cycles =
-        {
-            ("Medic", "SettlementServices.Label.BiosculpterCycle.Medic"),
-            ("Regeneration", "SettlementServices.Label.BiosculpterCycle.Regeneration"),
-            ("AgeReversal", "SettlementServices.Label.BiosculpterCycle.AgeReversal"),
-        };
 
         public override ServiceAvailabilityReport CanOffer(SettlementServiceContext ctx)
         {
@@ -36,15 +30,39 @@ namespace Settlement_Services.Services.Genetics
             if (!(ctx.SelectedTarget is Pawn pawn)) yield break;
             foreach (string key in EligibleCycleKeys(pawn))
             {
-                string labelKey = Cycles.First(c => c.key == key).labelKey;
-                yield return new ServiceDisplayOption { key = key, label = labelKey.Translate(), groupKey = CycleGroupKey };
+                CompProperties_BiosculpterPod_BaseCycle props = BiosculpterCycleService.ResolveCycleProps(key);
+                if (props == null) continue;
+                yield return new ServiceDisplayOption { key = key, label = props.LabelCap, description = props.description, groupKey = CycleGroupKey };
             }
         }
 
-        public override IEnumerable<ServiceLineItem> BuildQuoteLineItems(SettlementServiceRequest request) => new List<ServiceLineItem>();
+        public override IEnumerable<ServiceLineItem> BuildQuoteLineItems(SettlementServiceRequest request) =>
+            BuildQuoteLineItems(request, new ServiceBatchAllocationContext());
+
+        public override IEnumerable<ServiceLineItem> BuildQuoteLineItems(SettlementServiceRequest request, ServiceBatchAllocationContext batchContext)
+        {
+            var lineItems = new List<ServiceLineItem>();
+
+            ServiceInputPlan nutritionPlan = batchContext.GetOrCreateInputPlan(request, () => BiosculpterInputPlanning.PlanNutrition(request, batchContext.StockLedger));
+            int nutritionCost = BiosculpterInputPlanning.PreviewCost(nutritionPlan);
+            if (nutritionCost > 0) lineItems.Add(new ServiceLineItem("SettlementServices.LineItem.BiosculpterNutrition", nutritionCost));
+
+            return lineItems;
+        }
+
+        public override List<ServiceStockRequirement> GetDynamicStockRequirements(SettlementServiceRequest request) =>
+            new List<ServiceStockRequirement> { BiosculpterInputPlanning.NutritionRequirement() };
 
         public override ServiceInputPlan PlanInputs(SettlementServiceRequest request, SettlementServiceQuote quote) =>
-            MedicalInputPlanning.PlanFromCategory(request, "SettlementStock_Medicine", MedicineAmount);
+            PlanInputs(request, quote, new ServiceBatchAllocationContext());
+
+        public override ServiceInputPlan PlanInputs(SettlementServiceRequest request, SettlementServiceQuote quote, ServiceBatchAllocationContext batchContext)
+        {
+            ServiceInputPlan nutritionPlan = batchContext.GetOrCreateInputPlan(request, () => BiosculpterInputPlanning.PlanNutrition(request, batchContext.StockLedger));
+            var plan = new ServiceInputPlan();
+            plan.stockConsumed.AddRange(nutritionPlan.stockConsumed);
+            return plan;
+        }
 
         public override string ValidateUnitRequest(SettlementServiceRequest request)
         {
@@ -54,25 +72,27 @@ namespace Settlement_Services.Services.Genetics
             return EligibleCycleKeys(pawn).Contains(key) ? null : "SettlementServices.Error.NoBiosculpterCycleAvailable";
         }
 
+        public override int? ExpectedDurationTicksFor(SettlementServiceRequest request)
+        {
+            string key = request.selectedOptionKeys.FirstOrDefault();
+            int? baseTicks = BiosculpterCycleService.BaseTicksFor(key);
+            if (baseTicks == null) return null;
+
+            float multiplier = BiosculpterQualityService.DurationMultiplier(request.settlement, def.category);
+            return Mathf.Max(1, Mathf.RoundToInt(baseTicks.Value * multiplier));
+        }
+
         public override ServiceStartResult Start(ServiceJobContext ctx) => ServiceStartResult.Ok;
 
         public override ServiceCompletionResult Complete(ServiceJobContext ctx)
         {
             if (!(ctx.CurrentTarget?.liveThing is Pawn pawn)) return ServiceCompletionResult.Ok();
 
-            switch (ctx.Job.selectedOptionKeys.FirstOrDefault())
-            {
-                case "Medic":
-                    BiosculpterCycleService.ResolveCycle<CompBiosculpterPod_MedicCycle>()?.CycleCompleted(pawn);
-                    break;
-                case "Regeneration":
-                    BiosculpterCycleService.ResolveCycle<CompBiosculpterPod_RegenerationCycle>()?.CycleCompleted(pawn);
-                    break;
-                case "AgeReversal":
-                    if (BiosculpterCycleService.CanAgeReverse(pawn))
-                        BiosculpterCycleService.ResolveCycle<CompBiosculpterPod_AgeReversalCycle>()?.CycleCompleted(pawn);
-                    break;
-            }
+            string key = ctx.SelectedOptionKeys.FirstOrDefault();
+            if (key == BiosculpterCycleService.AgeReversalKey && !BiosculpterCycleService.CanAgeReverse(pawn))
+                return ServiceCompletionResult.Ok();
+
+            BiosculpterCycleService.ResolveCycle(key)?.CycleCompleted(pawn);
             return ServiceCompletionResult.Ok();
         }
 
@@ -80,9 +100,10 @@ namespace Settlement_Services.Services.Genetics
 
         private static IEnumerable<string> EligibleCycleKeys(Pawn pawn)
         {
-            yield return "Medic";
-            yield return "Regeneration";
-            if (BiosculpterCycleService.CanAgeReverse(pawn)) yield return "AgeReversal";
+            if (BiosculpterCycleService.ResolveCycleProps(BiosculpterCycleService.BioregenerationKey) != null)
+                yield return BiosculpterCycleService.BioregenerationKey;
+            if (BiosculpterCycleService.ResolveCycleProps(BiosculpterCycleService.AgeReversalKey) != null && BiosculpterCycleService.CanAgeReverse(pawn))
+                yield return BiosculpterCycleService.AgeReversalKey;
         }
     }
 }

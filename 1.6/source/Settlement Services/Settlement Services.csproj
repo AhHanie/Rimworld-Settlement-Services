@@ -189,6 +189,7 @@
     <Compile Include="UI\ServiceUITextures.cs" />
     <Compile Include="UI\SettlementSpecialtyTooltip.cs" />
     <Compile Include="UI\ServiceDiscoveryFormatting.cs" />
+    <Compile Include="UI\ServiceErrorFormatting.cs" />
     <Compile Include="UI\Audio\ServiceSoundtrackController.cs" />
     <Compile Include="UI\Audio\ServiceSoundtrackFade.cs" />
     <Compile Include="UI\Audio\ServiceSoundtrackWindowPatches.cs" />
@@ -230,6 +231,8 @@
     <Compile Include="Services\Genetics\GeneOptionService.cs" />
     <Compile Include="Services\Genetics\GeneCatalogService.cs" />
     <Compile Include="Services\Genetics\BiosculpterCycleService.cs" />
+    <Compile Include="Services\Genetics\BiosculpterQualityService.cs" />
+    <Compile Include="Services\Genetics\BiosculpterInputPlanning.cs" />
     <Compile Include="Services\Genetics\GeneImplantationServiceWorker.cs" />
     <Compile Include="Services\Genetics\GeneticAugmentationServiceWorker.cs" />
     <Compile Include="Services\Genetics\GeneExtractionServiceWorker.cs" />

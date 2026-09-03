@@ -8,7 +8,7 @@
     <SettlementServices.Error.InsufficientCaravanSilver>Your caravan does not have enough silver.</SettlementServices.Error.InsufficientCaravanSilver>
     <SettlementServices.Error.InsufficientHomeSilver>Your colony does not have enough stored silver.</SettlementServices.Error.InsufficientHomeSilver>
     <SettlementServices.Error.TechLevelTooLow>This settlement's tech level is too low to offer this service.</SettlementServices.Error.TechLevelTooLow>
-    <SettlementServices.Error.InsufficientGoodwill>Your goodwill with this settlement is too low for this service.</SettlementServices.Error.InsufficientGoodwill>
+    <SettlementServices.Error.InsufficientGoodwill>Your goodwill with this settlement is too low for this service (requires {0}, you have {1}).</SettlementServices.Error.InsufficientGoodwill>
     <SettlementServices.Error.InsufficientStock>This settlement does not currently have enough supplies for this service.</SettlementServices.Error.InsufficientStock>
     <SettlementServices.Error.FactionHostile>This faction is hostile to you.</SettlementServices.Error.FactionHostile>
     <SettlementServices.Error.FactionTypeNotEligible>This settlement's faction cannot offer this service.</SettlementServices.Error.FactionTypeNotEligible>
