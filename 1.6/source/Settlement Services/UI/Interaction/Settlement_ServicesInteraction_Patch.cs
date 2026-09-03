@@ -7,6 +7,7 @@ using Verse;
 using Settlement_Services.Domain;
 using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework;
+using Settlement_Services.Framework.Compatibility;
 
 namespace Settlement_Services.UI.Interaction
 {
@@ -60,6 +61,8 @@ namespace Settlement_Services.UI.Interaction
                 command.Disable("SettlementServices.Error.FactionHostile".Translate());
             else if (BestCaravanPawnUtility.FindBestNegotiator(caravan) == null)
                 command.Disable("SettlementServices.Command.NoNegotiator".Translate());
+            else if (SettlementServicesCompatibilityRegistry.GetRequestBlockReason(settlement) is string compatibilityBlockReason)
+                command.Disable(compatibilityBlockReason.Translate());
 
             return command;
         }

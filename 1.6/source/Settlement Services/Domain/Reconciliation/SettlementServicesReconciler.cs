@@ -72,6 +72,7 @@ namespace Settlement_Services.Domain.Reconciliation
             foreach (SettlementRecord record in component.SettlementRecordsRaw)
             {
                 if (record.capability == null) continue;
+                if (record.capability.specialtyDefNames == null) record.capability.specialtyDefNames = new List<string>();
 
                 List<string> toRemove = record.capability.specialtyDefNames
                     .Where(defName => !StillEligible(defName))

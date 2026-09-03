@@ -4,6 +4,7 @@ using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
 using Verse;
+using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Investment;
@@ -59,13 +60,15 @@ namespace Settlement_Services.Framework.Pricing
             ServicePriorityTierDef tier = ResolveTier(def, request.selectedTierKey);
             AddPctModifier(lineItems, scaled, tier?.costSurchargePct ?? 0f, "SettlementServices.LineItem.PriorityTier");
 
-            float total = lineItems.Aggregate(scaled, (acc, li) => acc + li.amount);
-            total = Mathf.Max(def.minimumCost, total);
+            float preMarketTotal = Mathf.Max(def.minimumCost, lineItems.Aggregate(scaled, (acc, li) => acc + li.amount));
+
+            var compatibilityContext = new CompatibilityQuoteContext(def, request, lineItems, Mathf.RoundToInt(preMarketTotal));
+            SettlementServicesCompatibilityRegistry.ModifyQuote(compatibilityContext);
 
             return new SettlementServiceQuote
             {
                 lineItems = lineItems,
-                totalCost = Mathf.RoundToInt(total),
+                totalCost = compatibilityContext.totalCost,
                 selectedTierKey = request.selectedTierKey,
                 expectedDurationTicks = EffectiveDuration(def, request, settlement, tier),
             };

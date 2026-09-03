@@ -1,6 +1,7 @@
 using RimWorld;
 using UnityEngine;
 using Verse;
+using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Pricing;
 using Settlement_Services.UI.Audio;
 
@@ -26,6 +27,12 @@ namespace Settlement_Services
             DrawDifficultySection(listing, settings);
             listing.GapLine();
             DrawFrameworkSection(listing, settings);
+
+            if (SettlementServicesCompatibilityRegistry.HasSettingsSections)
+            {
+                listing.GapLine();
+                SettlementServicesCompatibilityRegistry.DrawSettingsSections(listing);
+            }
 
             contentHeight = listing.CurHeight;
             listing.End();

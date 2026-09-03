@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using Settlement_Services.Framework.Compatibility;
 
 namespace Settlement_Services
 {
@@ -25,6 +26,8 @@ namespace Settlement_Services
 
         public float investmentDecayDurationScalePct = 1f;
 
+        public CompatibilitySettingsStore compatibilitySettings = new CompatibilitySettingsStore();
+
         public bool soundtrackEnabled = false;
 
         public override void ExposeData()
@@ -37,11 +40,13 @@ namespace Settlement_Services
             Scribe_Values.Look(ref investmentCostScalePct, "investmentCostScalePct", 1f);
             Scribe_Values.Look(ref investmentDiscountScalePct, "investmentDiscountScalePct", 1f);
             Scribe_Values.Look(ref investmentDecayDurationScalePct, "investmentDecayDurationScalePct", 1f);
+            Scribe_Deep.Look(ref compatibilitySettings, "compatibilitySettings");
             Scribe_Values.Look(ref soundtrackEnabled, "soundtrackEnabled", false);
 
             if (Scribe.mode != LoadSaveMode.PostLoadInit) return;
 
             if (difficultyMultiplierOverrides == null) difficultyMultiplierOverrides = new Dictionary<string, float>();
+            if (compatibilitySettings == null) compatibilitySettings = new CompatibilitySettingsStore();
 
             wealthPriceScalePct = Mathf.Clamp(wealthPriceScalePct, 0f, 3f);
             serviceEventFrequencyPct = Mathf.Clamp(serviceEventFrequencyPct, 0f, 2f);

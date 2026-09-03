@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
+using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Registry;
 using Settlement_Services.Services.Hospitality;
 
@@ -25,6 +26,7 @@ namespace Settlement_Services
             SettlementServiceRegistry.ValidateAll();
             Settlement_Services.Framework.Events.ServiceEventRegistry.ValidateAll();
             HospitalityPackageRegistry.ValidateAll();
+            LongEventHandler.ExecuteWhenFinished(SettlementServicesCompatibilityRegistry.Initialize);
         }
 
         public override string SettingsCategory()

@@ -6,6 +6,7 @@ using UnityEngine;
 using Verse;
 using Settlement_Services.Domain;
 using Settlement_Services.Domain.Records;
+using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Custody;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Events;
@@ -145,6 +146,8 @@ namespace Settlement_Services.Framework
             }
 
             ServicePawnCaravanReturn.TryReturnCompletedPawn(ctx);
+
+            SettlementServicesCompatibilityRegistry.NotifyCompleted(new CompatibilityCompletionContext(domain, job));
 
             bool needsCollection = requiresCollection || job.targetInCustody || !job.results.NullOrEmpty();
             domain.TryTransition(job.jobId, needsCollection ? ServiceJobStatus.AwaitingCollection : ServiceJobStatus.Completed);

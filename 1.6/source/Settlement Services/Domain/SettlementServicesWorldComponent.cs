@@ -7,6 +7,7 @@ using Verse;
 using Settlement_Services.Domain.Reconciliation;
 using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework;
+using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Custody;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Payment;
@@ -18,6 +19,7 @@ namespace Settlement_Services.Domain
         internal const int TickInterval = 250;
 
         private const int JobRetentionWindowTicks = 900000;
+        private const int CompatibilityCooldownRetentionTicks = 5400000;
 
         private int loadedSchemaVersion = SchemaVersion.Current;
         private int nextJobId = 1;
@@ -31,12 +33,16 @@ namespace Settlement_Services.Domain
 
         private List<TargetSnapshot> pendingHomeDeliveries = new List<TargetSnapshot>();
 
+        private CompatibilityWorldState compatibilityWorldState = new CompatibilityWorldState();
+
         private Dictionary<int, SettlementRecord> settlementsByWorldObjectId;
         private Dictionary<int, List<ServiceJobRecord>> jobsBySettlement;
         private Dictionary<int, ServiceJobRecord> jobsById;
         private List<ServiceJobRecord> activeJobsIndex;
 
         public static SettlementServicesWorldComponent Current => Find.World?.GetComponent<SettlementServicesWorldComponent>();
+
+        public CompatibilityWorldState CompatibilityWorldState => compatibilityWorldState;
 
         public SettlementServicesWorldComponent(World world) : base(world)
         {
@@ -53,6 +59,7 @@ namespace Settlement_Services.Domain
             Scribe_Collections.Look(ref pendingHomeSilverRefunds, "pendingHomeSilverRefunds", LookMode.Value);
             Scribe_Deep.Look(ref itemCustody, "itemCustody");
             Scribe_Collections.Look(ref pendingHomeDeliveries, "pendingHomeDeliveries", LookMode.Deep);
+            Scribe_Deep.Look(ref compatibilityWorldState, "compatibilityWorldState");
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
@@ -61,6 +68,7 @@ namespace Settlement_Services.Domain
                 if (pendingHomeSilverRefunds == null) pendingHomeSilverRefunds = new List<int>();
                 if (itemCustody == null) itemCustody = new ThingOwner<Thing>(this);
                 if (pendingHomeDeliveries == null) pendingHomeDeliveries = new List<TargetSnapshot>();
+                if (compatibilityWorldState == null) compatibilityWorldState = new CompatibilityWorldState();
                 settlementRecords.RemoveAll(r => r == null);
                 jobs.RemoveAll(j => j == null);
 
@@ -83,6 +91,7 @@ namespace Settlement_Services.Domain
             if (Find.TickManager.TicksGame % TickInterval != 0) return;
             SettlementServicesReconciler.DetectAndHandleMissingProviders(this);
             SettlementServiceJobScheduler.TickAll(this, TickInterval);
+            compatibilityWorldState.PruneOlderThan(CompatibilityCooldownRetentionTicks);
         }
 
         private void FlushPendingHomeSilverRefunds()
@@ -244,7 +253,7 @@ namespace Settlement_Services.Domain
         }
 
         public ServiceJobRecord CreateJob(int settlementWorldObjectId, PlanetTile settlementTile, string serviceDefName, RequestChannel channel, List<TargetSnapshot> targets, int quantity = 1,
-            int requesterCaravanId = -1, string requesterFactionLoadId = null, string requesterCaravanSnapshotLabel = null)
+            int requesterCaravanId = -1, string requesterFactionLoadId = null, string requesterCaravanSnapshotLabel = null, string providerFactionLoadId = null)
         {
             List<TargetSnapshot> normalizedTargets = targets ?? new List<TargetSnapshot>();
             var job = new ServiceJobRecord
@@ -264,6 +273,7 @@ namespace Settlement_Services.Domain
                 requesterCaravanId = requesterCaravanId,
                 requesterFactionLoadId = requesterFactionLoadId,
                 requesterCaravanSnapshotLabel = requesterCaravanSnapshotLabel,
+                providerFactionLoadId = providerFactionLoadId,
             };
 
             jobs.Add(job);
@@ -406,13 +416,48 @@ namespace Settlement_Services.Domain
             return record.reservations.Where(r => r.jobId == jobId).ToList();
         }
 
-        public IReadOnlyList<string> GetOrGenerateSpecialtyDefNames(int settlementWorldObjectId, Func<List<string>> generator)
+        public IReadOnlyList<string> GetOrRefreshSpecialtyDefNames(Settlement settlement, Func<List<string>> generator)
         {
-            SettlementRecord record = GetOrCreateSettlementRecord(settlementWorldObjectId);
-            if (record.capability != null) return record.capability.specialtyDefNames;
+            if (settlement == null) return Array.Empty<string>();
 
-            record.capability = new SettlementCapabilityRecord { specialtyDefNames = generator() };
-            return record.capability.specialtyDefNames;
+            SettlementRecord record = GetOrCreateSettlementRecord(settlement.ID);
+            string currentFactionLoadId = settlement.Faction?.GetUniqueLoadID();
+            string currentFactionDefName = settlement.Faction?.def?.defName;
+
+            if (record.capability == null)
+            {
+                record.capability = new SettlementCapabilityRecord
+                {
+                    specialtyDefNames = generator(),
+                    generatedForFactionLoadId = currentFactionLoadId,
+                    generatedForFactionDefName = currentFactionDefName,
+                    ownerFingerprintInitialized = true,
+                };
+                return record.capability.specialtyDefNames;
+            }
+
+            SettlementCapabilityRecord capability = record.capability;
+            if (!capability.ownerFingerprintInitialized)
+            {
+                capability.generatedForFactionLoadId = currentFactionLoadId;
+                capability.generatedForFactionDefName = currentFactionDefName;
+                capability.ownerFingerprintInitialized = true;
+                return capability.specialtyDefNames;
+            }
+
+            bool fingerprintMatches = string.Equals(capability.generatedForFactionLoadId, currentFactionLoadId, StringComparison.Ordinal)
+                && string.Equals(capability.generatedForFactionDefName, currentFactionDefName, StringComparison.Ordinal);
+            if (fingerprintMatches) return capability.specialtyDefNames;
+
+            string previousFactionLoadId = capability.generatedForFactionLoadId;
+            capability.specialtyDefNames = generator();
+            capability.generatedForFactionLoadId = currentFactionLoadId;
+            capability.generatedForFactionDefName = currentFactionDefName;
+
+            Settlement_Services.SupportLog.Info(
+                $"Settlement {settlement.LabelCap} ({settlement.ID}) specialties regenerated after an owner change from '{previousFactionLoadId ?? "none"}' to '{currentFactionLoadId ?? "none"}'.");
+
+            return capability.specialtyDefNames;
         }
 
         public bool TryGetCapability(int settlementWorldObjectId, out IReadOnlyList<string> specialtyDefNames)

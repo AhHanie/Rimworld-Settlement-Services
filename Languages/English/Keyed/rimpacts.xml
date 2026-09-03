@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Error.RimPactsEmbargoed>You have embargoed this faction.</SettlementServices.Error.RimPactsEmbargoed>
+    <SettlementServices.Error.RimPactsCivilWar>This faction is in a civil war.</SettlementServices.Error.RimPactsCivilWar>
+    <SettlementServices.RimPactsTrustReason.ServiceCompleted>Completed a paid service</SettlementServices.RimPactsTrustReason.ServiceCompleted>
+    <SettlementServices.LineItem.RimPactsMarket>RimPacts market conditions</SettlementServices.LineItem.RimPactsMarket>
+    <SettlementServices.Settings.SectionRimPacts>RimPacts compatibility</SettlementServices.Settings.SectionRimPacts>
+    <SettlementServices.Settings.RimPactsMarketPriceScalePct>RimPacts market price scale: {0}</SettlementServices.Settings.RimPactsMarketPriceScalePct>
+    <SettlementServices.Settings.RimPactsMarketPriceScalePct.Tooltip>Scales how much RimPacts' enabled global economy (boom/recession) adjusts service prices. 100% follows RimPacts' own economy setting as-is; 0% keeps RimPacts political availability integration on but removes the price effect. Has no effect unless RimPacts is installed and its own market prices setting is enabled.</SettlementServices.Settings.RimPactsMarketPriceScalePct.Tooltip>
+    <SettlementServices.Settings.RimPactsTrustRewardsEnabled>Award RimPacts trust for completed services</SettlementServices.Settings.RimPactsTrustRewardsEnabled>
+    <SettlementServices.Settings.RimPactsTrustRewardsEnabled.Tooltip>When a paid service completes successfully, grant a small RimPacts trust gain (+1, before RimPacts' own trust settings) to the faction that accepted the contract. Only applies if RimPacts is installed; RimPacts itself has the final say over whether the gain is applied.</SettlementServices.Settings.RimPactsTrustRewardsEnabled.Tooltip>
+    <SettlementServices.Settings.RimPactsTrustRewardCooldownDays>RimPacts trust reward cooldown: {0} days</SettlementServices.Settings.RimPactsTrustRewardCooldownDays>
+    <SettlementServices.Settings.RimPactsTrustRewardCooldownDays.Tooltip>The minimum time between trust rewards for the same faction, shared across every service that faction completes for you.</SettlementServices.Settings.RimPactsTrustRewardCooldownDays.Tooltip>
+</LanguageData>

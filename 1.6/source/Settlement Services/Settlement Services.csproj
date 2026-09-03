@@ -95,6 +95,7 @@
     <Compile Include="Domain\Migration\SettlementServiceMigrationRegistry.cs" />
     <Compile Include="Domain\Reconciliation\SettlementServicesReconciler.cs" />
     <Compile Include="Domain\WorldObjectLookup.cs" />
+    <Compile Include="Domain\FactionLookup.cs" />
     <Compile Include="Domain\IdeoLookup.cs" />
 
     <Compile Include="Framework\Defs\SettlementServiceDef.cs" />
@@ -157,6 +158,23 @@
     <Compile Include="Framework\Compat\DubsBadHygieneAdapter.cs" />
     <Compile Include="Framework\Compat\VehicleFrameworkAdapter.cs" />
     <Compile Include="Framework\Compat\AndroidsAdapter.cs" />
+    <Compile Include="Framework\Compat\RimPacts\RimPactsAdapter.cs" />
+    <Compile Include="Framework\Compat\RimPacts\RimPactsCompatibilityModule.cs" />
+    <Compile Include="Framework\Compat\RimPacts\RimPactsAvailabilityRule.cs" />
+    <Compile Include="Framework\Compat\RimPacts\RimPactsQuoteModifier.cs" />
+    <Compile Include="Framework\Compat\RimPacts\RimPactsCompletionObserver.cs" />
+    <Compile Include="Framework\Compat\RimPacts\RimPactsSettingsSection.cs" />
+    <Compile Include="Framework\Compatibility\ISettlementServicesCompatibilityModule.cs" />
+    <Compile Include="Framework\Compatibility\ICompatibilityAvailabilityRule.cs" />
+    <Compile Include="Framework\Compatibility\ICompatibilityQuoteModifier.cs" />
+    <Compile Include="Framework\Compatibility\ICompatibilityCompletionObserver.cs" />
+    <Compile Include="Framework\Compatibility\ICompatibilitySettingsSection.cs" />
+    <Compile Include="Framework\Compatibility\CompatibilityQuoteContext.cs" />
+    <Compile Include="Framework\Compatibility\CompatibilityCompletionContext.cs" />
+    <Compile Include="Framework\Compatibility\SettlementServicesCompatibilityRegistry.cs" />
+    <Compile Include="Framework\Compatibility\CompatibilityModuleCatalog.cs" />
+    <Compile Include="Framework\Compatibility\CompatibilitySettingsStore.cs" />
+    <Compile Include="Framework\Compatibility\CompatibilityWorldState.cs" />
     <Compile Include="Framework\Registry\ServiceEventDefValidation.cs" />
     <Compile Include="Framework\Events\ServiceEventEligibility.cs" />
     <Compile Include="Framework\Events\ServiceEventRegistry.cs" />

@@ -6,6 +6,7 @@ using UnityEngine;
 using Verse;
 using Settlement_Services.Domain;
 using Settlement_Services.Domain.Records;
+using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Custody;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Dto;
@@ -46,6 +47,7 @@ namespace Settlement_Services.Framework
             SettlementServicesWorldComponent domain = SettlementServicesWorldComponent.Current;
             Caravan caravan = request.negotiator?.GetCaravan();
             string requesterFactionLoadId = (caravan?.Faction ?? Faction.OfPlayer)?.GetUniqueLoadID();
+            string providerFactionLoadId = request.settlement?.Faction?.GetUniqueLoadID();
             List<TargetSnapshot> snapshots = request.targets.Select(t => t.ToSnapshot()).Where(s => s != null).ToList();
             int quantity = def.EffectiveBatchMode == ServiceBatchMode.Quantity ? Mathf.Max(1, request.quantity) : 1;
 
@@ -58,7 +60,8 @@ namespace Settlement_Services.Framework
                 quantity,
                 caravan?.ID ?? -1,
                 requesterFactionLoadId,
-                caravan?.LabelCap);
+                caravan?.LabelCap,
+                providerFactionLoadId);
         }
 
         public static bool AcceptQuote(int jobId, SettlementServiceQuote quote, SettlementServiceRequest request)
@@ -120,6 +123,14 @@ namespace Settlement_Services.Framework
 
             SettlementServiceDef def = DefDatabase<SettlementServiceDef>.GetNamedSilentFail(job.serviceDefName);
             if (def == null) return false;
+
+            Settlement settlement = WorldObjectLookup.ResolveSettlement(job.settlementWorldObjectId);
+            string compatibilityBlockReason = SettlementServicesCompatibilityRegistry.GetRequestBlockReason(settlement);
+            if (compatibilityBlockReason != null)
+            {
+                FailJob(domain, jobId, compatibilityBlockReason);
+                return false;
+            }
 
             var ctx = new ServiceJobContext(domain, job);
             Caravan caravan = ResolveRequesterCaravan(job);

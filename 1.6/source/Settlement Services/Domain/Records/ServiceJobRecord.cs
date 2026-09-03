@@ -51,12 +51,22 @@ namespace Settlement_Services.Domain.Records
         public List<ThingDefCountClass> consumedPlayerSuppliedInputs = new List<ThingDefCountClass>();
         public bool playerSuppliedInputsRefunded;
 
+        public string providerFactionLoadId;
+        public List<string> processedCompatibilityCompletionModuleIds = new List<string>();
+
         public IReadOnlyList<TargetSnapshot> Targets => targets;
 
         public List<string> OptionKeysForTarget(int targetIndex)
         {
             ServiceTargetOptionSelection match = targetOptionSelections?.Find(s => s.targetIndex == targetIndex);
             return match != null ? match.optionKeys : selectedOptionKeys;
+        }
+
+        public bool TryMarkCompatibilityCompletionProcessed(string moduleId)
+        {
+            if (processedCompatibilityCompletionModuleIds.Contains(moduleId)) return false;
+            processedCompatibilityCompletionModuleIds.Add(moduleId);
+            return true;
         }
 
         public void ExposeData()
@@ -89,6 +99,8 @@ namespace Settlement_Services.Domain.Records
             Scribe_Deep.Look(ref craftingProductionPlan, "craftingProductionPlan");
             Scribe_Collections.Look(ref consumedPlayerSuppliedInputs, "consumedPlayerSuppliedInputs", LookMode.Deep);
             Scribe_Values.Look(ref playerSuppliedInputsRefunded, "playerSuppliedInputsRefunded");
+            Scribe_Values.Look(ref providerFactionLoadId, "providerFactionLoadId");
+            Scribe_Collections.Look(ref processedCompatibilityCompletionModuleIds, "processedCompatibilityCompletionModuleIds", LookMode.Value);
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit && results == null)
             {
@@ -113,6 +125,10 @@ namespace Settlement_Services.Domain.Records
             if (Scribe.mode == LoadSaveMode.PostLoadInit && targets == null)
             {
                 targets = new List<TargetSnapshot>();
+            }
+            if (Scribe.mode == LoadSaveMode.PostLoadInit && processedCompatibilityCompletionModuleIds == null)
+            {
+                processedCompatibilityCompletionModuleIds = new List<string>();
             }
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {

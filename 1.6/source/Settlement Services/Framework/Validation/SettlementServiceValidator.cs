@@ -4,6 +4,7 @@ using RimWorld;
 using RimWorld.Planet;
 using Verse;
 using Settlement_Services.Domain;
+using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Specialty;
@@ -20,6 +21,9 @@ namespace Settlement_Services.Framework.Validation
 
             if (faction != null && faction.HostileTo(Faction.OfPlayer))
             { errorKey = "SettlementServices.Error.FactionHostile"; return false; }
+
+            string compatibilityBlockReason = SettlementServicesCompatibilityRegistry.GetRequestBlockReason(settlement);
+            if (compatibilityBlockReason != null) { errorKey = compatibilityBlockReason; return false; }
 
             if (!TechFactionEligibility(def, settlement, out errorKey)) return false;
             if (!GoodwillMet(def, settlement, out errorKey)) return false;

@@ -12,8 +12,8 @@ namespace Settlement_Services.Framework.Specialty
         public static IReadOnlyList<SettlementSpecialtyDef> GetSpecialties(Settlement settlement)
         {
             SettlementServicesWorldComponent domain = SettlementServicesWorldComponent.Current;
-            IReadOnlyList<string> defNames = domain.GetOrGenerateSpecialtyDefNames(
-                settlement.ID, () => SettlementSpecialtyGenerator.Generate(settlement).Select(d => d.defName).ToList());
+            IReadOnlyList<string> defNames = domain.GetOrRefreshSpecialtyDefNames(
+                settlement, () => SettlementSpecialtyGenerator.Generate(settlement).Select(d => d.defName).ToList());
 
             var resolved = new List<SettlementSpecialtyDef>();
             foreach (string defName in defNames)
