@@ -23,7 +23,7 @@
     <label>genetics lab</label>
     <description>This settlement operates a fully equipped gene bank, offering advanced genetic treatments no ordinary clinic can provide.</description>
     <iconTexPath>SettlementServices/UI/Icons/genetics</iconTexPath>
-    <selectionWeight>0.5</selectionWeight>
+    <selectionWeight>0.7</selectionWeight>
     <minTechLevel>Spacer</minTechLevel>
     <modifiers>
       <capabilityTags>
@@ -41,7 +41,6 @@
         <refreshRateMultiplier>1.3</refreshRateMultiplier>
       </li>
     </stockModifiers>
-    <disabled>true</disabled>
   </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
 
 </Defs>

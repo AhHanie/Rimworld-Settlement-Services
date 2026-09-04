@@ -250,13 +250,9 @@
     <Compile Include="Services\Medical\SurgeryServiceWorker.cs" />
 
     <Compile Include="Services\Genetics\GeneEligibilityService.cs" />
-    <Compile Include="Services\Genetics\GeneOptionService.cs" />
-    <Compile Include="Services\Genetics\GeneCatalogService.cs" />
     <Compile Include="Services\Genetics\BiosculpterCycleService.cs" />
     <Compile Include="Services\Genetics\BiosculpterQualityService.cs" />
     <Compile Include="Services\Genetics\BiosculpterInputPlanning.cs" />
-    <Compile Include="Services\Genetics\GeneImplantationServiceWorker.cs" />
-    <Compile Include="Services\Genetics\GeneticAugmentationServiceWorker.cs" />
     <Compile Include="Services\Genetics\GeneExtractionServiceWorker.cs" />
     <Compile Include="Services\Genetics\BiosculpterTreatmentServiceWorker.cs" />
 

@@ -13,12 +13,13 @@ namespace Settlement_Services.Services.Genetics
     public class GeneExtractionServiceWorker : SettlementServiceWorker
     {
         private const int MedicineAmount = 2;
-        private const int RegrowDurationDays = 15;
 
         private static readonly SimpleCurve GeneCountChanceCurve = new SimpleCurve
         {
-            new CurvePoint(1f, 0.75f),
-            new CurvePoint(2f, 0.25f),
+            new CurvePoint(1f, 0.70f),
+            new CurvePoint(2f, 0.20f),
+            new CurvePoint(3f, 0.08f),
+            new CurvePoint(4f, 0.02f),
         };
 
         public override ServiceAvailabilityReport CanOffer(SettlementServiceContext ctx)
@@ -27,6 +28,12 @@ namespace Settlement_Services.Services.Genetics
             return GeneEligibilityService.IsValidExtractionSource(pawn, out string reasonKey)
                 ? ServiceAvailabilityReport.Available
                 : ServiceAvailabilityReport.Unavailable(reasonKey);
+        }
+
+        public override IEnumerable<string> GetDisplaySummaryLines(SettlementServiceContext ctx)
+        {
+            if (ctx.SelectedTarget is Pawn pawn && pawn.health.hediffSet.HasHediff(HediffDefOf.XenogermReplicating))
+                yield return "SettlementServices.Warning.GenesRegrowing".Translate();
         }
 
         public override IEnumerable<ServiceLineItem> BuildQuoteLineItems(SettlementServiceRequest request) => new List<ServiceLineItem>();
@@ -41,8 +48,21 @@ namespace Settlement_Services.Services.Genetics
             if (!(ctx.CurrentTarget?.liveThing is Pawn pawn) || !GeneEligibilityService.IsValidExtractionSource(pawn, out _))
                 return ServiceCompletionResult.Ok();
 
-            List<GeneDef> extracted = PickGenesToExtract(pawn);
-            GeneUtility.ExtractXenogerm(pawn, RegrowDurationDays * 60000);
+            List<GeneDef> extracted;
+            Rand.PushState(pawn.thingIDNumber ^ ctx.Job.statusChangedTick);
+            try
+            {
+                extracted = PickGenesToExtract(pawn);
+                GeneUtility.ExtractXenogerm(pawn, Mathf.RoundToInt(60000f * GeneTuning.GeneExtractorRegrowingDurationDaysRange.RandomInRange));
+            }
+            finally
+            {
+                Rand.PopState();
+            }
+
+            if (!pawn.Dead && (pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony))
+                pawn.needs?.mood?.thoughts?.memories?.TryGainMemory(ThoughtDefOf.XenogermHarvested_Prisoner);
+
             if (extracted.Count == 0) return ServiceCompletionResult.Ok();
 
             var genepack = (Genepack)ThingMaker.MakeThing(ThingDefOf.Genepack);
@@ -61,16 +81,21 @@ namespace Settlement_Services.Services.Genetics
 
             for (int i = 0; i < count; i++)
             {
-                if (!pawn.genes.GenesListForReading.Where(g => Eligible(g, chosen)).TryRandomElementByWeight(g => Weight(g), out Gene picked))
+                if (!pawn.genes.GenesListForReading.TryRandomElementByWeight(g => SelectionWeight(g, chosen), out Gene picked))
                     break;
                 chosen.Add(picked.def);
             }
             return chosen;
         }
 
-        private static bool Eligible(Gene g, List<GeneDef> chosen) =>
-            g.def.biostatArc == 0 && g.def.endogeneCategory != EndogeneCategory.Melanin && !chosen.Contains(g.def);
-
-        private static float Weight(Gene g) => g.def.biostatCpx > 0 ? 3f : 1f;
+        private static float SelectionWeight(Gene g, List<GeneDef> chosen)
+        {
+            if (chosen.Contains(g.def)) return 0f;
+            if (g.def.biostatArc > 0) return 0f;
+            if (g.def.endogeneCategory == EndogeneCategory.Melanin) return 0f;
+            int projectedMetabolism = g.def.biostatMet + chosen.Sum(x => x.biostatMet);
+            if (projectedMetabolism < GeneTuning.BiostatRange.min || projectedMetabolism > GeneTuning.BiostatRange.max) return 0f;
+            return g.def.biostatCpx > 0 ? 3f : 1f;
+        }
     }
 }

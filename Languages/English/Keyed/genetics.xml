@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
-    <SettlementServices.Label.XenogermChoice>Xenogerm</SettlementServices.Label.XenogermChoice>
-    <SettlementServices.Label.XenotypeChoice>Xenotype</SettlementServices.Label.XenotypeChoice>
     <SettlementServices.Label.BiosculpterCycleChoice>Cycle</SettlementServices.Label.BiosculpterCycleChoice>
     <SettlementServices.LineItem.BiosculpterNutrition>Biosculpter nutrition</SettlementServices.LineItem.BiosculpterNutrition>
     <SettlementServices.Error.InvalidGeneTarget>Only a colonist, prisoner, or slave can be a gene target.</SettlementServices.Error.InvalidGeneTarget>
     <SettlementServices.Error.InXenogerminationComa>This pawn is in xenogermination coma.</SettlementServices.Error.InXenogerminationComa>
-    <SettlementServices.Error.ResultingMetabolismTooLow>The resulting metabolism would be too low.</SettlementServices.Error.ResultingMetabolismTooLow>
-    <SettlementServices.Error.IdeoligionForbidsImplanting>This pawn's ideoligion forbids this.</SettlementServices.Error.IdeoligionForbidsImplanting>
-    <SettlementServices.Error.NoCarriedXenogerm>No eligible carried xenogerm found.</SettlementServices.Error.NoCarriedXenogerm>
-    <SettlementServices.Error.NoXenotypesOffered>This settlement has nothing to offer right now.</SettlementServices.Error.NoXenotypesOffered>
     <SettlementServices.Error.NoExtractableGenes>This pawn has no genes that can be extracted.</SettlementServices.Error.NoExtractableGenes>
     <SettlementServices.Error.NoNonArchiteGenes>This pawn has no non-archite genes to extract.</SettlementServices.Error.NoNonArchiteGenes>
+    <SettlementServices.Warning.GenesRegrowing>Warning: this pawn's genes are still regrowing from a previous extraction. Extracting again now will kill them.</SettlementServices.Warning.GenesRegrowing>
     <SettlementServices.Error.NoBiosculpterCycleAvailable>No biosculpter cycle is available for this pawn.</SettlementServices.Error.NoBiosculpterCycleAvailable>
 </LanguageData>
