@@ -7,7 +7,7 @@
         <li>1.6</li>
     </supportedVersions>
     <description>Turns faction settlements into places that offer paid services instead of only trade and combat. Request medical care, training, hospitality, crafting commissions, and more; prices scale with your colony's wealth and the game's difficulty, and what's on offer depends on a settlement's faction, technology, and specialties.</description>
-    <modVersion>1.2.0</modVersion>
+    <modVersion>1.3.0</modVersion>
     <url>https://steamcommunity.com/sharedfiles/filedetails/?id=3793497508</url>
     <modDependencies>
         <li>

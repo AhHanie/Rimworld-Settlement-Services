@@ -164,6 +164,10 @@
     <Compile Include="Framework\Compat\RimPacts\RimPactsQuoteModifier.cs" />
     <Compile Include="Framework\Compat\RimPacts\RimPactsCompletionObserver.cs" />
     <Compile Include="Framework\Compat\RimPacts\RimPactsSettingsSection.cs" />
+    <Compile Include="Framework\Compat\RimEducation\RimEducationAdapter.cs" />
+    <Compile Include="Framework\Compat\RimEducation\RimEducationCourseServiceWorker.cs" />
+    <Compile Include="Framework\Compat\RimEducation\RimEducationCompatibilityModule.cs" />
+    <Compile Include="Framework\Compat\RimEducation\RimEducationCompletionObserver.cs" />
     <Compile Include="Framework\Compatibility\ISettlementServicesCompatibilityModule.cs" />
     <Compile Include="Framework\Compatibility\ICompatibilityAvailabilityRule.cs" />
     <Compile Include="Framework\Compatibility\ICompatibilityQuoteModifier.cs" />

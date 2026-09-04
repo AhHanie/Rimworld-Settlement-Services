@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_RimEducationCourse</defName>
+    <category>SettlementService_Education</category>
+    <label>education course</label>
+    <description>A four-day specialist placement that advances this pawn's own education under Rim Education's rules. The gain follows Rim Education's own difficulty curve, education stats, and Education Speed setting rather than a fixed amount.</description>
+    <workerClass>Settlement_Services.Framework.Compat.RimEducation.RimEducationCourseServiceWorker</workerClass>
+    <requiredTechLevel>Industrial</requiredTechLevel>
+    <minimumCost>2000</minimumCost>
+    <wealthScale>0.04</wealthScale>
+    <duration>120000</duration>    <!-- 2 days -->
+    <targetRule>Pawn</targetRule>
+    <eventChancePct>0</eventChancePct>
+    <iconTexPath>SettlementServices/UI/Icons/student</iconTexPath>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

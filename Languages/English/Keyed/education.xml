@@ -19,4 +19,17 @@
     <SettlementServices.Label.ResearchSeminarPreview>Research reward: {0}-{1} research points</SettlementServices.Label.ResearchSeminarPreview>
     <SettlementServices.Error.NoTrainableBehaviors>This animal has no behaviour that can currently be trained.</SettlementServices.Error.NoTrainableBehaviors>
     <SettlementServices.Error.NoBehaviorsSelectedForAnimal>Select at least one behaviour for this animal.</SettlementServices.Error.NoBehaviorsSelectedForAnimal>
+
+    <SettlementServices.Error.RimEducationUnavailable>Rim Education's integration isn't available right now.</SettlementServices.Error.RimEducationUnavailable>
+    <SettlementServices.Error.RimEducationNoComponent>This pawn doesn't have Rim Education's education tracking.</SettlementServices.Error.RimEducationNoComponent>
+    <SettlementServices.Error.RimEducationNotEligible>This pawn isn't eligible for education under Rim Education's rules.</SettlementServices.Error.RimEducationNotEligible>
+    <SettlementServices.Error.RimEducationFinalTier>This pawn has already reached the highest education level.</SettlementServices.Error.RimEducationFinalTier>
+    <SettlementServices.Error.RimEducationDevelopmentalStage>This pawn's current developmental stage can't receive this course.</SettlementServices.Error.RimEducationDevelopmentalStage>
+    <SettlementServices.Error.RimEducationZeroRate>This pawn's education rate is too low to gain anything from this course.</SettlementServices.Error.RimEducationZeroRate>
+    <SettlementServices.Label.RimEducationSelectPawnPrompt>Select a pawn to preview this course.</SettlementServices.Label.RimEducationSelectPawnPrompt>
+    <SettlementServices.Label.RimEducationCurrentNext>Current: {0} -> Next: {1}</SettlementServices.Label.RimEducationCurrentNext>
+    <SettlementServices.Label.RimEducationProgress>Current progress: {0}</SettlementServices.Label.RimEducationProgress>
+    <SettlementServices.Label.RimEducationExpectedGain>Expected progress: {0} (raw course input: {1})</SettlementServices.Label.RimEducationExpectedGain>
+    <SettlementServices.Label.RimEducationPredictedProgress>Progress after course: {0}</SettlementServices.Label.RimEducationPredictedProgress>
+    <SettlementServices.Label.RimEducationTierAttained>This course will attain {0}.</SettlementServices.Label.RimEducationTierAttained>
 </LanguageData>

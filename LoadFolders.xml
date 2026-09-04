@@ -4,6 +4,7 @@
     <li>1.6/Base</li>
     <li IfModActive="SmashPhil.VehicleFramework">1.6/VehicleFramework</li>
     <li IfModActive="vanillaracesexpanded.android">1.6/Androids</li>
+    <li IfModActive="DimonSever000.ScienceRework">1.6/RimEducation</li>
     <li IfModActive="Ludeon.RimWorld.Biotech">1.6/Biotech</li>
     <li IfModActive="Ludeon.RimWorld.Ideology">1.6/Ideology</li>
     <li IfModActive="Ludeon.RimWorld.Royalty">1.6/Royalty</li>
