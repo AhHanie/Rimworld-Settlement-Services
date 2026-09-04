@@ -135,7 +135,13 @@ namespace Settlement_Services.Framework
             var ctx = new ServiceJobContext(domain, job);
             Caravan caravan = ResolveRequesterCaravan(job);
 
-            if (!TargetCustodyService.TryTakeCustody(ctx, caravan, out string custodyErrorKey))
+            if (!TargetCustodyService.ValidateTargets(ctx, caravan, out string validationErrorKey))
+            {
+                FailJob(domain, jobId, validationErrorKey);
+                return false;
+            }
+
+            if (def.Worker.RequiresTargetCustody && !TargetCustodyService.TryTakeCustody(ctx, caravan, out string custodyErrorKey))
             {
                 FailJob(domain, jobId, custodyErrorKey);
                 return false;

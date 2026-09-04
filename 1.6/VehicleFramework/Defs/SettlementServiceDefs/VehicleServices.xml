@@ -9,11 +9,11 @@
     <workerClass>Settlement_Services.Services.Vehicle.VehicleFuelServiceWorker</workerClass>
     <requiredTechLevel>Industrial</requiredTechLevel>
     <minimumCost>10</minimumCost>
-    <wealthScale>0.0005</wealthScale>
-    <duration>0</duration>    <!-- instant; still takes a moment of custody like any other instant physical-target service -->
+    <wealthScale>0.01</wealthScale>
+    <duration>2500</duration>    <!-- 1 hour -->
     <targetRule>Vehicle</targetRule>
     <batchMode>Targets</batchMode>
-    <disabled>true</disabled>
+    <iconTexPath>SettlementServices/UI/Icons/fuel</iconTexPath>
   </Settlement_Services.Framework.Defs.SettlementServiceDef>
 
   <Settlement_Services.Framework.Defs.SettlementServiceDef>
@@ -24,7 +24,7 @@
     <workerClass>Settlement_Services.Services.Vehicle.VehicleRepairServiceWorker</workerClass>
     <requiredTechLevel>Industrial</requiredTechLevel>
     <minimumCost>40</minimumCost>
-    <wealthScale>0.001</wealthScale>
+    <wealthScale>0.02</wealthScale>
     <duration>20000</duration>    <!-- baseline for RepairFactor == 1, roughly a third of a day -->
     <targetRule>Vehicle</targetRule>
     <batchMode>Targets</batchMode>
@@ -36,7 +36,7 @@
         <costSurchargePct>0.2</costSurchargePct>
       </li>
     </priorityTiers>
-    <disabled>true</disabled>
+    <iconTexPath>SettlementServices/UI/Icons/wrench</iconTexPath>
   </Settlement_Services.Framework.Defs.SettlementServiceDef>
 
   <Settlement_Services.Framework.Defs.SettlementServiceDef>
@@ -47,11 +47,11 @@
     <workerClass>Settlement_Services.Services.Vehicle.VehicleUpgradeServiceWorker</workerClass>
     <requiredTechLevel>Industrial</requiredTechLevel>
     <minimumCost>80</minimumCost>
-    <wealthScale>0.0015</wealthScale>
+    <wealthScale>0.02</wealthScale>
     <duration>30000</duration>
     <targetRule>Vehicle</targetRule>
     <batchMode>Targets</batchMode>
-    <disabled>true</disabled>
+    <iconTexPath>SettlementServices/UI/Icons/car-sparkles</iconTexPath>
   </Settlement_Services.Framework.Defs.SettlementServiceDef>
 
 </Defs>

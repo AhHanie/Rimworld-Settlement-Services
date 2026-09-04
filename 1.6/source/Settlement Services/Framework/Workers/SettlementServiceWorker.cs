@@ -57,6 +57,8 @@ namespace Settlement_Services.Framework.Workers
 
         public virtual bool UsesPerTargetOptionSelections => false;
 
+        public virtual bool RequiresTargetCustody => true;
+
         protected int ExpectedDurationTicks(ServiceJobContext ctx)
         {
             int quoted = ctx.Job.acceptedQuote?.expectedDurationTicks ?? 0;

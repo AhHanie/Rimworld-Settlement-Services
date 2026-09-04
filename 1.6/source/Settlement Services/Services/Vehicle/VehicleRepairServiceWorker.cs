@@ -15,6 +15,8 @@ namespace Settlement_Services.Services.Vehicle
         private const float ReferenceDamageFraction = 0.5f;
         private const float MaxRepairFactor = 2.5f;
 
+        public override bool RequiresTargetCustody => false;
+
         public override ServiceAvailabilityReport CanOffer(SettlementServiceContext ctx)
         {
             Thing vehicle = ctx.SelectedTarget;

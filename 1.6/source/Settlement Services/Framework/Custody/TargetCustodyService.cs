@@ -13,7 +13,7 @@ namespace Settlement_Services.Framework.Custody
 {
     public static class TargetCustodyService
     {
-        public static bool TryTakeCustody(ServiceJobContext ctx, Caravan caravan, out string errorKey)
+        public static bool ValidateTargets(ServiceJobContext ctx, Caravan caravan, out string errorKey)
         {
             List<TargetSnapshot> targets = ctx.Job.Targets.ToList();
             if (targets.Count == 0) { errorKey = null; return true; }
@@ -35,6 +35,17 @@ namespace Settlement_Services.Framework.Custody
                     { errorKey = "SettlementServices.Error.TargetNotInCaravan"; return false; }
                 }
             }
+
+            errorKey = null;
+            return true;
+        }
+
+        public static bool TryTakeCustody(ServiceJobContext ctx, Caravan caravan, out string errorKey)
+        {
+            if (!ValidateTargets(ctx, caravan, out errorKey)) return false;
+
+            List<TargetSnapshot> targets = ctx.Job.Targets.ToList();
+            if (targets.Count == 0) return true;
 
             foreach (TargetSnapshot target in targets)
             {

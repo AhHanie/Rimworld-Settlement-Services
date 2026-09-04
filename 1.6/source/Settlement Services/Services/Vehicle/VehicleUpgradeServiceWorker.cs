@@ -14,6 +14,8 @@ namespace Settlement_Services.Services.Vehicle
         private const string UpgradeGroupKey = "SettlementServices.Label.VehicleUpgradeChoice";
         private const float MaterialMarkupPct = 1.4f;
 
+        public override bool RequiresTargetCustody => false;
+
         public override ServiceAvailabilityReport CanOffer(SettlementServiceContext ctx)
         {
             Thing vehicle = ctx.SelectedTarget;

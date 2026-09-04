@@ -30,7 +30,7 @@ namespace Settlement_Services.UI
                     candidates = caravan.PawnsListForReading.Where(p => p.RaceProps.IsMechanoid);
                     break;
                 case ServiceTargetRule.Vehicle:
-                    candidates = VehicleCandidates(caravan);
+                    candidates = VehicleFrameworkAdapter.VehiclesInCaravan(caravan);
                     break;
                 case ServiceTargetRule.Android:
                     candidates = caravan.PawnsListForReading.Where(p => AndroidsAdapter.IsAndroid(p));
@@ -45,14 +45,6 @@ namespace Settlement_Services.UI
 
             foreach (Thing thing in candidates)
                 if (!domain.IsTargetReserved(thing)) yield return thing;
-        }
-
-        private static IEnumerable<Thing> VehicleCandidates(Caravan caravan)
-        {
-            Type vehicleType = VehicleFrameworkAdapter.VehiclePawnType;
-            if (vehicleType == null) yield break;
-            foreach (Pawn pawn in caravan.PawnsListForReading)
-                if (vehicleType.IsInstanceOfType(pawn)) yield return pawn;
         }
 
         public static void OpenTargetPicker(ServiceRequestSession session, Action<Thing> onChosen)

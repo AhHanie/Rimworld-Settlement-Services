@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using RimWorld;
+using RimWorld.Planet;
 using Verse;
 
 namespace Settlement_Services.Framework.Compat
@@ -50,6 +51,13 @@ namespace Settlement_Services.Framework.Compat
         public static Type VehiclePawnType { get { EnsureResolved(); return resolveFailed ? null : vehiclePawnType; } }
 
         public static bool IsVehicle(Thing thing) => VehiclePawnType != null && VehiclePawnType.IsInstanceOfType(thing);
+
+        public static IEnumerable<Thing> VehiclesInCaravan(Caravan caravan)
+        {
+            Type vehicleType = VehiclePawnType;
+            if (caravan == null || vehicleType == null) return Enumerable.Empty<Thing>();
+            return caravan.PawnsListForReading.Where(p => vehicleType.IsInstanceOfType(p));
+        }
 
         public static bool TryGetFuel(Thing vehicle, out float current, out float capacity, out ThingDef fuelDef)
         {

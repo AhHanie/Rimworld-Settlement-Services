@@ -15,6 +15,8 @@ namespace Settlement_Services.Services.Vehicle
     {
         private const float FuelMarkupPct = 1.4f;
 
+        public override bool RequiresTargetCustody => false;
+
         public override ServiceAvailabilityReport CanOffer(SettlementServiceContext ctx)
         {
             Thing vehicle = ctx.SelectedTarget;

@@ -201,21 +201,21 @@
     <stockItems>
       <li>
         <thingDefName>Chemfuel</thingDefName>
-        <capacity>250</capacity>
-        <refreshAmount>25</refreshAmount>
+        <capacity>500</capacity>
+        <refreshAmount>50</refreshAmount>
         <refreshIntervalTicks>60000</refreshIntervalTicks>
         <minFactionTechLevel>Industrial</minFactionTechLevel>
         <techLevelTiers>
           <li>
             <minFactionTechLevel>Spacer</minFactionTechLevel>
-            <capacity>500</capacity>
-            <refreshAmount>50</refreshAmount>
+            <capacity>1000</capacity>
+            <refreshAmount>100</refreshAmount>
             <refreshIntervalTicks>60000</refreshIntervalTicks>
           </li>
           <li>
             <minFactionTechLevel>Ultra</minFactionTechLevel>
-            <capacity>1000</capacity>
-            <refreshAmount>100</refreshAmount>
+            <capacity>2000</capacity>
+            <refreshAmount>200</refreshAmount>
             <refreshIntervalTicks>60000</refreshIntervalTicks>
           </li>
         </techLevelTiers>
