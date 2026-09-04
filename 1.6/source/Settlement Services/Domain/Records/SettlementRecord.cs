@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using RimWorld.Planet;
+using UnityEngine;
 using Verse;
 
 namespace Settlement_Services.Domain.Records
@@ -21,6 +23,10 @@ namespace Settlement_Services.Domain.Records
         public int hiringPoolLastRefreshTick = -1;
         public int nextHiringCandidateId = 1;
 
+        public bool practicedIdeosInitialized;
+        public int practicedIdeoCount;
+        public List<string> practicedIdeoLoadIds = new List<string>();
+
         public void ExposeData()
         {
             Scribe_Values.Look(ref settlementWorldObjectId, "settlementWorldObjectId", -1);
@@ -33,6 +39,9 @@ namespace Settlement_Services.Domain.Records
             Scribe_Collections.Look(ref hiringCandidates, "hiringCandidates", LookMode.Deep);
             Scribe_Values.Look(ref hiringPoolLastRefreshTick, "hiringPoolLastRefreshTick", -1);
             Scribe_Values.Look(ref nextHiringCandidateId, "nextHiringCandidateId", 1);
+            Scribe_Values.Look(ref practicedIdeosInitialized, "practicedIdeosInitialized");
+            Scribe_Values.Look(ref practicedIdeoCount, "practicedIdeoCount");
+            Scribe_Collections.Look(ref practicedIdeoLoadIds, "practicedIdeoLoadIds", LookMode.Value);
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
@@ -41,6 +50,14 @@ namespace Settlement_Services.Domain.Records
                 if (stock == null) stock = new List<StockRecord>();
                 if (recentServiceEventTicks == null) recentServiceEventTicks = new Dictionary<string, int>();
                 if (hiringCandidates == null) hiringCandidates = new List<HiringCandidateRecord>();
+
+                if (practicedIdeoLoadIds == null) practicedIdeoLoadIds = new List<string>();
+                else
+                {
+                    var seen = new HashSet<string>();
+                    practicedIdeoLoadIds = practicedIdeoLoadIds.Where(id => !string.IsNullOrEmpty(id) && seen.Add(id)).ToList();
+                }
+                if (practicedIdeosInitialized) practicedIdeoCount = Mathf.Clamp(practicedIdeoCount, 1, 3);
             }
         }
 

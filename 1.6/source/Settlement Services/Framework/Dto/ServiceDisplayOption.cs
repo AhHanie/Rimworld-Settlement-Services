@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Settlement_Services.Framework.Dto
 {
@@ -11,6 +12,7 @@ namespace Settlement_Services.Framework.Dto
         public string groupKey;
 
         public string iconTexPath;
+        public Color? iconColor;
 
         public int groupColumnCount = 1;
 

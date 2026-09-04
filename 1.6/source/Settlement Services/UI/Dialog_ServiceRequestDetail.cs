@@ -577,14 +577,19 @@ namespace Settlement_Services.UI
         private static bool DrawRadioOption(Rect rowRect, ServiceDisplayOption option, bool selected)
         {
             Texture2D icon = ServiceUITextures.Resolve(option.iconTexPath);
-            return icon == null ? Widgets.RadioButtonLabeled(rowRect, option.label, selected) : IconRadioButton(rowRect, option.label, icon, selected);
+            return icon == null ? Widgets.RadioButtonLabeled(rowRect, option.label, selected) : IconRadioButton(rowRect, option.label, icon, option.iconColor, selected);
         }
 
-        private static bool IconRadioButton(Rect rowRect, string label, Texture2D icon, bool active)
+        private static bool IconRadioButton(Rect rowRect, string label, Texture2D icon, Color? iconColor, bool active)
         {
             Rect iconRect = new Rect(rowRect.x, rowRect.y + (rowRect.height - OptionIconSize) / 2f, OptionIconSize, OptionIconSize);
             Rect labelRect = new Rect(rowRect.x + OptionIconSize + OptionIconGap, rowRect.y, rowRect.width - OptionIconSize - OptionIconGap, rowRect.height);
+
+            Color previousColor = GUI.color;
+            if (iconColor.HasValue) GUI.color = iconColor.Value;
             Widgets.DrawTextureFitted(iconRect, icon, 1f);
+            GUI.color = previousColor;
+
             bool clickedLabel = Widgets.RadioButtonLabeled(labelRect, label, active);
             bool clickedIcon = Widgets.ButtonInvisible(iconRect) && !clickedLabel;
             if (clickedIcon && !active) SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();

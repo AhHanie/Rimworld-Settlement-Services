@@ -93,10 +93,12 @@
     <Compile Include="Domain\Records\StockRecord.cs" />
     <Compile Include="Domain\Migration\ISettlementServiceMigration.cs" />
     <Compile Include="Domain\Migration\SettlementServiceMigrationRegistry.cs" />
+    <Compile Include="Domain\Migration\SettlementServiceMigrationV1ToV2.cs" />
     <Compile Include="Domain\Reconciliation\SettlementServicesReconciler.cs" />
     <Compile Include="Domain\WorldObjectLookup.cs" />
     <Compile Include="Domain\FactionLookup.cs" />
     <Compile Include="Domain\IdeoLookup.cs" />
+    <Compile Include="Domain\SettlementIdeologyRoster.cs" />
 
     <Compile Include="Framework\Defs\SettlementServiceDef.cs" />
     <Compile Include="Framework\Defs\ServiceBatchMode.cs" />

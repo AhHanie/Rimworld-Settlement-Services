@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
 using Verse;
+using Settlement_Services.Domain.Migration;
 using Settlement_Services.Domain.Reconciliation;
 using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework;
@@ -71,8 +73,6 @@ namespace Settlement_Services.Domain
                 if (compatibilityWorldState == null) compatibilityWorldState = new CompatibilityWorldState();
                 settlementRecords.RemoveAll(r => r == null);
                 jobs.RemoveAll(j => j == null);
-
-                loadedSchemaVersion = SchemaVersion.Current;
             }
         }
 
@@ -80,6 +80,14 @@ namespace Settlement_Services.Domain
         {
             base.FinalizeInit(fromLoad);
             RebuildIndexes();
+
+            if (fromLoad && loadedSchemaVersion < SchemaVersion.Current)
+            {
+                SettlementServiceMigrationRegistry.Run(this, loadedSchemaVersion, SchemaVersion.Current);
+                RebuildIndexes();
+            }
+
+            loadedSchemaVersion = SchemaVersion.Current;
             SettlementServicesReconciler.Reconcile(this);
         }
 
@@ -487,6 +495,40 @@ namespace Settlement_Services.Domain
 
             record.capability.specialtyDefNames.Add(specialtyDefName);
             return true;
+        }
+
+        public IReadOnlyList<string> GetOrCreatePracticedIdeoIds(Settlement settlement)
+        {
+            if (settlement == null || !ModsConfig.IdeologyActive) return Array.Empty<string>();
+
+            EnsureRosterInitialized(settlement);
+            return GetOrCreateSettlementRecord(settlement.ID).practicedIdeoLoadIds;
+        }
+
+        public IReadOnlyList<Ideo> GetPracticedIdeos(Settlement settlement) =>
+            SettlementIdeologyRoster.ResolveRoster(GetOrCreatePracticedIdeoIds(settlement));
+
+        public void EnsureRosterInitialized(Settlement settlement, string reservedLoadId = null)
+        {
+            if (settlement == null || !ModsConfig.IdeologyActive) return;
+
+            SettlementRecord record = GetOrCreateSettlementRecord(settlement.ID);
+            if (record.practicedIdeosInitialized) return;
+
+            List<string> reserved = reservedLoadId != null ? new List<string> { reservedLoadId } : null;
+            record.practicedIdeoLoadIds = SettlementIdeologyRoster.GenerateRoster(settlement.ID, out int count, reserved);
+            record.practicedIdeoCount = count;
+            record.practicedIdeosInitialized = true;
+        }
+
+        public void ReconcilePracticedIdeoRoster(SettlementRecord record)
+        {
+            if (record == null || !record.practicedIdeosInitialized || !ModsConfig.IdeologyActive) return;
+
+            List<string> valid = record.practicedIdeoLoadIds.Where(id => IdeoLookup.ResolveIdeo(id) != null).ToList();
+            record.practicedIdeoLoadIds = valid.Count < record.practicedIdeoCount
+                ? SettlementIdeologyRoster.FillVacancies(record.settlementWorldObjectId, valid, record.practicedIdeoCount)
+                : valid;
         }
 
         public InvestmentRecord GetInvestment(int settlementWorldObjectId) =>

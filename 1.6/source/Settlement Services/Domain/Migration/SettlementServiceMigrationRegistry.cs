@@ -4,7 +4,10 @@ namespace Settlement_Services.Domain.Migration
 {
     public static class SettlementServiceMigrationRegistry
     {
-        private static readonly List<ISettlementServiceMigration> All = new List<ISettlementServiceMigration>();
+        private static readonly List<ISettlementServiceMigration> All = new List<ISettlementServiceMigration>
+        {
+            new SettlementServiceMigrationV1ToV2(),
+        };
 
         public static void Run(SettlementServicesWorldComponent component, int from, int to)
         {

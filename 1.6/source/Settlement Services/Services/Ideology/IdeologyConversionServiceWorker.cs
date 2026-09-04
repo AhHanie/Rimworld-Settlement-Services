@@ -4,7 +4,6 @@ using RimWorld;
 using RimWorld.Planet;
 using Verse;
 using Settlement_Services.Domain;
-using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Workers;
 using Settlement_Services.Framework.Workers.Results;
@@ -15,11 +14,20 @@ namespace Settlement_Services.Services.Ideology
     {
         private const string IdeoGroupKey = "SettlementServices.Label.IdeologyChoice";
 
+        public override bool UsesPerTargetOptionSelections => true;
+
         public override ServiceAvailabilityReport CanOffer(SettlementServiceContext ctx)
         {
             if (Find.IdeoManager.classicMode)
                 return ServiceAvailabilityReport.Unavailable("SettlementServices.Error.IdeoClassicModeActive");
-            if (!(ctx.SelectedTarget is Pawn pawn)) return ServiceAvailabilityReport.Available;
+
+            if (!(ctx.SelectedTarget is Pawn pawn))
+            {
+                return SettlementServicesWorldComponent.Current.GetPracticedIdeos(ctx.Settlement).Any()
+                    ? ServiceAvailabilityReport.Available
+                    : ServiceAvailabilityReport.Unavailable("SettlementServices.Error.NoIdeologyOffered");
+            }
+
             if (pawn.DevelopmentalStage.Baby() || pawn.ideo?.Ideo == null)
                 return ServiceAvailabilityReport.Unavailable("SettlementServices.Error.InvalidConversionTarget");
             return EligibleIdeos(ctx.Settlement, pawn).Any()
@@ -37,17 +45,17 @@ namespace Settlement_Services.Services.Ideology
                     label = ideo.name,
                     description = ideo.description,
                     groupKey = IdeoGroupKey,
+                    iconTexPath = ideo.iconDef?.iconPath,
+                    iconColor = ideo.Color,
                 };
         }
 
         private static IEnumerable<Ideo> EligibleIdeos(Settlement settlement, Pawn pawn)
         {
-            FactionIdeosTracker ideos = settlement?.Faction?.ideos;
-            if (ideos == null) yield break;
+            if (settlement == null) yield break;
 
-            if (ideos.PrimaryIdeo != null && Eligible(ideos.PrimaryIdeo, pawn)) yield return ideos.PrimaryIdeo;
-            foreach (Ideo minor in ideos.IdeosMinorListForReading)
-                if (Eligible(minor, pawn)) yield return minor;
+            foreach (Ideo ideo in SettlementServicesWorldComponent.Current.GetPracticedIdeos(settlement))
+                if (Eligible(ideo, pawn)) yield return ideo;
         }
 
         private static bool Eligible(Ideo ideo, Pawn pawn) => !ideo.hidden && (pawn == null || pawn.Ideo != ideo);
@@ -58,8 +66,11 @@ namespace Settlement_Services.Services.Ideology
         public override string ValidateUnitRequest(SettlementServiceRequest request)
         {
             if (!(request.target.thing is Pawn pawn)) return null;
-            string ideoKey = request.selectedOptionKeys.FirstOrDefault();
-            if (ideoKey == null) return null;
+
+            List<string> selected = request.selectedOptionKeys ?? new List<string>();
+            if (selected.Count != 1) return "SettlementServices.Error.NoTargetIdeologySelected";
+
+            string ideoKey = selected[0];
             return EligibleIdeos(request.settlement, pawn).Any(i => i.GetUniqueLoadID() == ideoKey)
                 ? null
                 : "SettlementServices.Error.NoIdeologyOffered";
@@ -69,14 +80,14 @@ namespace Settlement_Services.Services.Ideology
         {
             if (!(ctx.CurrentTarget?.liveThing is Pawn pawn) || pawn.ideo?.Ideo == null)
                 return ServiceStartResult.Fail("SettlementServices.Error.InvalidConversionTarget");
-            return ResolveTargetIdeo(ctx.Job) != null ? ServiceStartResult.Ok : ServiceStartResult.Fail("SettlementServices.Error.TargetIdeologyNoLongerExists");
+            return ResolveTargetIdeo(ctx) != null ? ServiceStartResult.Ok : ServiceStartResult.Fail("SettlementServices.Error.TargetIdeologyNoLongerExists");
         }
 
         public override ServiceCompletionResult Complete(ServiceJobContext ctx)
         {
             if (!(ctx.CurrentTarget?.liveThing is Pawn pawn) || pawn.ideo?.Ideo == null) return ServiceCompletionResult.Ok();
 
-            Ideo targetIdeo = ResolveTargetIdeo(ctx.Job);
+            Ideo targetIdeo = ResolveTargetIdeo(ctx);
             if (targetIdeo == null) return ServiceCompletionResult.Fail("SettlementServices.Error.TargetIdeologyNoLongerExists");
 
             if (pawn.ideo.Ideo != targetIdeo)
@@ -99,6 +110,6 @@ namespace Settlement_Services.Services.Ideology
 
         public override ServiceCancelResult Cancel(ServiceJobContext ctx, bool playerInitiated) => ServiceCancelResult.Ok();
 
-        private static Ideo ResolveTargetIdeo(ServiceJobRecord job) => IdeoLookup.ResolveIdeo(job.selectedOptionKeys.FirstOrDefault());
+        private static Ideo ResolveTargetIdeo(ServiceJobContext ctx) => IdeoLookup.ResolveIdeo(ctx.SelectedOptionKeys.FirstOrDefault());
     }
 }

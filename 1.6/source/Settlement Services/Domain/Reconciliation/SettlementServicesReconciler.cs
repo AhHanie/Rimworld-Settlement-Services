@@ -17,6 +17,7 @@ namespace Settlement_Services.Domain.Reconciliation
             int failedJobs = 0;
             int droppedSettlements = 0;
             int droppedSpecialties = 0;
+            int droppedIdeoEntries = 0;
 
             foreach (ServiceJobRecord job in component.JobsRaw)
             {
@@ -83,10 +84,22 @@ namespace Settlement_Services.Domain.Reconciliation
                 droppedSpecialties += toRemove.Count;
             }
 
-            if (failedJobs > 0 || droppedSettlements > 0 || droppedSpecialties > 0)
+            foreach (SettlementRecord record in component.SettlementRecordsRaw)
+            {
+                if (!record.practicedIdeosInitialized) continue;
+
+                int staleCount = record.practicedIdeoLoadIds.Count(id => IdeoLookup.ResolveIdeo(id) == null);
+                if (staleCount == 0) continue;
+
+                component.ReconcilePracticedIdeoRoster(record);
+                droppedIdeoEntries += staleCount;
+            }
+
+            if (failedJobs > 0 || droppedSettlements > 0 || droppedSpecialties > 0 || droppedIdeoEntries > 0)
             {
                 Settlement_Services.SupportLog.Info(
-                    $"Reconciliation: failed {failedJobs} orphaned job(s), dropped {droppedSettlements} orphaned settlement record(s), dropped {droppedSpecialties} specialty grant(s) whose gate is no longer met.");
+                    $"Reconciliation: failed {failedJobs} orphaned job(s), dropped {droppedSettlements} orphaned settlement record(s), dropped {droppedSpecialties} specialty grant(s) whose gate is no longer met, "
+                    + $"dropped {droppedIdeoEntries} stale practiced ideoligion entries.");
             }
         }
 

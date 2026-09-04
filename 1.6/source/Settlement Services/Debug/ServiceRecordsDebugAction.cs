@@ -35,8 +35,11 @@ namespace Settlement_Services.Debug
             {
                 string specialties = record.capability != null ? string.Join(", ", record.capability.specialtyDefNames) : "none";
                 string stock = record.stock.Count == 0 ? "none" : string.Join(", ", record.stock.Select(s => $"{s.stockThingDefName}={s.currentAmount}"));
+                string practicedIdeos = record.practicedIdeosInitialized
+                    ? $"target={record.practicedIdeoCount}, ids=[{string.Join(", ", record.practicedIdeoLoadIds)}], resolved=[{string.Join(", ", record.practicedIdeoLoadIds.Select(id => IdeoLookup.ResolveIdeo(id)?.name ?? "?"))}]"
+                    : "uninitialized";
                 Logger.Message($"  settlement {record.settlementWorldObjectId}: "
-                    + $"discoveries={record.discoveries.Count}, specialties=[{specialties}], stock=[{stock}]");
+                    + $"discoveries={record.discoveries.Count}, specialties=[{specialties}], stock=[{stock}], practicedIdeos=[{practicedIdeos}]");
             }
         }
     }

@@ -5,7 +5,7 @@
     <defName>SettlementService_IdeologyConversion</defName>
     <category>SettlementService_Ideology</category>
     <label>ideology conversion</label>
-    <description>Leave a colonist, prisoner, or slave with the settlement's own believers for a time. They will bring your pawn around to their ideoligion, and your pawn will adopt the selected ideoligion once the stay concludes.</description>
+    <description>Leave a colonist, prisoner, or slave with believers this settlement practices for a time. They will bring your pawn around to one of the settlement's ideoligions, and your pawn will adopt the selected ideoligion once the stay concludes.</description>
     <workerClass>Settlement_Services.Services.Ideology.IdeologyConversionServiceWorker</workerClass>
     <requiredCapabilityTags>
       <li>IdeologicalServices</li>
