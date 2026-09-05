@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementStockCategoryDef>
+    <defName>SettlementStock_VehicleParts</defName>
+    <label>vehicle parts</label>
+    <description>Replacement parts for VVE road vehicles, boats, and aircraft.</description>
+    <stockItems>
+      <li>
+        <thingDefName>VVE_EngineBlock</thingDefName>
+        <capacity>2</capacity>
+        <refreshAmount>1</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Industrial</minFactionTechLevel>
+      </li>
+      <li>
+        <thingDefName>VVE_CarAlternator</thingDefName>
+        <capacity>6</capacity>
+        <refreshAmount>2</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Industrial</minFactionTechLevel>
+      </li>
+      <li>
+        <thingDefName>VVE_CarExhaust</thingDefName>
+        <capacity>12</capacity>
+        <refreshAmount>3</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Industrial</minFactionTechLevel>
+      </li>
+      <li>
+        <thingDefName>VVE_CarSuspension</thingDefName>
+        <capacity>12</capacity>
+        <refreshAmount>3</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Industrial</minFactionTechLevel>
+      </li>
+      <li>
+        <thingDefName>VVE_CarWheel</thingDefName>
+        <capacity>12</capacity>
+        <refreshAmount>3</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Industrial</minFactionTechLevel>
+      </li>
+      <li>
+        <thingDefName>VVE_CarBattery</thingDefName>
+        <capacity>4</capacity>
+        <refreshAmount>1</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Industrial</minFactionTechLevel>
+      </li>
+      <li>
+        <thingDefName>VVE_CarFuelTank</thingDefName>
+        <capacity>4</capacity>
+        <refreshAmount>1</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Industrial</minFactionTechLevel>
+      </li>
+      <li>
+        <thingDefName>VVE_CarTransmission</thingDefName>
+        <capacity>3</capacity>
+        <refreshAmount>1</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Industrial</minFactionTechLevel>
+      </li>
+      <li>
+        <thingDefName>VVE_CarRadiator</thingDefName>
+        <capacity>4</capacity>
+        <refreshAmount>1</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Industrial</minFactionTechLevel>
+      </li>
+      <li>
+        <thingDefName>VVE_CarWiring</thingDefName>
+        <capacity>4</capacity>
+        <refreshAmount>1</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Industrial</minFactionTechLevel>
+      </li>
+    </stockItems>
+  </Settlement_Services.Framework.Defs.SettlementStockCategoryDef>
+
+</Defs>

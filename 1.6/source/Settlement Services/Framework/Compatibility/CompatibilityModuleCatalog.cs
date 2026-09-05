@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Settlement_Services.Framework.Compat.RimPacts;
 using Settlement_Services.Framework.Compat.RimEducation;
+using Settlement_Services.Framework.Compat.VehicleFramework;
 
 namespace Settlement_Services.Framework.Compatibility
 {
@@ -10,6 +11,7 @@ namespace Settlement_Services.Framework.Compatibility
         {
             yield return new RimPactsCompatibilityModule();
             yield return new RimEducationCompatibilityModule();
+            yield return new VehicleFrameworkCompatibilityModule();
         }
     }
 }

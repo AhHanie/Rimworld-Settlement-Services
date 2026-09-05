@@ -7,7 +7,7 @@ using RimWorld;
 using RimWorld.Planet;
 using Verse;
 
-namespace Settlement_Services.Framework.Compat
+namespace Settlement_Services.Framework.Compat.VehicleFramework
 {
     public class VehicleUpgradeOption
     {
@@ -28,6 +28,7 @@ namespace Settlement_Services.Framework.Compat
 
         private static FieldInfo statHandlerField;
         private static FieldInfo componentsField;
+        private static PropertyInfo statHandlerHealthPercentProp;
         private static PropertyInfo componentMaxHealthProp;
         private static PropertyInfo componentHealthPercentProp;
         private static MethodInfo componentSetHealthMethod;
@@ -47,6 +48,11 @@ namespace Settlement_Services.Framework.Compat
         private static MethodInfo prerequisitesMetMethod;
         private static MethodInfo disabledMethod;
         private static MethodInfo finishUnlockMethod;
+
+        private static MethodInfo disembarkAllMethod;
+        private static MethodInfo disembarkAllFromInventoryMethod;
+        private static PropertyInfo allPawnsAboardProp;
+        private static PropertyInfo allInventoryPawnsProp;
 
         public static Type VehiclePawnType { get { EnsureResolved(); return resolveFailed ? null : vehiclePawnType; } }
 
@@ -82,8 +88,11 @@ namespace Settlement_Services.Framework.Compat
 
         public static float HealthPercent(Thing vehicle)
         {
-            List<object> components = Components(vehicle);
-            return components.Count == 0 ? 1f : components.Average(c => (float)componentHealthPercentProp.GetValue(c));
+            EnsureResolved();
+            if (resolveFailed || !IsVehicle(vehicle)) return 1f;
+
+            object statHandler = statHandlerField.GetValue(vehicle);
+            return statHandler == null ? 1f : (float)statHandlerHealthPercentProp.GetValue(statHandler);
         }
 
         public static bool NeedsRepairs(Thing vehicle) => Components(vehicle).Any(c => (float)componentHealthPercentProp.GetValue(c) < 1f);
@@ -149,6 +158,22 @@ namespace Settlement_Services.Framework.Compat
             return true;
         }
 
+        public static bool TryDisembarkAllOccupants(Thing vehicle)
+        {
+            if (!IsVehicle(vehicle)) return true;
+
+            disembarkAllMethod.Invoke(vehicle, null);
+            disembarkAllFromInventoryMethod.Invoke(vehicle, null);
+            return OccupantCount(vehicle) == 0;
+        }
+
+        private static int OccupantCount(Thing vehicle)
+        {
+            int aboard = (allPawnsAboardProp.GetValue(vehicle) as ICollection)?.Count ?? 0;
+            int inCargo = (allInventoryPawnsProp.GetValue(vehicle) as ICollection)?.Count ?? 0;
+            return aboard + inCargo;
+        }
+
         private static ThingComp FuelComp(Thing vehicle) => VehicleComp(vehicle, compFueledTravelType);
         private static ThingComp UpgradeTreeComp(Thing vehicle) => VehicleComp(vehicle, compUpgradeTreeType);
 
@@ -207,6 +232,7 @@ namespace Settlement_Services.Framework.Compat
 
             statHandlerField = vehiclePawnType.GetField("statHandler", BindingFlags.Public | BindingFlags.Instance);
             componentsField = vehicleStatHandlerType.GetField("components", BindingFlags.Public | BindingFlags.Instance);
+            statHandlerHealthPercentProp = vehicleStatHandlerType.GetProperty("HealthPercent");
             componentMaxHealthProp = vehicleComponentType.GetProperty("MaxHealth");
             componentHealthPercentProp = vehicleComponentType.GetProperty("HealthPercent");
             componentSetHealthMethod = vehicleComponentType.GetMethod("SetHealth", new[] { typeof(float) });
@@ -227,11 +253,19 @@ namespace Settlement_Services.Framework.Compat
             disabledMethod = compUpgradeTreeType.GetMethod("Disabled", new[] { upgradeNodeType });
             finishUnlockMethod = compUpgradeTreeType.GetMethod("FinishUnlock", new[] { upgradeNodeType });
 
-            bool missingCore = statHandlerField == null || componentsField == null || componentHealthPercentProp == null
+            disembarkAllMethod = vehiclePawnType.GetMethod("DisembarkAll", Type.EmptyTypes);
+            disembarkAllFromInventoryMethod = vehiclePawnType.GetMethod("DisembarkAllFromInventory", Type.EmptyTypes);
+            allPawnsAboardProp = vehiclePawnType.GetProperty("AllPawnsAboard");
+            allInventoryPawnsProp = vehiclePawnType.GetProperty("AllInventoryPawns");
+
+            bool missingCore = statHandlerField == null || componentsField == null || statHandlerHealthPercentProp == null
+                || componentHealthPercentProp == null
                 || componentMaxHealthProp == null || componentSetHealthMethod == null
                 || fuelProp == null || fuelCapacityProp == null || refuelMethod == null
                 || nodesField == null || nodeKeyField == null || nodeLabelField == null
-                || nodeUnlockedMethod == null || prerequisitesMetMethod == null || disabledMethod == null || finishUnlockMethod == null;
+                || nodeUnlockedMethod == null || prerequisitesMetMethod == null || disabledMethod == null || finishUnlockMethod == null
+                || disembarkAllMethod == null || disembarkAllFromInventoryMethod == null
+                || allPawnsAboardProp == null || allInventoryPawnsProp == null;
 
             if (missingCore)
             {

@@ -1,20 +1,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
-using Settlement_Services.Framework.Compat;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Workers;
 using Settlement_Services.Framework.Workers.Results;
+using Settlement_Services.Services.Vehicle;
 
-namespace Settlement_Services.Services.Vehicle
+namespace Settlement_Services.Framework.Compat.VehicleFramework
 {
     public class VehicleUpgradeServiceWorker : SettlementServiceWorker
     {
         private const string UpgradeGroupKey = "SettlementServices.Label.VehicleUpgradeChoice";
         private const float MaterialMarkupPct = 1.4f;
-
-        public override bool RequiresTargetCustody => false;
 
         public override ServiceAvailabilityReport CanOffer(SettlementServiceContext ctx)
         {

@@ -607,13 +607,19 @@ namespace Settlement_Services.UI
                 return;
             }
 
+            bool isBatchedFuelTopUp = quote.unitCount > 1 && session.def.defName == "SettlementService_VehicleFuelTopUp";
             foreach (ServiceLineItem lineItem in quote.lineItems)
-                listing.Label($"{lineItem.DisplayLabel}: {lineItem.amount}");
+            {
+                if (isBatchedFuelTopUp && lineItem.labelKey == "SettlementServices.LineItem.VehicleFuelTopUp")
+                    listing.Label("SettlementServices.Label.VehicleFuelBatchSurcharge".Translate(lineItem.amount));
+                else
+                    listing.Label($"{lineItem.DisplayLabel}: {lineItem.amount}");
+            }
 
             if (quote.unitCount > 1)
             {
-                bool perUnitCostsDiffer = session.def.Worker.UsesPerTargetOptionSelections
-                    && quote.perUnitQuotes.Count > 1 && quote.perUnitQuotes.Select(u => u.totalCost).Distinct().Count() > 1;
+                bool perUnitCostsDiffer = quote.perUnitQuotes.Count > 1
+                    && quote.perUnitQuotes.Select(u => u.totalCost).Distinct().Count() > 1;
                 if (perUnitCostsDiffer)
                 {
                     foreach (ServiceUnitQuote unitQuote in quote.perUnitQuotes)

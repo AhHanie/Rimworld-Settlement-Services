@@ -32,7 +32,7 @@ namespace Settlement_Services.Framework.Custody
 
             bool createdCaravan = receiver == null;
             if (createdCaravan) receiver = CaravanMaker.MakeCaravan(Enumerable.Empty<Pawn>(), Faction.OfPlayer, tile, true);
-            foreach (Pawn pawn in pawns) TargetCustodyService.ReturnPawnToCaravan(receiver, pawn);
+            foreach (Pawn pawn in pawns) receiver = TargetCustodyService.ReturnPawnToCaravan(ctx, receiver, pawn);
             if (createdCaravan) receiver.Name = CaravanNameGenerator.GenerateCaravanName(receiver);
 
             job.targetInCustody = false;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using RimWorld.Planet;
 using UnityEngine;
 using Verse;
+using Settlement_Services.Framework.Workers;
 
 namespace Settlement_Services.Framework.Compatibility
 {
@@ -26,6 +27,7 @@ namespace Settlement_Services.Framework.Compatibility
         private static QuoteModifierEntry[] quoteModifiers = Array.Empty<QuoteModifierEntry>();
         private static CompletionObserverEntry[] completionObservers = Array.Empty<CompletionObserverEntry>();
         private static ICompatibilitySettingsSection[] settingsSections = Array.Empty<ICompatibilitySettingsSection>();
+        private static ICompatibilityCustodyLifecycle[] custodyLifecycles = Array.Empty<ICompatibilityCustodyLifecycle>();
 
         internal static bool HasSettingsSections => settingsSections.Length > 0;
 
@@ -38,6 +40,7 @@ namespace Settlement_Services.Framework.Compatibility
             var quoteModifierList = new List<QuoteModifierEntry>();
             var completionObserverList = new List<CompletionObserverEntry>();
             var settingsSectionList = new List<ICompatibilitySettingsSection>();
+            var custodyLifecycleList = new List<ICompatibilityCustodyLifecycle>();
 
             foreach (ISettlementServicesCompatibilityModule module in CompatibilityModuleCatalog.CreateModules())
             {
@@ -47,6 +50,7 @@ namespace Settlement_Services.Framework.Compatibility
                 if (module.QuoteModifier != null) quoteModifierList.Add(new QuoteModifierEntry { moduleId = module.ModuleId, modifier = module.QuoteModifier });
                 if (module.CompletionObserver != null) completionObserverList.Add(new CompletionObserverEntry { moduleId = module.ModuleId, observer = module.CompletionObserver });
                 if (module.SettingsSection != null) settingsSectionList.Add(module.SettingsSection);
+                if (module.CustodyLifecycle != null) custodyLifecycleList.Add(module.CustodyLifecycle);
             }
 
             quoteModifierList.Sort((a, b) =>
@@ -59,6 +63,21 @@ namespace Settlement_Services.Framework.Compatibility
             quoteModifiers = quoteModifierList.ToArray();
             completionObservers = completionObserverList.ToArray();
             settingsSections = settingsSectionList.ToArray();
+            custodyLifecycles = custodyLifecycleList.ToArray();
+        }
+
+        internal static bool TryGetCustodyLifecycle(ServiceJobContext context, Thing thing, out ICompatibilityCustodyLifecycle lifecycle)
+        {
+            for (int i = 0; i < custodyLifecycles.Length; i++)
+            {
+                if (custodyLifecycles[i].Handles(context, thing))
+                {
+                    lifecycle = custodyLifecycles[i];
+                    return true;
+                }
+            }
+            lifecycle = null;
+            return false;
         }
 
         internal static string GetRequestBlockReason(Settlement settlement)

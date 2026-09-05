@@ -158,7 +158,6 @@
     <Compile Include="Framework\Registry\ISettlementServiceProvider.cs" />
     <Compile Include="Framework\Registry\SettlementServiceDefValidation.cs" />
     <Compile Include="Framework\Compat\DubsBadHygieneAdapter.cs" />
-    <Compile Include="Framework\Compat\VehicleFrameworkAdapter.cs" />
     <Compile Include="Framework\Compat\AndroidsAdapter.cs" />
     <Compile Include="Framework\Compat\RimPacts\RimPactsAdapter.cs" />
     <Compile Include="Framework\Compat\RimPacts\RimPactsCompatibilityModule.cs" />
@@ -170,11 +169,18 @@
     <Compile Include="Framework\Compat\RimEducation\RimEducationCourseServiceWorker.cs" />
     <Compile Include="Framework\Compat\RimEducation\RimEducationCompatibilityModule.cs" />
     <Compile Include="Framework\Compat\RimEducation\RimEducationCompletionObserver.cs" />
+    <Compile Include="Framework\Compat\VehicleFramework\VehicleFrameworkAdapter.cs" />
+    <Compile Include="Framework\Compat\VehicleFramework\VehicleFuelServiceWorker.cs" />
+    <Compile Include="Framework\Compat\VehicleFramework\VehicleRepairServiceWorker.cs" />
+    <Compile Include="Framework\Compat\VehicleFramework\VehicleUpgradeServiceWorker.cs" />
+    <Compile Include="Framework\Compat\VehicleFramework\VehicleFrameworkCompatibilityModule.cs" />
+    <Compile Include="Framework\Compat\VehicleFramework\VehicleFrameworkCustodyLifecycle.cs" />
     <Compile Include="Framework\Compatibility\ISettlementServicesCompatibilityModule.cs" />
     <Compile Include="Framework\Compatibility\ICompatibilityAvailabilityRule.cs" />
     <Compile Include="Framework\Compatibility\ICompatibilityQuoteModifier.cs" />
     <Compile Include="Framework\Compatibility\ICompatibilityCompletionObserver.cs" />
     <Compile Include="Framework\Compatibility\ICompatibilitySettingsSection.cs" />
+    <Compile Include="Framework\Compatibility\ICompatibilityCustodyLifecycle.cs" />
     <Compile Include="Framework\Compatibility\CompatibilityQuoteContext.cs" />
     <Compile Include="Framework\Compatibility\CompatibilityCompletionContext.cs" />
     <Compile Include="Framework\Compatibility\SettlementServicesCompatibilityRegistry.cs" />
@@ -297,9 +303,6 @@
 
 
     <Compile Include="Services\Vehicle\VehicleMaterialPlanner.cs" />
-    <Compile Include="Services\Vehicle\VehicleFuelServiceWorker.cs" />
-    <Compile Include="Services\Vehicle\VehicleRepairServiceWorker.cs" />
-    <Compile Include="Services\Vehicle\VehicleUpgradeServiceWorker.cs" />
 
     <Compile Include="Services\Mechanitor\MechRepairServiceWorker.cs" />
     <Compile Include="Services\Mechanitor\MechRechargeServiceWorker.cs" />

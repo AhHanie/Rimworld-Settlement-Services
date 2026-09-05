@@ -296,6 +296,16 @@ namespace Settlement_Services.Domain
             return job;
         }
 
+        public void UpdateJobRequesterCaravan(int jobId, Caravan caravan)
+        {
+            ServiceJobRecord job = GetJob(jobId);
+            if (job == null) return;
+
+            job.requesterCaravanId = caravan?.ID ?? -1;
+            job.requesterFactionLoadId = (caravan?.Faction ?? Faction.OfPlayer)?.GetUniqueLoadID();
+            job.requesterCaravanSnapshotLabel = caravan?.LabelCap;
+        }
+
         public bool TryTransition(int jobId, ServiceJobStatus to)
         {
             ServiceJobRecord job = GetJob(jobId);

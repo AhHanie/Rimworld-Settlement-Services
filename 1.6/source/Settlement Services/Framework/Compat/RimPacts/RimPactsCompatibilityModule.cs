@@ -12,6 +12,7 @@ namespace Settlement_Services.Framework.Compat.RimPacts
         public ICompatibilityQuoteModifier QuoteModifier { get; private set; }
         public ICompatibilityCompletionObserver CompletionObserver { get; private set; }
         public ICompatibilitySettingsSection SettingsSection { get; private set; }
+        public ICompatibilityCustodyLifecycle CustodyLifecycle => null;
 
         public bool TryInitialize()
         {

@@ -12,6 +12,7 @@ namespace Settlement_Services.Framework.Compat.RimEducation
         public ICompatibilityQuoteModifier QuoteModifier => null;
         public ICompatibilityCompletionObserver CompletionObserver { get; private set; }
         public ICompatibilitySettingsSection SettingsSection => null;
+        public ICompatibilityCustodyLifecycle CustodyLifecycle => null;
 
         public bool TryInitialize()
         {

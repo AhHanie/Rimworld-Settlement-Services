@@ -141,10 +141,15 @@ namespace Settlement_Services.Framework
                 return false;
             }
 
-            if (def.Worker.RequiresTargetCustody && !TargetCustodyService.TryTakeCustody(ctx, caravan, out string custodyErrorKey))
+            if (def.Worker.RequiresTargetCustody)
             {
-                FailJob(domain, jobId, custodyErrorKey);
-                return false;
+                if (!TargetCustodyService.TryTakeCustody(ctx, caravan, out string custodyErrorKey))
+                {
+                    FailJob(domain, jobId, custodyErrorKey);
+                    return false;
+                }
+
+                caravan = ResolveRequesterCaravan(job);
             }
 
             List<TargetSnapshot> targets = job.Targets.ToList();
@@ -164,14 +169,14 @@ namespace Settlement_Services.Framework
 
             if (!result.Success)
             {
-                TargetCustodyService.ReturnCustody(job, caravan);
+                TargetCustodyService.ReturnCustody(ctx, caravan);
                 FailJob(domain, jobId, result.ErrorKey);
                 return false;
             }
 
             if (!domain.TryTransition(jobId, ServiceJobStatus.Active))
             {
-                TargetCustodyService.ReturnCustody(job, caravan);
+                TargetCustodyService.ReturnCustody(ctx, caravan);
                 return false;
             }
 
@@ -206,7 +211,7 @@ namespace Settlement_Services.Framework
             Settlement settlement = ctx.ResolveSettlement();
             if (settlement == null || collectingCaravan.Tile != settlement.Tile) return false;
 
-            TargetCustodyService.CollectAll(job, collectingCaravan);
+            TargetCustodyService.CollectAll(ctx, collectingCaravan);
             return domain.TryTransition(jobId, ServiceJobStatus.Collected);
         }
 
@@ -300,7 +305,7 @@ namespace Settlement_Services.Framework
             if (custodyJobs.Count > 0)
             {
                 PlanetTile tile = settlementTile.Valid ? settlementTile : custodyJobs[0].settlementTile;
-                bool recovered = TargetCustodyService.TryCreateRecoveryCaravanAndCollectAll(custodyJobs, tile);
+                bool recovered = TargetCustodyService.TryCreateRecoveryCaravanAndCollectAll(domain, custodyJobs, tile);
 
                 foreach (ServiceJobRecord job in custodyJobs)
                 {

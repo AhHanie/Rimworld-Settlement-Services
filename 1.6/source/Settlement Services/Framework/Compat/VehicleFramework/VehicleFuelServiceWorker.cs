@@ -2,20 +2,17 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Verse;
-using Settlement_Services.Framework.Compat;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Stock;
 using Settlement_Services.Framework.Workers;
 using Settlement_Services.Framework.Workers.Results;
 
-namespace Settlement_Services.Services.Vehicle
+namespace Settlement_Services.Framework.Compat.VehicleFramework
 {
     public class VehicleFuelServiceWorker : SettlementServiceWorker
     {
         private const float FuelMarkupPct = 1.4f;
-
-        public override bool RequiresTargetCustody => false;
 
         public override ServiceAvailabilityReport CanOffer(SettlementServiceContext ctx)
         {

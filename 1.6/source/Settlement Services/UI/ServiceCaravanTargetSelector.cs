@@ -6,6 +6,7 @@ using RimWorld.Planet;
 using Verse;
 using Settlement_Services.Domain;
 using Settlement_Services.Framework.Compat;
+using Settlement_Services.Framework.Compat.VehicleFramework;
 using Settlement_Services.Framework.Defs;
 
 namespace Settlement_Services.UI

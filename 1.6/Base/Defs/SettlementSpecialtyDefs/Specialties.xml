@@ -144,7 +144,7 @@
   <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
     <defName>SettlementSpecialty_Resort</defName>
     <label>resort</label>
-    <description>This settlement is a popular destination for rest and recreation, offering cheaper and faster hospitality services.</description>
+    <description>This settlement is a popular destination for rest and recreation, offering spa and meditation services.</description>
     <iconTexPath>SettlementServices/UI/Icons/resort</iconTexPath>
     <selectionWeight>1.2</selectionWeight>
     <minTechLevel>Neolithic</minTechLevel>

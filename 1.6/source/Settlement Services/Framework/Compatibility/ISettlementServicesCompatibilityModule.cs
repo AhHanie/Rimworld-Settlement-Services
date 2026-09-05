@@ -10,5 +10,6 @@ namespace Settlement_Services.Framework.Compatibility
         ICompatibilityQuoteModifier QuoteModifier { get; }
         ICompatibilityCompletionObserver CompletionObserver { get; }
         ICompatibilitySettingsSection SettingsSection { get; }
+        ICompatibilityCustodyLifecycle CustodyLifecycle { get; }
     }
 }

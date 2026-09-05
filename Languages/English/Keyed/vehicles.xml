@@ -6,7 +6,9 @@
     <SettlementServices.Error.VehicleNeedsNoRepairs>This vehicle needs no repairs.</SettlementServices.Error.VehicleNeedsNoRepairs>
     <SettlementServices.Error.NoVehicleUpgradesAvailable>No upgrades are currently available for this vehicle.</SettlementServices.Error.NoVehicleUpgradesAvailable>
     <SettlementServices.Error.VehicleUpgradeNoLongerAvailable>The selected upgrade is no longer available for this vehicle.</SettlementServices.Error.VehicleUpgradeNoLongerAvailable>
+    <SettlementServices.Error.VehicleOccupantsCouldNotDisembark>This vehicle's occupants could not be safely moved out before the service could begin.</SettlementServices.Error.VehicleOccupantsCouldNotDisembark>
     <SettlementServices.LineItem.VehicleFuelTopUp>Fuel</SettlementServices.LineItem.VehicleFuelTopUp>
+    <SettlementServices.Label.VehicleFuelBatchSurcharge>Settlement fuel surcharge (included in vehicle totals): {0} silver</SettlementServices.Label.VehicleFuelBatchSurcharge>
     <SettlementServices.LineItem.VehicleUpgradeMaterials>Upgrade materials</SettlementServices.LineItem.VehicleUpgradeMaterials>
     <SettlementServices.Label.VehicleUpgradeChoice>Upgrade</SettlementServices.Label.VehicleUpgradeChoice>
 </LanguageData>
