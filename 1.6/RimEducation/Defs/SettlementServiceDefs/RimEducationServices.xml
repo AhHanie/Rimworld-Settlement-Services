@@ -8,6 +8,9 @@
     <description>A four-day specialist placement that advances this pawn's own education under Rim Education's rules. The gain follows Rim Education's own difficulty curve, education stats, and Education Speed setting rather than a fixed amount.</description>
     <workerClass>Settlement_Services.Framework.Compat.RimEducation.RimEducationCourseServiceWorker</workerClass>
     <requiredTechLevel>Industrial</requiredTechLevel>
+    <requiredCapabilityTags>
+      <li>Research</li>
+    </requiredCapabilityTags>
     <minimumCost>2000</minimumCost>
     <wealthScale>0.04</wealthScale>
     <duration>240000</duration>    <!-- 4 days -->
