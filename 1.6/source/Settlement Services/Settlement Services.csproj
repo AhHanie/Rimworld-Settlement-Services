@@ -182,6 +182,11 @@
     <Compile Include="Framework\Compat\ProgressionEducation\ProgressionEducationProficiencyServiceWorker.cs" />
     <Compile Include="Framework\Compat\ProgressionEducation\ProgressionEducationCompatibilityModule.cs" />
     <Compile Include="Framework\Compat\ProgressionEducation\ProgressionEducationCompletionObserver.cs" />
+    <Compile Include="Framework\Compat\LifeLessons\ILifeLessonsProficiencyGateway.cs" />
+    <Compile Include="Framework\Compat\LifeLessons\LifeLessonsAdapter.cs" />
+    <Compile Include="Framework\Compat\LifeLessons\LifeLessonsProficiencyServiceWorker.cs" />
+    <Compile Include="Framework\Compat\LifeLessons\LifeLessonsCompatibilityModule.cs" />
+    <Compile Include="Framework\Compat\LifeLessons\LifeLessonsCompletionObserver.cs" />
     <Compile Include="Framework\Compatibility\ISettlementServicesCompatibilityModule.cs" />
     <Compile Include="Framework\Compatibility\IRechargeableHediffService.cs" />
     <Compile Include="Framework\Compatibility\ICompatibilityAvailabilityRule.cs" />

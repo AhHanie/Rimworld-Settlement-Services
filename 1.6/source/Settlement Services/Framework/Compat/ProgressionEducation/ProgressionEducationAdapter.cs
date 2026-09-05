@@ -25,8 +25,32 @@ namespace Settlement_Services.Framework.Compat.ProgressionEducation
         private static Action<Pawn, Def, Def> grantTier;
         private static Func<Def, IEnumerable> getTiers;
         private static Func<IEnumerable> getAllProficiencyDefs;
+        private static Func<Def, int> getSemesterGoal;
+
+        private static FieldInfo settingsField;
+        private static FieldInfo proficiencySpeedModifierField;
 
         internal static bool IsReady => state == BindingState.Ready;
+
+        internal static float ProficiencyClassSpeedModifier
+        {
+            get
+            {
+                if (settingsField == null || proficiencySpeedModifierField == null) return 1f;
+
+                try
+                {
+                    object settings = settingsField.GetValue(null);
+                    if (settings == null) return 1f;
+
+                    return proficiencySpeedModifierField.GetValue(settings) is float value ? value : 1f;
+                }
+                catch
+                {
+                    return 1f;
+                }
+            }
+        }
 
         internal static readonly IProgressionEducationProficiencyGateway Instance = new AdapterGateway();
 
@@ -79,8 +103,35 @@ namespace Settlement_Services.Framework.Compat.ProgressionEducation
             getTiers = CompileDefEnumerableField(trackDefType, tiersField);
             getAllProficiencyDefs = CompileStaticEnumerableGetter(allDefsProp);
 
+            FieldInfo semesterGoalField = tierDefType.GetField("semesterGoal", BindingFlags.Public | BindingFlags.Instance);
+            if (semesterGoalField != null && semesterGoalField.FieldType == typeof(int))
+                getSemesterGoal = CompileDefIntField(tierDefType, semesterGoalField);
+
+            BindProficiencySpeedModifier(assembly);
+
             state = BindingState.Ready;
             SupportLog.Info("Progression Education detected; proficiency training compatibility active.");
+        }
+
+        private static void BindProficiencySpeedModifier(Assembly assembly)
+        {
+            try
+            {
+                Type modType = assembly.GetType("ProgressionEducation.EducationMod");
+                FieldInfo settingsFieldInfo = modType?.GetField("settings", BindingFlags.Public | BindingFlags.Static);
+                if (settingsFieldInfo == null) return;
+
+                FieldInfo speedField = settingsFieldInfo.FieldType.GetField("proficiencyClassesLearningSpeedModifier", BindingFlags.Public | BindingFlags.Instance);
+                if (speedField == null || speedField.FieldType != typeof(float)) return;
+
+                settingsField = settingsFieldInfo;
+                proficiencySpeedModifierField = speedField;
+            }
+            catch
+            {
+                settingsField = null;
+                proficiencySpeedModifierField = null;
+            }
         }
 
         private struct EligiblePromotion
@@ -119,10 +170,24 @@ namespace Settlement_Services.Framework.Compat.ProgressionEducation
 
         private static string OptionKeyFor(Def tierDef) => OptionKeyPrefix + tierDef.defName;
 
+        private static int SemesterGoalFor(Def tierDef)
+        {
+            if (getSemesterGoal == null) return 0;
+
+            try
+            {
+                return getSemesterGoal(tierDef);
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
         private static IEnumerable<ProficiencyPromotionOption> GetEligiblePromotions(Pawn pawn)
         {
             foreach (EligiblePromotion promotion in EnumerateEligiblePromotions(pawn))
-                yield return new ProficiencyPromotionOption(OptionKeyFor(promotion.nextTier), promotion.track.LabelCap, promotion.currentTier.LabelCap, promotion.nextTier.LabelCap);
+                yield return new ProficiencyPromotionOption(OptionKeyFor(promotion.nextTier), promotion.track.LabelCap, promotion.currentTier.LabelCap, promotion.nextTier.LabelCap, SemesterGoalFor(promotion.nextTier));
         }
 
         private static bool TryResolvePromotion(Pawn pawn, string optionKey, out ProficiencyPromotionOption option)
@@ -130,7 +195,7 @@ namespace Settlement_Services.Framework.Compat.ProgressionEducation
             foreach (EligiblePromotion promotion in EnumerateEligiblePromotions(pawn))
             {
                 if (OptionKeyFor(promotion.nextTier) != optionKey) continue;
-                option = new ProficiencyPromotionOption(optionKey, promotion.track.LabelCap, promotion.currentTier.LabelCap, promotion.nextTier.LabelCap);
+                option = new ProficiencyPromotionOption(optionKey, promotion.track.LabelCap, promotion.currentTier.LabelCap, promotion.nextTier.LabelCap, SemesterGoalFor(promotion.nextTier));
                 return true;
             }
 
@@ -157,6 +222,8 @@ namespace Settlement_Services.Framework.Compat.ProgressionEducation
         {
             public bool IsReady => ProgressionEducationAdapter.IsReady;
 
+            public float ProficiencyClassSpeedModifier => ProgressionEducationAdapter.ProficiencyClassSpeedModifier;
+
             public IEnumerable<ProficiencyPromotionOption> GetEligiblePromotions(Pawn pawn) =>
                 ProgressionEducationAdapter.GetEligiblePromotions(pawn);
 
@@ -176,6 +243,9 @@ namespace Settlement_Services.Framework.Compat.ProgressionEducation
             grantTier = null;
             getTiers = null;
             getAllProficiencyDefs = null;
+            getSemesterGoal = null;
+            settingsField = null;
+            proficiencySpeedModifierField = null;
             SupportLog.Warning($"Progression Education is installed but its API shape doesn't match what this mod expects ({reason}); proficiency training will stay unavailable.");
         }
 
@@ -229,6 +299,14 @@ namespace Settlement_Services.Framework.Compat.ProgressionEducation
             Expression access = Expression.Property(null, property);
             Expression converted = Expression.Convert(access, typeof(IEnumerable));
             return Expression.Lambda<Func<IEnumerable>>(converted).Compile();
+        }
+
+        private static Func<Def, int> CompileDefIntField(Type declaringType, FieldInfo field)
+        {
+            ParameterExpression instanceParam = Expression.Parameter(typeof(Def), "instance");
+            Expression typedInstance = Expression.Convert(instanceParam, declaringType);
+            Expression access = Expression.Field(typedInstance, field);
+            return Expression.Lambda<Func<Def, int>>(access, instanceParam).Compile();
         }
     }
 }

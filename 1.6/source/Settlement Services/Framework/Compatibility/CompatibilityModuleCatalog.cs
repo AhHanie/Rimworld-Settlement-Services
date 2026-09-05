@@ -4,6 +4,7 @@ using Settlement_Services.Framework.Compat.RimEducation;
 using Settlement_Services.Framework.Compat.VehicleFramework;
 using Settlement_Services.Framework.Compat.ChargeableHediffs;
 using Settlement_Services.Framework.Compat.ProgressionEducation;
+using Settlement_Services.Framework.Compat.LifeLessons;
 
 namespace Settlement_Services.Framework.Compatibility
 {
@@ -16,6 +17,7 @@ namespace Settlement_Services.Framework.Compatibility
             yield return new VehicleFrameworkCompatibilityModule();
             yield return new ChargeableHediffsCompatibilityModule();
             yield return new ProgressionEducationCompatibilityModule();
+            yield return new LifeLessonsCompatibilityModule();
         }
     }
 }

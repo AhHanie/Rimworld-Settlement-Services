@@ -42,4 +42,13 @@
     <SettlementServices.Label.ProficiencyPromotionPreview>{0} training: {1} -> {2}</SettlementServices.Label.ProficiencyPromotionPreview>
     <SettlementServices.Label.ProficiencyPromotionSelectPrompt>Select a proficiency to train toward.</SettlementServices.Label.ProficiencyPromotionSelectPrompt>
     <SettlementServices.Label.ProficiencyPromotionSelectPawnPrompt>Select a pawn to preview this training.</SettlementServices.Label.ProficiencyPromotionSelectPawnPrompt>
+
+    <SettlementServices.Error.LifeLessonsUnavailable>Life Lessons' integration isn't available right now.</SettlementServices.Error.LifeLessonsUnavailable>
+    <SettlementServices.Error.LifeLessonsNoEligibleProficiency>This pawn has no Life Lessons proficiency it can currently be taught.</SettlementServices.Error.LifeLessonsNoEligibleProficiency>
+    <SettlementServices.Error.LifeLessonsNoProficiencySelected>Select exactly one Life Lessons proficiency to train.</SettlementServices.Error.LifeLessonsNoProficiencySelected>
+    <SettlementServices.Label.LifeLessonsProficiencyChoice>Life Lessons proficiency</SettlementServices.Label.LifeLessonsProficiencyChoice>
+    <SettlementServices.Label.LifeLessonsProficiencyCategory>Category: {0}</SettlementServices.Label.LifeLessonsProficiencyCategory>
+    <SettlementServices.Label.LifeLessonsProficiencyPreview>Will fully train: {0} ({1})</SettlementServices.Label.LifeLessonsProficiencyPreview>
+    <SettlementServices.Label.LifeLessonsSelectPrompt>Select a proficiency to train.</SettlementServices.Label.LifeLessonsSelectPrompt>
+    <SettlementServices.Label.LifeLessonsSelectPawnPrompt>Select a pawn to preview this training.</SettlementServices.Label.LifeLessonsSelectPawnPrompt>
 </LanguageData>

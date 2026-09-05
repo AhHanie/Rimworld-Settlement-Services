@@ -51,6 +51,8 @@ namespace Settlement_Services.Framework.Workers
 
         public virtual float WealthScaleAdditionFor(SettlementServiceRequest request) => 0f;
 
+        public virtual float MinimumCostMultiplierFor(SettlementServiceRequest request) => 1f;
+
         public virtual float BasePriceMultiplierFor(SettlementServiceRequest request) => 1f;
 
         public virtual float EventChanceMultiplierFor(ServiceJobContext ctx) => 1f;

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_LifeLessonsProficiencyTraining</defName>
+    <category>SettlementService_Education</category>
+    <label>proficiency training</label>
+    <description>A specialist placement that fully trains a colonist in one Life Lessons proficiency they already qualify to learn. Which proficiencies are available, and the pawn's own eligibility, are governed entirely by Life Lessons' own rules and settings.</description>
+    <workerClass>Settlement_Services.Framework.Compat.LifeLessons.LifeLessonsProficiencyServiceWorker</workerClass>
+    <requiredTechLevel>Industrial</requiredTechLevel>
+    <requiredCapabilityTags>
+      <li>Research</li>
+    </requiredCapabilityTags>
+    <minimumCost>2000</minimumCost>
+    <wealthScale>0.04</wealthScale>
+    <duration>300000</duration>    <!-- 5 days -->
+    <targetRule>Pawn</targetRule>
+    <batchMode>Targets</batchMode>
+    <eventChancePct>0</eventChancePct>
+    <iconTexPath>SettlementServices/UI/Icons/skill-level</iconTexPath>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

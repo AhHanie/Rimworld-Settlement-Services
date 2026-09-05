@@ -46,7 +46,8 @@ namespace Settlement_Services.Framework.Pricing
         {
             IServicePricingContext ctx = ServicePricingContext.Current;
             float wealthScaleAddition = def.Worker.WealthScaleAdditionFor(request);
-            float scaled = ScaledCost(def, ctx.TotalPlayerWealth, ctx.DifficultyMultiplier, ctx.WealthPriceScalePct, wealthScaleAddition);
+            float minimumCostMultiplier = def.Worker.MinimumCostMultiplierFor(request);
+            float scaled = ScaledCost(def, ctx.TotalPlayerWealth, ctx.DifficultyMultiplier, ctx.WealthPriceScalePct, wealthScaleAddition, minimumCostMultiplier);
             scaled *= def.Worker.BasePriceMultiplierFor(request);
 
             var lineItems = new List<ServiceLineItem>(workerLineItems);
@@ -80,10 +81,10 @@ namespace Settlement_Services.Framework.Pricing
             lineItems.Add(new ServiceLineItem(labelKey, Mathf.RoundToInt(scaled * pct), isModifier: true));
         }
 
-        internal static float ScaledCost(SettlementServiceDef def, float wealth, float difficultyMultiplier, float wealthPriceScalePct, float wealthScaleAddition = 0f)
+        internal static float ScaledCost(SettlementServiceDef def, float wealth, float difficultyMultiplier, float wealthPriceScalePct, float wealthScaleAddition = 0f, float minimumCostMultiplier = 1f)
         {
             float wealthDerivedCost = (def.wealthScale + wealthScaleAddition) * WealthScaling.EffectiveWealth(wealth) * wealthPriceScalePct * (def.difficultyScaling ? difficultyMultiplier : 1f);
-            return Mathf.Max(def.minimumCost, wealthDerivedCost);
+            return Mathf.Max(def.minimumCost * minimumCostMultiplier, wealthDerivedCost);
         }
 
         internal static ServicePriorityTierDef ResolveTier(SettlementServiceDef def, string tierKey) =>

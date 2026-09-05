@@ -5,7 +5,7 @@
     <defName>SettlementService_ProgressionEducationProficiencyTraining</defName>
     <category>SettlementService_Education</category>
     <label>proficiency certification</label>
-    <description>A specialist placement that promotes a colonist by exactly one Progression: Education proficiency tier, in whichever track and next tier the pawn already qualifies for. Which tracks are available, and the pawn's own eligibility, are governed entirely by Progression: Education's own rules and settings.</description>
+    <description>A specialist placement that promotes a colonist by exactly one Progression: Education proficiency tier, in whichever track and next tier the pawn already qualifies for. Which tracks are available, and the pawn's own eligibility, are governed entirely by Progression: Education's own rules and settings. Price and duration scale with the selected tier's own certification workload.</description>
     <workerClass>Settlement_Services.Framework.Compat.ProgressionEducation.ProgressionEducationProficiencyServiceWorker</workerClass>
     <requiredTechLevel>Industrial</requiredTechLevel>
     <requiredCapabilityTags>
@@ -13,7 +13,7 @@
     </requiredCapabilityTags>
     <minimumCost>2000</minimumCost>
     <wealthScale>0.04</wealthScale>
-    <duration>300000</duration>    <!-- 5 days -->
+    <duration>1500000</duration>    <!-- 25 days -->
     <targetRule>Pawn</targetRule>
     <batchMode>Targets</batchMode>
     <eventChancePct>0</eventChancePct>

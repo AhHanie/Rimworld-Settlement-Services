@@ -10,13 +10,15 @@ namespace Settlement_Services.Framework.Compat.ProgressionEducation
         public readonly string trackLabelCap;
         public readonly string currentTierLabelCap;
         public readonly string nextTierLabelCap;
+        public readonly int semesterGoal;
 
-        public ProficiencyPromotionOption(string optionKey, string trackLabelCap, string currentTierLabelCap, string nextTierLabelCap)
+        public ProficiencyPromotionOption(string optionKey, string trackLabelCap, string currentTierLabelCap, string nextTierLabelCap, int semesterGoal)
         {
             this.optionKey = optionKey;
             this.trackLabelCap = trackLabelCap;
             this.currentTierLabelCap = currentTierLabelCap;
             this.nextTierLabelCap = nextTierLabelCap;
+            this.semesterGoal = semesterGoal;
         }
     }
 
@@ -39,6 +41,8 @@ namespace Settlement_Services.Framework.Compat.ProgressionEducation
     {
         bool IsReady { get; }
 
+        float ProficiencyClassSpeedModifier { get; }
+
         IEnumerable<ProficiencyPromotionOption> GetEligiblePromotions(Pawn pawn);
 
         bool TryResolvePromotion(Pawn pawn, string optionKey, out ProficiencyPromotionOption option);
@@ -51,6 +55,8 @@ namespace Settlement_Services.Framework.Compat.ProgressionEducation
         internal static readonly NullProgressionEducationProficiencyGateway Instance = new NullProgressionEducationProficiencyGateway();
 
         public bool IsReady => false;
+
+        public float ProficiencyClassSpeedModifier => 1f;
 
         public IEnumerable<ProficiencyPromotionOption> GetEligiblePromotions(Pawn pawn) => Array.Empty<ProficiencyPromotionOption>();
 
