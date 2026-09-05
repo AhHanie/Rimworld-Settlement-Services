@@ -53,7 +53,7 @@ namespace Settlement_Services.Framework.Pricing
             Settlement settlement = request.settlement;
             Faction faction = settlement?.Faction;
 
-            AddPctModifier(lineItems, scaled, settlement != null ? SettlementSpecialtyService.TotalPriceModifierPct(settlement, def.category) : 0f, "SettlementServices.LineItem.SpecialtyModifier");
+            AddPctModifier(lineItems, scaled, settlement != null ? SettlementSpecialtyService.TotalPriceModifierPct(settlement, def) : 0f, "SettlementServices.LineItem.SpecialtyModifier");
             AddPctModifier(lineItems, scaled, ctx.ReputationModifierPct(faction), "SettlementServices.LineItem.ReputationModifier");
             AddPctModifier(lineItems, scaled, settlement != null ? -SettlementInvestmentService.CurrentDiscountPct(settlement) : 0f, "SettlementServices.LineItem.InvestmentDiscount");
 
@@ -94,7 +94,7 @@ namespace Settlement_Services.Framework.Pricing
             int? finalDuration = def.Worker.ExpectedDurationTicksFor(request);
             if (finalDuration.HasValue) return Mathf.Max(1, finalDuration.Value);
 
-            float specialtyOffset = settlement != null ? SettlementSpecialtyService.TotalDurationMultiplierOffset(settlement, def.category) : 0f;
+            float specialtyOffset = settlement != null ? SettlementSpecialtyService.TotalDurationMultiplierOffset(settlement, def) : 0f;
             float tierMultiplier = tier?.durationMultiplier ?? 1f;
             float workerMultiplier = def.Worker.DurationMultiplierFor(request);
             float combined = tierMultiplier * workerMultiplier * Mathf.Max(0.1f, 1f + specialtyOffset);

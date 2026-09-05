@@ -36,17 +36,29 @@ namespace Settlement_Services.Framework.Specialty
             GetSpecialties(settlement).Any(d => d.modifiers.capabilityTags.Contains(tag));
 
         public static float TotalPriceModifierPct(Settlement settlement, ServiceCategoryDef category) =>
-            Relevant(settlement, category).Sum(d => d.modifiers.priceModifierPct);
+            Relevant(settlement, category, null).Sum(d => d.modifiers.priceModifierPct);
 
         public static float TotalDurationMultiplierOffset(Settlement settlement, ServiceCategoryDef category) =>
-            Relevant(settlement, category).Sum(d => d.modifiers.durationMultiplierOffset);
+            Relevant(settlement, category, null).Sum(d => d.modifiers.durationMultiplierOffset);
 
         public static float TotalQualityOffset(Settlement settlement, ServiceCategoryDef category) =>
-            Relevant(settlement, category).Sum(d => d.modifiers.qualityOffset);
+            Relevant(settlement, category, null).Sum(d => d.modifiers.qualityOffset);
 
-        private static IEnumerable<SettlementSpecialtyDef> Relevant(Settlement settlement, ServiceCategoryDef category) =>
-            category == null
-                ? Enumerable.Empty<SettlementSpecialtyDef>()
-                : GetSpecialties(settlement).Where(d => d.modifiers.relevantCategoryDefNames.Contains(category.defName));
+        public static float TotalPriceModifierPct(Settlement settlement, SettlementServiceDef def) =>
+            Relevant(settlement, def?.category, def?.defName).Sum(d => d.modifiers.priceModifierPct);
+
+        public static float TotalDurationMultiplierOffset(Settlement settlement, SettlementServiceDef def) =>
+            Relevant(settlement, def?.category, def?.defName).Sum(d => d.modifiers.durationMultiplierOffset);
+
+        public static float TotalQualityOffset(Settlement settlement, SettlementServiceDef def) =>
+            Relevant(settlement, def?.category, def?.defName).Sum(d => d.modifiers.qualityOffset);
+
+        private static IEnumerable<SettlementSpecialtyDef> Relevant(Settlement settlement, ServiceCategoryDef category, string serviceDefName)
+        {
+            if (category == null && serviceDefName == null) return Enumerable.Empty<SettlementSpecialtyDef>();
+            return GetSpecialties(settlement).Where(d =>
+                (category != null && d.modifiers.relevantCategoryDefNames.Contains(category.defName))
+                || (serviceDefName != null && d.modifiers.relevantServiceDefNames.Contains(serviceDefName)));
+        }
     }
 }

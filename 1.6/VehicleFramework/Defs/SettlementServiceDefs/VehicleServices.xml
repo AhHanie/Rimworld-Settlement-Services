@@ -38,6 +38,9 @@
     <description>Commission the settlement's workshop to install one currently-available upgrade on a caravan vehicle.</description>
     <workerClass>Settlement_Services.Framework.Compat.VehicleFramework.VehicleUpgradeServiceWorker</workerClass>
     <requiredTechLevel>Industrial</requiredTechLevel>
+    <requiredCapabilityTags>
+      <li>VehicleUpgrades</li>
+    </requiredCapabilityTags>
     <minimumCost>80</minimumCost>
     <wealthScale>0.02</wealthScale>
     <duration>30000</duration>

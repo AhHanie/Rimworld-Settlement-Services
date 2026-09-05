@@ -57,7 +57,11 @@ namespace Settlement_Services.Debug
             {
                 bool unavailable = ServiceCandidacyService.TryGetUnavailableReason(def, settlement, out string reasonKey);
                 string status = unavailable ? $"unavailable ({reasonKey.Translate()})" : "available";
-                Logger.Message($"    {def.defName}: {status}");
+
+                float price = SettlementSpecialtyService.TotalPriceModifierPct(settlement, def);
+                float duration = SettlementSpecialtyService.TotalDurationMultiplierOffset(settlement, def);
+                string modifiers = price == 0f && duration == 0f ? "" : $", price {price:+0%;-0%}, duration {duration:+0%;-0%}";
+                Logger.Message($"    {def.defName}: {status}{modifiers}");
             }
         }
 

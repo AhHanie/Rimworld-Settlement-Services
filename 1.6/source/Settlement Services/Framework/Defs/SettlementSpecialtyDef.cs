@@ -29,8 +29,8 @@ namespace Settlement_Services.Framework.Defs
             foreach (string e in base.ConfigErrors()) yield return e;
             if (selectionWeight < 0f) yield return "selectionWeight must be >= 0.";
             if ((modifiers.qualityOffset != 0f || modifiers.priceModifierPct != 0f || modifiers.durationMultiplierOffset != 0f)
-                && modifiers.relevantCategoryDefNames.NullOrEmpty())
-                yield return "has a nonzero quality/price/duration modifier but no relevantCategoryDefNames -- it will never apply to anything.";
+                && modifiers.relevantCategoryDefNames.NullOrEmpty() && modifiers.relevantServiceDefNames.NullOrEmpty())
+                yield return "has a nonzero quality/price/duration modifier but no relevantCategoryDefNames or relevantServiceDefNames -- it will never apply to anything.";
         }
     }
 }

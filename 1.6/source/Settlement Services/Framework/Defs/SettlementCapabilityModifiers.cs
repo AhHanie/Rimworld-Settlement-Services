@@ -11,5 +11,6 @@ namespace Settlement_Services.Framework.Defs
         public float durationMultiplierOffset = 0f;
 
         public List<string> relevantCategoryDefNames = new List<string>();
+        public List<string> relevantServiceDefNames = new List<string>();
     }
 }

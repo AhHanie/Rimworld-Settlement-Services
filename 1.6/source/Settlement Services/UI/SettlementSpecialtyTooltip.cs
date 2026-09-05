@@ -75,16 +75,28 @@ namespace Settlement_Services.UI
                 ServiceCategoryDef category = DefDatabase<ServiceCategoryDef>.GetNamedSilentFail(categoryDefName);
                 if (category == null) continue;
 
-                if (sb.Length > 0) sb.Append("\n\n");
-                sb.Append(category.LabelCap.Colorize(ColoredText.TipSectionTitleColor));
-                if (mods.qualityOffset != 0f)
-                    sb.Append("\n").Append("SettlementServices.SpecialtyTooltip.QualityModifier".Translate(mods.qualityOffset.ToStringPercentSigned()));
-                if (mods.priceModifierPct != 0f)
-                    sb.Append("\n").Append("SettlementServices.SpecialtyTooltip.PriceModifier".Translate(mods.priceModifierPct.ToStringPercentSigned()));
-                if (mods.durationMultiplierOffset != 0f)
-                    sb.Append("\n").Append("SettlementServices.SpecialtyTooltip.DurationModifier".Translate(mods.durationMultiplierOffset.ToStringPercentSigned()));
+                AppendModifierBlock(sb, category.LabelCap, mods);
+            }
+            foreach (string serviceDefName in mods.relevantServiceDefNames)
+            {
+                SettlementServiceDef service = DefDatabase<SettlementServiceDef>.GetNamedSilentFail(serviceDefName);
+                if (service == null) continue;
+
+                AppendModifierBlock(sb, service.LabelCap, mods);
             }
             return sb.Length == 0 ? null : sb.ToString();
+        }
+
+        private static void AppendModifierBlock(StringBuilder sb, string heading, SettlementCapabilityModifiers mods)
+        {
+            if (sb.Length > 0) sb.Append("\n\n");
+            sb.Append(heading.Colorize(ColoredText.TipSectionTitleColor));
+            if (mods.qualityOffset != 0f)
+                sb.Append("\n").Append("SettlementServices.SpecialtyTooltip.QualityModifier".Translate(mods.qualityOffset.ToStringPercentSigned()));
+            if (mods.priceModifierPct != 0f)
+                sb.Append("\n").Append("SettlementServices.SpecialtyTooltip.PriceModifier".Translate(mods.priceModifierPct.ToStringPercentSigned()));
+            if (mods.durationMultiplierOffset != 0f)
+                sb.Append("\n").Append("SettlementServices.SpecialtyTooltip.DurationModifier".Translate(mods.durationMultiplierOffset.ToStringPercentSigned()));
         }
 
         private static string BuildStockModifiers(SettlementSpecialtyDef specialty)
