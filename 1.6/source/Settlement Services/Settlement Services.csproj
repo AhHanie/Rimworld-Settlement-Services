@@ -175,7 +175,10 @@
     <Compile Include="Framework\Compat\VehicleFramework\VehicleUpgradeServiceWorker.cs" />
     <Compile Include="Framework\Compat\VehicleFramework\VehicleFrameworkCompatibilityModule.cs" />
     <Compile Include="Framework\Compat\VehicleFramework\VehicleFrameworkCustodyLifecycle.cs" />
+    <Compile Include="Framework\Compat\ChargeableHediffs\ChargeableHediffsAdapter.cs" />
+    <Compile Include="Framework\Compat\ChargeableHediffs\ChargeableHediffsCompatibilityModule.cs" />
     <Compile Include="Framework\Compatibility\ISettlementServicesCompatibilityModule.cs" />
+    <Compile Include="Framework\Compatibility\IRechargeableHediffService.cs" />
     <Compile Include="Framework\Compatibility\ICompatibilityAvailabilityRule.cs" />
     <Compile Include="Framework\Compatibility\ICompatibilityQuoteModifier.cs" />
     <Compile Include="Framework\Compatibility\ICompatibilityCompletionObserver.cs" />
@@ -306,6 +309,8 @@
 
     <Compile Include="Services\Mechanitor\MechRepairServiceWorker.cs" />
     <Compile Include="Services\Mechanitor\MechRechargeServiceWorker.cs" />
+
+    <Compile Include="Services\Technical\BionicRechargeServiceWorker.cs" />
 
     <Compile Include="Services\Android\AndroidMaterialPlanner.cs" />
     <Compile Include="Services\Android\AndroidRepairServiceWorker.cs" />

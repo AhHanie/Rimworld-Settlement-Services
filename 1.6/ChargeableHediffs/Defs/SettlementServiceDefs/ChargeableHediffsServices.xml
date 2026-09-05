@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_BionicRecharge</defName>
+    <category>SettlementService_Technical</category>
+    <label>bionic recharge</label>
+    <description>Fully recharge a caravan member's chargeable bionics and implants at the settlement's charging bay.</description>
+    <workerClass>Settlement_Services.Services.Technical.BionicRechargeServiceWorker</workerClass>
+    <requiredTechLevel>Industrial</requiredTechLevel>
+    <minimumCost>25</minimumCost>
+    <wealthScale>0.005</wealthScale>
+    <duration>5000</duration>    <!-- baseline ~2 hours for DurationFactor == 1, a target at 50% aggregate charge deficit -->
+    <targetRule>Pawn</targetRule>
+    <batchMode>Targets</batchMode>
+    <iconTexPath>SettlementServices/UI/Icons/lightning-charge</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

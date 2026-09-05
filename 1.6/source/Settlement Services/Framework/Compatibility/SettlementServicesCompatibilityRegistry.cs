@@ -28,8 +28,10 @@ namespace Settlement_Services.Framework.Compatibility
         private static CompletionObserverEntry[] completionObservers = Array.Empty<CompletionObserverEntry>();
         private static ICompatibilitySettingsSection[] settingsSections = Array.Empty<ICompatibilitySettingsSection>();
         private static ICompatibilityCustodyLifecycle[] custodyLifecycles = Array.Empty<ICompatibilityCustodyLifecycle>();
+        private static IRechargeableHediffService rechargeableHediffService = NullRechargeableHediffService.Instance;
 
         internal static bool HasSettingsSections => settingsSections.Length > 0;
+        internal static IRechargeableHediffService RechargeableHediffService => rechargeableHediffService;
 
         internal static void Initialize()
         {
@@ -41,6 +43,7 @@ namespace Settlement_Services.Framework.Compatibility
             var completionObserverList = new List<CompletionObserverEntry>();
             var settingsSectionList = new List<ICompatibilitySettingsSection>();
             var custodyLifecycleList = new List<ICompatibilityCustodyLifecycle>();
+            string rechargeableHediffServiceModuleId = null;
 
             foreach (ISettlementServicesCompatibilityModule module in CompatibilityModuleCatalog.CreateModules())
             {
@@ -51,6 +54,17 @@ namespace Settlement_Services.Framework.Compatibility
                 if (module.CompletionObserver != null) completionObserverList.Add(new CompletionObserverEntry { moduleId = module.ModuleId, observer = module.CompletionObserver });
                 if (module.SettingsSection != null) settingsSectionList.Add(module.SettingsSection);
                 if (module.CustodyLifecycle != null) custodyLifecycleList.Add(module.CustodyLifecycle);
+
+                if (module is IRechargeableHediffServiceProvider provider && provider.RechargeableHediffService != null)
+                {
+                    if (rechargeableHediffServiceModuleId != null)
+                        SupportLog.Warning($"Compatibility module '{module.ModuleId}' also provides a rechargeable-hediff service; keeping '{rechargeableHediffServiceModuleId}', which claimed it first.");
+                    else
+                    {
+                        rechargeableHediffService = provider.RechargeableHediffService;
+                        rechargeableHediffServiceModuleId = module.ModuleId;
+                    }
+                }
             }
 
             quoteModifierList.Sort((a, b) =>
