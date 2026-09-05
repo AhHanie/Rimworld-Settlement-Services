@@ -10,7 +10,7 @@
     <requiredTechLevel>Industrial</requiredTechLevel>
     <minimumCost>2000</minimumCost>
     <wealthScale>0.04</wealthScale>
-    <duration>120000</duration>    <!-- 2 days -->
+    <duration>240000</duration>    <!-- 4 days -->
     <targetRule>Pawn</targetRule>
     <eventChancePct>0</eventChancePct>
     <iconTexPath>SettlementServices/UI/Icons/student</iconTexPath>

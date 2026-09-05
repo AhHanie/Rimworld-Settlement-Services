@@ -32,4 +32,14 @@
     <SettlementServices.Label.RimEducationExpectedGain>Expected progress: {0} (raw course input: {1})</SettlementServices.Label.RimEducationExpectedGain>
     <SettlementServices.Label.RimEducationPredictedProgress>Progress after course: {0}</SettlementServices.Label.RimEducationPredictedProgress>
     <SettlementServices.Label.RimEducationTierAttained>This course will attain {0}.</SettlementServices.Label.RimEducationTierAttained>
+
+    <SettlementServices.Error.ProgressionEducationUnavailable>Progression: Education's integration isn't available right now.</SettlementServices.Error.ProgressionEducationUnavailable>
+    <SettlementServices.Error.NoTrainableProficiency>This pawn has no proficiency that can currently be promoted.</SettlementServices.Error.NoTrainableProficiency>
+    <SettlementServices.Error.NoProficiencyPromotionSelected>Select exactly one proficiency to train toward.</SettlementServices.Error.NoProficiencyPromotionSelected>
+    <SettlementServices.Label.ProficiencyTrackChoice>Proficiency</SettlementServices.Label.ProficiencyTrackChoice>
+    <SettlementServices.Label.ProficiencyTrackOption>{0}: {1}</SettlementServices.Label.ProficiencyTrackOption>
+    <SettlementServices.Label.ProficiencyCurrentTier>Currently: {0}</SettlementServices.Label.ProficiencyCurrentTier>
+    <SettlementServices.Label.ProficiencyPromotionPreview>{0} training: {1} -> {2}</SettlementServices.Label.ProficiencyPromotionPreview>
+    <SettlementServices.Label.ProficiencyPromotionSelectPrompt>Select a proficiency to train toward.</SettlementServices.Label.ProficiencyPromotionSelectPrompt>
+    <SettlementServices.Label.ProficiencyPromotionSelectPawnPrompt>Select a pawn to preview this training.</SettlementServices.Label.ProficiencyPromotionSelectPawnPrompt>
 </LanguageData>

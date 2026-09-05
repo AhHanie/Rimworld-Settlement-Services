@@ -177,6 +177,11 @@
     <Compile Include="Framework\Compat\VehicleFramework\VehicleFrameworkCustodyLifecycle.cs" />
     <Compile Include="Framework\Compat\ChargeableHediffs\ChargeableHediffsAdapter.cs" />
     <Compile Include="Framework\Compat\ChargeableHediffs\ChargeableHediffsCompatibilityModule.cs" />
+    <Compile Include="Framework\Compat\ProgressionEducation\IProgressionEducationProficiencyGateway.cs" />
+    <Compile Include="Framework\Compat\ProgressionEducation\ProgressionEducationAdapter.cs" />
+    <Compile Include="Framework\Compat\ProgressionEducation\ProgressionEducationProficiencyServiceWorker.cs" />
+    <Compile Include="Framework\Compat\ProgressionEducation\ProgressionEducationCompatibilityModule.cs" />
+    <Compile Include="Framework\Compat\ProgressionEducation\ProgressionEducationCompletionObserver.cs" />
     <Compile Include="Framework\Compatibility\ISettlementServicesCompatibilityModule.cs" />
     <Compile Include="Framework\Compatibility\IRechargeableHediffService.cs" />
     <Compile Include="Framework\Compatibility\ICompatibilityAvailabilityRule.cs" />
