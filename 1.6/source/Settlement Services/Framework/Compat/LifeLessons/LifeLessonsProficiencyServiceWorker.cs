@@ -67,7 +67,9 @@ namespace Settlement_Services.Framework.Compat.LifeLessons
         public override float DurationMultiplierFor(SettlementServiceRequest request) => CostRatioFor(request);
 
         public override float WealthScaleAdditionFor(SettlementServiceRequest request) =>
-            def.wealthScale * Mathf.Max(0f, CostRatioFor(request) - 1f);
+            def.wealthScale * (CostRatioFor(request) - 1f);
+
+        public override float MinimumCostMultiplierFor(SettlementServiceRequest request) => CostRatioFor(request);
 
         private static float CostRatioFor(SettlementServiceRequest request)
         {

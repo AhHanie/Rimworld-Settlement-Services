@@ -54,6 +54,9 @@ namespace Settlement_Services.Framework.Compat.RimEducation
         private const int AwardSliceCount = 600;
 
         internal const float RawCourseReward = 1f;
+        internal const float ReferenceDifficulty = 1f;
+        internal const float MinWorkloadRatio = 0.5f;
+        internal const float MaxWorkloadRatio = 2f;
 
         private static BindingState state = BindingState.Uninitialized;
 
@@ -144,26 +147,9 @@ namespace Settlement_Services.Framework.Compat.RimEducation
         internal static bool TryGetCoursePreview(Pawn pawn, out RimEducationCoursePreview preview, out string errorKey)
         {
             preview = default;
-            errorKey = null;
 
-            if (state != BindingState.Ready) { errorKey = "SettlementServices.Error.RimEducationUnavailable"; return false; }
-            if (pawn == null) { errorKey = "SettlementServices.Error.RimEducationNoComponent"; return false; }
-
-            ThingComp comp = FindComp(pawn);
-            if (comp == null) { errorKey = "SettlementServices.Error.RimEducationNoComponent"; return false; }
-            if (!shouldEverHaveEducation(comp)) { errorKey = "SettlementServices.Error.RimEducationNotEligible"; return false; }
-
-            if (!tryGetEducation(comp, out Def currentDef)) { errorKey = "SettlementServices.Error.RimEducationNotEligible"; return false; }
-
-            Def nextDef = getNext(currentDef);
-            if (nextDef == null) { errorKey = "SettlementServices.Error.RimEducationFinalTier"; return false; }
-
-            DevelopmentalStage? stageFilter = getDevelopmentalStageFilter(currentDef);
-            if (stageFilter.HasValue && !stageFilter.Value.Has(pawn.DevelopmentalStage))
-            {
-                errorKey = "SettlementServices.Error.RimEducationDevelopmentalStage";
+            if (!TryGetEligibleTiers(pawn, out ThingComp comp, out Def currentDef, out Def nextDef, out errorKey))
                 return false;
-            }
 
             float rateFactor = educationRateFactor(null, pawn);
             float educationSpeedSetting = getEducationSpeed(getSettingsInstance());
@@ -184,6 +170,43 @@ namespace Settlement_Services.Framework.Compat.RimEducation
                 effectiveGain,
                 cappedPredicted,
                 cappedPredicted >= 1f);
+            return true;
+        }
+
+        internal static float GetWorkloadRatio(Pawn pawn)
+        {
+            if (!TryGetEligibleTiers(pawn, out _, out _, out Def nextDef, out _)) return 1f;
+
+            float difficulty = getDifficulty(nextDef);
+            return UnityEngine.Mathf.Clamp((1f + difficulty) / (1f + ReferenceDifficulty), MinWorkloadRatio, MaxWorkloadRatio);
+        }
+
+        private static bool TryGetEligibleTiers(Pawn pawn, out ThingComp comp, out Def currentDef, out Def nextDef, out string errorKey)
+        {
+            comp = null;
+            currentDef = null;
+            nextDef = null;
+            errorKey = null;
+
+            if (state != BindingState.Ready) { errorKey = "SettlementServices.Error.RimEducationUnavailable"; return false; }
+            if (pawn == null) { errorKey = "SettlementServices.Error.RimEducationNoComponent"; return false; }
+
+            comp = FindComp(pawn);
+            if (comp == null) { errorKey = "SettlementServices.Error.RimEducationNoComponent"; return false; }
+            if (!shouldEverHaveEducation(comp)) { errorKey = "SettlementServices.Error.RimEducationNotEligible"; return false; }
+
+            if (!tryGetEducation(comp, out currentDef)) { errorKey = "SettlementServices.Error.RimEducationNotEligible"; return false; }
+
+            nextDef = getNext(currentDef);
+            if (nextDef == null) { errorKey = "SettlementServices.Error.RimEducationFinalTier"; return false; }
+
+            DevelopmentalStage? stageFilter = getDevelopmentalStageFilter(currentDef);
+            if (stageFilter.HasValue && !stageFilter.Value.Has(pawn.DevelopmentalStage))
+            {
+                errorKey = "SettlementServices.Error.RimEducationDevelopmentalStage";
+                return false;
+            }
+
             return true;
         }
 

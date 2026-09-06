@@ -22,6 +22,16 @@ namespace Settlement_Services.Framework.Compat.RimEducation
 
         public override IEnumerable<ServiceLineItem> BuildQuoteLineItems(SettlementServiceRequest request) => new List<ServiceLineItem>();
 
+        public override float DurationMultiplierFor(SettlementServiceRequest request) => WorkloadRatioFor(request);
+
+        public override float WealthScaleAdditionFor(SettlementServiceRequest request) =>
+            def.wealthScale * (WorkloadRatioFor(request) - 1f);
+
+        public override float MinimumCostMultiplierFor(SettlementServiceRequest request) => WorkloadRatioFor(request);
+
+        private static float WorkloadRatioFor(SettlementServiceRequest request) =>
+            request.target.thing is Pawn pawn ? RimEducationAdapter.GetWorkloadRatio(pawn) : 1f;
+
         public override IEnumerable<string> GetDisplaySummaryLines(SettlementServiceContext ctx)
         {
             if (ctx.SelectedTarget is Pawn pawn && RimEducationAdapter.TryGetCoursePreview(pawn, out RimEducationCoursePreview preview, out _))
