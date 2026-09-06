@@ -32,6 +32,11 @@ namespace Settlement_Services.Domain
         private List<int> pendingHomeSilverRefunds = new List<int>();
 
         private ThingOwner<Thing> itemCustody;
+        private ThingOwner<Pawn> hiringCandidateCustody;
+        private ThingOwner<Pawn> hiringTransitCustody;
+        private List<HiringTransitRecord> hiringTransits = new List<HiringTransitRecord>();
+
+        private const int HiringRosterDurationTicks = 120000;
 
         private List<TargetSnapshot> pendingHomeDeliveries = new List<TargetSnapshot>();
 
@@ -49,6 +54,8 @@ namespace Settlement_Services.Domain
         public SettlementServicesWorldComponent(World world) : base(world)
         {
             itemCustody = new ThingOwner<Thing>(this);
+            hiringCandidateCustody = new ThingOwner<Pawn>(this);
+            hiringTransitCustody = new ThingOwner<Pawn>(this);
         }
 
         public override void ExposeData()
@@ -60,6 +67,9 @@ namespace Settlement_Services.Domain
             Scribe_Collections.Look(ref jobs, "jobs", LookMode.Deep);
             Scribe_Collections.Look(ref pendingHomeSilverRefunds, "pendingHomeSilverRefunds", LookMode.Value);
             Scribe_Deep.Look(ref itemCustody, "itemCustody");
+            Scribe_Deep.Look(ref hiringCandidateCustody, "hiringCandidateCustody");
+            Scribe_Deep.Look(ref hiringTransitCustody, "hiringTransitCustody");
+            Scribe_Collections.Look(ref hiringTransits, "hiringTransits", LookMode.Deep);
             Scribe_Collections.Look(ref pendingHomeDeliveries, "pendingHomeDeliveries", LookMode.Deep);
             Scribe_Deep.Look(ref compatibilityWorldState, "compatibilityWorldState");
 
@@ -69,10 +79,16 @@ namespace Settlement_Services.Domain
                 if (jobs == null) jobs = new List<ServiceJobRecord>();
                 if (pendingHomeSilverRefunds == null) pendingHomeSilverRefunds = new List<int>();
                 if (itemCustody == null) itemCustody = new ThingOwner<Thing>(this);
+                if (hiringCandidateCustody == null) hiringCandidateCustody = new ThingOwner<Pawn>(this);
+                if (hiringTransitCustody == null) hiringTransitCustody = new ThingOwner<Pawn>(this);
+                if (hiringTransits == null) hiringTransits = new List<HiringTransitRecord>();
                 if (pendingHomeDeliveries == null) pendingHomeDeliveries = new List<TargetSnapshot>();
                 if (compatibilityWorldState == null) compatibilityWorldState = new CompatibilityWorldState();
                 settlementRecords.RemoveAll(r => r == null);
                 jobs.RemoveAll(j => j == null);
+                hiringTransits.RemoveAll(t => t == null);
+                foreach (SettlementRecord record in settlementRecords)
+                    record.hiringCandidates.RemoveAll(c => !hiringCandidateCustody.Contains(c.pawn));
             }
         }
 
@@ -98,6 +114,7 @@ namespace Settlement_Services.Domain
             PruneResolvedJobs();
             if (Find.TickManager.TicksGame % TickInterval != 0) return;
             SettlementServicesReconciler.DetectAndHandleMissingProviders(this);
+            SettlementServicesReconciler.ReconcileHiringTransits(this);
             SettlementServiceJobScheduler.TickAll(this, TickInterval);
             compatibilityWorldState.PruneOlderThan(CompatibilityCooldownRetentionTicks);
         }
@@ -156,8 +173,12 @@ namespace Settlement_Services.Domain
 
         IThingHolder IThingHolder.ParentHolder => null;
         public ThingOwner GetDirectlyHeldThings() => itemCustody;
-        public void GetChildHolders(List<IThingHolder> outChildren) =>
+        public void GetChildHolders(List<IThingHolder> outChildren)
+        {
             ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, itemCustody);
+            ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, hiringCandidateCustody);
+            ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, hiringTransitCustody);
+        }
 
 
         public void TakeItemCustody(Thing thing) => itemCustody.TryAdd(thing, canMergeWithExistingStacks: false);
@@ -601,36 +622,153 @@ namespace Settlement_Services.Domain
             record.reservations.Remove(reservation);
         }
 
-        public IReadOnlyList<HiringCandidateRecord> GetOrRefreshHiringCandidates(int settlementWorldObjectId, int capacity, int refreshIntervalTicks, Func<int, HiringCandidateRecord> generator)
+        public IReadOnlyList<HiringCandidateRecord> GetOrRefreshHiringCandidates(Settlement settlement, Func<int, HiringCandidateRecord> generator)
         {
-            SettlementRecord record = GetOrCreateSettlementRecord(settlementWorldObjectId);
+            if (settlement == null) return Array.Empty<HiringCandidateRecord>();
+
+            SettlementRecord record = GetOrCreateSettlementRecord(settlement.ID);
             int now = Find.TickManager.TicksGame;
 
-            if (record.hiringPoolLastRefreshTick < 0)
+            record.hiringCandidates.RemoveAll(c => c.pawn == null || c.pawn.Destroyed || c.pawn.Dead);
+
+            if (record.hiringPoolExpiryTick >= 0 && now < record.hiringPoolExpiryTick) return record.hiringCandidates;
+
+            DisposeHiringCandidates(record);
+
+            int rosterSize = Rand.RangeInclusive(1, 3);
+            int failures = 0;
+            for (int i = 0; i < rosterSize; i++)
             {
-                for (int i = 0; i < capacity; i++) record.hiringCandidates.Add(generator(record.nextHiringCandidateId++));
-                record.hiringPoolLastRefreshTick = now;
-                return record.hiringCandidates;
+                HiringCandidateRecord candidate;
+                try
+                {
+                    candidate = generator(record.nextHiringCandidateId++);
+                }
+                catch (System.Exception ex)
+                {
+                    failures++;
+                    Settlement_Services.SupportLog.Error($"Hiring candidate generation threw for settlement {settlement.LabelCap} ({settlement.ID}): {ex}");
+                    continue;
+                }
+
+                if (candidate?.pawn == null) { failures++; continue; }
+
+                hiringCandidateCustody.TryAdd(candidate.pawn, canMergeWithExistingStacks: false);
+                record.hiringCandidates.Add(candidate);
             }
 
-            record.hiringCandidates.RemoveAll(c => c.expiryTick >= 0 && now >= c.expiryTick);
+            record.hiringPoolExpiryTick = now + HiringRosterDurationTicks;
+            foreach (HiringCandidateRecord candidate in record.hiringCandidates) candidate.expiryTick = record.hiringPoolExpiryTick;
 
-            int elapsed = now - record.hiringPoolLastRefreshTick;
-            if (elapsed >= refreshIntervalTicks && refreshIntervalTicks > 0)
-            {
-                int intervals = elapsed / refreshIntervalTicks;
-                int toAdd = Mathf.Max(0, Mathf.Min(intervals, capacity - record.hiringCandidates.Count));
-                for (int i = 0; i < toAdd; i++) record.hiringCandidates.Add(generator(record.nextHiringCandidateId++));
-                record.hiringPoolLastRefreshTick += intervals * refreshIntervalTicks;
-            }
+            if (failures > 0)
+                Settlement_Services.SupportLog.Warning($"Hiring roster for settlement {settlement.LabelCap} ({settlement.ID}): {failures} of {rosterSize} candidate generation attempt(s) failed, {record.hiringCandidates.Count} succeeded.");
 
             return record.hiringCandidates;
         }
 
-        public void RemoveHiringCandidate(int settlementWorldObjectId, int candidateId)
+        public void DisposeHiringCandidates(SettlementRecord record)
+        {
+            if (record?.hiringCandidates == null) return;
+
+            foreach (HiringCandidateRecord candidate in record.hiringCandidates)
+            {
+                if (candidate.pawn == null) continue;
+                if (hiringCandidateCustody.Contains(candidate.pawn)) hiringCandidateCustody.Remove(candidate.pawn);
+                if (!candidate.pawn.Destroyed) candidate.pawn.Destroy(DestroyMode.Vanish);
+            }
+            record.hiringCandidates.Clear();
+        }
+
+        public void ClaimHiringCandidates(int settlementWorldObjectId, IEnumerable<int> candidateIds)
         {
             if (!settlementsByWorldObjectId.TryGetValue(settlementWorldObjectId, out SettlementRecord record)) return;
-            record.hiringCandidates.RemoveAll(c => c.candidateId == candidateId);
+
+            foreach (int candidateId in candidateIds)
+            {
+                HiringCandidateRecord candidate = record.hiringCandidates.Find(c => c.candidateId == candidateId);
+                if (candidate == null) continue;
+
+                if (candidate.pawn != null && hiringCandidateCustody.Contains(candidate.pawn)) hiringCandidateCustody.Remove(candidate.pawn);
+                record.hiringCandidates.Remove(candidate);
+            }
+        }
+
+        internal IReadOnlyList<HiringTransitRecord> HiringTransitsRaw => hiringTransits;
+
+        public bool BeginHiringTransit(int jobId, int settlementWorldObjectId, PlanetTile originTile, string originFactionLoadId,
+            IEnumerable<HiringCandidateRecord> candidates, Map destinationMap, int arrivalTick)
+        {
+            if (!settlementsByWorldObjectId.TryGetValue(settlementWorldObjectId, out SettlementRecord record)) return false;
+
+            var transitPawns = new List<Pawn>();
+            foreach (HiringCandidateRecord candidate in candidates.ToList())
+            {
+                if (candidate.pawn == null) continue;
+
+                if (hiringCandidateCustody.Contains(candidate.pawn)) hiringCandidateCustody.Remove(candidate.pawn);
+                record.hiringCandidates.Remove(candidate);
+
+                hiringTransitCustody.TryAdd(candidate.pawn, canMergeWithExistingStacks: false);
+                transitPawns.Add(candidate.pawn);
+            }
+
+            if (transitPawns.Count == 0) return false;
+
+            hiringTransits.Add(new HiringTransitRecord
+            {
+                jobId = jobId,
+                originSettlementWorldObjectId = settlementWorldObjectId,
+                originTile = originTile,
+                originFactionLoadId = originFactionLoadId,
+                destinationMapId = destinationMap.uniqueID,
+                destinationTile = destinationMap.Tile,
+                departureTick = Find.TickManager.TicksGame,
+                arrivalTick = arrivalTick,
+                pawns = transitPawns,
+            });
+            return true;
+        }
+
+        public bool TryGetHiringTransit(int jobId, out HiringTransitRecord record)
+        {
+            record = hiringTransits.Find(t => t.jobId == jobId);
+            return record != null;
+        }
+
+        public List<Pawn> ReleaseHiringTransitForArrival(int jobId)
+        {
+            HiringTransitRecord record = hiringTransits.Find(t => t.jobId == jobId);
+            if (record == null) return new List<Pawn>();
+
+            var pawns = new List<Pawn>();
+            foreach (Pawn pawn in record.pawns)
+            {
+                if (pawn == null || pawn.Destroyed || pawn.Dead) continue;
+                if (hiringTransitCustody.Contains(pawn)) hiringTransitCustody.Remove(pawn);
+                pawns.Add(pawn);
+            }
+
+            hiringTransits.Remove(record);
+            return pawns;
+        }
+
+        public void AbortHiringTransit(int jobId)
+        {
+            HiringTransitRecord record = hiringTransits.Find(t => t.jobId == jobId);
+            if (record == null) return;
+
+            Faction originFaction = Find.FactionManager.AllFactionsListForReading.Find(f => f.GetUniqueLoadID() == record.originFactionLoadId);
+            foreach (Pawn pawn in record.pawns)
+            {
+                if (pawn == null) continue;
+                if (hiringTransitCustody.Contains(pawn)) hiringTransitCustody.Remove(pawn);
+                if (pawn.Destroyed || pawn.Dead) continue;
+
+                if (originFaction != null) pawn.SetFaction(originFaction);
+                Find.WorldPawns.PassToWorld(pawn);
+            }
+
+            hiringTransits.Remove(record);
         }
 
         private SettlementRecord GetOrCreateSettlementRecord(int settlementWorldObjectId)

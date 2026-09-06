@@ -5,35 +5,38 @@
     <defName>SettlementService_TemporaryHiring</defName>
     <category>SettlementService_Logistics</category>
     <label>temporary hiring</label>
-    <description>Hire a settlement contractor on a fixed-term contract. They will join your caravan or travel to your home base and work there until the contract ends, then leave automatically.</description>
+    <description>Inspect the settlement's available contractors and hire one or more on a fixed-term contract. They will join your caravan instantly, or travel to your home base at ordinary caravan speed and work there until the contract ends, then depart on foot through the map edge.</description>
     <workerClass>Settlement_Services.Services.Hiring.HiringServiceWorker</workerClass>
     <requiredCapabilityTags>
       <li>ContractorServices</li>
     </requiredCapabilityTags>
     <minimumCost>150</minimumCost>
-    <wealthScale>0.001</wealthScale>
-    <duration>0</duration>    <!-- negotiation and handoff are instant; contract length is tracked on the hired pawn itself -->
+    <wealthScale>0.06</wealthScale>
+    <duration>0</duration>    <!-- negotiation and handoff are instant; the worker computes the real duration (travel time or zero) itself -->
+    <durationLabelKey>SettlementServices.Label.ExpectedTravelDuration</durationLabelKey>
     <targetRule>None</targetRule>
+    <requireExplicitPriorityTier>true</requireExplicitPriorityTier>
     <priorityTiers>
       <li>
         <key>Short</key>
         <label>Short-term (about 3 days)</label>
         <durationMultiplier>0.6</durationMultiplier>
+        <isDefaultTier>true</isDefaultTier>
       </li>
       <li>
         <key>Standard</key>
         <label>Standard (about 5 days)</label>
         <durationMultiplier>1.0</durationMultiplier>
+        <costSurchargePct>0.2</costSurchargePct>
       </li>
       <li>
         <key>Long</key>
         <label>Long-term (about 9 days)</label>
         <durationMultiplier>1.8</durationMultiplier>
-        <costSurchargePct>0.2</costSurchargePct>
+        <costSurchargePct>0.4</costSurchargePct>
         <minimumGoodwill>20</minimumGoodwill>
       </li>
     </priorityTiers>
-    <disabled>true</disabled>
   </Settlement_Services.Framework.Defs.SettlementServiceDef>
 
 </Defs>

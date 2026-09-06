@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -21,11 +22,6 @@ namespace Settlement_Services.Services.Hiring
         private const string ModeGroupKey = "SettlementServices.Label.HireModeChoice";
         private const string ModeJoinCaravanKey = "Mode:JoinCaravan";
         private const string ModeTravelHomeKey = "Mode:TravelHome";
-        private const string HazardousWorkKey = "AllowHazardousWork";
-
-        private const int PoolCapacity = 2;
-        private const int PoolRefreshIntervalTicks = 180000;
-        private const int CandidateExpiryTicks = 360000;
 
         private const int BaselineContractTicks = 300000;
 
@@ -34,12 +30,22 @@ namespace Settlement_Services.Services.Hiring
             if (ctx.Settlement?.Faction == null) return ServiceAvailabilityReport.Unavailable("SettlementServices.Error.SettlementNoLongerExists");
             if (Pool(ctx.Settlement).Count == 0) return ServiceAvailabilityReport.Unavailable("SettlementServices.Error.NoCandidatesAvailable");
 
-            HiringCandidateRecord candidate = ResolveCandidate(ctx.Settlement, ctx.SelectedOptionKeys);
-            if (candidate != null && candidate.refusesHazardousWork && ctx.SelectedOptionKeys.Contains(HazardousWorkKey))
-                return ServiceAvailabilityReport.Unavailable("SettlementServices.Error.CandidateRefusesHazardousWork");
+            if (ctx.SelectedOptionKeys.Count > 0)
+            {
+                if (!TryResolveSelectedCandidates(ctx.Settlement, ctx.SelectedOptionKeys, out List<HiringCandidateRecord> selected))
+                    return ServiceAvailabilityReport.Unavailable("SettlementServices.Error.CandidateNoLongerAvailable");
+                if (selected.Count == 0)
+                    return ServiceAvailabilityReport.Unavailable("SettlementServices.Error.NoCandidatesSelected");
+            }
 
             if (ctx.SelectedOptionKeys.Contains(ModeJoinCaravanKey) && ctx.RequestingCaravan == null)
                 return ServiceAvailabilityReport.Unavailable("SettlementServices.Error.NoRequesterCaravan");
+
+            if (ctx.SelectedOptionKeys.Contains(ModeTravelHomeKey))
+            {
+                HomeTravelPlan plan = PlanHomeTravel(ctx.Settlement, ctx.SelectedOptionKeys);
+                if (!plan.Success) return ServiceAvailabilityReport.Unavailable(plan.ErrorKey);
+            }
 
             return ServiceAvailabilityReport.Available;
         }
@@ -49,88 +55,127 @@ namespace Settlement_Services.Services.Hiring
             if (ctx.Settlement?.Faction == null) yield break;
 
             foreach (HiringCandidateRecord candidate in Pool(ctx.Settlement))
+            {
                 yield return new ServiceDisplayOption
                 {
                     key = CandidateKeyPrefix + candidate.candidateId,
-                    label = CandidateLabel(candidate),
+                    label = candidate.pawn.LabelShortCap,
+                    description = HighestSkillLabel(candidate.pawn),
                     groupKey = CandidateGroupKey,
+                    allowMultipleSelectionInGroup = true,
+                    pawnPreview = candidate.pawn,
                 };
+            }
 
             yield return new ServiceDisplayOption { key = ModeJoinCaravanKey, label = "SettlementServices.Label.HireModeJoinCaravan".Translate(), groupKey = ModeGroupKey };
             yield return new ServiceDisplayOption { key = ModeTravelHomeKey, label = "SettlementServices.Label.HireModeTravelHome".Translate(), groupKey = ModeGroupKey };
-
-            yield return new ServiceDisplayOption { key = HazardousWorkKey, label = "SettlementServices.Label.AllowHazardousWork".Translate() };
         }
 
-        public override IEnumerable<ServiceLineItem> BuildQuoteLineItems(SettlementServiceRequest request)
+        public override IEnumerable<ServiceLineItem> BuildQuoteLineItems(SettlementServiceRequest request) => Array.Empty<ServiceLineItem>();
+
+        public override int? ExpectedDurationTicksFor(SettlementServiceRequest request)
         {
-            var items = new List<ServiceLineItem>();
-            HiringCandidateRecord candidate = ResolveCandidate(request.settlement, request.selectedOptionKeys);
-            if (candidate != null) items.Add(new ServiceLineItem("SettlementServices.LineItem.ContractorWage", candidate.wage));
-            return items;
+            if (!request.selectedOptionKeys.Contains(ModeTravelHomeKey)) return null;
+
+            HomeTravelPlan plan = PlanHomeTravel(request.settlement, request.selectedOptionKeys);
+            return plan.Success ? plan.EtaTicks : 0;
         }
 
         public override ServiceStartResult Start(ServiceJobContext ctx)
         {
             Settlement settlement = ctx.ResolveSettlement();
             if (settlement == null) return ServiceStartResult.Fail("SettlementServices.Error.SettlementNoLongerExists");
-            if (ResolveCandidate(settlement, ctx.Job.selectedOptionKeys) == null) return ServiceStartResult.Fail("SettlementServices.Error.CandidateNoLongerAvailable");
+            if (!TryResolveSelectedCandidates(settlement, ctx.Job.selectedOptionKeys, out List<HiringCandidateRecord> selected) || selected.Count == 0)
+                return ServiceStartResult.Fail("SettlementServices.Error.CandidateNoLongerAvailable");
 
-            if (ctx.Job.selectedOptionKeys.Contains(ModeJoinCaravanKey) && ResolveRequesterCaravan(ctx.Job) == null)
-                return ServiceStartResult.Fail("SettlementServices.Error.NoRequesterCaravan");
-            if (!ctx.Job.selectedOptionKeys.Contains(ModeJoinCaravanKey) && !Find.Maps.Any(m => m.IsPlayerHome))
-                return ServiceStartResult.Fail("SettlementServices.Error.NoHomeMapForTravel");
+            if (ctx.Job.selectedOptionKeys.Contains(ModeJoinCaravanKey))
+            {
+                if (ResolveRequesterCaravan(ctx.Job) == null) return ServiceStartResult.Fail("SettlementServices.Error.NoRequesterCaravan");
+                return ServiceStartResult.Ok;
+            }
 
+            HomeTravelPlan plan = PlanHomeTravel(settlement, ctx.Job.selectedOptionKeys);
+            if (!plan.Success) return ServiceStartResult.Fail(plan.ErrorKey);
+
+            int etaTicks = ctx.Job.acceptedQuote.expectedDurationTicks;
+            int arrivalTick = Find.TickManager.TicksGame + etaTicks;
+            bool began = ctx.Domain.BeginHiringTransit(ctx.Job.jobId, settlement.ID, settlement.Tile, settlement.Faction.GetUniqueLoadID(), selected, plan.DestinationMap, arrivalTick);
+            if (!began) return ServiceStartResult.Fail("SettlementServices.Error.CandidateNoLongerAvailable");
+
+            AnnounceDeparture(selected.Select(c => c.pawn).ToList(), plan.DestinationMap, etaTicks);
             return ServiceStartResult.Ok;
         }
 
-        public override ServiceCompletionResult Complete(ServiceJobContext ctx)
+        public override ServiceCompletionResult Complete(ServiceJobContext ctx) =>
+            ctx.Job.selectedOptionKeys.Contains(ModeJoinCaravanKey) ? CompleteCaravanHire(ctx) : CompleteHomeTravelHire(ctx);
+
+        public override ServiceCancelResult Cancel(ServiceJobContext ctx, bool playerInitiated)
+        {
+            if (!ctx.Job.selectedOptionKeys.Contains(ModeJoinCaravanKey)) ctx.Domain.AbortHiringTransit(ctx.Job.jobId);
+            return ServiceCancelResult.Ok();
+        }
+
+        private static ServiceCompletionResult CompleteCaravanHire(ServiceJobContext ctx)
         {
             Settlement settlement = ctx.ResolveSettlement();
-            HiringCandidateRecord candidate = settlement == null ? null : ResolveCandidate(settlement, ctx.Job.selectedOptionKeys);
-            if (settlement == null || candidate == null) return ServiceCompletionResult.Fail("SettlementServices.Error.CandidateNoLongerAvailable");
+            if (settlement == null) return ServiceCompletionResult.Fail("SettlementServices.Error.SettlementNoLongerExists");
+            if (!TryResolveSelectedCandidates(settlement, ctx.Job.selectedOptionKeys, out List<HiringCandidateRecord> selected) || selected.Count == 0)
+                return ServiceCompletionResult.Fail("SettlementServices.Error.CandidateNoLongerAvailable");
 
-            ctx.Domain.RemoveHiringCandidate(settlement.ID, candidate.candidateId);
+            Caravan caravan = ResolveRequesterCaravan(ctx.Job);
+            if (caravan == null) return ServiceCompletionResult.Fail("SettlementServices.Error.NoRequesterCaravan");
 
-            Pawn pawn = GenerateContractor(settlement, candidate);
-            AttachContract(pawn, settlement, ctx.Job);
+            ctx.Domain.ClaimHiringCandidates(settlement.ID, selected.Select(c => c.candidateId));
 
-            if (ctx.Job.selectedOptionKeys.Contains(ModeJoinCaravanKey)) HandToCaravan(pawn, ResolveRequesterCaravan(ctx.Job));
-            else HandToHomeMap(pawn);
+            var hiredPawns = new List<Pawn>();
+            foreach (HiringCandidateRecord candidate in selected)
+            {
+                Pawn pawn = candidate.pawn;
+                PrepareContractor(pawn, settlement, ctx.Job);
+                HandToCaravan(pawn, caravan);
+                hiredPawns.Add(pawn);
+            }
 
-            Messages.Message("SettlementServices.Message.ContractorHired".Translate(pawn.LabelShortCap), pawn, MessageTypeDefOf.PositiveEvent);
+            AnnounceHired(hiredPawns);
             return ServiceCompletionResult.Ok();
         }
 
-        public override ServiceCancelResult Cancel(ServiceJobContext ctx, bool playerInitiated) => ServiceCancelResult.Ok();
-
-        private static Pawn GenerateContractor(Settlement settlement, HiringCandidateRecord candidate)
+        private static ServiceCompletionResult CompleteHomeTravelHire(ServiceJobContext ctx)
         {
-            var request = new PawnGenerationRequest(settlement.Faction.def.basicMemberKind, Faction.OfPlayer, PawnGenerationContext.NonPlayer, forceGenerateNewPawn: true, canGeneratePawnRelations: false);
-            Pawn pawn = PawnGenerator.GeneratePawn(request);
+            if (!ctx.Domain.TryGetHiringTransit(ctx.Job.jobId, out HiringTransitRecord transit))
+                return ServiceCompletionResult.Fail("SettlementServices.Error.CandidateNoLongerAvailable");
 
-            WorkTypeDef specialty = DefDatabase<WorkTypeDef>.GetNamedSilentFail(candidate.specialtyWorkTypeDefName);
-            SkillDef relevantSkill = specialty?.relevantSkills.FirstOrDefault();
-            if (relevantSkill != null)
+            Settlement originSettlement = WorldObjectLookup.ResolveSettlement(transit.originSettlementWorldObjectId);
+            Map destinationMap = Find.Maps.FirstOrDefault(m => m.uniqueID == transit.destinationMapId);
+
+            if (originSettlement == null || destinationMap == null || !destinationMap.IsPlayerHome)
             {
-                SkillRecord skill = pawn.skills.GetSkill(relevantSkill);
-                skill.Level = candidate.skillLevel;
-                skill.passion = Passion.Major;
+                ctx.Domain.AbortHiringTransit(ctx.Job.jobId);
+                return ServiceCompletionResult.Fail("SettlementServices.Error.HomeDeliveryFailed");
             }
 
+            List<Pawn> pawns = ctx.Domain.ReleaseHiringTransitForArrival(ctx.Job.jobId);
+            if (pawns.Count == 0) return ServiceCompletionResult.Fail("SettlementServices.Error.CandidateNoLongerAvailable");
+
+            foreach (Pawn pawn in pawns)
+            {
+                PrepareContractor(pawn, originSettlement, ctx.Job);
+                GenSpawn.Spawn(pawn, DropCellFinder.TradeDropSpot(destinationMap), destinationMap);
+            }
+
+            AnnounceArrived(pawns);
+            return ServiceCompletionResult.Ok();
+        }
+
+        private static void PrepareContractor(Pawn pawn, Settlement settlement, ServiceJobRecord job)
+        {
+            pawn.SetFaction(Faction.OfPlayer);
+
             pawn.workSettings.EnableAndInitialize();
-            pawn.workSettings.DisableAll();
-            EnableWorkIfPermitted(pawn, specialty);
             EnableWorkIfPermitted(pawn, DefDatabase<WorkTypeDef>.GetNamedSilentFail("Hauling"));
             EnableWorkIfPermitted(pawn, DefDatabase<WorkTypeDef>.GetNamedSilentFail("Cleaning"));
 
-            return pawn;
-        }
-
-        private static void EnableHazardousWork(Pawn pawn)
-        {
-            foreach (string defName in new[] { "Firefighting", "Hunting", "Construction" })
-                EnableWorkIfPermitted(pawn, DefDatabase<WorkTypeDef>.GetNamedSilentFail(defName));
+            AttachContract(pawn, settlement, job);
         }
 
         private static void EnableWorkIfPermitted(Pawn pawn, WorkTypeDef workType)
@@ -140,8 +185,6 @@ namespace Settlement_Services.Services.Hiring
 
         private static void AttachContract(Pawn pawn, Settlement settlement, ServiceJobRecord job)
         {
-            if (job.selectedOptionKeys.Contains(HazardousWorkKey)) EnableHazardousWork(pawn);
-
             HediffDef contractDef = DefDatabase<HediffDef>.GetNamedSilentFail("SettlementService_TemporaryContract");
             if (contractDef == null) return;
 
@@ -162,33 +205,110 @@ namespace Settlement_Services.Services.Hiring
             caravan.AddPawn(pawn, true);
         }
 
-        private static void HandToHomeMap(Pawn pawn)
+        private static void AnnounceHired(List<Pawn> hiredPawns)
         {
-            Map homeMap = Find.Maps.FirstOrDefault(m => m.IsPlayerHome);
-            GenSpawn.Spawn(pawn, DropCellFinder.TradeDropSpot(homeMap), homeMap);
+            if (hiredPawns.Count == 1)
+                Messages.Message("SettlementServices.Message.ContractorHired".Translate(hiredPawns[0].LabelShortCap), hiredPawns[0], MessageTypeDefOf.PositiveEvent);
+            else
+                Messages.Message("SettlementServices.Message.ContractorsHired".Translate(hiredPawns.Count), MessageTypeDefOf.PositiveEvent);
         }
 
-        private static HiringCandidateRecord ResolveCandidate(Settlement settlement, IReadOnlyList<string> selectedOptionKeys)
+        private static void AnnounceArrived(List<Pawn> arrivedPawns)
         {
-            string key = selectedOptionKeys?.FirstOrDefault(k => k.StartsWith(CandidateKeyPrefix));
-            if (key == null || !int.TryParse(key.Substring(CandidateKeyPrefix.Length), out int candidateId)) return null;
-            return Pool(settlement).FirstOrDefault(c => c.candidateId == candidateId);
+            if (arrivedPawns.Count == 1)
+                Messages.Message("SettlementServices.Message.ContractorArrived".Translate(arrivedPawns[0].LabelShortCap), arrivedPawns[0], MessageTypeDefOf.PositiveEvent);
+            else
+                Messages.Message("SettlementServices.Message.ContractorsArrived".Translate(arrivedPawns.Count), MessageTypeDefOf.PositiveEvent);
+        }
+
+        private static void AnnounceDeparture(List<Pawn> pawns, Map destinationMap, int etaTicks)
+        {
+            if (etaTicks <= 0 || pawns.Count == 0) return;
+
+            string destinationLabel = destinationMap.Parent.LabelCap;
+            string etaLabel = etaTicks.ToStringTicksToPeriod();
+
+            if (pawns.Count == 1)
+                Messages.Message("SettlementServices.Message.ContractorEnRoute".Translate(pawns[0].LabelShortCap, destinationLabel, etaLabel), MessageTypeDefOf.NeutralEvent);
+            else
+                Messages.Message("SettlementServices.Message.ContractorsEnRoute".Translate(pawns.Count, destinationLabel, etaLabel), MessageTypeDefOf.NeutralEvent);
+        }
+
+        private readonly struct HomeTravelPlan
+        {
+            public bool Success { get; }
+            public string ErrorKey { get; }
+            public Map DestinationMap { get; }
+            public int EtaTicks { get; }
+
+            private HomeTravelPlan(bool success, string errorKey, Map destinationMap, int etaTicks)
+            {
+                Success = success;
+                ErrorKey = errorKey;
+                DestinationMap = destinationMap;
+                EtaTicks = etaTicks;
+            }
+
+            public static readonly HomeTravelPlan NotApplicable = new HomeTravelPlan(true, null, null, 0);
+            public static HomeTravelPlan Fail(string errorKey) => new HomeTravelPlan(false, errorKey, null, 0);
+            public static HomeTravelPlan Ok(Map map, int etaTicks) => new HomeTravelPlan(true, null, map, etaTicks);
+        }
+
+        private static HomeTravelPlan PlanHomeTravel(Settlement settlement, IReadOnlyList<string> selectedOptionKeys)
+        {
+            if (!selectedOptionKeys.Contains(ModeTravelHomeKey)) return HomeTravelPlan.NotApplicable;
+
+            Map homeMap = Find.Maps.FirstOrDefault(m => m.IsPlayerHome);
+            if (homeMap == null) return HomeTravelPlan.Fail("SettlementServices.Error.NoHomeMapForTravel");
+
+            PlanetTile originTile = settlement.Tile;
+            PlanetTile destinationTile = homeMap.Tile;
+            if (!originTile.Valid || !destinationTile.Valid) return HomeTravelPlan.Fail("SettlementServices.Error.NoReachableHomeForTravel");
+            if (originTile == destinationTile) return HomeTravelPlan.Ok(homeMap, 0);
+
+            using (WorldPath path = originTile.Layer.Pather.FindPath(originTile, destinationTile, null))
+            {
+                if (!path.Found) return HomeTravelPlan.Fail("SettlementServices.Error.NoReachableHomeForTravel");
+            }
+
+            int eta = CaravanArrivalTimeEstimator.EstimatedTicksToArrive(originTile, destinationTile, null);
+            return HomeTravelPlan.Ok(homeMap, Mathf.Max(0, eta));
+        }
+
+        private static bool TryResolveSelectedCandidates(Settlement settlement, IReadOnlyList<string> selectedOptionKeys, out List<HiringCandidateRecord> candidates)
+        {
+            var ids = new HashSet<int>();
+            foreach (string key in selectedOptionKeys)
+            {
+                if (!key.StartsWith(CandidateKeyPrefix)) continue;
+                if (!int.TryParse(key.Substring(CandidateKeyPrefix.Length), out int id) || !ids.Add(id))
+                {
+                    candidates = null;
+                    return false;
+                }
+            }
+
+            candidates = Pool(settlement).Where(c => ids.Contains(c.candidateId)).ToList();
+            return candidates.Count == ids.Count;
         }
 
         private static IReadOnlyList<HiringCandidateRecord> Pool(Settlement settlement) =>
-            SettlementServicesWorldComponent.Current.GetOrRefreshHiringCandidates(settlement.ID, PoolCapacity, PoolRefreshIntervalTicks, id => HiringCandidateGenerator.Generate(settlement, id, CandidateExpiryTicks));
+            SettlementServicesWorldComponent.Current.GetOrRefreshHiringCandidates(settlement, id => HiringCandidateGenerator.Generate(settlement, id));
 
         private static Caravan ResolveRequesterCaravan(ServiceJobRecord job) =>
             job.requesterCaravanId < 0 ? null : Find.WorldObjects.Caravans.FirstOrDefault(c => c.ID == job.requesterCaravanId);
 
-        private static string CandidateLabel(HiringCandidateRecord candidate)
+        private static string HighestSkillLabel(Pawn pawn)
         {
-            string tierKey = candidate.qualityTierKey == "Expert" ? "SettlementServices.Label.HiringTierExpert"
-                : candidate.qualityTierKey == "Skilled" ? "SettlementServices.Label.HiringTierSkilled"
-                : "SettlementServices.Label.HiringTierStandard";
-            WorkTypeDef specialty = DefDatabase<WorkTypeDef>.GetNamedSilentFail(candidate.specialtyWorkTypeDefName);
-            string workLabel = specialty?.pawnLabel ?? candidate.specialtyWorkTypeDefName;
-            return "SettlementServices.Label.CandidateOption".Translate(tierKey.Translate(), workLabel, candidate.wage);
+            SkillRecord best = pawn.skills?.skills
+                .Where(s => s != null && !s.TotallyDisabled)
+                .OrderByDescending(s => s.Level)
+                .ThenBy(s => s.def.defName, StringComparer.Ordinal)
+                .FirstOrDefault();
+
+            return best == null
+                ? "SettlementServices.Label.CandidateNoUsableSkill".Translate()
+                : "SettlementServices.Label.CandidateSkillSummary".Translate(best.def.LabelCap, best.Level);
         }
     }
 }

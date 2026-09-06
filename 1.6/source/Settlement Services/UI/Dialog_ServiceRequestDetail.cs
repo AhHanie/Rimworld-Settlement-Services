@@ -38,6 +38,9 @@ namespace Settlement_Services.UI
 
             if (session.def.Worker is CraftingCommissionServiceWorker)
                 craftingEligibleRecipes = CraftingCommissionCatalog.EligibleRecipes(session.settlement).ToList();
+
+            if (session.def.requireExplicitPriorityTier && session.selectedTierKey == null)
+                session.selectedTierKey = session.def.priorityTiers.Find(t => t.isDefaultTier)?.key;
         }
 
         public override void DoWindowContents(Rect inRect)
@@ -322,7 +325,8 @@ namespace Settlement_Services.UI
         private void DrawTierSection(Listing_Standard listing)
         {
             listing.Label((session.def.priorityTierHeaderKey ?? "SettlementServices.Label.PriorityTier").Translate());
-            if (listing.RadioButton("SettlementServices.Label.BaselineTier".Translate(), session.selectedTierKey == null))
+            if (!session.def.requireExplicitPriorityTier
+                && listing.RadioButton("SettlementServices.Label.BaselineTier".Translate(), session.selectedTierKey == null))
                 SetSelectedTier(null);
             foreach (ServicePriorityTierDef tier in session.def.priorityTiers)
             {
@@ -471,7 +475,10 @@ namespace Settlement_Services.UI
                 List<ServiceDisplayOption> groupOptions = group.ToList();
                 if (groupOptions[0].allowMultipleSelectionInGroup)
                 {
-                    DrawCheckboxColumn(listing, groupOptions, selectedKeys);
+                    if (groupOptions[0].pawnPreview != null)
+                        foreach (ServiceDisplayOption option in groupOptions) DrawPawnCandidateRow(listing, option, selectedKeys);
+                    else
+                        DrawCheckboxColumn(listing, groupOptions, selectedKeys);
                     continue;
                 }
 
@@ -479,6 +486,55 @@ namespace Settlement_Services.UI
                 if (columnCount == 1) DrawRadioColumn(listing, groupOptions, selectedKeys);
                 else DrawRadioGrid(listing, groupOptions, columnCount, selectedKeys);
             }
+        }
+
+        private const float CandidatePortraitSize = 56f;
+        private const float CandidateRowHeight = 64f;
+        private static readonly Vector2 CandidatePortraitVector = new Vector2(CandidatePortraitSize, CandidatePortraitSize);
+
+        private static void DrawPawnCandidateRow(Listing_Standard listing, ServiceDisplayOption option, List<string> selectedKeys)
+        {
+            Pawn pawn = option.pawnPreview;
+            Rect rowRect = listing.GetRect(CandidateRowHeight);
+            bool selected = selectedKeys.Contains(option.key);
+
+            Widgets.DrawOptionBackground(rowRect, selected);
+
+            Rect portraitRect = new Rect(rowRect.x + 4f, rowRect.y + (rowRect.height - CandidatePortraitSize) / 2f, CandidatePortraitSize, CandidatePortraitSize);
+            GUI.DrawTexture(portraitRect, PortraitsCache.Get(pawn, CandidatePortraitVector, Rot4.South));
+
+            Rect infoButtonRect = new Rect(rowRect.xMax - 28f, rowRect.y + (rowRect.height - 24f) / 2f, 24f, 24f);
+            Widgets.InfoCardButton(infoButtonRect.x, infoButtonRect.y, pawn);
+
+            Rect textRect = new Rect(portraitRect.xMax + 8f, rowRect.y, infoButtonRect.x - portraitRect.xMax - 12f, rowRect.height);
+            TextAnchor prevAnchor = Text.Anchor;
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Widgets.Label(textRect.TopHalf(), pawn.LabelShortCap);
+            Widgets.Label(textRect.BottomHalf(), HighestSkillLabel(pawn));
+            Text.Anchor = prevAnchor;
+
+            if (!option.description.NullOrEmpty()) TooltipHandler.TipRegion(rowRect, option.description);
+
+            Rect clickRect = new Rect(rowRect.x, rowRect.y, infoButtonRect.x - rowRect.x, rowRect.height);
+            if (Widgets.ButtonInvisible(clickRect))
+            {
+                if (selected) selectedKeys.Remove(option.key);
+                else selectedKeys.Add(option.key);
+                SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();
+            }
+        }
+
+        private static string HighestSkillLabel(Pawn pawn)
+        {
+            SkillRecord best = pawn.skills?.skills
+                .Where(s => s != null && !s.TotallyDisabled)
+                .OrderByDescending(s => s.Level)
+                .ThenBy(s => s.def.defName, StringComparer.Ordinal)
+                .FirstOrDefault();
+
+            return best == null
+                ? "SettlementServices.Label.CandidateNoUsableSkill".Translate()
+                : "SettlementServices.Label.CandidateSkillSummary".Translate(best.def.LabelCap, best.Level);
         }
 
         private void DrawCheckboxColumn(Listing_Standard listing, List<ServiceDisplayOption> group, List<string> selectedKeys)
@@ -635,7 +691,7 @@ namespace Settlement_Services.UI
             }
 
             listing.Label("SettlementServices.Label.TotalCost".Translate(quote.totalCost));
-            listing.Label("SettlementServices.Label.ExpectedDuration".Translate(quote.expectedDurationTicks.ToStringTicksToPeriod()));
+            listing.Label((session.def.durationLabelKey ?? "SettlementServices.Label.ExpectedDuration").Translate(quote.expectedDurationTicks.ToStringTicksToPeriod()));
         }
 
         private void DrawBottomButtons(Rect inRect, SettlementServiceQuote quote)

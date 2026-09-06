@@ -85,6 +85,7 @@
     <Compile Include="Domain\Records\SettlementRecord.cs" />
     <Compile Include="Domain\Records\InvestmentRecord.cs" />
     <Compile Include="Domain\Records\HiringCandidateRecord.cs" />
+    <Compile Include="Domain\Records\HiringTransitRecord.cs" />
     <Compile Include="Domain\Records\ServiceJobRecord.cs" />
     <Compile Include="Domain\Records\DiscoveryRecord.cs" />
     <Compile Include="Domain\Records\ServiceEventOutcomeRecord.cs" />

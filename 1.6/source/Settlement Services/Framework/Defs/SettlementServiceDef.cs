@@ -26,6 +26,8 @@ namespace Settlement_Services.Framework.Defs
         public int duration = 0;
         public List<ServicePriorityTierDef> priorityTiers;
         public string priorityTierHeaderKey;
+        public bool requireExplicitPriorityTier = false;
+        public string durationLabelKey;
 
         public float eventChancePct = 0.15f;
 
@@ -97,6 +99,7 @@ namespace Settlement_Services.Framework.Defs
             if (!priorityTiers.NullOrEmpty())
             {
                 var seenKeys = new HashSet<string>();
+                int defaultTierCount = 0;
                 for (int i = 0; i < priorityTiers.Count; i++)
                 {
                     ServicePriorityTierDef tier = priorityTiers[i];
@@ -110,7 +113,17 @@ namespace Settlement_Services.Framework.Defs
                         yield return $"priorityTiers[{i}] ({label}) durationMultiplier must be finite.";
                     else if (tier.durationMultiplier <= 0f)
                         yield return $"priorityTiers[{i}] ({label}) durationMultiplier must be > 0.";
+
+                    if (tier.isDefaultTier) defaultTierCount++;
                 }
+
+                if (defaultTierCount > 1) yield return "priorityTiers has more than one tier marked isDefaultTier.";
+                if (requireExplicitPriorityTier && defaultTierCount == 0)
+                    yield return "requireExplicitPriorityTier is set but no priorityTiers entry is marked isDefaultTier.";
+            }
+            else if (requireExplicitPriorityTier)
+            {
+                yield return "requireExplicitPriorityTier is set but priorityTiers is empty.";
             }
         }
     }

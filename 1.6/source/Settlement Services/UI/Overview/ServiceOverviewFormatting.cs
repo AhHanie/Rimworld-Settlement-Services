@@ -16,6 +16,15 @@ namespace Settlement_Services.UI.Overview
 
         public static string ExpectedCompletionLabel(ServiceJobRecord job)
         {
+            if (job.status == ServiceJobStatus.Active
+                && SettlementServicesWorldComponent.Current.TryGetHiringTransit(job.jobId, out HiringTransitRecord transit))
+            {
+                int transitTicksLeft = transit.arrivalTick - Find.TickManager.TicksGame;
+                return transitTicksLeft <= 0
+                    ? "SettlementServices.Label.ReadyToCollect".Translate()
+                    : "SettlementServices.Label.ContractorsTravellingEta".Translate(transitTicksLeft.ToStringTicksToPeriod());
+            }
+
             if (job.status == ServiceJobStatus.AwaitingCollection || job.status == ServiceJobStatus.Completed)
                 return "SettlementServices.Label.ReadyToCollect".Translate();
 

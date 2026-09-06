@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Verse;
 
 namespace Settlement_Services.Framework.Dto
 {
@@ -21,5 +22,7 @@ namespace Settlement_Services.Framework.Dto
         public bool isOptional;
 
         public List<string> conflictingOptionKeys;
+
+        public Pawn pawnPreview;
     }
 }

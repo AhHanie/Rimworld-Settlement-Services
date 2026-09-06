@@ -59,6 +59,7 @@ namespace Settlement_Services.Domain.Reconciliation
             }
 
             failedJobs += DetectAndHandleMissingProviders(component);
+            ReconcileHiringTransits(component);
 
             List<SettlementRecord> toDrop = component.SettlementRecordsRaw
                 .Where(r => WorldObjectLookup.ResolveSettlement(r.settlementWorldObjectId) == null
@@ -66,6 +67,7 @@ namespace Settlement_Services.Domain.Reconciliation
                 .ToList();
             foreach (SettlementRecord orphan in toDrop)
             {
+                component.DisposeHiringCandidates(orphan);
                 component.SettlementRecordsRaw.Remove(orphan);
                 droppedSettlements++;
             }
@@ -124,6 +126,21 @@ namespace Settlement_Services.Domain.Reconciliation
                 SettlementServiceOrchestrator.HandleSettlementDestroyed(component, settlementWorldObjectId, tile);
             }
             return affected;
+        }
+
+        public static void ReconcileHiringTransits(SettlementServicesWorldComponent component)
+        {
+            foreach (HiringTransitRecord transit in component.HiringTransitsRaw.ToList())
+            {
+                bool hasLiveContractor = transit.pawns.Any(p => p != null && !p.Destroyed && !p.Dead);
+                ServiceJobRecord job = component.GetJob(transit.jobId);
+                bool jobActive = job != null && job.status == ServiceJobStatus.Active;
+
+                if (hasLiveContractor && jobActive) continue;
+
+                component.AbortHiringTransit(transit.jobId);
+                if (jobActive) SettlementServiceOrchestrator.FailJob(component, transit.jobId, "SettlementServices.Error.CandidateNoLongerAvailable");
+            }
         }
 
         private static bool StillEligible(string defName)

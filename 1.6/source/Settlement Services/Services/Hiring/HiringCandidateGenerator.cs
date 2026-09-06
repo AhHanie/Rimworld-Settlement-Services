@@ -1,41 +1,40 @@
-using System.Linq;
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
 using Settlement_Services.Domain.Records;
-using Settlement_Services.Framework.Specialty;
 
 namespace Settlement_Services.Services.Hiring
 {
     internal static class HiringCandidateGenerator
     {
-        private static readonly string[] SpecialtyWorkTypes = { "Doctoring", "Construction", "Research", "Handling", "Hunting" };
-
-        private const int StandardSkillLevel = 6;
-        private const int SkilledSkillLevel = 10;
-        private const int ExpertSkillLevel = 14;
-        private const int BaseWage = 200;
-        private const int EliteMinimumGoodwill = 80;
-
-        public static HiringCandidateRecord Generate(Settlement settlement, int candidateId, int expiryTicks)
+        public static HiringCandidateRecord Generate(Settlement settlement, int candidateId)
         {
-            bool eliteEligible = SettlementSpecialtyService.HasCapabilityTag(settlement, "ContractorServices")
-                && settlement.Faction.PlayerGoodwill >= EliteMinimumGoodwill;
+            PawnKindDef kindDef = settlement.Faction?.RandomPawnKind();
+            if (kindDef?.race == null || !kindDef.RaceProps.Humanlike)
+            {
+                Settlement_Services.SupportLog.Warning($"Hiring candidate rejected for {settlement.LabelCap} ({settlement.Faction?.def?.defName ?? "no faction"}): no humanlike pawn kind available (RandomPawnKind returned {(kindDef == null ? "null" : $"'{kindDef.defName}'")}).");
+                return null;
+            }
 
-            float roll = Rand.Value;
-            string tierKey = roll < 0.15f && eliteEligible ? "Expert" : roll < 0.5f ? "Skilled" : "Standard";
-            int skillLevel = tierKey == "Expert" ? ExpertSkillLevel : tierKey == "Skilled" ? SkilledSkillLevel : StandardSkillLevel;
-            int wageMultiplierPct = tierKey == "Expert" ? 220 : tierKey == "Skilled" ? 140 : 100;
+            var request = new PawnGenerationRequest(kindDef, settlement.Faction, PawnGenerationContext.NonPlayer, forceGenerateNewPawn: true, canGeneratePawnRelations: false);
+            Pawn pawn = PawnGenerator.GeneratePawn(request);
+            if (pawn == null)
+            {
+                Settlement_Services.SupportLog.Warning($"Hiring candidate rejected for {settlement.LabelCap}: PawnGenerator.GeneratePawn returned null for kind '{kindDef.defName}'.");
+                return null;
+            }
+
+            if (pawn.DevelopmentalStage != DevelopmentalStage.Adult)
+            {
+                Settlement_Services.SupportLog.Warning($"Hiring candidate rejected for {settlement.LabelCap}: generated pawn '{pawn.LabelShortCap}' (kind '{kindDef.defName}') was {pawn.DevelopmentalStage}, not Adult.");
+                pawn.Destroy(DestroyMode.Vanish);
+                return null;
+            }
 
             return new HiringCandidateRecord
             {
                 candidateId = candidateId,
-                specialtyWorkTypeDefName = SpecialtyWorkTypes.RandomElement(),
-                skillLevel = skillLevel,
-                qualityTierKey = tierKey,
-                wage = BaseWage * wageMultiplierPct / 100,
-                refusesHazardousWork = Rand.Chance(0.3f),
-                expiryTick = Find.TickManager.TicksGame + expiryTicks,
+                pawn = pawn,
             };
         }
     }

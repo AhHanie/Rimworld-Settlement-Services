@@ -174,7 +174,6 @@
         <li>SettlementService_Logistics</li>
       </relevantCategoryDefNames>
     </modifiers>
-    <disabled>true</disabled>
   </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
 
 </Defs>
