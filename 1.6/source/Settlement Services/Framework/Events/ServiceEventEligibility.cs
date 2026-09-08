@@ -12,7 +12,7 @@ namespace Settlement_Services.Framework.Events
     {
         public static bool IsEligible(ServiceEventDef eventDef, SettlementServiceDef serviceDef, ServiceJobContext ctx)
         {
-            if (!CategoryMatches(eventDef, serviceDef)) return false;
+            if (!ServiceMatches(eventDef, serviceDef)) return false;
             if (!eventDef.excludedServiceDefNames.NullOrEmpty() && eventDef.excludedServiceDefNames.Contains(serviceDef.defName))
                 return false;
 
@@ -48,9 +48,13 @@ namespace Settlement_Services.Framework.Events
             return true;
         }
 
-        private static bool CategoryMatches(ServiceEventDef eventDef, SettlementServiceDef serviceDef)
+        private static bool ServiceMatches(ServiceEventDef eventDef, SettlementServiceDef serviceDef)
         {
+            if (!eventDef.eligibleServiceDefNames.NullOrEmpty())
+                return eventDef.eligibleServiceDefNames.Contains(serviceDef.defName);
+
             if (eventDef.appliesToAllCategories) return true;
+
             return !eventDef.eligibleCategoryDefNames.NullOrEmpty()
                 && serviceDef.category != null
                 && eventDef.eligibleCategoryDefNames.Contains(serviceDef.category.defName);

@@ -13,6 +13,7 @@ namespace Settlement_Services.Framework.Defs
         public ServiceEventTriggerPhase triggerPhase = ServiceEventTriggerPhase.OnComplete;
         public float selectionWeight = 1f;
 
+        public List<string> eligibleServiceDefNames;
         public List<string> eligibleCategoryDefNames;
         public bool appliesToAllCategories = false;
         public List<string> excludedServiceDefNames;
@@ -31,8 +32,18 @@ namespace Settlement_Services.Framework.Defs
         {
             foreach (string e in base.ConfigErrors()) yield return e;
 
-            if (!appliesToAllCategories && eligibleCategoryDefNames.NullOrEmpty())
-                yield return "must set appliesToAllCategories or at least one eligibleCategoryDefNames entry.";
+            int positiveSelectorCount = 0;
+            if (!eligibleServiceDefNames.NullOrEmpty()) positiveSelectorCount++;
+            if (!eligibleCategoryDefNames.NullOrEmpty()) positiveSelectorCount++;
+            if (appliesToAllCategories) positiveSelectorCount++;
+
+            if (positiveSelectorCount == 0)
+                yield return "must set exactly one of eligibleServiceDefNames, eligibleCategoryDefNames, or appliesToAllCategories.";
+            if (positiveSelectorCount > 1)
+                yield return "must set only one of eligibleServiceDefNames, eligibleCategoryDefNames, and appliesToAllCategories; they are mutually exclusive.";
+
+            foreach (string e in ValidateNameList(eligibleServiceDefNames, "eligibleServiceDefNames")) yield return e;
+            foreach (string e in ValidateNameList(eligibleCategoryDefNames, "eligibleCategoryDefNames")) yield return e;
 
             if (choices.NullOrEmpty() && effects == null)
                 yield return "must set either effects or exactly two choices.";
@@ -54,5 +65,22 @@ namespace Settlement_Services.Framework.Defs
 
         private static bool RequiresPawn(ServiceEventEffects e) =>
             e != null && (e.experienceSkillDefName != null || e.thoughtDefName != null || e.hediffDefName != null);
+
+        private static IEnumerable<string> ValidateNameList(List<string> names, string fieldName)
+        {
+            if (names.NullOrEmpty()) yield break;
+
+            var seen = new HashSet<string>();
+            foreach (string name in names)
+            {
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    yield return $"{fieldName} contains a blank entry.";
+                    continue;
+                }
+                if (!seen.Add(name))
+                    yield return $"{fieldName} contains duplicate entry '{name}'.";
+            }
+        }
     }
 }
