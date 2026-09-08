@@ -36,7 +36,7 @@ namespace Settlement_Services.Domain
         private ThingOwner<Pawn> hiringTransitCustody;
         private List<HiringTransitRecord> hiringTransits = new List<HiringTransitRecord>();
 
-        private const int HiringRosterDurationTicks = 120000;
+        private const int HiringRosterDurationTicks = 300000;
 
         private List<TargetSnapshot> pendingHomeDeliveries = new List<TargetSnapshot>();
 

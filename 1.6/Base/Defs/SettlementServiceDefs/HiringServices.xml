@@ -37,6 +37,7 @@
         <minimumGoodwill>20</minimumGoodwill>
       </li>
     </priorityTiers>
+    <iconTexPath>SettlementServices/UI/Icons/worker</iconTexPath>
   </Settlement_Services.Framework.Defs.SettlementServiceDef>
 
 </Defs>

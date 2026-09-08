@@ -73,7 +73,7 @@ namespace Settlement_Services.Services.Android
             Hediff hediff = NeutroLossHediff(ctx.CurrentTarget?.liveThing as Pawn);
             if (hediff == null) return ServiceCompletionResult.Fail("SettlementServices.Error.TargetNoLongerExists");
 
-            hediff.Severity = 0f;
+            HealthUtility.Cure(hediff);
             return ServiceCompletionResult.Ok();
         }
 

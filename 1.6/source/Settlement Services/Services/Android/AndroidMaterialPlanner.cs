@@ -11,26 +11,19 @@ namespace Settlement_Services.Services.Android
 {
     internal static class AndroidMaterialPlanner
     {
-        public static List<ServiceStockRequirement> RequirementsFor(List<ThingDefCountClass> costList)
+        public static List<ServiceStockRequirement> RequirementsFor(ThingDef part)
         {
             var result = new List<ServiceStockRequirement>();
-            if (costList == null) return result;
+            if (part == null || SettlementStockCatalog.ItemFor(part) == null) return result;
 
-            foreach (ThingDefCountClass cost in costList)
-            {
-                if (SettlementStockCatalog.ItemFor(cost.thingDef) == null) continue;
-
-                ServiceStockRequirement existing = result.Find(r => r.thingDefName == cost.thingDef.defName);
-                if (existing != null) existing.amount += cost.count;
-                else result.Add(new ServiceStockRequirement { thingDefName = cost.thingDef.defName, amount = cost.count, playerCanSupply = true });
-            }
+            result.Add(new ServiceStockRequirement { thingDefName = part.defName, amount = 1, playerCanSupply = true });
             return result;
         }
 
-        public static ServiceInputPlan PlanInputs(SettlementServiceRequest request, List<ThingDefCountClass> costList)
+        public static ServiceInputPlan PlanInputs(SettlementServiceRequest request, ThingDef part)
         {
             var plan = new ServiceInputPlan();
-            List<ServiceStockRequirement> requirements = RequirementsFor(costList);
+            List<ServiceStockRequirement> requirements = RequirementsFor(part);
             if (requirements.Count == 0) return plan;
 
             StockAllocationResult allocation = SettlementStockService.TryAllocate(request.settlement, requirements, request.playerSuppliedInputs);
@@ -41,9 +34,9 @@ namespace Settlement_Services.Services.Android
             return plan;
         }
 
-        public static int SettlementSuppliedCost(SettlementServiceRequest request, List<ThingDefCountClass> costList, float markupPct)
+        public static int SettlementSuppliedCost(SettlementServiceRequest request, ThingDef part, float markupPct)
         {
-            List<ServiceStockRequirement> requirements = RequirementsFor(costList);
+            List<ServiceStockRequirement> requirements = RequirementsFor(part);
             if (requirements.Count == 0) return 0;
 
             StockAllocationResult allocation = SettlementStockService.TryAllocate(request.settlement, requirements, request.playerSuppliedInputs);

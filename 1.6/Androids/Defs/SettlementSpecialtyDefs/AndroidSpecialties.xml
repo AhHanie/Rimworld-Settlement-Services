@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+    <defName>SettlementSpecialty_AndroidServiceCenter</defName>
+    <label>android service center</label>
+    <description>This settlement maintains dedicated facilities and technicians for android repair, parts, and maintenance, which is what permits it to offer android services at all.</description>
+    <iconTexPath>SettlementServices/UI/Icons/android</iconTexPath>
+    <selectionWeight>0.7</selectionWeight>
+    <minTechLevel>Spacer</minTechLevel>
+    <modifiers>
+      <capabilityTags>
+        <li>AndroidServices</li>
+      </capabilityTags>
+    </modifiers>
+    <stockModifiers>
+      <li>
+        <stockCategoryDefName>SettlementStock_ProstheticsAndBionics</stockCategoryDefName>
+        <capacityMultiplier>2.0</capacityMultiplier>
+        <refreshRateMultiplier>1.5</refreshRateMultiplier>
+      </li>
+    </stockModifiers>
+  </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+
+</Defs>

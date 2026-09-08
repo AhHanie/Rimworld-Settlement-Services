@@ -5,6 +5,7 @@ using Verse;
 using Settlement_Services.Framework.Compat;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Dto;
+using Settlement_Services.Framework.Stock;
 using Settlement_Services.Framework.Workers;
 using Settlement_Services.Framework.Workers.Results;
 
@@ -44,7 +45,7 @@ namespace Settlement_Services.Services.Android
         {
             var items = new List<ServiceLineItem>();
             AndroidInstallOption option = ResolveOption(request.target.thing as Pawn, request.selectedOptionKeys);
-            int materialsCost = AndroidMaterialPlanner.SettlementSuppliedCost(request, PartCostList(option?.recipe), MaterialMarkupPct);
+            int materialsCost = AndroidMaterialPlanner.SettlementSuppliedCost(request, PartThingDef(option?.recipe), MaterialMarkupPct);
             if (materialsCost > 0) items.Add(new ServiceLineItem("SettlementServices.LineItem.AndroidPartInstallMaterials", materialsCost));
             return items;
         }
@@ -52,13 +53,13 @@ namespace Settlement_Services.Services.Android
         public override ServiceInputPlan PlanInputs(SettlementServiceRequest request, SettlementServiceQuote quote)
         {
             AndroidInstallOption option = ResolveOption(request.target.thing as Pawn, request.selectedOptionKeys);
-            return option != null ? AndroidMaterialPlanner.PlanInputs(request, PartCostList(option.recipe)) : ServiceInputPlan.None;
+            return option != null ? AndroidMaterialPlanner.PlanInputs(request, PartThingDef(option.recipe)) : ServiceInputPlan.None;
         }
 
         public override List<ServiceStockRequirement> GetDynamicStockRequirements(SettlementServiceRequest request)
         {
             AndroidInstallOption option = ResolveOption(request.target.thing as Pawn, request.selectedOptionKeys);
-            return option != null ? AndroidMaterialPlanner.RequirementsFor(PartCostList(option.recipe)) : new List<ServiceStockRequirement>();
+            return option != null ? AndroidMaterialPlanner.RequirementsFor(PartThingDef(option.recipe)) : new List<ServiceStockRequirement>();
         }
 
         public override string ValidateUnitRequest(SettlementServiceRequest request)
@@ -98,6 +99,7 @@ namespace Settlement_Services.Services.Android
             {
                 if (recipe.addsHediff == null || !partType.IsAssignableFrom(recipe.addsHediff.hediffClass)) continue;
                 if (reactorType != null && reactorType.IsAssignableFrom(recipe.addsHediff.hediffClass)) continue;
+                if (SettlementStockCatalog.ItemFor(PartThingDef(recipe)) == null) continue;
 
                 foreach (BodyPartRecord part in recipe.Worker.GetPartsToApplyOn(android, recipe))
                     if (recipe.Worker.AvailableOnNow(android, part))
@@ -112,7 +114,7 @@ namespace Settlement_Services.Services.Android
             return selectedOptionKeys.Select(k => options.FirstOrDefault(o => o.Key == k)).FirstOrDefault(o => o != null);
         }
 
-        private static List<ThingDefCountClass> PartCostList(RecipeDef recipe) =>
-            recipe?.fixedIngredientFilter?.AllowedThingDefs?.FirstOrDefault()?.costList;
+        private static ThingDef PartThingDef(RecipeDef recipe) =>
+            recipe?.fixedIngredientFilter?.AllowedThingDefs?.FirstOrDefault();
     }
 }
