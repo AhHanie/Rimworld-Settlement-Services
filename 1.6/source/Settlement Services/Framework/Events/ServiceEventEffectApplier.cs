@@ -56,8 +56,14 @@ namespace Settlement_Services.Framework.Events
                 if (amount > 0) SettlementServiceOrchestrator.ResolvePaymentProvider(job.requestChannel).Refund(amount, ctx);
             }
 
-            if (effects.durationDeltaTicks != 0 && job.status == Domain.ServiceJobStatus.Active)
-                job.expectedCompletionTick = Mathf.Max(Find.TickManager.TicksGame + 1, job.expectedCompletionTick + effects.durationDeltaTicks);
+            if ((effects.durationDeltaTicks != 0 || effects.durationDeltaPct != 0f) && job.status == Domain.ServiceJobStatus.Active)
+            {
+                int originalDurationTicks = job.acceptedQuote != null && job.acceptedQuote.expectedDurationTicks > 0
+                    ? job.acceptedQuote.expectedDurationTicks
+                    : Mathf.Max(0, job.expectedCompletionTick - job.statusChangedTick);
+                int deltaTicks = effects.durationDeltaTicks + Mathf.RoundToInt(originalDurationTicks * effects.durationDeltaPct);
+                job.expectedCompletionTick = Mathf.Max(Find.TickManager.TicksGame + 1, job.expectedCompletionTick + deltaTicks);
+            }
 
             if (effects.hediffDefName != null && pawn != null)
             {

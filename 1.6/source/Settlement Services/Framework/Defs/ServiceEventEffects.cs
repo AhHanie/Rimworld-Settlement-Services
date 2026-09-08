@@ -12,6 +12,7 @@ namespace Settlement_Services.Framework.Defs
         public int refundAmount;
 
         public int durationDeltaTicks;
+        public float durationDeltaPct;
 
         public int? qualityOffset;
 
