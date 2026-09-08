@@ -206,6 +206,8 @@
     <Compile Include="Framework\Events\ServiceEventRegistry.cs" />
     <Compile Include="Framework\Events\ServiceEventRollService.cs" />
     <Compile Include="Framework\Events\ServiceEventEffectApplier.cs" />
+    <Compile Include="Framework\Events\ServiceEventWorker.cs" />
+    <Compile Include="Framework\Events\Workers\CureRandomInjuryServiceEventWorker.cs" />
     <Compile Include="Framework\Events\ServiceReferralResolver.cs" />
     <Compile Include="Framework\Events\ServiceQuestHookEffect.cs" />
     <Compile Include="Framework\Events\ChoiceLetter_ServiceEvent.cs" />

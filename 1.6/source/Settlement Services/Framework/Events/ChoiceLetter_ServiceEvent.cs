@@ -41,17 +41,17 @@ namespace Settlement_Services.Framework.Events
                     var option = new DiaOption(choice.labelKey.Translate())
                     {
                         resolveTree = true,
-                        action = () => Resolve(job, choice, index),
+                        action = () => Resolve(job, eventDef, choice, index),
                     };
                     yield return option;
                 }
             }
         }
 
-        private void Resolve(ServiceJobRecord job, ServiceEventChoice choice, int index)
+        private void Resolve(ServiceJobRecord job, ServiceEventDef eventDef, ServiceEventChoice choice, int index)
         {
             var ctx = new ServiceJobContext(SettlementServicesWorldComponent.Current, job).ForUnitIndex(job.eventTargetIndex);
-            ServiceEventEffectApplier.Apply(choice.effects, job, ctx);
+            ServiceEventEffectApplier.Apply(eventDef, choice.effects, job, ctx);
             job.eventOutcome.applied = true;
             job.eventOutcome.choiceIndexSelected = index;
             Find.LetterStack.RemoveLetter(this);

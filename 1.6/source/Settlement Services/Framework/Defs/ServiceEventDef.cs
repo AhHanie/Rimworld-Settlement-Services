@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Verse;
+using Settlement_Services.Framework.Events;
 
 namespace Settlement_Services.Framework.Defs
 {
@@ -28,6 +30,25 @@ namespace Settlement_Services.Framework.Defs
         public ServiceEventEffects effects;
         public List<ServiceEventChoice> choices;
 
+        public Type workerClass;
+
+        [Unsaved(false)]
+        private ServiceEventWorker workerInt;
+
+        public ServiceEventWorker Worker
+        {
+            get
+            {
+                if (workerClass == null) return null;
+                if (workerInt == null)
+                {
+                    workerInt = (ServiceEventWorker)Activator.CreateInstance(workerClass);
+                    workerInt.def = this;
+                }
+                return workerInt;
+            }
+        }
+
         public override IEnumerable<string> ConfigErrors()
         {
             foreach (string e in base.ConfigErrors()) yield return e;
@@ -45,12 +66,22 @@ namespace Settlement_Services.Framework.Defs
             foreach (string e in ValidateNameList(eligibleServiceDefNames, "eligibleServiceDefNames")) yield return e;
             foreach (string e in ValidateNameList(eligibleCategoryDefNames, "eligibleCategoryDefNames")) yield return e;
 
-            if (choices.NullOrEmpty() && effects == null)
-                yield return "must set either effects or exactly two choices.";
+            if (choices.NullOrEmpty() && effects == null && workerClass == null)
+                yield return "must set effects, exactly two choices, or workerClass.";
             if (!choices.NullOrEmpty() && effects != null)
                 yield return "must not set both effects and choices.";
             if (!choices.NullOrEmpty() && choices.Count != 2)
                 yield return $"choices must contain exactly 2 entries, found {choices.Count}.";
+
+            if (workerClass != null)
+            {
+                if (!typeof(ServiceEventWorker).IsAssignableFrom(workerClass))
+                    yield return $"workerClass {workerClass} does not derive from ServiceEventWorker.";
+                else if (workerClass.IsAbstract)
+                    yield return $"workerClass {workerClass} is abstract.";
+                else if (workerClass.GetConstructor(Type.EmptyTypes) == null)
+                    yield return $"workerClass {workerClass} lacks a public parameterless constructor.";
+            }
 
             if (RequiresPawn(effects) && !requiresPawnTarget)
                 yield return "effects reference a pawn but requiresPawnTarget is false.";

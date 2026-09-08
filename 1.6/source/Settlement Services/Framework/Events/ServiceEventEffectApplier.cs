@@ -22,14 +22,19 @@ namespace Settlement_Services.Framework.Events
                 return;
             }
 
-            Apply(eventDef.effects, job, ctx);
+            Apply(eventDef, eventDef.effects, job, ctx);
             job.eventOutcome.applied = true;
             SettlementServiceNotifier.NotifyEvent(job, eventDef);
         }
 
-        public static void Apply(ServiceEventEffects effects, ServiceJobRecord job, ServiceJobContext ctx)
+        public static void Apply(ServiceEventDef eventDef, ServiceEventEffects effects, ServiceJobRecord job, ServiceJobContext ctx)
         {
-            if (effects == null) return;
+            if (effects != null) ApplyEffects(effects, job, ctx);
+            eventDef.Worker?.Apply(ctx);
+        }
+
+        private static void ApplyEffects(ServiceEventEffects effects, ServiceJobRecord job, ServiceJobContext ctx)
+        {
             Pawn pawn = ctx.ResolvePrimaryPawn();
 
             if (effects.experienceSkillDefName != null && pawn?.skills != null)

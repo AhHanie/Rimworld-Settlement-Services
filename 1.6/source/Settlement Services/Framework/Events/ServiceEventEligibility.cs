@@ -45,7 +45,7 @@ namespace Settlement_Services.Framework.Events
             if (SettlementServicesWorldComponent.Current.IsServiceEventOnCooldown(ctx.Job.settlementWorldObjectId, eventDef.defName, eventDef.cooldownTicks))
                 return false;
 
-            return true;
+            return eventDef.Worker == null || eventDef.Worker.CanApply(ctx);
         }
 
         private static bool ServiceMatches(ServiceEventDef eventDef, SettlementServiceDef serviceDef)
