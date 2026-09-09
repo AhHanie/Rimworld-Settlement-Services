@@ -31,7 +31,7 @@
     <SettlementServices.Error.DuplicateTarget>The same target was selected more than once.</SettlementServices.Error.DuplicateTarget>
     <SettlementServices.Error.InvalidQuantity>The requested quantity is not valid.</SettlementServices.Error.InvalidQuantity>
     <SettlementServices.LineItem.SpecialtyModifier>Settlement specialty</SettlementServices.LineItem.SpecialtyModifier>
-    <SettlementServices.LineItem.ReputationModifier>Faction relations</SettlementServices.LineItem.ReputationModifier>
+    <SettlementServices.LineItem.ReputationModifier>Faction relations discount</SettlementServices.LineItem.ReputationModifier>
     <SettlementServices.LineItem.PriorityTier>Priority surcharge</SettlementServices.LineItem.PriorityTier>
     <SettlementServices.LineItem.InvestmentDiscount>Settlement investment</SettlementServices.LineItem.InvestmentDiscount>
     <SettlementServices.Letter.ReadyForCollectionLabel>Service complete</SettlementServices.Letter.ReadyForCollectionLabel>

@@ -34,7 +34,27 @@ namespace Settlement_Services.Framework.Events
             }
 
             ServiceEventDef chosen = WeightedPick(eligible, Gen.HashCombineInt(job.jobId, PickSalt));
+            RecordAndPresent(domain, chosen, job, ctx);
+        }
 
+        internal static bool ForceRandom(SettlementServicesWorldComponent domain, SettlementServiceDef def, ServiceJobRecord job, ServiceJobContext ctx)
+        {
+            List<ServiceEventDef> eligible = ServiceEventRegistry.EligibleEvents(def, ctx).ToList();
+            if (eligible.Count == 0) return false;
+
+            int debugSeed = Gen.HashCombineInt(job.jobId, Find.TickManager.TicksGame);
+            ServiceEventDef chosen = WeightedPick(eligible, debugSeed);
+            RecordAndPresent(domain, chosen, job, ctx);
+            return true;
+        }
+
+        internal static void ForceSpecific(SettlementServicesWorldComponent domain, ServiceEventDef chosen, ServiceJobRecord job, ServiceJobContext ctx)
+        {
+            RecordAndPresent(domain, chosen, job, ctx);
+        }
+
+        private static void RecordAndPresent(SettlementServicesWorldComponent domain, ServiceEventDef chosen, ServiceJobRecord job, ServiceJobContext ctx)
+        {
             int scheduledTick = -1;
             if (chosen.triggerPhase == ServiceEventTriggerPhase.DuringService)
             {
