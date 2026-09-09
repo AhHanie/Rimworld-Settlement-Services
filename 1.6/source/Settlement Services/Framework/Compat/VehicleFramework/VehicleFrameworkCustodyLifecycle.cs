@@ -10,28 +10,41 @@ namespace Settlement_Services.Framework.Compat.VehicleFramework
 {
     internal sealed class VehicleFrameworkCustodyLifecycle : ICompatibilityCustodyLifecycle
     {
-        public bool Handles(ServiceJobContext context, Thing thing) => VehicleFrameworkAdapter.IsVehicle(thing);
+        public bool Handles(ServiceJobContext context, Caravan caravan, Thing thing) =>
+            VehicleFrameworkAdapter.IsVehicle(thing) ||
+            (thing is Pawn occupant && caravan != null && VehicleFrameworkAdapter.FindVehicleContainingOccupant(caravan, occupant) != null);
 
         public bool TryPrepareForTargetCustody(ServiceJobContext context, Caravan origin, Thing thing, out Caravan resultCaravan, out string errorKey)
         {
             resultCaravan = origin;
             errorKey = null;
 
-            if (origin == null || !(thing is Pawn vehicle)) return true;
+            if (origin == null || !(thing is Pawn pawn)) return true;
 
-            if (!VehicleFrameworkAdapter.TryDisembarkAllOccupants(vehicle))
+            if (VehicleFrameworkAdapter.IsVehicle(pawn))
             {
-                errorKey = "SettlementServices.Error.VehicleOccupantsCouldNotDisembark";
+                if (!VehicleFrameworkAdapter.TryDisembarkAllOccupants(pawn))
+                {
+                    errorKey = "SettlementServices.Error.VehicleOccupantsCouldNotDisembark";
+                    return false;
+                }
+
+                Faction faction = origin.Faction;
+                PlanetTile tile = origin.Tile;
+                List<Pawn> remainingMembers = origin.PawnsListForReading.Where(p => p != pawn).ToList();
+
+                origin.RemovePawn(pawn);
+
+                resultCaravan = ResolveLiveCaravan(origin, faction, tile, remainingMembers);
+                return true;
+            }
+
+            if (!VehicleFrameworkAdapter.TryRemoveOccupantFromCaravanVehicle(origin, pawn))
+            {
+                errorKey = "SettlementServices.Error.VehicleOccupantCouldNotDetach";
                 return false;
             }
 
-            Faction faction = origin.Faction;
-            PlanetTile tile = origin.Tile;
-            List<Pawn> remainingMembers = origin.PawnsListForReading.Where(p => p != vehicle).ToList();
-
-            origin.RemovePawn(vehicle);
-
-            resultCaravan = ResolveLiveCaravan(origin, faction, tile, remainingMembers);
             return true;
         }
 

@@ -23,6 +23,7 @@
     <SettlementServices.Error.CaravanNoLongerExists>The requesting caravan no longer exists.</SettlementServices.Error.CaravanNoLongerExists>
     <SettlementServices.Error.InsufficientPlayerSuppliedInput>Your caravan no longer carries the required materials.</SettlementServices.Error.InsufficientPlayerSuppliedInput>
     <SettlementServices.Error.TargetNotInCaravan>The target is no longer with your caravan.</SettlementServices.Error.TargetNotInCaravan>
+    <SettlementServices.Error.TargetCouldNotBeDetached>This target could not be safely separated from your caravan.</SettlementServices.Error.TargetCouldNotBeDetached>
     <SettlementServices.Error.TargetAlreadyInUse>This target is already committed to another service.</SettlementServices.Error.TargetAlreadyInUse>
     <SettlementServices.Error.CancelledByPlayer>Cancelled.</SettlementServices.Error.CancelledByPlayer>
     <SettlementServices.Error.BatchNotSupported>This service does not support multiple targets at once.</SettlementServices.Error.BatchNotSupported>

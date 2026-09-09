@@ -212,6 +212,8 @@ namespace Settlement_Services.Framework
             if (settlement == null || collectingCaravan.Tile != settlement.Tile) return false;
 
             TargetCustodyService.CollectAll(ctx, collectingCaravan);
+            if (job.targetInCustody) return false;
+
             return domain.TryTransition(jobId, ServiceJobStatus.Collected);
         }
 

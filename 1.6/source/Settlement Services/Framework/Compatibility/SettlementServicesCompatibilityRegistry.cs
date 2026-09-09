@@ -80,11 +80,11 @@ namespace Settlement_Services.Framework.Compatibility
             custodyLifecycles = custodyLifecycleList.ToArray();
         }
 
-        internal static bool TryGetCustodyLifecycle(ServiceJobContext context, Thing thing, out ICompatibilityCustodyLifecycle lifecycle)
+        internal static bool TryGetCustodyLifecycle(ServiceJobContext context, Caravan caravan, Thing thing, out ICompatibilityCustodyLifecycle lifecycle)
         {
             for (int i = 0; i < custodyLifecycles.Length; i++)
             {
-                if (custodyLifecycles[i].Handles(context, thing))
+                if (custodyLifecycles[i].Handles(context, caravan, thing))
                 {
                     lifecycle = custodyLifecycles[i];
                     return true;

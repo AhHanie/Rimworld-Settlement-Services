@@ -6,7 +6,7 @@ namespace Settlement_Services.Framework.Compatibility
 {
     internal interface ICompatibilityCustodyLifecycle
     {
-        bool Handles(ServiceJobContext context, Thing thing);
+        bool Handles(ServiceJobContext context, Caravan caravan, Thing thing);
 
         bool TryPrepareForTargetCustody(ServiceJobContext context, Caravan origin, Thing thing, out Caravan resultCaravan, out string errorKey);
 

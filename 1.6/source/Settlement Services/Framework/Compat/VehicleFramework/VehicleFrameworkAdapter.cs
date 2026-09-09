@@ -53,6 +53,7 @@ namespace Settlement_Services.Framework.Compat.VehicleFramework
         private static MethodInfo disembarkAllFromInventoryMethod;
         private static PropertyInfo allPawnsAboardProp;
         private static PropertyInfo allInventoryPawnsProp;
+        private static MethodInfo removePawnMethod;
 
         public static Type VehiclePawnType { get { EnsureResolved(); return resolveFailed ? null : vehiclePawnType; } }
 
@@ -174,6 +175,47 @@ namespace Settlement_Services.Framework.Compat.VehicleFramework
             return aboard + inCargo;
         }
 
+        public static Thing FindVehicleContainingOccupant(Caravan caravan, Pawn pawn)
+        {
+            if (caravan == null || pawn == null) return null;
+            EnsureResolved();
+            if (resolveFailed) return null;
+
+            foreach (Thing vehicle in VehiclesInCaravan(caravan))
+            {
+                if (ContainsOccupant(allPawnsAboardProp, vehicle, pawn) || ContainsOccupant(allInventoryPawnsProp, vehicle, pawn))
+                    return vehicle;
+            }
+            return null;
+        }
+
+        public static bool TryRemoveOccupantFromCaravanVehicle(Caravan caravan, Pawn pawn)
+        {
+            Thing vehicle = FindVehicleContainingOccupant(caravan, pawn);
+            if (vehicle == null) return false;
+
+            try
+            {
+                removePawnMethod.Invoke(vehicle, new object[] { pawn });
+            }
+            catch (Exception ex)
+            {
+                SupportLog.Error($"Vehicle Framework threw while detaching {pawn.LabelShort} from its vehicle: {ex}");
+                return false;
+            }
+
+            bool stillContained = ContainsOccupant(allPawnsAboardProp, vehicle, pawn) || ContainsOccupant(allInventoryPawnsProp, vehicle, pawn);
+            return !stillContained && pawn.holdingOwner == null;
+        }
+
+        private static bool ContainsOccupant(PropertyInfo occupantListProp, Thing vehicle, Pawn pawn)
+        {
+            if (!(occupantListProp.GetValue(vehicle) is IEnumerable occupants)) return false;
+            foreach (object occupant in occupants)
+                if (ReferenceEquals(occupant, pawn)) return true;
+            return false;
+        }
+
         private static ThingComp FuelComp(Thing vehicle) => VehicleComp(vehicle, compFueledTravelType);
         private static ThingComp UpgradeTreeComp(Thing vehicle) => VehicleComp(vehicle, compUpgradeTreeType);
 
@@ -257,6 +299,7 @@ namespace Settlement_Services.Framework.Compat.VehicleFramework
             disembarkAllFromInventoryMethod = vehiclePawnType.GetMethod("DisembarkAllFromInventory", Type.EmptyTypes);
             allPawnsAboardProp = vehiclePawnType.GetProperty("AllPawnsAboard");
             allInventoryPawnsProp = vehiclePawnType.GetProperty("AllInventoryPawns");
+            removePawnMethod = vehiclePawnType.GetMethod("RemovePawn", new[] { typeof(Pawn) });
 
             bool missingCore = statHandlerField == null || componentsField == null || statHandlerHealthPercentProp == null
                 || componentHealthPercentProp == null
@@ -265,7 +308,7 @@ namespace Settlement_Services.Framework.Compat.VehicleFramework
                 || nodesField == null || nodeKeyField == null || nodeLabelField == null
                 || nodeUnlockedMethod == null || prerequisitesMetMethod == null || disabledMethod == null || finishUnlockMethod == null
                 || disembarkAllMethod == null || disembarkAllFromInventoryMethod == null
-                || allPawnsAboardProp == null || allInventoryPawnsProp == null;
+                || allPawnsAboardProp == null || allInventoryPawnsProp == null || removePawnMethod == null;
 
             if (missingCore)
             {

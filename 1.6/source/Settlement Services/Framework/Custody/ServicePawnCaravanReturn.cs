@@ -32,7 +32,21 @@ namespace Settlement_Services.Framework.Custody
 
             bool createdCaravan = receiver == null;
             if (createdCaravan) receiver = CaravanMaker.MakeCaravan(Enumerable.Empty<Pawn>(), Faction.OfPlayer, tile, true);
-            foreach (Pawn pawn in pawns) receiver = TargetCustodyService.ReturnPawnToCaravan(ctx, receiver, pawn);
+
+            bool allReturned = true;
+            foreach (Pawn pawn in pawns)
+            {
+                if (TargetCustodyService.TryReturnPawnToCaravan(ctx, receiver, pawn, out Caravan updated)) receiver = updated;
+                else allReturned = false;
+            }
+
+            if (!allReturned)
+            {
+                SupportLog.Error($"Job {job.jobId}: automatic return could not verify every pawn back into a caravan; leaving the job awaiting collection.");
+                if (createdCaravan && receiver != null && !receiver.Destroyed && receiver.PawnsListForReading.Count == 0) receiver.Destroy();
+                return false;
+            }
+
             if (createdCaravan) receiver.Name = CaravanNameGenerator.GenerateCaravanName(receiver);
 
             job.targetInCustody = false;
