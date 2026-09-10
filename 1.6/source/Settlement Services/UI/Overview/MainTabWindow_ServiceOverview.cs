@@ -56,6 +56,10 @@ namespace Settlement_Services.UI.Overview
             DrawList(listRect, filtered);
         }
 
+        private const float KnownServicesRowMinHeight = 60f;
+        private const float KnownServicesJumpButtonWidth = 90f;
+        private const float KnownServicesJumpButtonGutter = 6f;
+
         private void DrawKnownServicesView(Rect inRect)
         {
             List<ServiceDiscoveryOverviewEntry> entries = ServiceOverviewQueryService.BuildDiscoveryEntries();
@@ -65,38 +69,62 @@ namespace Settlement_Services.UI.Overview
                 return;
             }
 
-            const float rowHeight = 60f;
-            Rect viewRect = new Rect(0f, 0f, inRect.width - 16f, entries.Count * rowHeight);
+            float textWidth = inRect.width - 16f - KnownServicesJumpButtonWidth - KnownServicesJumpButtonGutter;
+            float[] rowStrides = entries.Select(e => KnownServicesRowStride(e, textWidth)).ToArray();
+            Rect viewRect = new Rect(0f, 0f, inRect.width - 16f, rowStrides.Sum());
             Widgets.BeginScrollView(inRect, ref knownServicesScrollPosition, viewRect);
             float y = 0f;
-            foreach (ServiceDiscoveryOverviewEntry entry in entries)
+            for (int i = 0; i < entries.Count; i++)
             {
-                Rect rowRect = new Rect(0f, y, viewRect.width, rowHeight - 2f);
-                if (rowRect.y + rowHeight >= knownServicesScrollPosition.y && rowRect.y <= knownServicesScrollPosition.y + inRect.height)
-                    DrawKnownServicesRow(rowRect, entry);
-                y += rowHeight;
+                float stride = rowStrides[i];
+                Rect rowRect = new Rect(0f, y, viewRect.width, stride - 2f);
+                if (rowRect.y + stride >= knownServicesScrollPosition.y && rowRect.y <= knownServicesScrollPosition.y + inRect.height)
+                    DrawKnownServicesRow(rowRect, entries[i]);
+                y += stride;
             }
             Widgets.EndScrollView();
+        }
+
+        private static float KnownServicesRowStride(ServiceDiscoveryOverviewEntry entry, float textWidth)
+        {
+            float height = Text.CalcHeight(entry.settlementLabel, textWidth);
+            if (entry.inPersonLabel != null)
+                height += Text.CalcHeight("SettlementServices.Label.KnownServicesInPerson".Translate(entry.inPersonLabel), textWidth);
+            if (entry.remoteLabel != null)
+                height += Text.CalcHeight("SettlementServices.Label.KnownServicesRemote".Translate(entry.remoteLabel), textWidth);
+            return Mathf.Max(height + 2f, KnownServicesRowMinHeight);
         }
 
         private void DrawKnownServicesRow(Rect rect, ServiceDiscoveryOverviewEntry entry)
         {
             Widgets.DrawHighlightIfMouseover(rect);
 
-            Rect jumpRect = new Rect(rect.x, rect.y, 90f, rect.height);
+            Rect jumpRect = new Rect(rect.x, rect.y, KnownServicesJumpButtonWidth, rect.height);
             if (Widgets.ButtonText(jumpRect, "SettlementServices.Button.Jump".Translate()))
                 JumpToSettlement(entry.settlement);
 
-            Rect textRect = new Rect(jumpRect.xMax + 6f, rect.y, rect.width - jumpRect.width - 6f, rect.height);
-            Widgets.Label(new Rect(textRect.x, textRect.y, textRect.width, textRect.height / 3f), entry.settlementLabel);
+            Rect textRect = new Rect(jumpRect.xMax + KnownServicesJumpButtonGutter, rect.y, rect.width - jumpRect.width - KnownServicesJumpButtonGutter, rect.height);
+            float y = textRect.y;
+            float settlementHeight = Text.CalcHeight(entry.settlementLabel, textRect.width);
+            Widgets.Label(new Rect(textRect.x, y, textRect.width, settlementHeight), entry.settlementLabel);
+            y += settlementHeight;
+
             Color prevColor = GUI.color;
             GUI.color = Color.gray;
             if (entry.inPersonLabel != null)
-                Widgets.Label(new Rect(textRect.x, textRect.y + textRect.height / 3f, textRect.width, textRect.height / 3f),
-                    "SettlementServices.Label.KnownServicesInPerson".Translate(entry.inPersonLabel));
+            {
+                string inPersonText = "SettlementServices.Label.KnownServicesInPerson".Translate(entry.inPersonLabel);
+                float inPersonHeight = Text.CalcHeight(inPersonText, textRect.width);
+                Widgets.Label(new Rect(textRect.x, y, textRect.width, inPersonHeight), inPersonText);
+                y += inPersonHeight;
+            }
             if (entry.remoteLabel != null)
-                Widgets.Label(new Rect(textRect.x, textRect.y + textRect.height * 2f / 3f, textRect.width, textRect.height / 3f),
-                    "SettlementServices.Label.KnownServicesRemote".Translate(entry.remoteLabel));
+            {
+                string remoteText = "SettlementServices.Label.KnownServicesRemote".Translate(entry.remoteLabel);
+                float remoteHeight = Text.CalcHeight(remoteText, textRect.width);
+                Widgets.Label(new Rect(textRect.x, y, textRect.width, remoteHeight), remoteText);
+                y += remoteHeight;
+            }
             GUI.color = prevColor;
         }
 
