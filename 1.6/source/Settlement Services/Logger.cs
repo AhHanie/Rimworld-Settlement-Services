@@ -1,9 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 
 namespace Settlement_Services
@@ -12,28 +7,29 @@ namespace Settlement_Services
     {
         private const string Prefix = "[Settlement Services] ";
 
-        [Conditional("DEBUG")]
+        private static bool Enabled => ModSettings.Current.verboseLoggingEnabled;
+
         public static void Message(string message)
         {
+            if (!Enabled) return;
             Log.Message(Prefix + message);
         }
 
-        [Conditional("DEBUG")]
         public static void Warning(string message)
         {
+            if (!Enabled) return;
             Log.Warning(Prefix + message);
         }
 
-        [Conditional("DEBUG")]
         public static void Error(string message)
         {
+            if (!Enabled) return;
             Log.Error(Prefix + message);
         }
 
-        [Conditional("DEBUG")]
         public static void Exception(Exception exception, string context = null)
         {
-            if (exception == null)
+            if (!Enabled || exception == null)
             {
                 return;
             }

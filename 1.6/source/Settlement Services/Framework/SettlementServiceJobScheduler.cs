@@ -96,13 +96,6 @@ namespace Settlement_Services.Framework
 
         internal static void CompleteJob(SettlementServicesWorldComponent domain, SettlementServiceDef def, ServiceJobRecord job, ServiceJobContext ctx)
         {
-            if (job.eventOutcome != null && !job.eventOutcome.presented && job.eventOutcome.triggerPhase == ServiceEventTriggerPhase.OnComplete)
-            {
-                ServiceEventDef eventDef = DefDatabase<ServiceEventDef>.GetNamedSilentFail(job.eventOutcome.eventDefName);
-                if (eventDef != null) ServiceEventEffectApplier.Present(eventDef, job, ctx.ForUnitIndex(job.eventTargetIndex));
-                else { job.eventOutcome.presented = true; job.eventOutcome.applied = true; }
-            }
-
             IReadOnlyList<TargetSnapshot> targets = job.Targets;
             var allResultThings = new List<Thing>();
             bool requiresCollection = false;
@@ -145,6 +138,13 @@ namespace Settlement_Services.Framework
                 return;
             }
 
+            if (job.eventOutcome != null && !job.eventOutcome.presented && job.eventOutcome.triggerPhase == ServiceEventTriggerPhase.OnComplete)
+            {
+                ServiceEventDef eventDef = DefDatabase<ServiceEventDef>.GetNamedSilentFail(job.eventOutcome.eventDefName);
+                if (eventDef != null) ServiceEventEffectApplier.Present(eventDef, job, ctx.ForUnitIndex(job.eventTargetIndex));
+                else { job.eventOutcome.presented = true; job.eventOutcome.applied = true; }
+            }
+
             ServicePawnCaravanReturn.TryReturnCompletedPawn(ctx);
 
             SettlementServicesCompatibilityRegistry.NotifyCompleted(new CompatibilityCompletionContext(domain, job));
@@ -174,20 +174,8 @@ namespace Settlement_Services.Framework
 
         private static void BankResults(SettlementServicesWorldComponent domain, ServiceJobRecord job, List<Thing> resultThings)
         {
-            if (resultThings.Count == 0) return;
-
             foreach (Thing resultThing in resultThings)
-            {
-                domain.TakeItemCustody(resultThing);
-                job.results.Add(new TargetSnapshot
-                {
-                    kind = TargetKind.Item,
-                    liveThing = resultThing,
-                    snapshotLabel = resultThing.LabelCap,
-                    snapshotDefName = resultThing.def?.defName,
-                    snapshotQuality = resultThing.TryGetQuality(out QualityCategory q) ? q : (QualityCategory?)null,
-                });
-            }
+                domain.TryAddJobResult(job.jobId, resultThing);
         }
     }
 }

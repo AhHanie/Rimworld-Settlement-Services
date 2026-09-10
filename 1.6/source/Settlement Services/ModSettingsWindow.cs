@@ -115,6 +115,12 @@ namespace Settlement_Services
                 settings.soundtrackEnabled = soundtrackEnabled;
                 ServiceSoundtrackController.RefreshForSettingsChange();
             }
+
+            bool verboseLoggingEnabled = settings.verboseLoggingEnabled;
+            listing.CheckboxLabeled(
+                "SettlementServices.Settings.VerboseLoggingEnabled".Translate(), ref verboseLoggingEnabled,
+                "SettlementServices.Settings.VerboseLoggingEnabled.Tooltip".Translate());
+            settings.verboseLoggingEnabled = verboseLoggingEnabled;
         }
 
         private static float DefaultMultiplierFor(DifficultyDef def)

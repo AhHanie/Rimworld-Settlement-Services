@@ -30,6 +30,8 @@ namespace Settlement_Services
 
         public bool soundtrackEnabled = false;
 
+        public bool verboseLoggingEnabled = false;
+
         public override void ExposeData()
         {
             base.ExposeData();
@@ -42,6 +44,7 @@ namespace Settlement_Services
             Scribe_Values.Look(ref investmentDecayDurationScalePct, "investmentDecayDurationScalePct", 1f);
             Scribe_Deep.Look(ref compatibilitySettings, "compatibilitySettings");
             Scribe_Values.Look(ref soundtrackEnabled, "soundtrackEnabled", false);
+            Scribe_Values.Look(ref verboseLoggingEnabled, "verboseLoggingEnabled", false);
 
             if (Scribe.mode != LoadSaveMode.PostLoadInit) return;
 

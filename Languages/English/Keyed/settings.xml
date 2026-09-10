@@ -19,4 +19,6 @@
     <SettlementServices.Settings.ServiceEventFrequencyPct.Tooltip>How often paid services can trigger a bonus or complication beyond their normal outcome, relative to each service's own default rate.</SettlementServices.Settings.ServiceEventFrequencyPct.Tooltip>
     <SettlementServices.Settings.SoundtrackEnabled>Play settlement services soundtrack</SettlementServices.Settings.SoundtrackEnabled>
     <SettlementServices.Settings.SoundtrackEnabled.Tooltip>Fade in a short ambient loop while browsing a settlement's services menu, and fade normal music back in when you close it.</SettlementServices.Settings.SoundtrackEnabled.Tooltip>
+    <SettlementServices.Settings.VerboseLoggingEnabled>Enable verbose logging</SettlementServices.Settings.VerboseLoggingEnabled>
+    <SettlementServices.Settings.VerboseLoggingEnabled.Tooltip>Write Settlement Services' internal diagnostic messages to the log, without needing a debug build. Intended for troubleshooting; leave off for normal play.</SettlementServices.Settings.VerboseLoggingEnabled.Tooltip>
 </LanguageData>

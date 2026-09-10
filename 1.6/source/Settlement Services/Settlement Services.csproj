@@ -120,6 +120,7 @@
     <Compile Include="Framework\Defs\SettlementStockItemTier.cs" />
     <Compile Include="Framework\Defs\CraftingCommissionExtension.cs" />
     <Compile Include="Framework\Defs\CraftingCommissionRecipeDef.cs" />
+    <Compile Include="Framework\Defs\ServiceEventItemRewardExtension.cs" />
     <Compile Include="Framework\Workers\SettlementServiceWorker.cs" />
     <Compile Include="Framework\Workers\SettlementServiceContext.cs" />
     <Compile Include="Framework\Workers\ServiceJobContext.cs" />
@@ -207,7 +208,15 @@
     <Compile Include="Framework\Events\ServiceEventRollService.cs" />
     <Compile Include="Framework\Events\ServiceEventEffectApplier.cs" />
     <Compile Include="Framework\Events\ServiceEventWorker.cs" />
+    <Compile Include="Framework\Events\Workers\AnimalGroupServiceEventUtility.cs" />
     <Compile Include="Framework\Events\Workers\CureRandomInjuryServiceEventWorker.cs" />
+    <Compile Include="Framework\Events\Workers\GroupCureRandomInjuryServiceEventWorker.cs" />
+    <Compile Include="Framework\Events\Workers\RandomCutDamageServiceEventWorker.cs" />
+    <Compile Include="Framework\Events\Workers\GroupRandomCutDamageServiceEventWorker.cs" />
+    <Compile Include="Framework\Events\Workers\CaravanAnimalJoinServiceEventWorker.cs" />
+    <Compile Include="Framework\Events\Workers\CaravanItemFindServiceEventWorker.cs" />
+    <Compile Include="Framework\Events\Workers\RandomAnimalDiseaseServiceEventWorker.cs" />
+    <Compile Include="Framework\Events\Workers\GroupAnimalDiseaseServiceEventWorker.cs" />
     <Compile Include="Framework\Events\ServiceReferralResolver.cs" />
     <Compile Include="Framework\Events\ServiceQuestHookEffect.cs" />
     <Compile Include="Framework\Events\ChoiceLetter_ServiceEvent.cs" />

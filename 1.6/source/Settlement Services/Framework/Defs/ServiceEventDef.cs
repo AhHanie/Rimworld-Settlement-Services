@@ -95,6 +95,17 @@ namespace Settlement_Services.Framework.Defs
                 foreach (ServiceEventChoice c in choices)
                     foreach (string e in ValidateDurationEffect(c.effects, $"choice '{c.labelKey}' effects", triggerPhase))
                         yield return e;
+
+            ServiceEventItemRewardExtension itemRewardExtension = GetModExtension<ServiceEventItemRewardExtension>();
+            if (itemRewardExtension != null)
+            {
+                if (itemRewardExtension.thingSetMakerDef == null)
+                    yield return "ServiceEventItemRewardExtension.thingSetMakerDef did not resolve.";
+                if (float.IsNaN(itemRewardExtension.rewardValueFactor) || float.IsInfinity(itemRewardExtension.rewardValueFactor) || itemRewardExtension.rewardValueFactor <= 0f)
+                    yield return $"ServiceEventItemRewardExtension.rewardValueFactor must be a finite, positive number, found {itemRewardExtension.rewardValueFactor}.";
+                if (float.IsNaN(itemRewardExtension.minimumRewardValue) || float.IsInfinity(itemRewardExtension.minimumRewardValue) || itemRewardExtension.minimumRewardValue < 0f)
+                    yield return $"ServiceEventItemRewardExtension.minimumRewardValue must be a finite, non-negative number, found {itemRewardExtension.minimumRewardValue}.";
+            }
         }
 
         private static bool RequiresPawn(ServiceEventEffects e) =>

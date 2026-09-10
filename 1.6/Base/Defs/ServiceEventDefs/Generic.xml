@@ -178,4 +178,16 @@
     </effects>
   </Settlement_Services.Framework.Defs.ServiceEventDef>
 
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Generic_AnimalJoinsCaravan</defName>
+    <label>animal joins the caravan</label>
+    <disabled>true</disabled>
+    <description>A tame animal from the settlement takes a liking to your caravan and decides to travel with you.</description>
+    <weightClass>RareExceptional</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>0.2</selectionWeight>
+    <appliesToAllCategories>true</appliesToAllCategories>
+    <workerClass>Settlement_Services.Framework.Events.Workers.CaravanAnimalJoinServiceEventWorker</workerClass>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
 </Defs>

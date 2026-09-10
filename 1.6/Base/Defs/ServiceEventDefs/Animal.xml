@@ -3,9 +3,8 @@
 
   <Settlement_Services.Framework.Defs.ServiceEventDef>
     <defName>SettlementServiceEvent_Animal_ExperiencedVeterinarian</defName>
-    <disabled>true</disabled>
-    <label>experienced veterinarian</label>
-    <description>An experienced veterinarian happens to be on hand and speeds things along.</description>
+    <label>experienced animal handler</label>
+    <description>An experienced animal handler is on hand and speeds up the service.</description>
     <weightClass>MinorPositive</weightClass>
     <triggerPhase>DuringService</triggerPhase>
     <selectionWeight>0.8</selectionWeight>
@@ -19,9 +18,8 @@
 
   <Settlement_Services.Framework.Defs.ServiceEventDef>
     <defName>SettlementServiceEvent_Animal_DifficultPatient</defName>
-    <disabled>true</disabled>
-    <label>difficult patient</label>
-    <description>The animal is more skittish than expected, and handling it takes longer.</description>
+    <label>difficult animal</label>
+    <description>One of the animals proves more challenging than expected, delaying the service.</description>
     <weightClass>Complication</weightClass>
     <triggerPhase>DuringService</triggerPhase>
     <selectionWeight>0.6</selectionWeight>
@@ -34,66 +32,150 @@
   </Settlement_Services.Framework.Defs.ServiceEventDef>
 
   <Settlement_Services.Framework.Defs.ServiceEventDef>
-    <defName>SettlementServiceEvent_Animal_HiddenInjuryFound</defName>
-    <label>hidden injury found</label>
-    <description>The handler treats an injury at no extra charge.</description>
-    <weightClass>Discovery</weightClass>
+    <defName>SettlementServiceEvent_Animal_InjuryFound</defName>
+    <label>injury treated for free</label>
+    <description>The handler treats one of the animals' injuries at no extra charge.</description>
+    <weightClass>MinorPositive</weightClass>
     <triggerPhase>OnComplete</triggerPhase>
-    <selectionWeight>0.6</selectionWeight>
-    <eligibleCategoryDefNames>
-      <li>SettlementService_Animals</li>
-    </eligibleCategoryDefNames>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_AnimalTraining</li>
+      <li>SettlementService_VeterinarySurgery</li>
+      <li>SettlementService_UrgentVeterinaryStabilization</li>
+    </eligibleServiceDefNames>
     <requiresPawnTarget>true</requiresPawnTarget>
     <workerClass>Settlement_Services.Framework.Events.Workers.CureRandomInjuryServiceEventWorker</workerClass>
   </Settlement_Services.Framework.Defs.ServiceEventDef>
 
   <Settlement_Services.Framework.Defs.ServiceEventDef>
-    <defName>SettlementServiceEvent_Animal_FreeGrooming</defName>
-    <disabled>true</disabled>
-    <label>free grooming</label>
-    <description>The handler gives the bonded caretaker a few tips on grooming, at no extra charge.</description>
-    <weightClass>Social</weightClass>
-    <triggerPhase>OnComplete</triggerPhase>
-    <selectionWeight>0.8</selectionWeight>
-    <eligibleCategoryDefNames>
-      <li>SettlementService_Animals</li>
-    </eligibleCategoryDefNames>
-    <requiresPawnTarget>true</requiresPawnTarget>
-    <effects>
-      <thoughtDefName>SettlementServiceEvent_PositiveExperience</thoughtDefName>
-    </effects>
-  </Settlement_Services.Framework.Defs.ServiceEventDef>
-
-  <Settlement_Services.Framework.Defs.ServiceEventDef>
-    <defName>SettlementServiceEvent_Animal_RareMedicineRequired</defName>
-    <disabled>true</disabled>
-    <label>rare medicine required</label>
-    <description>Treating the animal properly calls for a rarer medicine than usual, and takes longer to source.</description>
-    <weightClass>Complication</weightClass>
-    <triggerPhase>OnStart</triggerPhase>
-    <selectionWeight>0.6</selectionWeight>
-    <eligibleCategoryDefNames>
-      <li>SettlementService_Animals</li>
-    </eligibleCategoryDefNames>
-    <effects>
-      <durationDeltaTicks>10000</durationDeltaTicks>
-    </effects>
-  </Settlement_Services.Framework.Defs.ServiceEventDef>
-
-  <Settlement_Services.Framework.Defs.ServiceEventDef>
     <defName>SettlementServiceEvent_Animal_CenterReferral</defName>
-    <disabled>true</disabled>
     <label>animal center referral</label>
     <description>The handler mentions another settlement with a better-equipped animal center.</description>
     <weightClass>Discovery</weightClass>
     <triggerPhase>OnComplete</triggerPhase>
-    <selectionWeight>0.6</selectionWeight>
+    <selectionWeight>0.5</selectionWeight>
     <eligibleCategoryDefNames>
       <li>SettlementService_Animals</li>
     </eligibleCategoryDefNames>
     <effects>
       <referralCategoryDefName>SettlementService_Animals</referralCategoryDefName>
     </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_AnimalTraining_HandlerInjuresAnimal</defName>
+    <label>training mishap</label>
+    <description>During training, the handler loses their grip, leaving one of the animals with a cut.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_AnimalTraining</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <workerClass>Settlement_Services.Framework.Events.Workers.RandomCutDamageServiceEventWorker</workerClass>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Animal_FindsItem</defName>
+    <label>animal finds an item</label>
+    <description>While in the settlement's care, the animal turns up something useful.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.4</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Animals</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <workerClass>Settlement_Services.Framework.Events.Workers.CaravanItemFindServiceEventWorker</workerClass>
+    <modExtensions>
+      <li Class="Settlement_Services.Framework.Defs.ServiceEventItemRewardExtension">
+        <thingSetMakerDef>Reward_ItemsStandard</thingSetMakerDef>
+        <rewardValueFactor>0.1</rewardValueFactor>
+        <minimumRewardValue>150</minimumRewardValue>
+      </li>
+    </modExtensions>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Animal_FindsRareItem</defName>
+    <label>animal finds an exceptional item</label>
+    <description>While in the settlement's care, the animal digs up something exceptionally rare.</description>
+    <weightClass>RareExceptional</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.1</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Animals</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <workerClass>Settlement_Services.Framework.Events.Workers.CaravanItemFindServiceEventWorker</workerClass>
+    <modExtensions>
+      <li Class="Settlement_Services.Framework.Defs.ServiceEventItemRewardExtension">
+        <thingSetMakerDef>SettlementServices_AnimalFindRareItems</thingSetMakerDef>
+        <rewardValueFactor>0.3</rewardValueFactor>
+        <minimumRewardValue>500</minimumRewardValue>
+      </li>
+    </modExtensions>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Animal_ContractsDisease</defName>
+    <label>animal falls ill</label>
+    <description>One of the animals becomes ill while in the settlement's care and needs further treatment.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_AnimalTraining</li>
+      <li>SettlementService_VeterinarySurgery</li>
+      <li>SettlementService_UrgentVeterinaryStabilization</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <workerClass>Settlement_Services.Framework.Events.Workers.RandomAnimalDiseaseServiceEventWorker</workerClass>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Animal_GroupInjuriesFound</defName>
+    <label>injuries treated for free</label>
+    <description>The handler treats injuries on several of the animals at no extra charge.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.4</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_AnimalTraining</li>
+      <li>SettlementService_VeterinarySurgery</li>
+      <li>SettlementService_UrgentVeterinaryStabilization</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <workerClass>Settlement_Services.Framework.Events.Workers.GroupCureRandomInjuryServiceEventWorker</workerClass>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_AnimalTraining_HandlerInjuresGroup</defName>
+    <label>training mishap spreads</label>
+    <description>During training, the handler loses their grip, leaving several of the animals with cuts.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.2</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_AnimalTraining</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <workerClass>Settlement_Services.Framework.Events.Workers.GroupRandomCutDamageServiceEventWorker</workerClass>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Animal_GroupContractsDisease</defName>
+    <label>illness spreads among the animals</label>
+    <description>An illness spreads among several of the animals while in the settlement's care and needs further treatment.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.2</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Animals</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <workerClass>Settlement_Services.Framework.Events.Workers.GroupAnimalDiseaseServiceEventWorker</workerClass>
   </Settlement_Services.Framework.Defs.ServiceEventDef>
 
 </Defs>

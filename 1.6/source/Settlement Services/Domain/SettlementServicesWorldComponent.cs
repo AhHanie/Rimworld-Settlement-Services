@@ -188,6 +188,25 @@ namespace Settlement_Services.Domain
             if (itemCustody.Contains(thing)) itemCustody.Remove(thing);
         }
 
+        public bool TryAddJobResult(int jobId, Thing thing)
+        {
+            if (thing == null || thing.Destroyed) return false;
+
+            ServiceJobRecord job = GetJob(jobId);
+            if (job == null || job.status != ServiceJobStatus.Active) return false;
+
+            TakeItemCustody(thing);
+            job.results.Add(new TargetSnapshot
+            {
+                kind = TargetKind.Item,
+                liveThing = thing,
+                snapshotLabel = thing.LabelCap,
+                snapshotDefName = thing.def?.defName,
+                snapshotQuality = thing.TryGetQuality(out QualityCategory q) ? q : (QualityCategory?)null,
+            });
+            return true;
+        }
+
         public bool IsTargetReserved(Thing thing, int excludingJobId = -1)
         {
             foreach (ServiceJobRecord job in jobs)
