@@ -3,7 +3,6 @@
 
   <Settlement_Services.Framework.Defs.ServiceEventDef>
     <defName>SettlementServiceEvent_Medical_ExceptionalTreatment</defName>
-    <disabled>true</disabled>
     <label>exceptional treatment</label>
     <description>The medical staff handle the case with unusual skill, finishing well ahead of schedule.</description>
     <weightClass>MinorPositive</weightClass>
@@ -14,32 +13,14 @@
     </eligibleCategoryDefNames>
     <requiresPawnTarget>true</requiresPawnTarget>
     <effects>
-      <durationDeltaTicks>-10000</durationDeltaTicks>
-    </effects>
-  </Settlement_Services.Framework.Defs.ServiceEventDef>
-
-  <Settlement_Services.Framework.Defs.ServiceEventDef>
-    <defName>SettlementServiceEvent_Medical_JuniorDoctor</defName>
-    <disabled>true</disabled>
-    <label>junior doctor</label>
-    <description>A junior doctor handles the case under supervision, and the settlement discounts the visit accordingly.</description>
-    <weightClass>MinorPositive</weightClass>
-    <triggerPhase>OnStart</triggerPhase>
-    <selectionWeight>1.0</selectionWeight>
-    <eligibleCategoryDefNames>
-      <li>SettlementService_Medical</li>
-    </eligibleCategoryDefNames>
-    <requiresPawnTarget>true</requiresPawnTarget>
-    <effects>
-      <refundAmount>10</refundAmount>
+      <durationDeltaPct>-0.1</durationDeltaPct>
     </effects>
   </Settlement_Services.Framework.Defs.ServiceEventDef>
 
   <Settlement_Services.Framework.Defs.ServiceEventDef>
     <defName>SettlementServiceEvent_Medical_GoodBedsideManner</defName>
-    <disabled>true</disabled>
     <label>good bedside manner</label>
-    <description>The attending staff put your colonist at ease throughout the whole procedure.</description>
+    <description>The attending staff put your colonists at ease throughout the whole procedure.</description>
     <weightClass>Social</weightClass>
     <triggerPhase>OnComplete</triggerPhase>
     <selectionWeight>1.0</selectionWeight>
@@ -49,14 +30,14 @@
     <requiresPawnTarget>true</requiresPawnTarget>
     <effects>
       <thoughtDefName>SettlementServiceEvent_PositiveExperience</thoughtDefName>
+      <grantThoughtToAllParticipants>true</grantThoughtToAllParticipants>
     </effects>
   </Settlement_Services.Framework.Defs.ServiceEventDef>
 
   <Settlement_Services.Framework.Defs.ServiceEventDef>
     <defName>SettlementServiceEvent_Medical_PoorBedsideManner</defName>
-    <disabled>true</disabled>
     <label>poor bedside manner</label>
-    <description>The attending staff are brusque and dismissive throughout the procedure.</description>
+    <description>The attending staff are brusque and dismissive with your colonists throughout the procedure.</description>
     <weightClass>Complication</weightClass>
     <triggerPhase>OnComplete</triggerPhase>
     <selectionWeight>0.4</selectionWeight>
@@ -66,30 +47,12 @@
     <requiresPawnTarget>true</requiresPawnTarget>
     <effects>
       <thoughtDefName>SettlementServiceEvent_NegativeExperience</thoughtDefName>
-    </effects>
-  </Settlement_Services.Framework.Defs.ServiceEventDef>
-
-  <Settlement_Services.Framework.Defs.ServiceEventDef>
-    <defName>SettlementServiceEvent_Medical_PainManagement</defName>
-    <disabled>true</disabled>
-    <label>pain management</label>
-    <description>The staff send your colonist off with a mild, short-lived analgesic to ease the trip home.</description>
-    <weightClass>MinorPositive</weightClass>
-    <triggerPhase>OnComplete</triggerPhase>
-    <selectionWeight>0.8</selectionWeight>
-    <eligibleCategoryDefNames>
-      <li>SettlementService_Medical</li>
-    </eligibleCategoryDefNames>
-    <requiresPawnTarget>true</requiresPawnTarget>
-    <effects>
-      <hediffDefName>SettlementServiceEvent_PainRelief</hediffDefName>
-      <hediffSeverity>0.5</hediffSeverity>
+      <grantThoughtToAllParticipants>true</grantThoughtToAllParticipants>
     </effects>
   </Settlement_Services.Framework.Defs.ServiceEventDef>
 
   <Settlement_Services.Framework.Defs.ServiceEventDef>
     <defName>SettlementServiceEvent_Medical_TreatmentComplication</defName>
-    <disabled>true</disabled>
     <label>treatment complication</label>
     <description>The treatment turns out to be more involved than first thought.</description>
     <weightClass>Complication</weightClass>
@@ -100,7 +63,7 @@
     </eligibleCategoryDefNames>
     <requiresPawnTarget>true</requiresPawnTarget>
     <effects>
-      <durationDeltaTicks>15000</durationDeltaTicks>
+      <durationDeltaPct>0.1</durationDeltaPct>
     </effects>
   </Settlement_Services.Framework.Defs.ServiceEventDef>
 

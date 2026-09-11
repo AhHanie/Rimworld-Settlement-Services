@@ -1,6 +1,7 @@
 using RimWorld;
 using UnityEngine;
 using Verse;
+using Settlement_Services.Domain;
 using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Workers;
@@ -43,10 +44,16 @@ namespace Settlement_Services.Framework.Events
                 if (skill != null) pawn.skills.Learn(skill, effects.experienceAmount);
             }
 
-            if (effects.thoughtDefName != null && pawn?.needs?.mood != null)
+            if (effects.thoughtDefName != null)
             {
                 ThoughtDef thought = DefDatabase<ThoughtDef>.GetNamedSilentFail(effects.thoughtDefName);
-                if (thought != null) pawn.needs.mood.thoughts.memories.TryGainMemory(thought);
+                if (thought != null)
+                {
+                    if (effects.grantThoughtToAllParticipants)
+                        GrantThoughtToAllParticipants(thought, job);
+                    else if (pawn?.needs?.mood != null)
+                        pawn.needs.mood.thoughts.memories.TryGainMemory(thought);
+                }
             }
 
             if (effects.goodwillDelta != 0)
@@ -87,6 +94,15 @@ namespace Settlement_Services.Framework.Events
             if (effects.questHookDefName != null)
                 ServiceQuestHookEffect.TryFire(effects.questHookDefName, ctx);
 
+        }
+
+        private static void GrantThoughtToAllParticipants(ThoughtDef thought, ServiceJobRecord job)
+        {
+            foreach (TargetSnapshot target in job.Targets)
+            {
+                if (target?.liveThing is Pawn targetPawn && !targetPawn.Destroyed && targetPawn.needs?.mood != null)
+                    targetPawn.needs.mood.thoughts.memories.TryGainMemory(thought);
+            }
         }
     }
 }

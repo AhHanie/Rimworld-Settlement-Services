@@ -6,6 +6,7 @@ namespace Settlement_Services.Framework.Defs
         public float experienceAmount;
 
         public string thoughtDefName;
+        public bool grantThoughtToAllParticipants;
 
         public int goodwillDelta;
 

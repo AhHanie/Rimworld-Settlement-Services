@@ -201,8 +201,8 @@ namespace Settlement_Services.Services.Hiring
 
         private static void HandToCaravan(Pawn pawn, Caravan caravan)
         {
-            Find.WorldPawns.PassToWorld(pawn);
             caravan.AddPawn(pawn, true);
+            Find.WorldPawns.PassToWorld(pawn);
         }
 
         private static void AnnounceHired(List<Pawn> hiredPawns)
