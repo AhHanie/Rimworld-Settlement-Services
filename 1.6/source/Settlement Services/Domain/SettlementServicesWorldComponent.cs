@@ -222,6 +222,22 @@ namespace Settlement_Services.Domain
         private static bool IsOpenCustodyStatus(ServiceJobStatus s) =>
             s == ServiceJobStatus.Active || s == ServiceJobStatus.AwaitingCollection;
 
+        public bool HasCustodyHeldFreeColonist()
+        {
+            foreach (ServiceJobRecord job in jobs)
+            {
+                if (job == null || !job.targetInCustody) continue;
+                if (!IsOpenCustodyStatus(job.status)) continue;
+
+                foreach (TargetSnapshot target in job.Targets)
+                {
+                    if (target?.liveThing is Pawn pawn && !pawn.Destroyed && !pawn.Dead && pawn.IsColonist && pawn.HostFaction == null)
+                        return true;
+                }
+            }
+            return false;
+        }
+
         private void RebuildIndexes()
         {
             settlementsByWorldObjectId = new Dictionary<int, SettlementRecord>();
