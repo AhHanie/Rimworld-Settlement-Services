@@ -18,13 +18,13 @@ namespace Settlement_Services.Services.Education
         private const float OptionalIntellectualXp = 500f;
 
         public override ServiceAvailabilityReport CanOffer(SettlementServiceContext ctx) =>
-            EligibleProjects().Any()
+            ResearchProjectEligibilityService.EligibleProjects().Any()
                 ? ServiceAvailabilityReport.Available
                 : ServiceAvailabilityReport.Unavailable("SettlementServices.Error.NoResearchProjectAvailable");
 
         public override IEnumerable<ServiceDisplayOption> GetDisplayOptions(SettlementServiceContext ctx)
         {
-            foreach (ResearchProjectDef proj in EligibleProjects())
+            foreach (ResearchProjectDef proj in ResearchProjectEligibilityService.EligibleProjects())
                 yield return new ServiceDisplayOption { key = proj.defName, label = proj.LabelCap, description = proj.description, groupKey = ProjectGroupKey };
         }
 
@@ -36,7 +36,7 @@ namespace Settlement_Services.Services.Education
             if (selectedKey == null) yield break;
 
             ResearchProjectDef proj = DefDatabase<ResearchProjectDef>.GetNamedSilentFail(selectedKey);
-            if (proj == null || !IsSeminarEligible(proj)) yield break;
+            if (proj == null || !ResearchProjectEligibilityService.IsOrdinaryStartable(proj)) yield break;
 
             int minReward = Mathf.RoundToInt(proj.Cost * LowBandMinFraction);
             int maxReward = Mathf.RoundToInt(proj.Cost * HighBandMaxFraction);
@@ -48,7 +48,7 @@ namespace Settlement_Services.Services.Education
         public override ServiceCompletionResult Complete(ServiceJobContext ctx)
         {
             ResearchProjectDef proj = DefDatabase<ResearchProjectDef>.GetNamedSilentFail(ctx.Job.selectedOptionKeys.FirstOrDefault());
-            if (proj != null && IsSeminarEligible(proj))
+            if (proj != null && ResearchProjectEligibilityService.IsOrdinaryStartable(proj))
             {
                 float quality = EducationQualityService.TrainingQuality(ctx.ResolveSettlement(), def.category);
                 float fraction = RollRewardFraction(quality);
@@ -71,11 +71,5 @@ namespace Settlement_Services.Services.Education
                 ? Rand.Range(LowBandMaxFraction, HighBandMaxFraction)
                 : Rand.Range(LowBandMinFraction, LowBandMaxFraction);
         }
-
-        private static bool IsSeminarEligible(ResearchProjectDef proj) =>
-            proj.baseCost > 0f && proj.CanStartNow;
-
-        private static IEnumerable<ResearchProjectDef> EligibleProjects() =>
-            DefDatabase<ResearchProjectDef>.AllDefsListForReading.Where(IsSeminarEligible);
     }
 }

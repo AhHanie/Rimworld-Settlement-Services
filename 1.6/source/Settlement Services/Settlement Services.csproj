@@ -222,6 +222,8 @@
     <Compile Include="Framework\Events\Workers\SuccessfulRehabilitationServiceEventWorker.cs" />
     <Compile Include="Framework\Events\Workers\SurgicalComplicationServiceEventWorker.cs" />
     <Compile Include="Framework\Events\Workers\PracticalExerciseServiceEventWorker.cs" />
+    <Compile Include="Framework\Events\Workers\UsefulNotesServiceEventWorker.cs" />
+    <Compile Include="Framework\Events\Workers\AcademicContactServiceEventWorker.cs" />
     <Compile Include="Framework\Events\ServiceReferralResolver.cs" />
     <Compile Include="Framework\Events\ServiceQuestHookEffect.cs" />
     <Compile Include="Framework\Events\ChoiceLetter_ServiceEvent.cs" />
@@ -298,6 +300,7 @@
     <Compile Include="Services\Education\EducationExperienceCalculator.cs" />
     <Compile Include="Services\Education\EducationEventEffectResolver.cs" />
     <Compile Include="Services\Education\SkillEligibilityService.cs" />
+    <Compile Include="Services\Education\ResearchProjectEligibilityService.cs" />
     <Compile Include="Services\Education\AnimalTrainingOptionService.cs" />
     <Compile Include="Services\Education\SkillLessonServiceDef.cs" />
     <Compile Include="Services\Education\SkillLessonServiceWorker.cs" />

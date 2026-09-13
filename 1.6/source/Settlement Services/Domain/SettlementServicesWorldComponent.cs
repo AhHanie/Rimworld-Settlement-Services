@@ -545,6 +545,22 @@ namespace Settlement_Services.Domain
             return false;
         }
 
+        public bool TryGetCurrentCapability(Settlement settlement, out IReadOnlyList<string> specialtyDefNames)
+        {
+            if (settlement != null
+                && settlementsByWorldObjectId.TryGetValue(settlement.ID, out SettlementRecord record)
+                && record.capability != null
+                && record.capability.ownerFingerprintInitialized
+                && string.Equals(record.capability.generatedForFactionLoadId, settlement.Faction?.GetUniqueLoadID(), StringComparison.Ordinal)
+                && string.Equals(record.capability.generatedForFactionDefName, settlement.Faction?.def?.defName, StringComparison.Ordinal))
+            {
+                specialtyDefNames = record.capability.specialtyDefNames;
+                return true;
+            }
+            specialtyDefNames = null;
+            return false;
+        }
+
         public void RemoveSpecialties(int settlementWorldObjectId, IEnumerable<string> defNamesToRemove)
         {
             if (!settlementsByWorldObjectId.TryGetValue(settlementWorldObjectId, out SettlementRecord record) || record.capability == null) return;

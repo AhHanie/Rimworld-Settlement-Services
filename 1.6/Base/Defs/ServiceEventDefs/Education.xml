@@ -42,7 +42,7 @@
     <description>The placement turns into a bit of a cultural exchange, and both sides come away better for it.</description>
     <weightClass>Social</weightClass>
     <triggerPhase>OnComplete</triggerPhase>
-    <selectionWeight>0.8</selectionWeight>
+    <selectionWeight>0.6</selectionWeight>
     <eligibleCategoryDefNames>
       <li>SettlementService_Education</li>
     </eligibleCategoryDefNames>
@@ -126,7 +126,7 @@
     <description>The lesson leaves a lasting impression: for the next two days, your colonists learn 20% faster at everything.</description>
     <weightClass>MinorPositive</weightClass>
     <triggerPhase>OnComplete</triggerPhase>
-    <selectionWeight>1.0</selectionWeight>
+    <selectionWeight>0.8</selectionWeight>
     <eligibleServiceDefNames>
       <li>SettlementService_SkillLesson</li>
       <li>SettlementService_Apprenticeship</li>
@@ -178,7 +178,7 @@
     <description>The instructor sends the pupils off with a small parting gift.</description>
     <weightClass>MinorPositive</weightClass>
     <triggerPhase>OnComplete</triggerPhase>
-    <selectionWeight>1.0</selectionWeight>
+    <selectionWeight>0.6</selectionWeight>
     <eligibleServiceDefNames>
       <li>SettlementService_SkillLesson</li>
       <li>SettlementService_Apprenticeship</li>
@@ -200,7 +200,7 @@
     <description>The apprentice's work turns out so well that the settlement refunds part of the fee.</description>
     <weightClass>MinorPositive</weightClass>
     <triggerPhase>OnComplete</triggerPhase>
-    <selectionWeight>1.0</selectionWeight>
+    <selectionWeight>0.8</selectionWeight>
     <eligibleServiceDefNames>
       <li>SettlementService_Apprenticeship</li>
     </eligibleServiceDefNames>
@@ -239,6 +239,67 @@
     <effects>
       <durationDeltaPct>-0.1</durationDeltaPct>
     </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Education_NewPerspective</defName>
+    <label>new perspective</label>
+    <description>The seminar attendee comes away with a genuinely new way of looking at things, sharpening research and scanner work for a while.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_ResearchSeminar</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <hediffDefName>SettlementService_NewPerspective</hediffDefName>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Education_UsefulNotes</defName>
+    <label>useful notes</label>
+    <description>The attendee's notes turn out to be useful for an entirely different research project back home.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_ResearchSeminar</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <workerClass>Settlement_Services.Framework.Events.Workers.UsefulNotesServiceEventWorker</workerClass>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Education_TechnicalDebate</defName>
+    <label>technical debate</label>
+    <description>A spirited technical debate during the seminar leaves the attendee with a deeper grasp of the subject.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_ResearchSeminar</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <experienceSkillDefName>Intellectual</experienceSkillDefName>
+      <experienceAmount>1000</experienceAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Education_AcademicContact</defName>
+    <label>academic contact</label>
+    <description>The attendee makes a valuable academic contact, and word of a nearby university settlement's teaching services reaches you.</description>
+    <weightClass>Discovery</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_ResearchSeminar</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <workerClass>Settlement_Services.Framework.Events.Workers.AcademicContactServiceEventWorker</workerClass>
   </Settlement_Services.Framework.Defs.ServiceEventDef>
 
 </Defs>

@@ -23,4 +23,26 @@
     </stages>
   </HediffDef>
 
+  <HediffDef>
+    <defName>SettlementService_NewPerspective</defName>
+    <label>new perspective</label>
+    <description>A recent seminar left a lasting impression, sharpening focus and speeding up research and long-range scanner work for a while.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <isBad>false</isBad>
+    <comps>
+      <li Class="HediffCompProperties_Disappears">
+        <disappearsAfterTicks>120000</disappearsAfterTicks>
+        <showRemainingTime>true</showRemainingTime>
+      </li>
+      <li Class="HediffCompProperties_DisappearsOnDeath" />
+    </comps>
+    <stages>
+      <li>
+        <statFactors>
+          <ResearchSpeed>1.20</ResearchSpeed>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
 </Defs>

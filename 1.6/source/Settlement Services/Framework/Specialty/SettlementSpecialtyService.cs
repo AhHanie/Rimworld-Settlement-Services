@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld.Planet;
@@ -15,6 +16,22 @@ namespace Settlement_Services.Framework.Specialty
             IReadOnlyList<string> defNames = domain.GetOrRefreshSpecialtyDefNames(
                 settlement, () => SettlementSpecialtyGenerator.Generate(settlement).Select(d => d.defName).ToList());
 
+            return ResolveSpecialties(defNames);
+        }
+
+        public static IReadOnlyList<SettlementSpecialtyDef> PreviewSpecialties(Settlement settlement)
+        {
+            if (settlement == null) return Array.Empty<SettlementSpecialtyDef>();
+
+            IEnumerable<string> defNames = SettlementServicesWorldComponent.Current.TryGetCurrentCapability(settlement, out IReadOnlyList<string> cached)
+                ? cached
+                : SettlementSpecialtyGenerator.Generate(settlement).Select(d => d.defName);
+
+            return ResolveSpecialties(defNames);
+        }
+
+        private static List<SettlementSpecialtyDef> ResolveSpecialties(IEnumerable<string> defNames)
+        {
             var resolved = new List<SettlementSpecialtyDef>();
             foreach (string defName in defNames)
             {
