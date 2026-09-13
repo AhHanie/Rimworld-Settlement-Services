@@ -87,14 +87,15 @@ namespace Settlement_Services.Framework.Events
                 job.expectedCompletionTick = Mathf.Max(Find.TickManager.TicksGame + 1, job.expectedCompletionTick + deltaTicks);
             }
 
-            if (effects.hediffDefName != null && pawn != null)
+            if (effects.hediffDefName != null)
             {
                 HediffDef hediff = DefDatabase<HediffDef>.GetNamedSilentFail(effects.hediffDefName);
                 if (hediff != null)
                 {
-                    Hediff instance = HediffMaker.MakeHediff(hediff, pawn);
-                    if (effects.hediffSeverity > 0f) instance.Severity = effects.hediffSeverity;
-                    pawn.health.AddHediff(instance);
+                    if (effects.grantHediffToAllParticipants)
+                        GrantHediffToAllParticipants(hediff, effects.hediffSeverity, job);
+                    else if (pawn != null)
+                        AddHediff(hediff, effects.hediffSeverity, pawn);
                 }
             }
 
@@ -113,6 +114,23 @@ namespace Settlement_Services.Framework.Events
                 if (target?.liveThing is Pawn targetPawn && !targetPawn.Destroyed && targetPawn.needs?.mood != null)
                     targetPawn.needs.mood.thoughts.memories.TryGainMemory(thought);
             }
+        }
+
+        private static void GrantHediffToAllParticipants(HediffDef hediff, float severity, ServiceJobRecord job)
+        {
+            var seen = new HashSet<Pawn>();
+            foreach (TargetSnapshot target in job.Targets)
+            {
+                if (!(target?.liveThing is Pawn targetPawn) || targetPawn.Destroyed || targetPawn.health == null) continue;
+                if (seen.Add(targetPawn)) AddHediff(hediff, severity, targetPawn);
+            }
+        }
+
+        private static void AddHediff(HediffDef hediff, float severity, Pawn pawn)
+        {
+            Hediff instance = HediffMaker.MakeHediff(hediff, pawn);
+            if (severity > 0f) instance.Severity = severity;
+            pawn.health.AddHediff(instance);
         }
 
         private static void GrantExperienceToAllParticipants(SkillDef skill, float amount, ServiceJobRecord job)

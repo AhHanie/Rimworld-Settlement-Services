@@ -133,4 +133,20 @@
     </effects>
   </Settlement_Services.Framework.Defs.ServiceEventDef>
 
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Medical_Referral</defName>
+    <label>medical referral</label>
+    <description>The medical staff recommend another nearby settlement with capable medical services.</description>
+    <weightClass>Discovery</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Medical</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <referralCategoryDefName>SettlementService_Medical</referralCategoryDefName>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
 </Defs>

@@ -15,7 +15,6 @@
     <wealthScale>0.04</wealthScale>
     <duration>240000</duration>    <!-- 4 days -->
     <targetRule>Pawn</targetRule>
-    <eventChancePct>0</eventChancePct>
     <iconTexPath>SettlementServices/UI/Icons/student</iconTexPath>
     <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
   </Settlement_Services.Framework.Defs.SettlementServiceDef>

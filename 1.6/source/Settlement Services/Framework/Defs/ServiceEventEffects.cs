@@ -21,8 +21,12 @@ namespace Settlement_Services.Framework.Defs
 
         public int? qualityOffset;
 
+        public float? educationExperienceMultiplier;
+        public float? researchProgressMultiplier;
+
         public string hediffDefName;
         public float hediffSeverity;
+        public bool grantHediffToAllParticipants;
 
         public string referralCategoryDefName;
 

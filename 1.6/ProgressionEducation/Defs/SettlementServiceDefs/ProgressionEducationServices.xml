@@ -16,7 +16,6 @@
     <duration>1500000</duration>    <!-- 25 days -->
     <targetRule>Pawn</targetRule>
     <batchMode>Targets</batchMode>
-    <eventChancePct>0</eventChancePct>
     <iconTexPath>SettlementServices/UI/Icons/skill-level</iconTexPath>
     <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
   </Settlement_Services.Framework.Defs.SettlementServiceDef>

@@ -102,6 +102,12 @@ namespace Settlement_Services.Framework.Defs
                     foreach (string e in ValidateRefundEffect(c.effects, $"choice '{c.labelKey}' effects"))
                         yield return e;
 
+            foreach (string e in ValidateCompletionRewardMultiplier(effects, "effects", triggerPhase, isChoice: false)) yield return e;
+            if (!choices.NullOrEmpty())
+                foreach (ServiceEventChoice c in choices)
+                    foreach (string e in ValidateCompletionRewardMultiplier(c.effects, $"choice '{c.labelKey}' effects", triggerPhase, isChoice: true))
+                        yield return e;
+
             ServiceEventItemRewardExtension itemRewardExtension = GetModExtension<ServiceEventItemRewardExtension>();
             if (itemRewardExtension != null)
             {
@@ -144,6 +150,32 @@ namespace Settlement_Services.Framework.Defs
 
             if (e.refundAmount > 0 && e.refundFraction > 0f)
                 yield return $"{fieldName} must not set both refundAmount and refundFraction.";
+        }
+
+        private static IEnumerable<string> ValidateCompletionRewardMultiplier(ServiceEventEffects e, string fieldName, ServiceEventTriggerPhase phase, bool isChoice)
+        {
+            if (e == null) yield break;
+
+            if (isChoice || phase != ServiceEventTriggerPhase.OnComplete)
+            {
+                if (e.educationExperienceMultiplier.HasValue)
+                    yield return $"{fieldName}.educationExperienceMultiplier is only valid on the Def-level effects of an automatic OnComplete event.";
+                if (e.researchProgressMultiplier.HasValue)
+                    yield return $"{fieldName}.researchProgressMultiplier is only valid on the Def-level effects of an automatic OnComplete event.";
+                yield break;
+            }
+
+            foreach (string e2 in ValidatePositiveMultiplier(e.educationExperienceMultiplier, $"{fieldName}.educationExperienceMultiplier")) yield return e2;
+            foreach (string e2 in ValidatePositiveMultiplier(e.researchProgressMultiplier, $"{fieldName}.researchProgressMultiplier")) yield return e2;
+        }
+
+        private static IEnumerable<string> ValidatePositiveMultiplier(float? value, string fieldName)
+        {
+            if (!value.HasValue) yield break;
+
+            float v = value.Value;
+            if (float.IsNaN(v) || float.IsInfinity(v) || v <= 0f)
+                yield return $"{fieldName} must be a finite, positive number, found {v}.";
         }
 
         private static IEnumerable<string> ValidateNameList(List<string> names, string fieldName)

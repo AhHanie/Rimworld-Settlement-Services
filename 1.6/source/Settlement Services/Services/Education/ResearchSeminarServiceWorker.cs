@@ -52,7 +52,8 @@ namespace Settlement_Services.Services.Education
             {
                 float quality = EducationQualityService.TrainingQuality(ctx.ResolveSettlement(), def.category);
                 float fraction = RollRewardFraction(quality);
-                Find.ResearchManager.AddProgress(proj, proj.Cost * fraction, ctx.CurrentTarget?.liveThing as Pawn);
+                float multiplier = EducationEventEffectResolver.ResearchProgressMultiplierFor(ctx);
+                Find.ResearchManager.AddProgress(proj, proj.Cost * fraction * multiplier, ctx.CurrentTarget?.liveThing as Pawn);
             }
 
             if (ctx.CurrentTarget?.liveThing is Pawn attendee)

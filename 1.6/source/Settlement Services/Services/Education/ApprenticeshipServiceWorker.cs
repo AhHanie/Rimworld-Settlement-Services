@@ -63,7 +63,7 @@ namespace Settlement_Services.Services.Education
         public override ServiceCompletionResult Complete(ServiceJobContext ctx)
         {
             if (ctx.CurrentTarget?.liveThing is Pawn pawn &&
-                EducationExperienceCalculator.TryCalculate(pawn, ctx.ResolveSettlement(), def.category, LessonDef, ctx.Job.selectedOptionKeys, out EducationExperienceResult result))
+                EducationExperienceCalculator.TryCalculate(pawn, ctx.ResolveSettlement(), def.category, LessonDef, ctx.Job.selectedOptionKeys, out EducationExperienceResult result, EducationEventEffectResolver.ExperienceMultiplierFor(ctx)))
                 pawn.skills.Learn(result.Skill, result.QualityXp);
 
             return ServiceCompletionResult.Ok();

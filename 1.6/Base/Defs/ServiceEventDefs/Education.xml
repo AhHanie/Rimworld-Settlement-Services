@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Apprenticeship_MentorBond</defName>
+    <label>mentor bond</label>
+    <description>Your colonists and their mentor strike up a genuine rapport during the placement.</description>
+    <weightClass>Social</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_SkillLesson</li>
+      <li>SettlementService_Apprenticeship</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <thoughtDefName>SettlementServiceEvent_PositiveExperience</thoughtDefName>
+      <grantThoughtToAllParticipants>true</grantThoughtToAllParticipants>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Education_ExtendedSession</defName>
+    <disabled>true</disabled>
+    <label>extended session</label>
+    <description>An unexpected task keeps your colonists at the service a little longer than planned.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Education</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <durationDeltaPct>0.1</durationDeltaPct>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Apprenticeship_CulturalExchange</defName>
+    <label>cultural exchange</label>
+    <description>The placement turns into a bit of a cultural exchange, and both sides come away better for it.</description>
+    <weightClass>Social</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Education</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <thoughtDefName>SettlementServiceEvent_PositiveExperience</thoughtDefName>
+      <grantThoughtToAllParticipants>true</grantThoughtToAllParticipants>
+      <goodwillDelta>1</goodwillDelta>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Education_ExceptionalInstruction</defName>
+    <label>exceptional instruction</label>
+    <description>The instructor's teaching clicks unusually well, and all selected pupils walk away having learned 20% more than expected.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_SkillLesson</li>
+      <li>SettlementService_Apprenticeship</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <educationExperienceMultiplier>1.2</educationExperienceMultiplier>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Education_InstructionalSetback</defName>
+    <label>instructional setback</label>
+    <description>The lessons don't land as well as hoped, and all selected pupils come away having learned 20% less than expected.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_SkillLesson</li>
+      <li>SettlementService_Apprenticeship</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <educationExperienceMultiplier>0.8</educationExperienceMultiplier>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Education_ResearchBreakthrough</defName>
+    <label>research breakthrough</label>
+    <description>The seminar stumbles onto a genuine breakthrough, boosting the research reward by 20%.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_ResearchSeminar</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <researchProgressMultiplier>1.2</researchProgressMultiplier>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Education_ResearchSetback</defName>
+    <label>research setback</label>
+    <description>The seminar runs into a dead end, reducing the research reward by 20%.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_ResearchSeminar</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <researchProgressMultiplier>0.8</researchProgressMultiplier>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Education_InspirationalTeacher</defName>
+    <label>inspirational teacher</label>
+    <description>The lesson leaves a lasting impression: for the next two days, your colonists learn 20% faster at everything.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_SkillLesson</li>
+      <li>SettlementService_Apprenticeship</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <hediffDefName>SettlementService_InspirationalTeacher</hediffDefName>
+      <grantHediffToAllParticipants>true</grantHediffToAllParticipants>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Education_PracticalExercise</defName>
+    <label>practical exercise</label>
+    <description>A hands-on exercise during the lesson grants 1,000 base experience in a different, randomly chosen skill.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_SkillLesson</li>
+      <li>SettlementService_Apprenticeship</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <workerClass>Settlement_Services.Framework.Events.Workers.PracticalExerciseServiceEventWorker</workerClass>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Education_StrictMentor</defName>
+    <label>strict mentor</label>
+    <description>The instructor pushes hard and expects a lot in return: the selected pupils learn 20% more, but come away with an unpleasant experience.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_SkillLesson</li>
+      <li>SettlementService_Apprenticeship</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <educationExperienceMultiplier>1.2</educationExperienceMultiplier>
+      <thoughtDefName>SettlementServiceEvent_NegativeExperience</thoughtDefName>
+      <grantThoughtToAllParticipants>true</grantThoughtToAllParticipants>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Education_MentorGift</defName>
+    <label>mentor gift</label>
+    <description>The instructor sends the pupils off with a small parting gift.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_SkillLesson</li>
+      <li>SettlementService_Apprenticeship</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <workerClass>Settlement_Services.Framework.Events.Workers.CaravanItemFindServiceEventWorker</workerClass>
+    <modExtensions>
+      <li Class="Settlement_Services.Framework.Defs.ServiceEventItemRewardExtension">
+        <thingSetMakerDef>Reward_ItemsStandard</thingSetMakerDef>
+        <rewardValueFactor>0.1</rewardValueFactor>
+        <minimumRewardValue>150</minimumRewardValue>
+      </li>
+    </modExtensions>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Apprenticeship_OutstandingWork</defName>
+    <label>outstanding work</label>
+    <description>The apprentice's work turns out so well that the settlement refunds part of the fee.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_Apprenticeship</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <refundFraction>0.30</refundFraction>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Education_Referral</defName>
+    <label>education referral</label>
+    <description>The instructor recommends another nearby settlement with suitable teaching services.</description>
+    <weightClass>Discovery</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Education</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <referralCategoryDefName>SettlementService_Education</referralCategoryDefName>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Education_QuickSession</defName>
+    <label>quick session</label>
+    <description>The session moves along briskly, finishing up 10% faster than expected.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Education</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <durationDeltaPct>-0.1</durationDeltaPct>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+</Defs>

@@ -28,7 +28,7 @@ namespace Settlement_Services.Services.Education
 
     internal static class EducationExperienceCalculator
     {
-        public static bool TryCalculate(Pawn pawn, Settlement settlement, ServiceCategoryDef category, SkillLessonServiceDef def, IEnumerable<string> selectedOptionKeys, out EducationExperienceResult result)
+        public static bool TryCalculate(Pawn pawn, Settlement settlement, ServiceCategoryDef category, SkillLessonServiceDef def, IEnumerable<string> selectedOptionKeys, out EducationExperienceResult result, float baseXpMultiplier = 1f)
         {
             result = default;
             if (pawn?.skills == null || def == null) return false;
@@ -41,7 +41,7 @@ namespace Settlement_Services.Services.Education
 
             SkillRecord skillRecord = pawn.skills.GetSkill(skill);
             float quality = EducationQualityService.TrainingQuality(settlement, category);
-            float qualityXp = option.baseXp * quality;
+            float qualityXp = option.baseXp * quality * baseXpMultiplier;
             float estimatedXp = qualityXp * skillRecord.LearnRateFactor();
 
             result = new EducationExperienceResult(skill, skillRecord, option, qualityXp, estimatedXp);
