@@ -17,8 +17,6 @@ namespace Settlement_Services.Services.Medical
         private const string ImplantGroupKey = "SettlementServices.Label.ImplantChoice";
         private const int MedicineAmount = 2;
         private const int OperationDurationTicks = 2 * GenDate.TicksPerHour;
-        private const float BaseComplicationChance = 0.2f;
-        private const float ComplicationChanceQualityWeight = 0.25f;
 
         public override ServiceAvailabilityReport CanOffer(SettlementServiceContext ctx)
         {
@@ -137,12 +135,11 @@ namespace Settlement_Services.Services.Medical
             IReadOnlyList<string> keys = ctx.SelectedOptionKeys;
             if (keys.Count == 0) return ServiceCompletionResult.Ok();
 
-            Settlement settlement = ctx.ResolveSettlement();
             foreach (string key in keys)
             {
                 SurgeryOptionService.ImplantOption? option = SurgeryOptionService.FindByKey(pawn, key);
                 if (option == null) return ServiceCompletionResult.Fail("SettlementServices.Error.NoCompatibleImplants");
-                PerformSurgery(pawn, option.Value, settlement, def.category);
+                PerformSurgery(pawn, option.Value);
             }
 
             return ServiceCompletionResult.Ok();
@@ -153,16 +150,9 @@ namespace Settlement_Services.Services.Medical
         private static List<ThingDefCountClass> CloneCounts(List<ThingDefCountClass> source) =>
             source?.Select(c => new ThingDefCountClass(c.thingDef, c.count)).ToList() ?? new List<ThingDefCountClass>();
 
-        private static void PerformSurgery(Pawn pawn, SurgeryOptionService.ImplantOption option, Settlement settlement, ServiceCategoryDef category)
+        private static void PerformSurgery(Pawn pawn, SurgeryOptionService.ImplantOption option)
         {
             option.recipe.Worker.ApplyOnPawn(pawn, option.part, null, new List<Thing>(), null);
-
-            float quality = MedicalQualityService.TreatmentQuality(settlement, category);
-            float complicationChance = Mathf.Clamp01(BaseComplicationChance - quality * ComplicationChanceQualityWeight);
-            if (!Rand.Chance(complicationChance)) return;
-
-            HediffDef complication = DefDatabase<HediffDef>.GetNamedSilentFail("SettlementService_SurgicalComplication");
-            if (complication != null) pawn.health.AddHediff(complication, option.part);
         }
     }
 }

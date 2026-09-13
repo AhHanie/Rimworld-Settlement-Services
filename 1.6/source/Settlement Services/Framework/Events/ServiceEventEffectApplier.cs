@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -11,8 +12,6 @@ namespace Settlement_Services.Framework.Events
 {
     internal static class ServiceEventEffectApplier
     {
-        private const float MaxRefundFraction = 0.25f;
-
         public static void Present(ServiceEventDef eventDef, ServiceJobRecord job, ServiceJobContext ctx)
         {
             job.eventOutcome.presented = true;
@@ -38,10 +37,16 @@ namespace Settlement_Services.Framework.Events
         {
             Pawn pawn = ctx.ResolvePrimaryPawn();
 
-            if (effects.experienceSkillDefName != null && pawn?.skills != null)
+            if (effects.experienceSkillDefName != null)
             {
                 SkillDef skill = DefDatabase<SkillDef>.GetNamedSilentFail(effects.experienceSkillDefName);
-                if (skill != null) pawn.skills.Learn(skill, effects.experienceAmount);
+                if (skill != null)
+                {
+                    if (effects.grantExperienceToAllParticipants)
+                        GrantExperienceToAllParticipants(skill, effects.experienceAmount, job);
+                    else if (pawn?.skills != null)
+                        pawn.skills.Learn(skill, effects.experienceAmount);
+                }
             }
 
             if (effects.thoughtDefName != null)
@@ -62,9 +67,14 @@ namespace Settlement_Services.Framework.Events
                 faction?.TryAffectGoodwillWith(Faction.OfPlayer, effects.goodwillDelta, canSendMessage: false, canSendHostilityLetter: false);
             }
 
-            if (effects.refundAmount > 0 && job.acceptedQuote != null)
+            if (job.acceptedQuote != null)
             {
-                int amount = Mathf.Min(effects.refundAmount, Mathf.RoundToInt(job.acceptedQuote.totalCost * MaxRefundFraction));
+                int amount = 0;
+                if (effects.refundAmount > 0)
+                    amount = Mathf.Min(effects.refundAmount, Mathf.RoundToInt(job.acceptedQuote.totalCost * ServiceEventEffects.MaxRefundFraction));
+                else if (effects.refundFraction > 0f)
+                    amount = Mathf.RoundToInt(job.acceptedQuote.totalCost * Mathf.Min(effects.refundFraction, ServiceEventEffects.MaxRefundFraction));
+
                 if (amount > 0) SettlementServiceOrchestrator.ResolvePaymentProvider(job.requestChannel).Refund(amount, ctx);
             }
 
@@ -102,6 +112,17 @@ namespace Settlement_Services.Framework.Events
             {
                 if (target?.liveThing is Pawn targetPawn && !targetPawn.Destroyed && targetPawn.needs?.mood != null)
                     targetPawn.needs.mood.thoughts.memories.TryGainMemory(thought);
+            }
+        }
+
+        private static void GrantExperienceToAllParticipants(SkillDef skill, float amount, ServiceJobRecord job)
+        {
+            var seen = new HashSet<Pawn>();
+            foreach (TargetSnapshot target in job.Targets)
+            {
+                if (!(target?.liveThing is Pawn targetPawn)) continue;
+                if (targetPawn.Destroyed || targetPawn.Dead || targetPawn.skills == null) continue;
+                if (seen.Add(targetPawn)) targetPawn.skills.Learn(skill, amount);
             }
         }
     }

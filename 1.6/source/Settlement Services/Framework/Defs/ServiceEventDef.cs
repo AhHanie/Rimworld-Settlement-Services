@@ -96,6 +96,12 @@ namespace Settlement_Services.Framework.Defs
                     foreach (string e in ValidateDurationEffect(c.effects, $"choice '{c.labelKey}' effects", triggerPhase))
                         yield return e;
 
+            foreach (string e in ValidateRefundEffect(effects, "effects")) yield return e;
+            if (!choices.NullOrEmpty())
+                foreach (ServiceEventChoice c in choices)
+                    foreach (string e in ValidateRefundEffect(c.effects, $"choice '{c.labelKey}' effects"))
+                        yield return e;
+
             ServiceEventItemRewardExtension itemRewardExtension = GetModExtension<ServiceEventItemRewardExtension>();
             if (itemRewardExtension != null)
             {
@@ -123,6 +129,21 @@ namespace Settlement_Services.Framework.Defs
             bool hasDurationEffect = e.durationDeltaTicks != 0 || e.durationDeltaPct != 0f;
             if (hasDurationEffect && phase == ServiceEventTriggerPhase.OnComplete)
                 yield return $"{fieldName}: durationDeltaTicks/durationDeltaPct have no effect at OnComplete; use OnStart or DuringService.";
+        }
+
+        private static IEnumerable<string> ValidateRefundEffect(ServiceEventEffects e, string fieldName)
+        {
+            if (e == null) yield break;
+
+            if (float.IsNaN(e.refundFraction) || float.IsInfinity(e.refundFraction))
+                yield return $"{fieldName}.refundFraction must be a finite number, found {e.refundFraction}.";
+            else if (e.refundFraction < 0f)
+                yield return $"{fieldName}.refundFraction must be non-negative, found {e.refundFraction}.";
+            else if (e.refundFraction > ServiceEventEffects.MaxRefundFraction)
+                yield return $"{fieldName}.refundFraction must not exceed {ServiceEventEffects.MaxRefundFraction}, found {e.refundFraction}.";
+
+            if (e.refundAmount > 0 && e.refundFraction > 0f)
+                yield return $"{fieldName} must not set both refundAmount and refundFraction.";
         }
 
         private static IEnumerable<string> ValidateNameList(List<string> names, string fieldName)

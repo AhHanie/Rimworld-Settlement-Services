@@ -2,20 +2,26 @@
 <Defs>
 
   <HediffDef>
-    <defName>SettlementService_SurgicalComplication</defName>
-    <label>surgical complication</label>
-    <description>A minor complication from a recent procedure. Uncomfortable, but not dangerous, and it fades on its own.</description>
+    <defName>SettlementService_SuccessfulRehabilitation</defName>
+    <label>successfully rehabilitated</label>
+    <description>A temporary boost to movement and work speed following a successful course of long-term rehabilitation.</description>
     <hediffClass>HediffWithComps</hediffClass>
-    <isBad>true</isBad>
+    <isBad>false</isBad>
     <comps>
       <li Class="HediffCompProperties_Disappears">
-        <disappearsAfterTicks>60000</disappearsAfterTicks>
+        <disappearsAfterTicks>180000</disappearsAfterTicks>
         <showRemainingTime>true</showRemainingTime>
       </li>
+      <li Class="HediffCompProperties_DisappearsOnDeath" />
     </comps>
     <stages>
       <li>
-        <painFactor>1.15</painFactor>
+        <statFactors>
+          <MoveSpeed>1.15</MoveSpeed>
+        </statFactors>
+        <statOffsets>
+          <WorkSpeedGlobal>0.20</WorkSpeedGlobal>
+        </statOffsets>
       </li>
     </stages>
   </HediffDef>

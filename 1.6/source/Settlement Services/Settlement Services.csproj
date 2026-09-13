@@ -218,6 +218,9 @@
     <Compile Include="Framework\Events\Workers\CaravanItemFindServiceEventWorker.cs" />
     <Compile Include="Framework\Events\Workers\RandomAnimalDiseaseServiceEventWorker.cs" />
     <Compile Include="Framework\Events\Workers\GroupAnimalDiseaseServiceEventWorker.cs" />
+    <Compile Include="Framework\Events\Workers\PreventativeTreatmentServiceEventWorker.cs" />
+    <Compile Include="Framework\Events\Workers\SuccessfulRehabilitationServiceEventWorker.cs" />
+    <Compile Include="Framework\Events\Workers\SurgicalComplicationServiceEventWorker.cs" />
     <Compile Include="Framework\Events\ServiceReferralResolver.cs" />
     <Compile Include="Framework\Events\ServiceQuestHookEffect.cs" />
     <Compile Include="Framework\Events\ChoiceLetter_ServiceEvent.cs" />

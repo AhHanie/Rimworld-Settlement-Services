@@ -18,10 +18,24 @@
   </Settlement_Services.Framework.Defs.ServiceEventDef>
 
   <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Medical_PreventativeTreatment</defName>
+    <label>preventative treatment</label>
+    <description>The settlement's staff administer a complimentary penoxycyline dose to every patient, providing temporary protection from preventable diseases.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Medical</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <workerClass>Settlement_Services.Framework.Events.Workers.PreventativeTreatmentServiceEventWorker</workerClass>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
     <defName>SettlementServiceEvent_Medical_GoodBedsideManner</defName>
     <label>good bedside manner</label>
     <description>The attending staff put your colonists at ease throughout the whole procedure.</description>
-    <weightClass>Social</weightClass>
+    <weightClass>MinorPositive</weightClass>
     <triggerPhase>OnComplete</triggerPhase>
     <selectionWeight>1.0</selectionWeight>
     <eligibleCategoryDefNames>
@@ -68,11 +82,44 @@
   </Settlement_Services.Framework.Defs.ServiceEventDef>
 
   <Settlement_Services.Framework.Defs.ServiceEventDef>
-    <defName>SettlementServiceEvent_Medical_FreeConsultation</defName>
-    <disabled>true</disabled>
-    <label>free consultation</label>
-    <description>The doctor throws in a free consultation on top of the requested treatment.</description>
+    <defName>SettlementServiceEvent_Medical_SuccessfulRehabilitation</defName>
+    <label>successful rehabilitation</label>
+    <description>The long-term rehabilitation program pays off: the patient leaves with renewed mobility and a clear, focused mind.</description>
     <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_ExtendedTreatment</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <workerClass>Settlement_Services.Framework.Events.Workers.SuccessfulRehabilitationServiceEventWorker</workerClass>
+    <effects>
+      <hediffDefName>SettlementService_SuccessfulRehabilitation</hediffDefName>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Medical_SurgicalComplication</defName>
+    <label>surgical complication</label>
+    <description>The operation does not go as smoothly as planned, leaving one of the patients with a fresh injury near the operated site. The settlement's staff tend the wound at once and refund part of the fee.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.4</selectionWeight>
+    <eligibleServiceDefNames>
+      <li>SettlementService_Surgery</li>
+    </eligibleServiceDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <workerClass>Settlement_Services.Framework.Events.Workers.SurgicalComplicationServiceEventWorker</workerClass>
+    <effects>
+      <refundFraction>0.30</refundFraction>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Medical_ResearchVolunteer</defName>
+    <label>medical research volunteers</label>
+    <description>Your colonists agree to answer a few questions for the settlement's own medical records, and pick up a little insight in the process.</description>
+    <weightClass>Discovery</weightClass>
     <triggerPhase>OnStart</triggerPhase>
     <selectionWeight>1.0</selectionWeight>
     <eligibleCategoryDefNames>
@@ -80,26 +127,9 @@
     </eligibleCategoryDefNames>
     <requiresPawnTarget>true</requiresPawnTarget>
     <effects>
-      <refundAmount>10</refundAmount>
-    </effects>
-  </Settlement_Services.Framework.Defs.ServiceEventDef>
-
-  <Settlement_Services.Framework.Defs.ServiceEventDef>
-    <defName>SettlementServiceEvent_Medical_ResearchVolunteer</defName>
-    <disabled>true</disabled>
-    <label>medical research volunteer</label>
-    <description>Your colonist agrees to answer a few questions for the settlement's own medical records, and picks up a little insight in the process.</description>
-    <weightClass>Discovery</weightClass>
-    <triggerPhase>OnStart</triggerPhase>
-    <selectionWeight>0.4</selectionWeight>
-    <eligibleCategoryDefNames>
-      <li>SettlementService_Medical</li>
-    </eligibleCategoryDefNames>
-    <requiresPawnTarget>true</requiresPawnTarget>
-    <effects>
-      <refundAmount>10</refundAmount>
       <experienceSkillDefName>Intellectual</experienceSkillDefName>
-      <experienceAmount>50</experienceAmount>
+      <experienceAmount>1000</experienceAmount>
+      <grantExperienceToAllParticipants>true</grantExperienceToAllParticipants>
     </effects>
   </Settlement_Services.Framework.Defs.ServiceEventDef>
 
