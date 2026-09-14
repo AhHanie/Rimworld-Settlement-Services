@@ -105,6 +105,8 @@ namespace Settlement_Services.Framework
                 domain.FreezeOptionSelections(jobId, request);
                 if (plan.AcceptedWorkerData is CraftingProductionPlan productionPlan)
                     domain.FreezeCraftingProductionPlan(jobId, productionPlan);
+                if (plan.AcceptedWorkerData is BuildingCommissionPlan buildingPlan)
+                    domain.FreezeBuildingCommissionPlan(jobId, buildingPlan);
                 domain.FreezeConsumedPlayerSuppliedInputs(jobId, plan.InputPlan.playerSuppliedConsumed);
                 return true;
             }
@@ -258,6 +260,7 @@ namespace Settlement_Services.Framework
         }
 
         private const string CraftingRecipeUnavailableErrorKey = "SettlementServices.Error.CommissionedItemNoLongerAvailable";
+        private const string BuildingUnavailableErrorKey = "SettlementServices.Error.BuildingNoLongerAvailable";
 
         public static void FailJob(SettlementServicesWorldComponent domain, int jobId, string errorKey) =>
             FailJob(domain, jobId, errorKey, 1f);
@@ -333,7 +336,7 @@ namespace Settlement_Services.Framework
 
         private static void RefundConsumedPlayerSuppliedInputsForMissingRecipe(SettlementServicesWorldComponent domain, ServiceJobRecord job, string errorKey)
         {
-            if (errorKey != CraftingRecipeUnavailableErrorKey) return;
+            if (errorKey != CraftingRecipeUnavailableErrorKey && errorKey != BuildingUnavailableErrorKey) return;
             if (job.playerSuppliedInputsRefunded || job.consumedPlayerSuppliedInputs.NullOrEmpty()) return;
 
             Caravan caravan = ResolveRequesterCaravan(job);

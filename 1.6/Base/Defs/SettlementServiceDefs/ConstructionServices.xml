@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_ConstructionContract</defName>
+    <category>SettlementService_Crafting</category>
+    <label>construction contract</label>
+    <description>Commission the settlement to build minifiable structures for you. Choose what to have built, whether you or the settlement supplies the construction materials, and how skilled a constructor to pay for. Return later to collect the finished, installable buildings.</description>
+    <workerClass>Settlement_Services.Services.Construction.BuildingCommissionServiceWorker</workerClass>
+    <requiredTechLevel>Neolithic</requiredTechLevel>
+    <minimumCost>60</minimumCost>
+    <wealthScale>0.01</wealthScale>
+    <duration>30000</duration>    <!-- half a day -->
+    <targetRule>None</targetRule>
+    <batchMode>None</batchMode>
+    <allowRemoteDiscovery>true</allowRemoteDiscovery>
+    <allowRemoteRequest>true</allowRemoteRequest>
+    <priorityTierHeaderKey>SettlementServices.Label.ConstructorSkillLevelHeader</priorityTierHeaderKey>
+    <priorityTiers>
+      <li>
+        <key>Skilled</key>
+        <label>Skilled constructor</label>
+        <durationMultiplier>1</durationMultiplier>
+        <costSurchargePct>0.35</costSurchargePct>
+      </li>
+      <li>
+        <key>Master</key>
+        <label>Master constructor</label>
+        <durationMultiplier>1</durationMultiplier>
+        <costSurchargePct>0.9</costSurchargePct>
+        <minimumGoodwill>60</minimumGoodwill>
+      </li>
+    </priorityTiers>
+    <iconTexPath>SettlementServices/UI/Icons/hammer</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

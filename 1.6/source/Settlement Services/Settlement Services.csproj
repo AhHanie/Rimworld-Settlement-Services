@@ -141,6 +141,8 @@
     <Compile Include="Framework\Dto\CraftingMaterialRequirement.cs" />
     <Compile Include="Framework\Dto\CraftingProductionOperation.cs" />
     <Compile Include="Framework\Dto\CraftingProductionPlan.cs" />
+    <Compile Include="Framework\Dto\BuildingCommissionLine.cs" />
+    <Compile Include="Framework\Dto\BuildingCommissionPlan.cs" />
     <Compile Include="Framework\Pricing\IServicePricingContext.cs" />
     <Compile Include="Framework\Pricing\ServicePricingEngine.cs" />
     <Compile Include="Framework\Pricing\WealthScaling.cs" />
@@ -260,6 +262,7 @@
     <Compile Include="UI\Dialog_SettlementServices.cs" />
     <Compile Include="UI\Dialog_ServiceRequestDetail.cs" />
     <Compile Include="UI\Dialog_CraftingCommissionItemPicker.cs" />
+    <Compile Include="UI\Dialog_BuildingCommissionItemPicker.cs" />
     <Compile Include="UI\Dialog_SettlementInvestment.cs" />
     <Compile Include="UI\ServiceConfirmationFlow.cs" />
     <Compile Include="UI\Interaction\CaravanArrivalAction_VisitServices.cs" />
@@ -332,6 +335,11 @@
     <Compile Include="Services\Crafting\CraftingStockRequirements.cs" />
     <Compile Include="Services\Crafting\CraftingMaterialPreview.cs" />
     <Compile Include="Services\Crafting\CraftingCommissionServiceWorker.cs" />
+
+    <Compile Include="Services\Construction\BuildingCommissionCatalog.cs" />
+    <Compile Include="Services\Construction\BuildingCommissionPlanner.cs" />
+    <Compile Include="Services\Construction\BuildingCommissionPlanValidator.cs" />
+    <Compile Include="Services\Construction\BuildingCommissionServiceWorker.cs" />
 
     <Compile Include="Services\Hiring\HiringCandidateGenerator.cs" />
     <Compile Include="Services\Hiring\Hediff_TemporaryContract.cs" />

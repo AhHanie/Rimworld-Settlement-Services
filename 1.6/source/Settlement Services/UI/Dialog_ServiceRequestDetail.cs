@@ -11,6 +11,7 @@ using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Validation;
 using Settlement_Services.Framework.Workers;
+using Settlement_Services.Services.Construction;
 using Settlement_Services.Services.Crafting;
 
 namespace Settlement_Services.UI
@@ -19,6 +20,7 @@ namespace Settlement_Services.UI
     {
         private readonly ServiceRequestSession session;
         private readonly List<CraftingCommissionRecipe> craftingEligibleRecipes;
+        private readonly List<ThingDef> buildingEligibleBuildings;
         private Vector2 scrollPosition;
         private float scrollHeight;
         private string quantityBuffer;
@@ -39,6 +41,9 @@ namespace Settlement_Services.UI
             if (session.def.Worker is CraftingCommissionServiceWorker)
                 craftingEligibleRecipes = CraftingCommissionCatalog.EligibleRecipes(session.settlement).ToList();
 
+            if (session.def.Worker is BuildingCommissionServiceWorker)
+                buildingEligibleBuildings = BuildingCommissionCatalog.EligibleBuildings(session.settlement).ToList();
+
             if (session.def.requireExplicitPriorityTier && session.selectedTierKey == null)
                 session.selectedTierKey = session.def.priorityTiers.Find(t => t.isDefaultTier)?.key;
         }
@@ -46,6 +51,7 @@ namespace Settlement_Services.UI
         public override void DoWindowContents(Rect inRect)
         {
             bool isCrafting = craftingEligibleRecipes != null;
+            bool isConstruction = buildingEligibleBuildings != null;
             List<StockInputRow> stockRows = isCrafting ? new List<StockInputRow>() : ServiceStockInputPicker.BuildRows(session);
 
             Rect bodyRect = new Rect(inRect.x, inRect.y, inRect.width, inRect.height - 45f);
@@ -65,6 +71,7 @@ namespace Settlement_Services.UI
             if (session.def.targetRule != ServiceTargetRule.None && session.caravan != null) DrawTargetSection(listing);
             if (session.def.EffectiveBatchMode == ServiceBatchMode.Quantity) DrawQuantitySection(listing);
             if (isCrafting) DrawCraftingCommissionSection(listing);
+            if (isConstruction) DrawConstructionCommissionSection(listing);
 
             CraftingMaterialPreview craftingMaterialPreview = isCrafting && session.caravan != null
                 ? CraftingMaterialPreviewBuilder.Build(session)
@@ -72,6 +79,7 @@ namespace Settlement_Services.UI
 
             if (isCrafting) DrawCraftingProductionPlanSection(listing);
             if (isCrafting) DrawCraftingMaterialsSection(listing, craftingMaterialPreview);
+            if (isConstruction) DrawConstructionPlanSection(listing);
             if (stockRows.Count > 0) DrawStockInputSection(listing, stockRows);
             if (!session.def.priorityTiers.NullOrEmpty()) DrawTierSection(listing);
             if (isCrafting) DrawCraftingCrafterSection(listing);
@@ -207,6 +215,76 @@ namespace Settlement_Services.UI
                 .Find(l => l.recipeKind == line.recipeKind && l.recipeDefName == line.recipeDefName && l.stuffDefName == line.stuffDefName);
             if (existing != null) existing.count += line.count;
             else session.craftingCommissionLines.Add(line);
+        }
+
+        private void DrawConstructionCommissionSection(Listing_Standard listing)
+        {
+            listing.Label("SettlementServices.Label.CommissionedBuildings".Translate());
+
+            List<BuildingCommissionLine> lines = session.buildingCommissionLines;
+            if (lines.Count == 0)
+            {
+                listing.Label("SettlementServices.Label.NoConstructionItemsYet".Translate());
+            }
+            else
+            {
+                for (int i = lines.Count - 1; i >= 0; i--)
+                {
+                    BuildingCommissionLine line = lines[i];
+                    ThingDef building = DefDatabase<ThingDef>.GetNamedSilentFail(line.buildingDefName);
+                    if (building == null) { lines.RemoveAt(i); continue; }
+                    ThingDef stuff = line.stuffDefName != null ? DefDatabase<ThingDef>.GetNamedSilentFail(line.stuffDefName) : null;
+
+                    Rect row = listing.GetRect(28f);
+                    Rect iconRect = new Rect(row.x, row.y, 28f, 28f);
+                    Widgets.DefIcon(iconRect, building, stuff, drawPlaceholder: true);
+
+                    string materialSuffix = stuff != null ? $" ({stuff.LabelCap})" : string.Empty;
+                    string label = $"{building.LabelCap}{materialSuffix} x{line.count}";
+                    Rect labelRect = new Rect(iconRect.xMax + 6f, row.y, row.width - 28f - 6f - 28f, row.height);
+                    TextAnchor prevAnchor = Text.Anchor;
+                    Text.Anchor = TextAnchor.MiddleLeft;
+                    Widgets.Label(labelRect, label);
+                    Text.Anchor = prevAnchor;
+
+                    Rect removeRect = new Rect(row.xMax - 24f, row.y, 24f, 24f);
+                    if (Widgets.ButtonText(removeRect, "-")) lines.RemoveAt(i);
+                    TooltipHandler.TipRegion(removeRect, "SettlementServices.Button.RemoveCommissionItem".Translate());
+
+                    listing.Gap(4f);
+                }
+            }
+
+            if (listing.ButtonText("SettlementServices.Button.AddCommissionItem".Translate()))
+                Find.WindowStack.Add(new Dialog_BuildingCommissionItemPicker(session, buildingEligibleBuildings, AddOrMergeBuildingLine));
+
+            listing.Gap();
+        }
+
+        private void AddOrMergeBuildingLine(BuildingCommissionLine line)
+        {
+            BuildingCommissionLine existing = session.buildingCommissionLines
+                .Find(l => l.buildingDefName == line.buildingDefName && l.stuffDefName == line.stuffDefName);
+            if (existing != null) existing.count += line.count;
+            else session.buildingCommissionLines.Add(line);
+        }
+
+        private void DrawConstructionPlanSection(Listing_Standard listing)
+        {
+            if (session.buildingCommissionLines.Count == 0) return;
+            if (!BuildingCommissionPlanner.TryPlan(session.settlement, session.buildingCommissionLines, out BuildingCommissionPlan plan, out _)) return;
+
+            listing.Label("SettlementServices.Label.ConstructionBill".Translate());
+            listing.Label("SettlementServices.Label.ConstructionBillExplanation".Translate());
+            foreach (CraftingMaterialRequirement raw in plan.rawMaterials)
+            {
+                ThingDef thingDef = DefDatabase<ThingDef>.GetNamedSilentFail(raw.thingDefName);
+                string label = thingDef != null ? thingDef.LabelCap.ToString() : raw.thingDefName;
+                listing.Label("SettlementServices.Label.RawMaterialLine".Translate(label, raw.amount));
+            }
+            listing.Label("SettlementServices.Label.ConstructionWorkload".Translate(plan.workTicks.ToStringTicksToPeriod()));
+
+            listing.Gap();
         }
 
         private void DrawCraftingProductionPlanSection(Listing_Standard listing)

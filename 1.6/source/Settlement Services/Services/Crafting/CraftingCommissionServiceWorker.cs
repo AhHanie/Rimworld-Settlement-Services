@@ -4,10 +4,10 @@ using UnityEngine;
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
-using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Dto;
+using Settlement_Services.Framework.Events;
 using Settlement_Services.Framework.Stock;
 using Settlement_Services.Framework.Workers;
 using Settlement_Services.Framework.Workers.Results;
@@ -122,19 +122,8 @@ namespace Settlement_Services.Services.Crafting
         private int EffectiveSkillLevel(ServiceJobContext ctx, Settlement settlement)
         {
             int baseline = DraftEffectiveSkillLevel(settlement, ctx.Job.acceptedQuote?.selectedTierKey);
-            int eventQualityOffset = ResolveAppliedEventQualityOffset(ctx.Job);
+            int eventQualityOffset = ServiceEventEffectApplier.ResolveAppliedEventQualityOffset(ctx.Job);
             return Mathf.Clamp(baseline + eventQualityOffset * SkillLevelsPerEventQualityStep, 0, 20);
-        }
-
-        private static int ResolveAppliedEventQualityOffset(ServiceJobRecord job)
-        {
-            if (job.eventOutcome == null || !job.eventOutcome.applied || job.eventOutcome.eventDefName == null) return 0;
-
-            ServiceEventDef eventDef = DefDatabase<ServiceEventDef>.GetNamedSilentFail(job.eventOutcome.eventDefName);
-            ServiceEventEffects effects = job.eventOutcome.choiceIndexSelected >= 0 && eventDef?.choices != null
-                ? eventDef.choices.ElementAtOrDefault(job.eventOutcome.choiceIndexSelected)?.effects
-                : eventDef?.effects;
-            return effects?.qualityOffset ?? 0;
         }
 
         private static int SettlementSuppliedMaterialsCost(SettlementServiceRequest request, CraftingProductionPlan plan)

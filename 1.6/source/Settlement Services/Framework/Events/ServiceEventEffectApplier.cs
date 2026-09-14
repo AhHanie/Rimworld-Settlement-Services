@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -31,6 +32,17 @@ namespace Settlement_Services.Framework.Events
         {
             if (effects != null) ApplyEffects(effects, job, ctx);
             eventDef.Worker?.Apply(ctx);
+        }
+
+        public static int ResolveAppliedEventQualityOffset(ServiceJobRecord job)
+        {
+            if (job.eventOutcome == null || !job.eventOutcome.applied || job.eventOutcome.eventDefName == null) return 0;
+
+            ServiceEventDef eventDef = DefDatabase<ServiceEventDef>.GetNamedSilentFail(job.eventOutcome.eventDefName);
+            ServiceEventEffects effects = job.eventOutcome.choiceIndexSelected >= 0 && eventDef?.choices != null
+                ? eventDef.choices.ElementAtOrDefault(job.eventOutcome.choiceIndexSelected)?.effects
+                : eventDef?.effects;
+            return effects?.qualityOffset ?? 0;
         }
 
         private static void ApplyEffects(ServiceEventEffects effects, ServiceJobRecord job, ServiceJobContext ctx)

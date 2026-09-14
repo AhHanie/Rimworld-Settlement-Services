@@ -26,6 +26,8 @@ namespace Settlement_Services.Framework.Dto
 
         public int craftingCrafterCount = 1;
 
+        public List<BuildingCommissionLine> buildingCommissionLines = new List<BuildingCommissionLine>();
+
         public Pawn negotiator;
 
         public int bookingTick = -1;
@@ -61,6 +63,7 @@ namespace Settlement_Services.Framework.Dto
             selectedOptionKeys = selectedOptionKeys,
             craftingCommissionLines = CloneLines(craftingCommissionLines),
             craftingCrafterCount = craftingCrafterCount,
+            buildingCommissionLines = CloneLines(buildingCommissionLines),
             negotiator = negotiator,
             bookingTick = bookingTick,
         };
@@ -76,6 +79,7 @@ namespace Settlement_Services.Framework.Dto
             selectedOptionKeys = new List<string>(OptionKeysForTarget(targetIndex)),
             craftingCommissionLines = CloneLines(craftingCommissionLines),
             craftingCrafterCount = craftingCrafterCount,
+            buildingCommissionLines = CloneLines(buildingCommissionLines),
             negotiator = negotiator,
             bookingTick = bookingTick,
         };
@@ -91,6 +95,7 @@ namespace Settlement_Services.Framework.Dto
             selectedOptionKeys = selectedOptionKeys,
             craftingCommissionLines = CloneLines(craftingCommissionLines),
             craftingCrafterCount = craftingCrafterCount,
+            buildingCommissionLines = CloneLines(buildingCommissionLines),
             negotiator = negotiator,
             bookingTick = bookingTick,
         };
@@ -107,11 +112,15 @@ namespace Settlement_Services.Framework.Dto
             targetOptionSelections = targetOptionSelections?.Select(s => s.Clone()).ToList() ?? new List<ServiceTargetOptionSelection>(),
             craftingCommissionLines = CloneLines(craftingCommissionLines),
             craftingCrafterCount = craftingCrafterCount,
+            buildingCommissionLines = CloneLines(buildingCommissionLines),
             negotiator = negotiator,
             bookingTick = bookingTick,
         };
 
         private static List<CraftingCommissionLine> CloneLines(List<CraftingCommissionLine> source) =>
             source?.Select(l => l.Clone()).ToList() ?? new List<CraftingCommissionLine>();
+
+        private static List<BuildingCommissionLine> CloneLines(List<BuildingCommissionLine> source) =>
+            source?.Select(l => l.Clone()).ToList() ?? new List<BuildingCommissionLine>();
     }
 }

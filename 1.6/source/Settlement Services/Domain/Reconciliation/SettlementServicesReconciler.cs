@@ -6,6 +6,7 @@ using Verse;
 using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework;
 using Settlement_Services.Framework.Defs;
+using Settlement_Services.Services.Construction;
 using Settlement_Services.Services.Crafting;
 
 namespace Settlement_Services.Domain.Reconciliation
@@ -35,6 +36,13 @@ namespace Settlement_Services.Domain.Reconciliation
                 if (jobShouldBeGuarded && job.craftingProductionPlan != null && !CraftingProductionPlanValidator.Validate(job.craftingProductionPlan, out string craftingErrorKey))
                 {
                     FailJob(component, job, craftingErrorKey);
+                    failedJobs++;
+                    continue;
+                }
+
+                if (jobShouldBeGuarded && job.buildingCommissionPlan != null && !BuildingCommissionPlanValidator.Validate(job.buildingCommissionPlan, out string buildingErrorKey))
+                {
+                    FailJob(component, job, buildingErrorKey);
                     failedJobs++;
                     continue;
                 }

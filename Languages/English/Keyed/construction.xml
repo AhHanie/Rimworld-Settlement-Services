@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.LineItem.ConstructionMaterials>Settlement-supplied materials</SettlementServices.LineItem.ConstructionMaterials>
+    <SettlementServices.Error.NoCommissionableBuildingsAvailable>This settlement cannot construct anything for you.</SettlementServices.Error.NoCommissionableBuildingsAvailable>
+    <SettlementServices.Error.BuildingNoLongerAvailable>The commissioned building can no longer be constructed.</SettlementServices.Error.BuildingNoLongerAvailable>
+    <SettlementServices.Error.NoConstructionItemsSelected>Add at least one building to commission.</SettlementServices.Error.NoConstructionItemsSelected>
+    <SettlementServices.Label.CommissionedBuildings>Commissioned buildings</SettlementServices.Label.CommissionedBuildings>
+    <SettlementServices.Label.NoConstructionItemsYet>No buildings commissioned yet.</SettlementServices.Label.NoConstructionItemsYet>
+    <SettlementServices.Label.AddConstructionItemTitle>Add building</SettlementServices.Label.AddConstructionItemTitle>
+    <SettlementServices.Label.ConstructionBill>Construction bill</SettlementServices.Label.ConstructionBill>
+    <SettlementServices.Label.ConstructionBillExplanation>The settlement supplies whatever quantity of these materials you do not provide below.</SettlementServices.Label.ConstructionBillExplanation>
+    <SettlementServices.Label.ConstructionWorkload>Construction workload: {0}</SettlementServices.Label.ConstructionWorkload>
+    <SettlementServices.Label.NoEligibleConstructionMaterial>The settlement has no eligible material for this building.</SettlementServices.Label.NoEligibleConstructionMaterial>
+    <SettlementServices.Label.EffectiveConstructorSkill>Effective constructor skill: {0}</SettlementServices.Label.EffectiveConstructorSkill>
+    <SettlementServices.Label.ConstructorSkillLevelHeader>Constructor skill level</SettlementServices.Label.ConstructorSkillLevelHeader>
+</LanguageData>

@@ -26,6 +26,7 @@ namespace Settlement_Services.UI
         public readonly List<ThingDefCountClass> playerSuppliedInputs = new List<ThingDefCountClass>();
         public readonly List<CraftingCommissionLine> craftingCommissionLines = new List<CraftingCommissionLine>();
         public int craftingCrafterCount = 1;
+        public readonly List<BuildingCommissionLine> buildingCommissionLines = new List<BuildingCommissionLine>();
 
         private ServiceRequestSession(RequestChannel channel, Settlement settlement, Caravan caravan, Pawn negotiator)
         {
@@ -81,6 +82,7 @@ namespace Settlement_Services.UI
                 targetOptionSelections = perTargetOptions ? BuildTargetOptionSelections() : new List<ServiceTargetOptionSelection>(),
                 craftingCommissionLines = craftingCommissionLines.Select(l => l.Clone()).ToList(),
                 craftingCrafterCount = craftingCrafterCount,
+                buildingCommissionLines = buildingCommissionLines.Select(l => l.Clone()).ToList(),
                 negotiator = negotiator,
             };
         }
