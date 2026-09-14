@@ -222,6 +222,8 @@
     <Compile Include="Framework\Events\Workers\SuccessfulRehabilitationServiceEventWorker.cs" />
     <Compile Include="Framework\Events\Workers\SurgicalComplicationServiceEventWorker.cs" />
     <Compile Include="Framework\Events\Workers\PracticalExerciseServiceEventWorker.cs" />
+    <Compile Include="Framework\Events\Workers\InterestingConversationServiceEventWorker.cs" />
+    <Compile Include="Framework\Events\Workers\HelpfulInnkeeperServiceEventWorker.cs" />
     <Compile Include="Framework\Events\Workers\UsefulNotesServiceEventWorker.cs" />
     <Compile Include="Framework\Events\Workers\AcademicContactServiceEventWorker.cs" />
     <Compile Include="Framework\Events\ServiceReferralResolver.cs" />

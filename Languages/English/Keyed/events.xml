@@ -16,4 +16,5 @@
     <SettlementServices.EventChoice.DeclineUpgrade>Decline</SettlementServices.EventChoice.DeclineUpgrade>
     <SettlementServices.EventChoice.AcceptBetterContractor>Accept the better contractor</SettlementServices.EventChoice.AcceptBetterContractor>
     <SettlementServices.EventChoice.KeepOriginalContractor>Keep the original contractor</SettlementServices.EventChoice.KeepOriginalContractor>
+    <SettlementServices.Event.HelpfulInnkeeperDiscovery>a helpful innkeeper</SettlementServices.Event.HelpfulInnkeeperDiscovery>
 </LanguageData>
