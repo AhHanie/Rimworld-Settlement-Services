@@ -15,6 +15,16 @@
         <li>SettlementService_Medical</li>
       </relevantCategoryDefNames>
     </modifiers>
+    <tooltipEffectKeys>
+      <li>SettlementServices.SpecialtyEffect.MedicalCenterHiringBias</li>
+    </tooltipEffectKeys>
+    <hiringSkillBiases>
+      <li>
+        <skillDefName>Medicine</skillDefName>
+        <chance>0.35</chance>
+        <levelRange>8~12</levelRange>
+      </li>
+    </hiringSkillBiases>
     <stockModifiers>
       <li>
         <stockCategoryDefName>SettlementStock_Medicine</stockCategoryDefName>
@@ -45,6 +55,16 @@
         <li>SettlementService_Education</li>
       </relevantCategoryDefNames>
     </modifiers>
+    <tooltipEffectKeys>
+      <li>SettlementServices.SpecialtyEffect.UniversityHiringBias</li>
+    </tooltipEffectKeys>
+    <hiringSkillBiases>
+      <li>
+        <skillDefName>Intellectual</skillDefName>
+        <chance>0.35</chance>
+        <levelRange>8~12</levelRange>
+      </li>
+    </hiringSkillBiases>
   </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
 
   <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
@@ -66,7 +86,20 @@
     </modifiers>
     <tooltipEffectKeys>
       <li>SettlementServices.SpecialtyEffect.IndustrialHubCraftingCeiling</li>
+      <li>SettlementServices.SpecialtyEffect.IndustrialHubHiringBias</li>
     </tooltipEffectKeys>
+    <hiringSkillBiases>
+      <li>
+        <skillDefName>Construction</skillDefName>
+        <chance>0.25</chance>
+        <levelRange>8~12</levelRange>
+      </li>
+      <li>
+        <skillDefName>Crafting</skillDefName>
+        <chance>0.25</chance>
+        <levelRange>8~12</levelRange>
+      </li>
+    </hiringSkillBiases>
     <stockModifiers>
       <li>
         <stockCategoryDefName>SettlementStock_MetallicMaterials</stockCategoryDefName>
@@ -139,6 +172,16 @@
         <li>SettlementService_Animals</li>
       </relevantCategoryDefNames>
     </modifiers>
+    <tooltipEffectKeys>
+      <li>SettlementServices.SpecialtyEffect.AnimalCenterHiringBias</li>
+    </tooltipEffectKeys>
+    <hiringSkillBiases>
+      <li>
+        <skillDefName>Animals</skillDefName>
+        <chance>0.35</chance>
+        <levelRange>8~12</levelRange>
+      </li>
+    </hiringSkillBiases>
   </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
 
   <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
@@ -157,6 +200,16 @@
         <li>SettlementService_Hospitality</li>
       </relevantCategoryDefNames>
     </modifiers>
+    <tooltipEffectKeys>
+      <li>SettlementServices.SpecialtyEffect.ResortHiringBias</li>
+    </tooltipEffectKeys>
+    <hiringSkillBiases>
+      <li>
+        <skillDefName>Social</skillDefName>
+        <chance>0.35</chance>
+        <levelRange>8~12</levelRange>
+      </li>
+    </hiringSkillBiases>
   </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
 
   <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>

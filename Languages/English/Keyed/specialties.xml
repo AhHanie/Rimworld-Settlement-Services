@@ -14,4 +14,9 @@
     <SettlementServices.SpecialtyTooltip.StockRefresh>{0} restock rate: {1}</SettlementServices.SpecialtyTooltip.StockRefresh>
     <SettlementServices.SpecialtyEffect.IndustrialHubCraftingCeiling>Raises the settlement's crafting commission tech ceiling by one tech level.</SettlementServices.SpecialtyEffect.IndustrialHubCraftingCeiling>
     <SettlementServices.SpecialtyEffect.WeaponsmithCraftingCeiling>Raises the settlement's weapon crafting commission tech ceiling by one tech level.</SettlementServices.SpecialtyEffect.WeaponsmithCraftingCeiling>
+    <SettlementServices.SpecialtyEffect.MedicalCenterHiringBias>Contractors have an increased chance to be skilled in medical work.</SettlementServices.SpecialtyEffect.MedicalCenterHiringBias>
+    <SettlementServices.SpecialtyEffect.UniversityHiringBias>Contractors have an increased chance to be skilled in intellectual work.</SettlementServices.SpecialtyEffect.UniversityHiringBias>
+    <SettlementServices.SpecialtyEffect.IndustrialHubHiringBias>Contractors have an increased chance to be skilled in construction or crafting.</SettlementServices.SpecialtyEffect.IndustrialHubHiringBias>
+    <SettlementServices.SpecialtyEffect.AnimalCenterHiringBias>Contractors have an increased chance to be skilled in animal handling.</SettlementServices.SpecialtyEffect.AnimalCenterHiringBias>
+    <SettlementServices.SpecialtyEffect.ResortHiringBias>Contractors have an increased chance to be skilled in social work.</SettlementServices.SpecialtyEffect.ResortHiringBias>
 </LanguageData>

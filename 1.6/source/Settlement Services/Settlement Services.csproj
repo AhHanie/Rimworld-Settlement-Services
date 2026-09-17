@@ -115,6 +115,7 @@
     <Compile Include="Framework\Defs\SettlementSpecialtyDef.cs" />
     <Compile Include="Framework\Defs\SettlementCapabilityModifiers.cs" />
     <Compile Include="Framework\Defs\SpecialtyStockModifier.cs" />
+    <Compile Include="Framework\Defs\SpecialtyHiringSkillBias.cs" />
     <Compile Include="Framework\Defs\SettlementStockCategoryDef.cs" />
     <Compile Include="Framework\Defs\SettlementStockItem.cs" />
     <Compile Include="Framework\Defs\SettlementStockItemTier.cs" />
@@ -342,6 +343,7 @@
     <Compile Include="Services\Construction\BuildingCommissionServiceWorker.cs" />
 
     <Compile Include="Services\Hiring\HiringCandidateGenerator.cs" />
+    <Compile Include="Services\Hiring\HiringCandidateSkillBiasService.cs" />
     <Compile Include="Services\Hiring\Hediff_TemporaryContract.cs" />
     <Compile Include="Services\Hiring\HiringServiceWorker.cs" />
 

@@ -31,6 +31,8 @@ namespace Settlement_Services.Services.Hiring
                 return null;
             }
 
+            HiringCandidateSkillBiasService.Apply(settlement, pawn);
+
             return new HiringCandidateRecord
             {
                 candidateId = candidateId,
