@@ -89,6 +89,9 @@ namespace Settlement_Services.Framework
             foreach (ThingDefCountClass stockItem in plan.InputPlan.stockConsumed)
                 domain.Reserve(jobId, stockItem.thingDef.defName, stockItem.count);
 
+            foreach (ServiceStockReservation reservation in plan.InputPlan.specialStockReservations)
+                domain.Reserve(jobId, reservation.stockKey, reservation.amount);
+
             Caravan caravan = request.negotiator?.GetCaravan();
             if (!plan.InputPlan.playerSuppliedConsumed.NullOrEmpty()
                 && !CaravanInventoryTransfer.TryConsume(caravan, plan.InputPlan.playerSuppliedConsumed, out string consumeErrorKey))

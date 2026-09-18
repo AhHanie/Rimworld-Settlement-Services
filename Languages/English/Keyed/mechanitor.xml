@@ -2,4 +2,19 @@
 <LanguageData>
     <SettlementServices.Error.MechNeedsNoRepairs>This mech needs no repairs.</SettlementServices.Error.MechNeedsNoRepairs>
     <SettlementServices.Error.MechEnergyAlreadyFull>This mech's energy cell is already full.</SettlementServices.Error.MechEnergyAlreadyFull>
+
+    <SettlementServices.Error.NoCaravanMechanitor>Your caravan has no living mechanitor.</SettlementServices.Error.NoCaravanMechanitor>
+    <SettlementServices.Error.InsufficientMechBandwidth>None of your caravan's mechanitors have enough free bandwidth to control this mech.</SettlementServices.Error.InsufficientMechBandwidth>
+    <SettlementServices.Error.NoMechsInStock>This settlement has no mechanoids available to hire right now.</SettlementServices.Error.NoMechsInStock>
+    <SettlementServices.Error.NoMechSelected>Select exactly one mechanoid to hire.</SettlementServices.Error.NoMechSelected>
+    <SettlementServices.Error.MechNoLongerAvailable>That mechanoid is no longer available in this settlement's stock.</SettlementServices.Error.MechNoLongerAvailable>
+    <SettlementServices.Error.MechContentUnavailable>That mechanoid type is no longer available.</SettlementServices.Error.MechContentUnavailable>
+
+    <SettlementServices.Label.MechanoidChoice>Mechanoid</SettlementServices.Label.MechanoidChoice>
+    <SettlementServices.Label.MechanoidHiringOptionDescription>Bandwidth cost: {0}\nIn stock: {1} / {2}\nMarket value: {3}</SettlementServices.Label.MechanoidHiringOptionDescription>
+
+    <SettlementServices.LineItem.MechHireWealthFee>Settlement fee</SettlementServices.LineItem.MechHireWealthFee>
+    <SettlementServices.LineItem.MechHireMarketValue>{0} market value</SettlementServices.LineItem.MechHireMarketValue>
+
+    <SettlementServices.Message.MechanoidHired>{0} has joined your caravan, bonded to {1}.</SettlementServices.Message.MechanoidHired>
 </LanguageData>

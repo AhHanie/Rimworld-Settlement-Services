@@ -37,4 +37,23 @@
     <iconTexPath>SettlementServices/UI/Icons/lightning-charge</iconTexPath>
   </Settlement_Services.Framework.Defs.SettlementServiceDef>
 
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_MechanoidHiring</defName>
+    <category>SettlementService_Technical</category>
+    <label>mechanoid hiring</label>
+    <description>Purchase a mechanoid from the settlement's mechanitor enclave. The mech joins your caravan and is bonded to one of your own mechanitors.</description>
+    <workerClass>Settlement_Services.Services.Mechanitor.MechanoidHiringServiceWorker</workerClass>
+    <requiredTechLevel>Spacer</requiredTechLevel>
+    <requiredCapabilityTags>
+      <li>MechanitorServices</li>
+    </requiredCapabilityTags>
+    <minimumCost>250</minimumCost>
+    <wealthScale>0</wealthScale>
+    <difficultyScaling>false</difficultyScaling>
+    <duration>0</duration>
+    <targetRule>None</targetRule>
+    <batchMode>None</batchMode>
+    <iconTexPath>SettlementServices/UI/Icons/mechanoid</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
 </Defs>

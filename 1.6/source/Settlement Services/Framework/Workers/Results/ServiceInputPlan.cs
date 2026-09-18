@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Verse;
+using Settlement_Services.Framework.Dto;
 
 namespace Settlement_Services.Framework.Workers.Results
 {
@@ -9,5 +10,6 @@ namespace Settlement_Services.Framework.Workers.Results
 
         public List<ThingDefCountClass> stockConsumed = new List<ThingDefCountClass>();
         public List<ThingDefCountClass> playerSuppliedConsumed = new List<ThingDefCountClass>();
+        public List<ServiceStockReservation> specialStockReservations = new List<ServiceStockReservation>();
     }
 }

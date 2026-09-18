@@ -14,11 +14,14 @@ namespace Settlement_Services.UI
         public static bool IsCandidate(SettlementServiceDef def, Settlement settlement) =>
             SettlementServiceValidator.StructuralEligibility(def, settlement, out _);
 
-        public static bool TryGetUnavailableReason(SettlementServiceDef def, Settlement settlement, out string reasonKey)
+        public static bool TryGetUnavailableReason(SettlementServiceDef def, Settlement settlement, out string reasonKey) =>
+            TryGetUnavailableReason(def, settlement, null, out reasonKey);
+
+        public static bool TryGetUnavailableReason(SettlementServiceDef def, Settlement settlement, Caravan caravan, out string reasonKey)
         {
             if (!SettlementServiceValidator.GoodwillMet(def, settlement, out reasonKey)) return true;
 
-            var ctx = new SettlementServiceContext(SettlementServicesWorldComponent.Current, settlement, null);
+            var ctx = new SettlementServiceContext(SettlementServicesWorldComponent.Current, settlement, null, requestingCaravan: caravan);
             ServiceAvailabilityReport report = def.Worker.CanOffer(ctx);
             if (!report.IsAvailable) { reasonKey = report.ErrorKey; return true; }
 

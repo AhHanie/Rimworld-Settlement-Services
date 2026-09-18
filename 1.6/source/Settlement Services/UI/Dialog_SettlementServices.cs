@@ -217,7 +217,7 @@ namespace Settlement_Services.UI
 
         private void DrawServiceRow(Rect rect, SettlementServiceDef def)
         {
-            bool unavailable = ServiceCandidacyService.TryGetUnavailableReason(def, contextTemplate.settlement, out string reasonKey);
+            bool unavailable = ServiceCandidacyService.TryGetUnavailableReason(def, contextTemplate.settlement, contextTemplate.caravan, out string reasonKey);
             Texture2D icon = ServiceUITextures.Resolve(def.iconTexPath ?? selectedCategory.iconTexPath);
             string tooltip = unavailable ? ServiceErrorFormatting.Format(reasonKey, def, contextTemplate.settlement) : null;
             if (DrawSelectableRow(rect, def.LabelCap, icon, false, unavailable, tooltip))

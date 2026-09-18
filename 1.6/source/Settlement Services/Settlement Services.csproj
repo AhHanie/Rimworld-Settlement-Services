@@ -144,6 +144,7 @@
     <Compile Include="Framework\Dto\CraftingProductionPlan.cs" />
     <Compile Include="Framework\Dto\BuildingCommissionLine.cs" />
     <Compile Include="Framework\Dto\BuildingCommissionPlan.cs" />
+    <Compile Include="Framework\Dto\ServiceStockReservation.cs" />
     <Compile Include="Framework\Pricing\IServicePricingContext.cs" />
     <Compile Include="Framework\Pricing\ServicePricingEngine.cs" />
     <Compile Include="Framework\Pricing\WealthScaling.cs" />
@@ -352,6 +353,9 @@
 
     <Compile Include="Services\Mechanitor\MechRepairServiceWorker.cs" />
     <Compile Include="Services\Mechanitor\MechRechargeServiceWorker.cs" />
+    <Compile Include="Services\Mechanitor\MechanoidHiringCatalog.cs" />
+    <Compile Include="Services\Mechanitor\MechanoidHiringStock.cs" />
+    <Compile Include="Services\Mechanitor\MechanoidHiringServiceWorker.cs" />
 
     <Compile Include="Services\Technical\BionicRechargeServiceWorker.cs" />
 

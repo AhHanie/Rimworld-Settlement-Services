@@ -108,6 +108,7 @@ namespace Settlement_Services.Framework
             var combinedStockRequirements = new List<ServiceStockRequirement>();
             var stockConsumed = new List<ThingDefCountClass>();
             var playerSuppliedConsumed = new List<ThingDefCountClass>();
+            var specialStockReservations = new List<ServiceStockReservation>();
             object acceptedWorkerData = null;
 
             List<ThingDefCountClass> remainingPlayerSupplied = CloneCounts(request.playerSuppliedInputs);
@@ -141,6 +142,7 @@ namespace Settlement_Services.Framework
                 {
                     MergeCounts(stockConsumed, unitInputPlan.stockConsumed);
                     MergeCounts(playerSuppliedConsumed, unitInputPlan.playerSuppliedConsumed);
+                    MergeReservations(specialStockReservations, unitInputPlan.specialStockReservations);
                     acceptedWorkerData = def.Worker.BuildAcceptedData(unit, unitQuote);
                 }
                 remainingPlayerSupplied = SubtractCounts(remainingPlayerSupplied, unitInputPlan.playerSuppliedConsumed);
@@ -156,7 +158,7 @@ namespace Settlement_Services.Framework
             }
 
             quote = AggregateQuotes(def, request, units, unitQuotes, unitQuoteDtos);
-            if (includeInputPlan) inputPlan = new ServiceInputPlan { stockConsumed = stockConsumed, playerSuppliedConsumed = playerSuppliedConsumed };
+            if (includeInputPlan) inputPlan = new ServiceInputPlan { stockConsumed = stockConsumed, playerSuppliedConsumed = playerSuppliedConsumed, specialStockReservations = specialStockReservations };
             workerData = acceptedWorkerData;
             errorKey = null;
             return true;
@@ -200,6 +202,16 @@ namespace Settlement_Services.Framework
                 ThingDefCountClass existing = list.Find(x => x.thingDef == addition.thingDef);
                 if (existing != null) existing.count += addition.count;
                 else list.Add(new ThingDefCountClass(addition.thingDef, addition.count));
+            }
+        }
+
+        private static void MergeReservations(List<ServiceStockReservation> list, List<ServiceStockReservation> additions)
+        {
+            foreach (ServiceStockReservation addition in additions)
+            {
+                ServiceStockReservation existing = list.Find(x => x.stockKey == addition.stockKey);
+                if (existing != null) existing.amount += addition.amount;
+                else list.Add(new ServiceStockReservation(addition.stockKey, addition.amount));
             }
         }
 
