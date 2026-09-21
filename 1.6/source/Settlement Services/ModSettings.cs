@@ -16,6 +16,8 @@ namespace Settlement_Services
 
         public Dictionary<string, float> difficultyMultiplierOverrides = new Dictionary<string, float>();
 
+        public Dictionary<string, float> moodThoughtOverrides = new Dictionary<string, float>();
+
         public float serviceEventFrequencyPct = 1f;
 
         public float goodwillDiscountScalePct = 1f;
@@ -37,6 +39,7 @@ namespace Settlement_Services
             base.ExposeData();
             Scribe_Values.Look(ref wealthPriceScalePct, "wealthPriceScalePct", 1f);
             Scribe_Collections.Look(ref difficultyMultiplierOverrides, "difficultyMultiplierOverrides", LookMode.Value, LookMode.Value);
+            Scribe_Collections.Look(ref moodThoughtOverrides, "moodThoughtOverrides", LookMode.Value, LookMode.Value);
             Scribe_Values.Look(ref serviceEventFrequencyPct, "serviceEventFrequencyPct", 1f);
             Scribe_Values.Look(ref goodwillDiscountScalePct, "goodwillDiscountScalePct", 1f);
             Scribe_Values.Look(ref investmentCostScalePct, "investmentCostScalePct", 1f);
@@ -49,6 +52,7 @@ namespace Settlement_Services
             if (Scribe.mode != LoadSaveMode.PostLoadInit) return;
 
             if (difficultyMultiplierOverrides == null) difficultyMultiplierOverrides = new Dictionary<string, float>();
+            if (moodThoughtOverrides == null) moodThoughtOverrides = new Dictionary<string, float>();
             if (compatibilitySettings == null) compatibilitySettings = new CompatibilitySettingsStore();
 
             wealthPriceScalePct = Mathf.Clamp(wealthPriceScalePct, 0f, 3f);
@@ -59,6 +63,10 @@ namespace Settlement_Services
             investmentDecayDurationScalePct = Mathf.Clamp(investmentDecayDurationScalePct, 0f, 3f);
             var keys = new List<string>(difficultyMultiplierOverrides.Keys);
             foreach (string key in keys) difficultyMultiplierOverrides[key] = Mathf.Clamp(difficultyMultiplierOverrides[key], 0f, 3f);
+
+            var moodKeys = new List<string>(moodThoughtOverrides.Keys);
+            foreach (string key in moodKeys)
+                moodThoughtOverrides[key] = Mathf.Clamp(moodThoughtOverrides[key], MoodThoughtCatalog.MinMoodEffect, MoodThoughtCatalog.MaxMoodEffect);
         }
     }
 }

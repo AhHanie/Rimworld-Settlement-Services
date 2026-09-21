@@ -35,6 +35,8 @@ namespace Settlement_Services.Framework.Workers
 
         public abstract ServiceCancelResult Cancel(ServiceJobContext ctx, bool playerInitiated);
 
+        public virtual bool CanLeaveEarly(ServiceJobContext ctx) => false;
+
         public virtual IEnumerable<ServiceDisplayOption> GetDisplayOptions(SettlementServiceContext ctx) => Enumerable.Empty<ServiceDisplayOption>();
 
         public virtual IEnumerable<string> GetDisplaySummaryLines(SettlementServiceContext ctx) => Enumerable.Empty<string>();

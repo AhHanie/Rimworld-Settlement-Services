@@ -8,6 +8,7 @@ using Verse;
 using Settlement_Services.Domain;
 using Settlement_Services.Framework;
 using Settlement_Services.Framework.Defs;
+using Settlement_Services.Framework.Workers;
 
 namespace Settlement_Services.UI.Overview
 {
@@ -264,6 +265,7 @@ namespace Settlement_Services.UI.Overview
         }
 
         private const float DebugCompleteButtonWidth = 150f;
+        private const float LeaveEarlyButtonWidth = 110f;
 
         private void DrawRow(Rect rect, ServiceOverviewEntry entry)
         {
@@ -274,8 +276,12 @@ namespace Settlement_Services.UI.Overview
                 JumpToSettlement(entry.settlement);
 
             bool canDebugComplete = Prefs.DevMode && entry.job.status == ServiceJobStatus.Active;
+            bool canLeaveEarly = entry.job.status == ServiceJobStatus.Active && entry.def != null
+                && entry.def.Worker.CanLeaveEarly(new ServiceJobContext(SettlementServicesWorldComponent.Current, entry.job));
+
             float textWidth = rect.width - jumpRect.width - 6f;
             if (canDebugComplete) textWidth -= DebugCompleteButtonWidth + 6f;
+            if (canLeaveEarly) textWidth -= LeaveEarlyButtonWidth + 6f;
             Rect textRect = new Rect(jumpRect.xMax + 6f, rect.y, textWidth, rect.height);
             string line1 = $"{entry.settlementLabel} - {entry.ServiceLabel} ({entry.TargetLabel})";
             string line2 = $"{ServiceOverviewFormatting.StatusLabel(entry.job.status)}: {ServiceOverviewFormatting.ExpectedCompletionLabel(entry.job)}";
@@ -286,9 +292,12 @@ namespace Settlement_Services.UI.Overview
             Widgets.Label(new Rect(textRect.x, textRect.y + textRect.height / 2f, textRect.width, textRect.height / 2f), line2);
             GUI.color = prevColor;
 
+            float buttonsXMax = rect.xMax;
+
             if (canDebugComplete)
             {
-                Rect debugCompleteRect = new Rect(rect.xMax - DebugCompleteButtonWidth, rect.y, DebugCompleteButtonWidth, rect.height);
+                Rect debugCompleteRect = new Rect(buttonsXMax - DebugCompleteButtonWidth, rect.y, DebugCompleteButtonWidth, rect.height);
+                buttonsXMax -= DebugCompleteButtonWidth + 6f;
                 TooltipHandler.TipRegion(debugCompleteRect, "DEV: Immediately complete this active service.");
                 if (Widgets.ButtonText(debugCompleteRect, "DEV: Complete now"))
                 {
@@ -296,6 +305,28 @@ namespace Settlement_Services.UI.Overview
                         Messages.Message("DEV: Job is no longer eligible to be force-completed.", MessageTypeDefOf.RejectInput, historical: false);
                 }
             }
+
+            if (canLeaveEarly)
+            {
+                Rect leaveEarlyRect = new Rect(buttonsXMax - LeaveEarlyButtonWidth, rect.y, LeaveEarlyButtonWidth, rect.height);
+                buttonsXMax -= LeaveEarlyButtonWidth + 6f;
+                TooltipHandler.TipRegion(leaveEarlyRect, "SettlementServices.Button.LeaveEarlyDesc".Translate());
+                if (Widgets.ButtonText(leaveEarlyRect, "SettlementServices.Button.LeaveEarly".Translate()))
+                    ConfirmLeaveEarly(entry);
+            }
+        }
+
+        private static void ConfirmLeaveEarly(ServiceOverviewEntry entry)
+        {
+            int jobId = entry.job.jobId;
+            TaggedString body = "SettlementServices.Label.LeaveEarlyConfirmBody".Translate(entry.TargetLabel, entry.settlementLabel);
+            string title = "SettlementServices.Label.LeaveEarlyConfirmTitle".Translate(entry.ServiceLabel);
+
+            Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation(body, () =>
+            {
+                if (!SettlementServiceOrchestrator.TryLeaveJobEarly(jobId))
+                    Messages.Message("SettlementServices.Message.LeaveEarlyNoLongerEligible".Translate(), MessageTypeDefOf.RejectInput, historical: false);
+            }, destructive: true, title: title));
         }
 
         private static void JumpToSettlement(Settlement settlement)

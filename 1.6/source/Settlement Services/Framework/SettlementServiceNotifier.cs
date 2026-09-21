@@ -28,6 +28,12 @@ namespace Settlement_Services.Framework
         public static void NotifyFailed(ServiceJobRecord job) =>
             Send(job, "SettlementServices.Letter.FailedLabel", "SettlementServices.Letter.FailedText", LetterDefOf.NegativeEvent);
 
+        public static void NotifyLeftEarly(ServiceJobRecord job) =>
+            Messages.Message("SettlementServices.Message.LeftEarly".Translate(), MessageTypeDefOf.NeutralEvent, historical: false);
+
+        public static void NotifyLeftEarlyAwaitingCollection(ServiceJobRecord job) =>
+            Send(job, "SettlementServices.Letter.LeftEarlyLabel", "SettlementServices.Letter.LeftEarlyText", LetterDefOf.NeutralEvent);
+
         public static void NotifyShuttleMergeSkipped(ServiceJobRecord job) =>
             Messages.Message("SettlementServices.Message.ShuttleMergeSkipped".Translate(), MessageTypeDefOf.NeutralEvent, historical: false);
 

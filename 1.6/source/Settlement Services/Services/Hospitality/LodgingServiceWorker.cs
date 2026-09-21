@@ -143,6 +143,8 @@ namespace Settlement_Services.Services.Hospitality
 
         public override ServiceCancelResult Cancel(ServiceJobContext ctx, bool playerInitiated) => ServiceCancelResult.Ok();
 
+        public override bool CanLeaveEarly(ServiceJobContext ctx) => true;
+
         public override float EventChanceMultiplierFor(ServiceJobContext ctx)
         {
             float multiplier = 1f;

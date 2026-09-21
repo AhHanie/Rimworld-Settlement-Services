@@ -262,6 +262,57 @@ namespace Settlement_Services.Framework
             RouteToTerminalOrCollectible(domain, job, "SettlementServices.Error.CancelledByPlayer", ServiceJobStatus.Cancelled);
         }
 
+        public static bool TryLeaveJobEarly(int jobId)
+        {
+            SettlementServicesWorldComponent domain = SettlementServicesWorldComponent.Current;
+            ServiceJobRecord job = domain.GetJob(jobId);
+            if (job == null || job.status != ServiceJobStatus.Active) return false;
+
+            SettlementServiceDef def = DefDatabase<SettlementServiceDef>.GetNamedSilentFail(job.serviceDefName);
+            var ctx = new ServiceJobContext(domain, job);
+            if (def == null || !def.Worker.CanLeaveEarly(ctx)) return false;
+
+            ServiceCancelResult result = def.Worker.Cancel(ctx, playerInitiated: true);
+            if (!result.Success)
+            {
+                job.lastErrorKey = result.ErrorKey;
+                return false;
+            }
+
+            domain.ReleaseAllReservations(jobId);
+
+            Caravan caravan = ResolveRequesterCaravan(job);
+            TargetCustodyService.ReturnCustody(ctx, caravan);
+
+            RouteLeftEarly(domain, job);
+            return true;
+        }
+
+        private static void RouteLeftEarly(SettlementServicesWorldComponent domain, ServiceJobRecord job)
+        {
+            job.lastErrorKey = "SettlementServices.Error.LeftEarlyByPlayer";
+
+            if (!job.targetInCustody)
+            {
+                domain.TryTransition(job.jobId, ServiceJobStatus.Cancelled);
+                SettlementServiceNotifier.NotifyLeftEarly(job);
+                return;
+            }
+
+            if (new ServiceJobContext(domain, job).ResolveSettlement() != null)
+            {
+                domain.TryTransition(job.jobId, ServiceJobStatus.AwaitingCollection);
+                SettlementServiceNotifier.NotifyLeftEarlyAwaitingCollection(job);
+            }
+            else
+            {
+                domain.TryTransition(job.jobId, ServiceJobStatus.AwaitingCollection);
+                TargetCustodyService.QueueHomeDeliveryForJob(domain, job);
+                domain.TryTransition(job.jobId, ServiceJobStatus.Collected);
+                SettlementServiceNotifier.NotifyDeliveredHome(job);
+            }
+        }
+
         private const string CraftingRecipeUnavailableErrorKey = "SettlementServices.Error.CommissionedItemNoLongerAvailable";
         private const string BuildingUnavailableErrorKey = "SettlementServices.Error.BuildingNoLongerAvailable";
 

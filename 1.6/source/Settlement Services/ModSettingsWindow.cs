@@ -26,6 +26,8 @@ namespace Settlement_Services
             listing.GapLine();
             DrawDifficultySection(listing, settings);
             listing.GapLine();
+            DrawMoodBuffsSection(listing, settings);
+            listing.GapLine();
             DrawFrameworkSection(listing, settings);
 
             if (SettlementServicesCompatibilityRegistry.HasSettingsSections)
@@ -94,6 +96,34 @@ namespace Settlement_Services
             }
         }
 
+        private static void DrawMoodBuffsSection(Listing_Standard listing, ModSettings settings)
+        {
+            Text.Font = GameFont.Medium;
+            listing.Label("SettlementServices.Settings.SectionMoodBuffs".Translate());
+            Text.Font = GameFont.Small;
+
+            listing.Label("SettlementServices.Settings.MoodBuffsRestartNotice".Translate());
+
+            foreach (MoodThoughtCatalog.Entry entry in MoodThoughtCatalog.Entries)
+            {
+                ThoughtDef thought = DefDatabase<ThoughtDef>.GetNamedSilentFail(entry.defName);
+                if (thought == null || thought.stages.NullOrEmpty()) continue;
+
+                int current = Mathf.RoundToInt(MoodThoughtCatalog.GetValue(settings, entry.defName));
+                string thoughtLabel = thought.stages[0].label.CapitalizeFirst();
+                string signedValue = (current >= 0 ? "+" : "") + current;
+
+                int updated = SliderLabeledInt(
+                    listing,
+                    "SettlementServices.Settings.MoodBuff".Translate(thoughtLabel, signedValue),
+                    current, Mathf.RoundToInt(MoodThoughtCatalog.MinMoodEffect), Mathf.RoundToInt(MoodThoughtCatalog.MaxMoodEffect),
+                    tooltip: "SettlementServices.Settings.MoodBuff.Tooltip".Translate());
+
+                if (updated != current)
+                    settings.moodThoughtOverrides[entry.defName] = updated;
+            }
+        }
+
         private static void DrawFrameworkSection(Listing_Standard listing, ModSettings settings)
         {
             Text.Font = GameFont.Medium;
@@ -121,6 +151,18 @@ namespace Settlement_Services
                 "SettlementServices.Settings.VerboseLoggingEnabled".Translate(), ref verboseLoggingEnabled,
                 "SettlementServices.Settings.VerboseLoggingEnabled.Tooltip".Translate());
             settings.verboseLoggingEnabled = verboseLoggingEnabled;
+        }
+
+        private static int SliderLabeledInt(Listing_Standard listing, string label, int val, int min, int max, float labelPct = 0.5f, string tooltip = null)
+        {
+            Rect rect = listing.GetRect(30f);
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Widgets.Label(rect.LeftPart(labelPct), label);
+            if (tooltip != null) TooltipHandler.TipRegion(rect.LeftPart(labelPct), tooltip);
+            Text.Anchor = TextAnchor.UpperLeft;
+            float result = Widgets.HorizontalSlider(rect.RightPart(1f - labelPct), val, min, max, middleAlignment: true, roundTo: 1f);
+            listing.Gap(listing.verticalSpacing);
+            return Mathf.RoundToInt(result);
         }
 
         private static float DefaultMultiplierFor(DifficultyDef def)

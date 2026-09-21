@@ -21,7 +21,8 @@ namespace Settlement_Services
 
         private void Init()
         {
-            GetSettings<ModSettings>();
+            ModSettings settings = GetSettings<ModSettings>();
+            MoodThoughtCatalog.Apply(settings);
             new Harmony("sk.settlementservices").PatchAll();
             SettlementServiceRegistry.ValidateAll();
             Settlement_Services.Framework.Events.ServiceEventRegistry.ValidateAll();

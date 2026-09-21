@@ -63,6 +63,11 @@
     <SettlementServices.Label.FilterTarget>Target: {0}</SettlementServices.Label.FilterTarget>
     <SettlementServices.Label.FilterStatus>Status: {0}</SettlementServices.Label.FilterStatus>
     <SettlementServices.Button.Jump>Jump</SettlementServices.Button.Jump>
+    <SettlementServices.Button.LeaveEarly>Leave early</SettlementServices.Button.LeaveEarly>
+    <SettlementServices.Button.LeaveEarlyDesc>End this service now, before it finishes.</SettlementServices.Button.LeaveEarlyDesc>
+    <SettlementServices.Label.LeaveEarlyConfirmTitle>Leave {0} early?</SettlementServices.Label.LeaveEarlyConfirmTitle>
+    <SettlementServices.Label.LeaveEarlyConfirmBody>{0} at {1} will leave before the service finishes. You will not receive its remaining benefits, and no refund will be given. Continue?</SettlementServices.Label.LeaveEarlyConfirmBody>
+    <SettlementServices.Message.LeaveEarlyNoLongerEligible>This service can no longer be left early.</SettlementServices.Message.LeaveEarlyNoLongerEligible>
     <SettlementServices.Label.KnownServicesInPerson>Known services (discovered in person): {0}</SettlementServices.Label.KnownServicesInPerson>
     <SettlementServices.Label.KnownServicesRemote>Known services (discovered remotely): {0}</SettlementServices.Label.KnownServicesRemote>
     <SettlementServices.Label.YourServices>Your services here: {0}</SettlementServices.Label.YourServices>

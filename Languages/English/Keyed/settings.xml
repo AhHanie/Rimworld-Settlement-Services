@@ -14,6 +14,10 @@
     <SettlementServices.Settings.SectionDifficulty>Per-difficulty price multipliers</SettlementServices.Settings.SectionDifficulty>
     <SettlementServices.Settings.DifficultyMultiplier>{0}: {1}</SettlementServices.Settings.DifficultyMultiplier>
     <SettlementServices.Settings.DifficultyMultiplier.Tooltip>Multiplies the wealth-based price surcharge when this difficulty is active. 100% applies no extra scaling beyond the wealth-based surcharge itself.</SettlementServices.Settings.DifficultyMultiplier.Tooltip>
+    <SettlementServices.Settings.SectionMoodBuffs>Mood buffs</SettlementServices.Settings.SectionMoodBuffs>
+    <SettlementServices.Settings.MoodBuffsRestartNotice>These values are only copied into this mod's memory thoughts when Settlement Services initializes. Restart Rimworld after changing them for the new values to take effect.</SettlementServices.Settings.MoodBuffsRestartNotice>
+    <SettlementServices.Settings.MoodBuff>{0}: {1}</SettlementServices.Settings.MoodBuff>
+    <SettlementServices.Settings.MoodBuff.Tooltip>Sets this mod's own memory's mood bonus. A value of zero disables this specific mood bonus. Vanilla thoughts (including Lodging's own) are never affected. Requires a game restart to take effect.</SettlementServices.Settings.MoodBuff.Tooltip>
     <SettlementServices.Settings.SectionFramework>Framework</SettlementServices.Settings.SectionFramework>
     <SettlementServices.Settings.ServiceEventFrequencyPct>Service event frequency: {0}</SettlementServices.Settings.ServiceEventFrequencyPct>
     <SettlementServices.Settings.ServiceEventFrequencyPct.Tooltip>How often paid services can trigger a bonus or complication beyond their normal outcome, relative to each service's own default rate.</SettlementServices.Settings.ServiceEventFrequencyPct.Tooltip>
