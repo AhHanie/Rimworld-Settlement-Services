@@ -99,7 +99,7 @@
     <defName>SettlementService_Surgery</defName>
     <category>SettlementService_Medical</category>
     <label>surgery</label>
-    <description>Install a prosthetic or bionic body part. Lists only implants and body parts compatible with the patient; medicine and the implant itself are consumed from settlement stock or the caravan's own supply. A caravan may also bring a compatible listed part itself: assigned as a supplied material, it is not billed as an implant, and only the operation charge remains.</description>
+    <description>Install a prosthetic or bionic body part. Lists only implants and body parts compatible with the patient; medicine and the implant itself are consumed from settlement stock or the caravan's own supply, and only what the settlement actually supplies is billed. Assigning compatible medicine or the implant itself as a supplied material in Supply your own materials removes its charge, leaving only the operation fee.</description>
     <workerClass>Settlement_Services.Services.Medical.SurgeryServiceWorker</workerClass>
     <requiredTechLevel>Industrial</requiredTechLevel>
     <minimumCost>150</minimumCost>
@@ -121,7 +121,7 @@
     <defName>SettlementService_VeterinarySurgery</defName>
     <category>SettlementService_Animals</category>
     <label>veterinary surgery</label>
-    <description>Install a prosthetic or bionic body part on an animal. Lists only implants and body parts compatible with the patient; medicine and the implant itself are consumed from settlement stock or the caravan's own supply. A caravan may also bring a compatible listed part itself: assigned as a supplied material, it is not billed as an implant, and only the operation charge remains.</description>
+    <description>Install a prosthetic or bionic body part on an animal. Lists only implants and body parts compatible with the patient; medicine and the implant itself are consumed from settlement stock or the caravan's own supply, and only what the settlement actually supplies is billed. Assigning compatible medicine or the implant itself as a supplied material in Supply your own materials removes its charge, leaving only the operation fee.</description>
     <workerClass>Settlement_Services.Services.Medical.SurgeryServiceWorker</workerClass>
     <requiredTechLevel>Industrial</requiredTechLevel>
     <requiredCapabilityTags>

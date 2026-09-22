@@ -4,6 +4,7 @@ using RimWorld;
 using UnityEngine;
 using RimWorld.Planet;
 using Verse;
+using Settlement_Services.Framework;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Stock;
@@ -15,6 +16,7 @@ namespace Settlement_Services.Services.Medical
     public class SurgeryServiceWorker : SettlementServiceWorker
     {
         private const string ImplantGroupKey = "SettlementServices.Label.ImplantChoice";
+        private const string MedicineStockCategory = "SettlementStock_Medicine";
         private const int MedicineAmount = 2;
         private const int OperationDurationTicks = 2 * GenDate.TicksPerHour;
 
@@ -50,7 +52,10 @@ namespace Settlement_Services.Services.Medical
             yield return "SettlementServices.Label.SurgeryPlayerSuppliedExplanation".Translate();
         }
 
-        public override IEnumerable<ServiceLineItem> BuildQuoteLineItems(SettlementServiceRequest request)
+        public override IEnumerable<ServiceLineItem> BuildQuoteLineItems(SettlementServiceRequest request) =>
+            BuildQuoteLineItems(request, new ServiceBatchAllocationContext());
+
+        public override IEnumerable<ServiceLineItem> BuildQuoteLineItems(SettlementServiceRequest request, ServiceBatchAllocationContext batchContext)
         {
             var lineItems = new List<ServiceLineItem>();
             if (!(request.target.thing is Pawn pawn)) return lineItems;
@@ -58,17 +63,28 @@ namespace Settlement_Services.Services.Medical
             List<SurgeryOptionService.ImplantOption> resolved = SurgeryOptionService.ResolveAvailable(pawn, request.selectedOptionKeys);
             if (resolved.Count == 0) return lineItems;
 
-            List<ThingDefCountClass> remainingPlayerSupplied = CloneCounts(request.playerSuppliedInputs);
+            ServiceInputPlan plan = batchContext.GetOrCreateInputPlan(request, () => AllocateInputs(request, resolved, batchContext.StockLedger));
+
+            float medicineCostRaw = 0f;
+            var settlementSuppliedParts = new List<ThingDefCountClass>();
+            foreach (ThingDefCountClass entry in plan.stockConsumed)
+            {
+                if (SettlementStockCatalog.CategoryFor(entry.thingDef)?.defName == MedicineStockCategory)
+                    medicineCostRaw += entry.count * entry.thingDef.BaseMarketValue;
+                else
+                    settlementSuppliedParts.Add(new ThingDefCountClass(entry.thingDef, entry.count));
+            }
+
+            int medicineCost = Mathf.RoundToInt(medicineCostRaw);
+            if (medicineCost > 0)
+                lineItems.Add(new ServiceLineItem("SettlementServices.LineItem.SurgeryMedicine", medicineCost));
 
             foreach (SurgeryOptionService.ImplantOption option in resolved)
             {
-                ThingDefCountClass playerEntry = remainingPlayerSupplied.Find(c => c.thingDef == option.itemDef);
-                if (playerEntry != null && playerEntry.count > 0)
-                {
-                    playerEntry.count--;
-                    continue;
-                }
+                ThingDefCountClass supplied = settlementSuppliedParts.Find(c => c.thingDef == option.itemDef);
+                if (supplied == null || supplied.count <= 0) continue;
 
+                supplied.count--;
                 lineItems.Add(new ServiceLineItem("SettlementServices.LineItem.SurgeryPart", Mathf.RoundToInt(option.itemDef.BaseMarketValue), labelArgument: option.Label));
             }
 
@@ -86,23 +102,15 @@ namespace Settlement_Services.Services.Medical
             return result;
         }
 
-        public override ServiceInputPlan PlanInputs(SettlementServiceRequest request, SettlementServiceQuote quote)
+        public override ServiceInputPlan PlanInputs(SettlementServiceRequest request, SettlementServiceQuote quote) =>
+            PlanInputs(request, quote, new ServiceBatchAllocationContext());
+
+        public override ServiceInputPlan PlanInputs(SettlementServiceRequest request, SettlementServiceQuote quote, ServiceBatchAllocationContext batchContext)
         {
             if (!(request.target.thing is Pawn pawn)) return new ServiceInputPlan();
 
             List<SurgeryOptionService.ImplantOption> resolved = SurgeryOptionService.ResolveAvailable(pawn, request.selectedOptionKeys);
-
-            var requirements = new List<ServiceStockRequirement>
-            {
-                new ServiceStockRequirement { stockCategoryDefName = "SettlementStock_Medicine", preferredThingDefName = "MedicineIndustrial", amount = MedicineAmount, playerCanSupply = true },
-            };
-            foreach (SurgeryOptionService.ImplantOption option in resolved)
-                requirements.Add(new ServiceStockRequirement { thingDefName = option.itemDef.defName, amount = 1, playerCanSupply = true });
-
-            StockAllocationResult allocation = SettlementStockService.TryAllocate(request.settlement, requirements, request.playerSuppliedInputs);
-            if (!allocation.Success) return new ServiceInputPlan();
-
-            return new ServiceInputPlan { stockConsumed = allocation.SettlementSupplied, playerSuppliedConsumed = allocation.PlayerSupplied };
+            return batchContext.GetOrCreateInputPlan(request, () => AllocateInputs(request, resolved, batchContext.StockLedger));
         }
 
         public override string ValidateUnitRequest(SettlementServiceRequest request)
@@ -147,8 +155,22 @@ namespace Settlement_Services.Services.Medical
 
         public override ServiceCancelResult Cancel(ServiceJobContext ctx, bool playerInitiated) => ServiceCancelResult.Ok();
 
-        private static List<ThingDefCountClass> CloneCounts(List<ThingDefCountClass> source) =>
-            source?.Select(c => new ThingDefCountClass(c.thingDef, c.count)).ToList() ?? new List<ThingDefCountClass>();
+        private static ServiceInputPlan AllocateInputs(SettlementServiceRequest request, List<SurgeryOptionService.ImplantOption> resolved, StockAllocationLedger ledger)
+        {
+            if (resolved.Count == 0) return new ServiceInputPlan();
+
+            var requirements = new List<ServiceStockRequirement>
+            {
+                new ServiceStockRequirement { stockCategoryDefName = MedicineStockCategory, preferredThingDefName = "MedicineIndustrial", amount = MedicineAmount, playerCanSupply = true },
+            };
+            foreach (SurgeryOptionService.ImplantOption option in resolved)
+                requirements.Add(new ServiceStockRequirement { thingDefName = option.itemDef.defName, amount = 1, playerCanSupply = true });
+
+            StockAllocationResult allocation = SettlementStockService.TryAllocate(request.settlement, requirements, request.playerSuppliedInputs, ledger);
+            if (!allocation.Success) return new ServiceInputPlan();
+
+            return new ServiceInputPlan { stockConsumed = allocation.SettlementSupplied, playerSuppliedConsumed = allocation.PlayerSupplied };
+        }
 
         private static void PerformSurgery(Pawn pawn, SurgeryOptionService.ImplantOption option)
         {

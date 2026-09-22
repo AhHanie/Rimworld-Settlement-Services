@@ -6,5 +6,6 @@
     <SettlementServices.Error.NoCompatibleImplants>No compatible implant or body part available for this patient.</SettlementServices.Error.NoCompatibleImplants>
     <SettlementServices.Error.ConflictingSurgeries>Two or more selected operations affect the same body part chain and cannot be performed together.</SettlementServices.Error.ConflictingSurgeries>
     <SettlementServices.LineItem.SurgeryPart>Implant: {0}</SettlementServices.LineItem.SurgeryPart>
-    <SettlementServices.Label.SurgeryPlayerSuppliedExplanation>The caravan may bring any compatible implant or bionic instead of buying one from the settlement. Assign it below in Supply your own materials: once assigned, only the operation charge remains.</SettlementServices.Label.SurgeryPlayerSuppliedExplanation>
+    <SettlementServices.LineItem.SurgeryMedicine>Medicine</SettlementServices.LineItem.SurgeryMedicine>
+    <SettlementServices.Label.SurgeryPlayerSuppliedExplanation>The caravan may bring any compatible implant or bionic, or the medicine the operation consumes, instead of buying them from the settlement. Assign them below in Supply your own materials: once assigned, only the operation charge remains.</SettlementServices.Label.SurgeryPlayerSuppliedExplanation>
 </LanguageData>
