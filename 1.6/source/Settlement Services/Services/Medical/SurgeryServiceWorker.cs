@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using RimWorld;
 using UnityEngine;
 using RimWorld.Planet;
@@ -23,7 +22,7 @@ namespace Settlement_Services.Services.Medical
         public override ServiceAvailabilityReport CanOffer(SettlementServiceContext ctx)
         {
             if (!(ctx.SelectedTarget is Pawn pawn)) return ServiceAvailabilityReport.Available;
-            return SurgeryOptionService.FindOfferedOptions(pawn, ctx.Settlement, ctx.RequestingCaravan).Any()
+            return SurgeryOptionService.FindOfferedOptions(pawn, ctx.Settlement, ctx.RequestingCaravan).Count > 0
                 ? ServiceAvailabilityReport.Available
                 : ServiceAvailabilityReport.Unavailable("SettlementServices.Error.NoCompatibleImplants");
         }
@@ -31,16 +30,8 @@ namespace Settlement_Services.Services.Medical
         public override IEnumerable<ServiceDisplayOption> GetDisplayOptions(SettlementServiceContext ctx)
         {
             if (!(ctx.SelectedTarget is Pawn pawn)) yield break;
-            List<SurgeryOptionService.ImplantOption> allOptions = SurgeryOptionService.FindOfferedOptions(pawn, ctx.Settlement, ctx.RequestingCaravan);
-            foreach (SurgeryOptionService.ImplantOption option in allOptions)
-                yield return new ServiceDisplayOption
-                {
-                    key = option.Key,
-                    label = option.Label,
-                    groupKey = ImplantGroupKey,
-                    allowMultipleSelectionInGroup = true,
-                    conflictingOptionKeys = SurgeryOptionService.ConflictingKeysFor(option, allOptions),
-                };
+            foreach (ServiceDisplayOption option in SurgeryOptionService.GetOfferedDisplayOptions(pawn, ctx.Settlement, ctx.RequestingCaravan, ImplantGroupKey))
+                yield return option;
         }
 
         public override IEnumerable<string> GetDisplaySummaryLines(SettlementServiceContext ctx)

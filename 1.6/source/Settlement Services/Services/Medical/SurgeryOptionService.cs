@@ -5,6 +5,7 @@ using RimWorld;
 using RimWorld.Planet;
 using Verse;
 using Settlement_Services.Framework.Defs;
+using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Stock;
 
 namespace Settlement_Services.Services.Medical
@@ -42,9 +43,10 @@ namespace Settlement_Services.Services.Medical
                 yield return reference.thing;
         }
 
-        private static bool IsSupportedImplantRecipe(RecipeDef recipe, ThingDef item)
+        private static bool TryGetSupportedImplantItem(RecipeDef recipe, out ThingDef item)
         {
-            if (recipe == null || item == null) return false;
+            item = null;
+            if (recipe == null) return false;
             if (!recipe.IsSurgery || !recipe.targetsBodyPart || recipe.addsHediff == null) return false;
 
             IngredientCount fixedIngredient = null;
@@ -56,19 +58,50 @@ namespace Settlement_Services.Services.Medical
             }
 
             if (fixedIngredient == null) return false;
-            if (fixedIngredient.FixedIngredient != item || fixedIngredient.GetBaseCount() != 1f) return false;
 
-            return recipe.fixedIngredientFilter.Allows(item);
+            ThingDef candidateItem = fixedIngredient.FixedIngredient;
+            if (candidateItem == null || fixedIngredient.GetBaseCount() != 1f) return false;
+            if (!recipe.fixedIngredientFilter.Allows(candidateItem)) return false;
+
+            item = candidateItem;
+            return true;
         }
 
-        private static List<RecipeDef> FindSupportedInstallRecipes(ThingDef item)
-        {
-            var result = new List<RecipeDef>();
-            if (item == null) return result;
+        private static bool IsSupportedImplantRecipe(RecipeDef recipe, ThingDef item) =>
+            TryGetSupportedImplantItem(recipe, out ThingDef resolvedItem) && resolvedItem == item;
 
-            foreach (RecipeDef candidate in DefDatabase<RecipeDef>.AllDefsListForReading)
-                if (IsSupportedImplantRecipe(candidate, item)) result.Add(candidate);
-            return result;
+        private static Dictionary<ThingDef, List<RecipeDef>> _supportedInstallRecipeIndex;
+
+        private static Dictionary<ThingDef, List<RecipeDef>> SupportedInstallRecipeIndex
+        {
+            get
+            {
+                if (_supportedInstallRecipeIndex == null)
+                {
+                    var index = new Dictionary<ThingDef, List<RecipeDef>>();
+                    foreach (RecipeDef candidate in DefDatabase<RecipeDef>.AllDefsListForReading)
+                    {
+                        if (!TryGetSupportedImplantItem(candidate, out ThingDef item)) continue;
+
+                        if (!index.TryGetValue(item, out List<RecipeDef> recipes))
+                        {
+                            recipes = new List<RecipeDef>();
+                            index[item] = recipes;
+                        }
+                        recipes.Add(candidate);
+                    }
+                    _supportedInstallRecipeIndex = index;
+                }
+                return _supportedInstallRecipeIndex;
+            }
+        }
+
+        private static IReadOnlyList<RecipeDef> FindSupportedInstallRecipes(ThingDef item)
+        {
+            if (item == null) return Array.Empty<RecipeDef>();
+            return SupportedInstallRecipeIndex.TryGetValue(item, out List<RecipeDef> recipes)
+                ? (IReadOnlyList<RecipeDef>)recipes
+                : Array.Empty<RecipeDef>();
         }
 
         private static bool TryGetLegacyInstallRecipe(ThingDef item, out RecipeDef recipe)
@@ -97,7 +130,7 @@ namespace Settlement_Services.Services.Medical
 
             foreach (ThingDef item in candidateItems.Distinct())
             {
-                List<RecipeDef> recipes = FindSupportedInstallRecipes(item);
+                IReadOnlyList<RecipeDef> recipes = FindSupportedInstallRecipes(item);
                 if (recipes.Count == 0 && configuredStock.Contains(item) && TryGetLegacyInstallRecipe(item, out RecipeDef legacyRecipe))
                     recipes = new List<RecipeDef> { legacyRecipe };
 
@@ -107,7 +140,7 @@ namespace Settlement_Services.Services.Medical
             }
         }
 
-        public static List<ImplantOption> FindOfferedOptions(Pawn pawn, Settlement settlement, Caravan caravan)
+        private static List<ImplantOption> ComputeOfferedOptions(Pawn pawn, Settlement settlement, Caravan caravan)
         {
             var result = new List<ImplantOption>();
             if (pawn == null) return result;
@@ -130,6 +163,103 @@ namespace Settlement_Services.Services.Medical
                 int itemCompare = string.Compare(a.itemDef.defName, b.itemDef.defName, StringComparison.Ordinal);
                 return itemCompare != 0 ? itemCompare : string.Compare(a.recipe.defName, b.recipe.defName, StringComparison.Ordinal);
             });
+            return result;
+        }
+
+        private readonly struct OfferedOptionsCacheKey : IEquatable<OfferedOptionsCacheKey>
+        {
+            private readonly Pawn pawn;
+            private readonly Settlement settlement;
+            private readonly Caravan caravan;
+
+            public OfferedOptionsCacheKey(Pawn pawn, Settlement settlement, Caravan caravan)
+            {
+                this.pawn = pawn;
+                this.settlement = settlement;
+                this.caravan = caravan;
+            }
+
+            public bool Equals(OfferedOptionsCacheKey other) =>
+                pawn == other.pawn && settlement == other.settlement && caravan == other.caravan;
+
+            public override bool Equals(object obj) => obj is OfferedOptionsCacheKey other && Equals(other);
+
+            public override int GetHashCode()
+            {
+                int hash = 17;
+                hash = hash * 31 + (pawn?.thingIDNumber ?? 0);
+                hash = hash * 31 + (settlement?.ID ?? 0);
+                hash = hash * 31 + (caravan?.ID ?? 0);
+                return hash;
+            }
+        }
+
+        private static int _cacheTick = int.MinValue;
+        private static Dictionary<OfferedOptionsCacheKey, IReadOnlyList<ImplantOption>> _offeredOptionsCache;
+        private static Dictionary<(OfferedOptionsCacheKey key, string groupKey), IReadOnlyList<ServiceDisplayOption>> _displayOptionsCache;
+
+        private static bool TryEnterCacheScope()
+        {
+            if (Current.ProgramState != ProgramState.Playing) return false;
+
+            int currentTick = Find.TickManager.TicksGame;
+            if (currentTick != _cacheTick)
+            {
+                _cacheTick = currentTick;
+                _offeredOptionsCache?.Clear();
+                _displayOptionsCache?.Clear();
+            }
+            return true;
+        }
+
+        public static IReadOnlyList<ImplantOption> FindOfferedOptions(Pawn pawn, Settlement settlement, Caravan caravan)
+        {
+            if (pawn == null) return Array.Empty<ImplantOption>();
+            if (!TryEnterCacheScope()) return ComputeOfferedOptions(pawn, settlement, caravan);
+
+            var key = new OfferedOptionsCacheKey(pawn, settlement, caravan);
+            if (_offeredOptionsCache == null)
+                _offeredOptionsCache = new Dictionary<OfferedOptionsCacheKey, IReadOnlyList<ImplantOption>>();
+
+            if (!_offeredOptionsCache.TryGetValue(key, out IReadOnlyList<ImplantOption> cached))
+            {
+                cached = ComputeOfferedOptions(pawn, settlement, caravan);
+                _offeredOptionsCache[key] = cached;
+            }
+            return cached;
+        }
+
+        public static IReadOnlyList<ServiceDisplayOption> GetOfferedDisplayOptions(Pawn pawn, Settlement settlement, Caravan caravan, string groupKey)
+        {
+            IReadOnlyList<ImplantOption> offered = FindOfferedOptions(pawn, settlement, caravan);
+            if (offered.Count == 0) return Array.Empty<ServiceDisplayOption>();
+
+            if (!TryEnterCacheScope()) return BuildDisplayOptions(offered, groupKey);
+
+            var cacheKey = (new OfferedOptionsCacheKey(pawn, settlement, caravan), groupKey);
+            if (_displayOptionsCache == null)
+                _displayOptionsCache = new Dictionary<(OfferedOptionsCacheKey, string), IReadOnlyList<ServiceDisplayOption>>();
+
+            if (!_displayOptionsCache.TryGetValue(cacheKey, out IReadOnlyList<ServiceDisplayOption> cached))
+            {
+                cached = BuildDisplayOptions(offered, groupKey);
+                _displayOptionsCache[cacheKey] = cached;
+            }
+            return cached;
+        }
+
+        private static List<ServiceDisplayOption> BuildDisplayOptions(IReadOnlyList<ImplantOption> offered, string groupKey)
+        {
+            var result = new List<ServiceDisplayOption>(offered.Count);
+            foreach (ImplantOption option in offered)
+                result.Add(new ServiceDisplayOption
+                {
+                    key = option.Key,
+                    label = option.Label,
+                    groupKey = groupKey,
+                    allowMultipleSelectionInGroup = true,
+                    conflictingOptionKeys = ConflictingKeysFor(option, offered),
+                });
             return result;
         }
 
@@ -198,7 +328,7 @@ namespace Settlement_Services.Services.Medical
             return false;
         }
 
-        public static List<string> ConflictingKeysFor(ImplantOption option, List<ImplantOption> allOptions) =>
+        public static List<string> ConflictingKeysFor(ImplantOption option, IReadOnlyList<ImplantOption> allOptions) =>
             allOptions.Where(o => o.Key != option.Key && ConflictsWith(option, o)).Select(o => o.Key).ToList();
 
         public static List<ImplantOption> ResolveAvailable(Pawn pawn, IReadOnlyList<string> keys)
