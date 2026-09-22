@@ -62,14 +62,14 @@ namespace Settlement_Services.Services.Medical
 
             foreach (SurgeryOptionService.ImplantOption option in resolved)
             {
-                ThingDefCountClass playerEntry = remainingPlayerSupplied.Find(c => c.thingDef == option.stockThingDef);
+                ThingDefCountClass playerEntry = remainingPlayerSupplied.Find(c => c.thingDef == option.itemDef);
                 if (playerEntry != null && playerEntry.count > 0)
                 {
                     playerEntry.count--;
                     continue;
                 }
 
-                lineItems.Add(new ServiceLineItem("SettlementServices.LineItem.SurgeryPart", Mathf.RoundToInt(option.stockThingDef.BaseMarketValue), labelArgument: option.Label));
+                lineItems.Add(new ServiceLineItem("SettlementServices.LineItem.SurgeryPart", Mathf.RoundToInt(option.itemDef.BaseMarketValue), labelArgument: option.Label));
             }
 
             return lineItems;
@@ -82,7 +82,7 @@ namespace Settlement_Services.Services.Medical
 
             List<SurgeryOptionService.ImplantOption> resolved = SurgeryOptionService.ResolveAvailable(pawn, request.selectedOptionKeys);
             foreach (SurgeryOptionService.ImplantOption option in resolved)
-                result.Add(new ServiceStockRequirement { thingDefName = option.stockThingDef.defName, amount = 1, playerCanSupply = true });
+                result.Add(new ServiceStockRequirement { thingDefName = option.itemDef.defName, amount = 1, playerCanSupply = true });
             return result;
         }
 
@@ -97,7 +97,7 @@ namespace Settlement_Services.Services.Medical
                 new ServiceStockRequirement { stockCategoryDefName = "SettlementStock_Medicine", preferredThingDefName = "MedicineIndustrial", amount = MedicineAmount, playerCanSupply = true },
             };
             foreach (SurgeryOptionService.ImplantOption option in resolved)
-                requirements.Add(new ServiceStockRequirement { thingDefName = option.stockThingDef.defName, amount = 1, playerCanSupply = true });
+                requirements.Add(new ServiceStockRequirement { thingDefName = option.itemDef.defName, amount = 1, playerCanSupply = true });
 
             StockAllocationResult allocation = SettlementStockService.TryAllocate(request.settlement, requirements, request.playerSuppliedInputs);
             if (!allocation.Success) return new ServiceInputPlan();

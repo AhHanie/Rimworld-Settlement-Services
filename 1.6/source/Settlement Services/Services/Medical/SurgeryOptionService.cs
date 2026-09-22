@@ -17,16 +17,16 @@ namespace Settlement_Services.Services.Medical
         {
             public readonly RecipeDef recipe;
             public readonly BodyPartRecord part;
-            public readonly ThingDef stockThingDef;
+            public readonly ThingDef itemDef;
 
-            public ImplantOption(RecipeDef recipe, BodyPartRecord part, ThingDef stockThingDef)
+            public ImplantOption(RecipeDef recipe, BodyPartRecord part, ThingDef itemDef)
             {
                 this.recipe = recipe;
                 this.part = part;
-                this.stockThingDef = stockThingDef;
+                this.itemDef = itemDef;
             }
 
-            public string Key => $"{recipe.defName}|{part.Index}";
+            public string Key => $"{recipe.defName}|{part.Index}|{itemDef.defName}";
             public string Label => $"{recipe.LabelCap} ({part.LabelCap})";
         }
 
@@ -42,21 +42,68 @@ namespace Settlement_Services.Services.Medical
                 yield return reference.thing;
         }
 
-        public static IEnumerable<ImplantOption> FindOptions(Pawn pawn)
+        private static bool IsSupportedImplantRecipe(RecipeDef recipe, ThingDef item)
         {
-            if (pawn == null) yield break;
+            if (recipe == null || item == null) return false;
+            if (!recipe.IsSurgery || !recipe.targetsBodyPart || recipe.addsHediff == null) return false;
 
-            var seenKeys = new HashSet<string>();
-            foreach (ThingDef thingDef in ConfiguredThingDefs())
+            IngredientCount fixedIngredient = null;
+            foreach (IngredientCount ingredient in recipe.ingredients)
             {
-                RecipeDef recipe = DefDatabase<RecipeDef>.GetNamedSilentFail("Install" + thingDef.defName);
-                if (recipe == null || !recipe.Worker.AvailableOnNow(pawn)) continue;
+                if (!ingredient.IsFixedIngredient) continue;
+                if (fixedIngredient != null) return false;
+                fixedIngredient = ingredient;
+            }
 
-                foreach (BodyPartRecord part in recipe.Worker.GetPartsToApplyOn(pawn, recipe))
-                {
-                    var option = new ImplantOption(recipe, part, thingDef);
-                    if (seenKeys.Add(option.Key)) yield return option;
-                }
+            if (fixedIngredient == null) return false;
+            if (fixedIngredient.FixedIngredient != item || fixedIngredient.GetBaseCount() != 1f) return false;
+
+            return recipe.fixedIngredientFilter.Allows(item);
+        }
+
+        private static List<RecipeDef> FindSupportedInstallRecipes(ThingDef item)
+        {
+            var result = new List<RecipeDef>();
+            if (item == null) return result;
+
+            foreach (RecipeDef candidate in DefDatabase<RecipeDef>.AllDefsListForReading)
+                if (IsSupportedImplantRecipe(candidate, item)) result.Add(candidate);
+            return result;
+        }
+
+        private static bool TryGetLegacyInstallRecipe(ThingDef item, out RecipeDef recipe)
+        {
+            recipe = item != null ? DefDatabase<RecipeDef>.GetNamedSilentFail("Install" + item.defName) : null;
+            return recipe != null;
+        }
+
+        private static IEnumerable<ImplantOption> OptionsForRecipeAndItem(Pawn pawn, RecipeDef recipe, ThingDef item)
+        {
+            if (!recipe.Worker.AvailableOnNow(pawn)) yield break;
+
+            foreach (BodyPartRecord part in recipe.Worker.GetPartsToApplyOn(pawn, recipe))
+            {
+                if (!recipe.Worker.AvailableOnNow(pawn, part)) continue;
+                yield return new ImplantOption(recipe, part, item);
+            }
+        }
+
+        public static IEnumerable<ImplantOption> FindOptions(Pawn pawn, IEnumerable<ThingDef> candidateItems)
+        {
+            if (pawn == null || candidateItems == null) yield break;
+
+            var configuredStock = new HashSet<ThingDef>(ConfiguredThingDefs());
+            var seenKeys = new HashSet<string>();
+
+            foreach (ThingDef item in candidateItems.Distinct())
+            {
+                List<RecipeDef> recipes = FindSupportedInstallRecipes(item);
+                if (recipes.Count == 0 && configuredStock.Contains(item) && TryGetLegacyInstallRecipe(item, out RecipeDef legacyRecipe))
+                    recipes = new List<RecipeDef> { legacyRecipe };
+
+                foreach (RecipeDef recipe in recipes)
+                    foreach (ImplantOption option in OptionsForRecipeAndItem(pawn, recipe, item))
+                        if (seenKeys.Add(option.Key)) yield return option;
             }
         }
 
@@ -65,34 +112,78 @@ namespace Settlement_Services.Services.Medical
             var result = new List<ImplantOption>();
             if (pawn == null) return result;
 
-            var offeredThingDefs = new HashSet<ThingDef>();
+            var candidateItems = new HashSet<ThingDef>();
             SettlementStockCategoryDef category = ProstheticsCategory;
             if (category != null)
                 foreach (SettlementStockItemReference reference in SettlementStockService.ItemsFor(settlement, category))
-                    offeredThingDefs.Add(reference.thing);
+                    candidateItems.Add(reference.thing);
 
             if (caravan != null)
-            {
-                var configured = new HashSet<ThingDef>(ConfiguredThingDefs());
                 foreach (Thing thing in CaravanInventoryUtility.AllInventoryItems(caravan))
-                    if (configured.Contains(thing.def)) offeredThingDefs.Add(thing.def);
-            }
+                    candidateItems.Add(thing.def);
 
-            result.AddRange(FindOptions(pawn).Where(o => offeredThingDefs.Contains(o.stockThingDef)));
+            result.AddRange(FindOptions(pawn, candidateItems));
             result.Sort((a, b) =>
             {
                 int labelCompare = string.Compare(a.Label, b.Label, StringComparison.Ordinal);
-                return labelCompare != 0 ? labelCompare : string.Compare(a.stockThingDef.defName, b.stockThingDef.defName, StringComparison.Ordinal);
+                if (labelCompare != 0) return labelCompare;
+                int itemCompare = string.Compare(a.itemDef.defName, b.itemDef.defName, StringComparison.Ordinal);
+                return itemCompare != 0 ? itemCompare : string.Compare(a.recipe.defName, b.recipe.defName, StringComparison.Ordinal);
             });
             return result;
         }
 
-        public static ImplantOption? FindByKey(Pawn pawn, string key)
+        private static ImplantOption? ResolveThreeFieldKey(Pawn pawn, string recipeDefName, string partIndexText, string itemDefName)
         {
-            foreach (ImplantOption option in FindOptions(pawn))
-                if (option.Key == key) return option;
+            if (!int.TryParse(partIndexText, out int partIndex)) return null;
+
+            RecipeDef recipe = DefDatabase<RecipeDef>.GetNamedSilentFail(recipeDefName);
+            ThingDef item = DefDatabase<ThingDef>.GetNamedSilentFail(itemDefName);
+            if (recipe == null || item == null) return null;
+
+            bool supported = IsSupportedImplantRecipe(recipe, item);
+            if (!supported)
+            {
+                supported = ConfiguredThingDefs().Contains(item)
+                    && TryGetLegacyInstallRecipe(item, out RecipeDef legacyRecipe)
+                    && legacyRecipe == recipe;
+            }
+            if (!supported) return null;
+
+            foreach (ImplantOption option in OptionsForRecipeAndItem(pawn, recipe, item))
+                if (option.part.Index == partIndex) return option;
             return null;
         }
+
+        private static ImplantOption? ResolveLegacyTwoFieldKey(Pawn pawn, string recipeDefName, string partIndexText)
+        {
+            if (!int.TryParse(partIndexText, out int partIndex)) return null;
+
+            RecipeDef recipe = DefDatabase<RecipeDef>.GetNamedSilentFail(recipeDefName);
+            if (recipe == null) return null;
+
+            var matches = new List<ImplantOption>();
+            foreach (ThingDef stockItem in ConfiguredThingDefs())
+            {
+                if (!TryGetLegacyInstallRecipe(stockItem, out RecipeDef legacyRecipe) || legacyRecipe != recipe) continue;
+
+                foreach (ImplantOption option in OptionsForRecipeAndItem(pawn, legacyRecipe, stockItem))
+                    if (option.part.Index == partIndex) matches.Add(option);
+            }
+            return matches.Count == 1 ? matches[0] : (ImplantOption?)null;
+        }
+
+        private static ImplantOption? ResolveKey(Pawn pawn, string key)
+        {
+            if (pawn == null || string.IsNullOrEmpty(key)) return null;
+
+            string[] parts = key.Split('|');
+            if (parts.Length == 3) return ResolveThreeFieldKey(pawn, parts[0], parts[1], parts[2]);
+            if (parts.Length == 2) return ResolveLegacyTwoFieldKey(pawn, parts[0], parts[1]);
+            return null;
+        }
+
+        public static ImplantOption? FindByKey(Pawn pawn, string key) => ResolveKey(pawn, key);
 
         public static bool ConflictsWith(ImplantOption a, ImplantOption b)
         {
@@ -115,11 +206,11 @@ namespace Settlement_Services.Services.Medical
             var result = new List<ImplantOption>();
             if (pawn == null || keys == null || keys.Count == 0) return result;
 
-            List<ImplantOption> available = FindOptions(pawn).ToList();
             foreach (string key in keys)
-                foreach (ImplantOption candidate in available)
-                    if (candidate.Key == key) { result.Add(candidate); break; }
-
+            {
+                ImplantOption? option = ResolveKey(pawn, key);
+                if (option != null) result.Add(option.Value);
+            }
             return result;
         }
 
@@ -129,17 +220,13 @@ namespace Settlement_Services.Services.Medical
             errorKey = null;
             if (pawn == null || keys == null || keys.Count == 0) return true;
 
-            List<ImplantOption> available = FindOptions(pawn).ToList();
             var seenKeys = new HashSet<string>();
 
             foreach (string key in keys)
             {
                 if (!seenKeys.Add(key)) { errorKey = "SettlementServices.Error.ConflictingSurgeries"; return false; }
 
-                ImplantOption? match = null;
-                foreach (ImplantOption candidate in available)
-                    if (candidate.Key == key) { match = candidate; break; }
-
+                ImplantOption? match = ResolveKey(pawn, key);
                 if (match == null) { errorKey = "SettlementServices.Error.NoCompatibleImplants"; return false; }
                 resolved.Add(match.Value);
             }
