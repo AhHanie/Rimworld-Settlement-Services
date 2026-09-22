@@ -17,7 +17,9 @@ namespace Settlement_Services.Framework.Pricing
     {
         public static readonly ServicePricingContext Current = new ServicePricingContext();
 
-        public float TotalPlayerWealth => Find.Maps.Where(m => m.IsPlayerHome).Sum(m => m.wealthWatcher.WealthTotal);
+        public float TotalPlayerWealth =>
+            Find.Maps.Where(m => m.IsPlayerHome).Sum(m => m.wealthWatcher.WealthTotal) +
+            Find.WorldObjects.Caravans.Sum(c => c.PlayerWealthForStoryteller);
 
         public float DifficultyMultiplier
         {
