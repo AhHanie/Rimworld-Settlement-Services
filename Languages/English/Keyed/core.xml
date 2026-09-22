@@ -36,6 +36,7 @@
     <SettlementServices.LineItem.ReputationModifier>Faction relations discount</SettlementServices.LineItem.ReputationModifier>
     <SettlementServices.LineItem.PriorityTier>Priority surcharge</SettlementServices.LineItem.PriorityTier>
     <SettlementServices.LineItem.InvestmentDiscount>Settlement investment</SettlementServices.LineItem.InvestmentDiscount>
+    <SettlementServices.LineItem.NegotiatorSocialDiscount>Negotiator Social skill ({0})</SettlementServices.LineItem.NegotiatorSocialDiscount>
     <SettlementServices.Letter.ReadyForCollectionLabel>Service complete</SettlementServices.Letter.ReadyForCollectionLabel>
     <SettlementServices.Letter.ReadyForCollectionText>A service at a settlement has finished. Send a caravan to collect the result.</SettlementServices.Letter.ReadyForCollectionText>
     <SettlementServices.Letter.InterruptedLabel>Service interrupted</SettlementServices.Letter.InterruptedLabel>

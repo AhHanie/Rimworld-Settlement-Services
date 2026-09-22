@@ -28,6 +28,8 @@ namespace Settlement_Services
 
         public float investmentDecayDurationScalePct = 1f;
 
+        public bool negotiatorSocialDiscountEnabled = true;
+
         public CompatibilitySettingsStore compatibilitySettings = new CompatibilitySettingsStore();
 
         public bool soundtrackEnabled = false;
@@ -45,6 +47,7 @@ namespace Settlement_Services
             Scribe_Values.Look(ref investmentCostScalePct, "investmentCostScalePct", 1f);
             Scribe_Values.Look(ref investmentDiscountScalePct, "investmentDiscountScalePct", 1f);
             Scribe_Values.Look(ref investmentDecayDurationScalePct, "investmentDecayDurationScalePct", 1f);
+            Scribe_Values.Look(ref negotiatorSocialDiscountEnabled, "negotiatorSocialDiscountEnabled", true);
             Scribe_Deep.Look(ref compatibilitySettings, "compatibilitySettings");
             Scribe_Values.Look(ref soundtrackEnabled, "soundtrackEnabled", false);
             Scribe_Values.Look(ref verboseLoggingEnabled, "verboseLoggingEnabled", false);

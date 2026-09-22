@@ -20,6 +20,7 @@ namespace Settlement_Services
 
             Widgets.BeginScrollView(parent, ref scrollPosition, viewRect);
             var listing = new Listing_Standard();
+            listing.maxOneColumn = true;
             listing.Begin(viewRect);
 
             DrawPricingSection(listing, settings);
@@ -56,6 +57,12 @@ namespace Settlement_Services
                 "SettlementServices.Settings.GoodwillDiscountScalePct".Translate(settings.goodwillDiscountScalePct.ToStringPercent()),
                 settings.goodwillDiscountScalePct, 0f, 2f,
                 tooltip: "SettlementServices.Settings.GoodwillDiscountScalePct.Tooltip".Translate());
+
+            bool negotiatorSocialDiscountEnabled = settings.negotiatorSocialDiscountEnabled;
+            listing.CheckboxLabeled(
+                "SettlementServices.Settings.NegotiatorSocialDiscountEnabled".Translate(), ref negotiatorSocialDiscountEnabled,
+                "SettlementServices.Settings.NegotiatorSocialDiscountEnabled.Tooltip".Translate());
+            settings.negotiatorSocialDiscountEnabled = negotiatorSocialDiscountEnabled;
 
             // TODO: Re-enable investment settings after investment testing is complete.
             //settings.investmentCostScalePct = listing.SliderLabeled(
@@ -130,11 +137,10 @@ namespace Settlement_Services
             listing.Label("SettlementServices.Settings.SectionFramework".Translate());
             Text.Font = GameFont.Small;
 
-            // TODO: Re-enable the service-event setting after event testing is complete.
-            //settings.serviceEventFrequencyPct = listing.SliderLabeled(
-            //    "SettlementServices.Settings.ServiceEventFrequencyPct".Translate(settings.serviceEventFrequencyPct.ToStringPercent()),
-            //    settings.serviceEventFrequencyPct, 0f, 2f,
-            //    tooltip: "SettlementServices.Settings.ServiceEventFrequencyPct.Tooltip".Translate());
+            settings.serviceEventFrequencyPct = listing.SliderLabeled(
+                "SettlementServices.Settings.ServiceEventFrequencyPct".Translate(settings.serviceEventFrequencyPct.ToStringPercent()),
+                settings.serviceEventFrequencyPct, 0f, 2f,
+                tooltip: "SettlementServices.Settings.ServiceEventFrequencyPct.Tooltip".Translate());
 
             bool soundtrackEnabled = settings.soundtrackEnabled;
             listing.CheckboxLabeled(

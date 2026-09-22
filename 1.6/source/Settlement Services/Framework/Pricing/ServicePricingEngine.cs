@@ -63,6 +63,9 @@ namespace Settlement_Services.Framework.Pricing
             ServicePriorityTierDef tier = ResolveTier(def, request.selectedTierKey);
             AddPctModifier(lineItems, scaled, tier?.costSurchargePct ?? 0f, "SettlementServices.LineItem.PriorityTier");
 
+            float coreSubtotal = lineItems.Aggregate(scaled, (acc, li) => acc + li.amount);
+            AddNegotiatorDiscount(lineItems, coreSubtotal, def.minimumCost, request.negotiator);
+
             float preMarketTotal = Mathf.Max(def.minimumCost, lineItems.Aggregate(scaled, (acc, li) => acc + li.amount));
 
             var compatibilityContext = new CompatibilityQuoteContext(def, request, lineItems, Mathf.RoundToInt(preMarketTotal));
@@ -81,6 +84,19 @@ namespace Settlement_Services.Framework.Pricing
         {
             if (Mathf.Approximately(pct, 0f)) return;
             lineItems.Add(new ServiceLineItem(labelKey, Mathf.RoundToInt(scaled * pct), isModifier: true));
+        }
+
+        private static void AddNegotiatorDiscount(List<ServiceLineItem> lineItems, float coreSubtotal, float minimumCost, Pawn negotiator)
+        {
+            float pct = NegotiatorDiscount.DiscountPctFor(negotiator);
+            if (Mathf.Approximately(pct, 0f)) return;
+
+            int maxReduction = Mathf.Max(0, Mathf.RoundToInt(coreSubtotal - minimumCost));
+            int reduction = Mathf.Min(maxReduction, Mathf.RoundToInt(coreSubtotal * pct));
+            if (reduction <= 0) return;
+
+            int level = NegotiatorDiscount.EffectiveSocialLevel(negotiator);
+            lineItems.Add(new ServiceLineItem("SettlementServices.LineItem.NegotiatorSocialDiscount", -reduction, isModifier: true, labelArgument: level.ToString()));
         }
 
         internal static float ScaledCost(SettlementServiceDef def, float wealth, float difficultyMultiplier, float wealthPriceScalePct, float wealthScaleAddition = 0f, float minimumCostMultiplier = 1f)

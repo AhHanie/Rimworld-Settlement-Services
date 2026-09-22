@@ -150,6 +150,7 @@
     <Compile Include="Framework\Pricing\ServicePricingEngine.cs" />
     <Compile Include="Framework\Pricing\WealthScaling.cs" />
     <Compile Include="Framework\Pricing\GoodwillBands.cs" />
+    <Compile Include="Framework\Pricing\NegotiatorDiscount.cs" />
     <Compile Include="Framework\Pricing\SettlementServiceDifficultyExtension.cs" />
     <Compile Include="Framework\Investment\InvestmentPricing.cs" />
     <Compile Include="Framework\Investment\SettlementInvestmentService.cs" />
