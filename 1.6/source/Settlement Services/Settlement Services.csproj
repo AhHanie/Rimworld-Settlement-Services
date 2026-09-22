@@ -196,6 +196,10 @@
     <Compile Include="Framework\Compat\LifeLessons\LifeLessonsProficiencyServiceWorker.cs" />
     <Compile Include="Framework\Compat\LifeLessons\LifeLessonsCompatibilityModule.cs" />
     <Compile Include="Framework\Compat\LifeLessons\LifeLessonsCompletionObserver.cs" />
+    <Compile Include="Framework\Compat\Empire\EmpireAdapter.cs" />
+    <Compile Include="Framework\Compat\Empire\EmpireInteractionPatches.cs" />
+    <Compile Include="Framework\Compat\Empire\EmpireAvailabilityRule.cs" />
+    <Compile Include="Framework\Compat\Empire\EmpireCompatibilityModule.cs" />
     <Compile Include="Framework\Compatibility\ISettlementServicesCompatibilityModule.cs" />
     <Compile Include="Framework\Compatibility\IRechargeableHediffService.cs" />
     <Compile Include="Framework\Compatibility\ICompatibilityAvailabilityRule.cs" />
@@ -271,6 +275,7 @@
     <Compile Include="UI\ServiceConfirmationFlow.cs" />
     <Compile Include="UI\Interaction\CaravanArrivalAction_VisitServices.cs" />
     <Compile Include="UI\Interaction\CaravanArrivalAction_InvestInSettlement.cs" />
+    <Compile Include="UI\Interaction\SettlementServicesInteractionCommands.cs" />
     <Compile Include="UI\Interaction\Settlement_ServicesInteraction_Patch.cs" />
     <Compile Include="UI\Interaction\CommsConsole_ServicesPatch.cs" />
 

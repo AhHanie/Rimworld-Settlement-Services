@@ -324,7 +324,7 @@ namespace Settlement_Services.Framework
             ServiceJobRecord job = domain.GetJob(jobId);
             if (job == null) return;
 
-            RefundConsumedPlayerSuppliedInputsForMissingRecipe(domain, job, errorKey);
+            RefundConsumedPlayerSuppliedInputsIfApplicable(domain, job, errorKey);
             ApplyRefundAndReleaseReservations(domain, job, refundFraction);
 
             bool neverReserved = job.status == ServiceJobStatus.Drafted || job.status == ServiceJobStatus.Quoted;
@@ -388,9 +388,10 @@ namespace Settlement_Services.Framework
             }
         }
 
-        private static void RefundConsumedPlayerSuppliedInputsForMissingRecipe(SettlementServicesWorldComponent domain, ServiceJobRecord job, string errorKey)
+        private static void RefundConsumedPlayerSuppliedInputsIfApplicable(SettlementServicesWorldComponent domain, ServiceJobRecord job, string errorKey)
         {
-            if (errorKey != CraftingRecipeUnavailableErrorKey && errorKey != BuildingUnavailableErrorKey) return;
+            bool missingRecipe = errorKey == CraftingRecipeUnavailableErrorKey || errorKey == BuildingUnavailableErrorKey;
+            if (!missingRecipe && job.status != ServiceJobStatus.Reserved) return;
             if (job.playerSuppliedInputsRefunded || job.consumedPlayerSuppliedInputs.NullOrEmpty()) return;
 
             Caravan caravan = ResolveRequesterCaravan(job);

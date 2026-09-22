@@ -18,11 +18,14 @@ namespace Settlement_Services.UI.Interaction
         public override FloatMenuAcceptanceReport StillValid(Caravan caravan, PlanetTile destinationTile)
         {
             FloatMenuAcceptanceReport baseReport = base.StillValid(caravan, destinationTile);
-            return !baseReport.Accepted ? baseReport : CanVisit(caravan, settlement);
+            if (!baseReport.Accepted) return baseReport;
+            if (settlement == null || settlement.Tile != destinationTile) return false;
+            return CanVisit(caravan, settlement);
         }
 
         public override void Arrived(Caravan caravan)
         {
+            if (!CanVisit(caravan, settlement).Accepted) return;
             CameraJumper.TryJumpAndSelect(caravan);
             Find.WindowStack.Add(new Dialog_SettlementServices(ServiceRequestSession.ForInPersonVisit(settlement, caravan)));
         }
@@ -35,7 +38,7 @@ namespace Settlement_Services.UI.Interaction
 
         public static FloatMenuAcceptanceReport CanVisit(Caravan caravan, Settlement settlement)
         {
-            if (settlement == null || !settlement.Spawned || settlement.HasMap) return false;
+            if (settlement == null || !settlement.Spawned || settlement.HasMap || !settlement.Visitable) return false;
             if (settlement.Faction != null && settlement.Faction.HostileTo(Faction.OfPlayer))
                 return FloatMenuAcceptanceReport.WithFailReason("SettlementServices.Error.FactionHostile".Translate());
             if (BestCaravanPawnUtility.FindBestNegotiator(caravan) == null)
