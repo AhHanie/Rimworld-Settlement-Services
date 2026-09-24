@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_MetallicMaterials"]/stockItems</xpath>
+    <value>
+      <li>
+        <thingDefName>DankPyon_IronIngot</thingDefName>
+        <capacity>750</capacity>
+        <refreshAmount>25</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Neolithic</minFactionTechLevel>
+        <techLevelTiers>
+          <li>
+            <minFactionTechLevel>Industrial</minFactionTechLevel>
+            <capacity>1500</capacity>
+            <refreshAmount>50</refreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+          </li>
+          <li>
+            <minFactionTechLevel>Spacer</minFactionTechLevel>
+            <capacity>3000</capacity>
+            <refreshAmount>100</refreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+          </li>
+        </techLevelTiers>
+      </li>
+    </value>
+  </Operation>
+
+</Patch>
