@@ -2,6 +2,7 @@
 <loadFolders>
   <v1.6>
     <li>1.6/Base</li>
+    <li IfModActive="DankPyon.Medieval.Overhaul">1.6/MedievalOverhaul</li>
     <li IfModActive="SmashPhil.VehicleFramework">1.6/VehicleFramework</li>
     <li IfModActive="OskarPotocki.VanillaVehiclesExpanded">1.6/VanillaVehiclesExpanded</li>
     <li IfModActive="vanillaracesexpanded.android">1.6/Androids</li>
