@@ -397,6 +397,13 @@ namespace Settlement_Services.Domain
             job.buildingCommissionPlan = plan;
         }
 
+        public void FreezeMarketPurchasePlan(int jobId, MarketPurchasePlan plan)
+        {
+            ServiceJobRecord job = GetJob(jobId);
+            if (job == null) return;
+            job.marketPurchasePlan = plan;
+        }
+
         public void FreezeConsumedPlayerSuppliedInputs(int jobId, List<ThingDefCountClass> items)
         {
             ServiceJobRecord job = GetJob(jobId);

@@ -50,6 +50,8 @@ namespace Settlement_Services.Domain.Records
 
         public BuildingCommissionPlan buildingCommissionPlan;
 
+        public MarketPurchasePlan marketPurchasePlan;
+
         public List<ThingDefCountClass> consumedPlayerSuppliedInputs = new List<ThingDefCountClass>();
         public bool playerSuppliedInputsRefunded;
 
@@ -100,6 +102,7 @@ namespace Settlement_Services.Domain.Records
             Scribe_Collections.Look(ref craftingCommissionLines, "craftingCommissionLines", LookMode.Deep);
             Scribe_Deep.Look(ref craftingProductionPlan, "craftingProductionPlan");
             Scribe_Deep.Look(ref buildingCommissionPlan, "buildingCommissionPlan");
+            Scribe_Deep.Look(ref marketPurchasePlan, "marketPurchasePlan");
             Scribe_Collections.Look(ref consumedPlayerSuppliedInputs, "consumedPlayerSuppliedInputs", LookMode.Deep);
             Scribe_Values.Look(ref playerSuppliedInputsRefunded, "playerSuppliedInputsRefunded");
             Scribe_Values.Look(ref providerFactionLoadId, "providerFactionLoadId");

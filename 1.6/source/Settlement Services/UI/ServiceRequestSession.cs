@@ -27,6 +27,7 @@ namespace Settlement_Services.UI
         public readonly List<CraftingCommissionLine> craftingCommissionLines = new List<CraftingCommissionLine>();
         public int craftingCrafterCount = 1;
         public readonly List<BuildingCommissionLine> buildingCommissionLines = new List<BuildingCommissionLine>();
+        public readonly List<MarketCartLine> marketCartLines = new List<MarketCartLine>();
 
         private ServiceRequestSession(RequestChannel channel, Settlement settlement, Caravan caravan, Pawn negotiator)
         {
@@ -83,6 +84,7 @@ namespace Settlement_Services.UI
                 craftingCommissionLines = craftingCommissionLines.Select(l => l.Clone()).ToList(),
                 craftingCrafterCount = craftingCrafterCount,
                 buildingCommissionLines = buildingCommissionLines.Select(l => l.Clone()).ToList(),
+                marketCartLines = marketCartLines.Select(l => l.Clone()).ToList(),
                 negotiator = negotiator,
             };
         }

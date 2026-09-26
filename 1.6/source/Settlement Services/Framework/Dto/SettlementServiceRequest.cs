@@ -28,6 +28,8 @@ namespace Settlement_Services.Framework.Dto
 
         public List<BuildingCommissionLine> buildingCommissionLines = new List<BuildingCommissionLine>();
 
+        public List<MarketCartLine> marketCartLines = new List<MarketCartLine>();
+
         public Pawn negotiator;
 
         public int bookingTick = -1;
@@ -64,6 +66,7 @@ namespace Settlement_Services.Framework.Dto
             craftingCommissionLines = CloneLines(craftingCommissionLines),
             craftingCrafterCount = craftingCrafterCount,
             buildingCommissionLines = CloneLines(buildingCommissionLines),
+            marketCartLines = CloneLines(marketCartLines),
             negotiator = negotiator,
             bookingTick = bookingTick,
         };
@@ -80,6 +83,7 @@ namespace Settlement_Services.Framework.Dto
             craftingCommissionLines = CloneLines(craftingCommissionLines),
             craftingCrafterCount = craftingCrafterCount,
             buildingCommissionLines = CloneLines(buildingCommissionLines),
+            marketCartLines = CloneLines(marketCartLines),
             negotiator = negotiator,
             bookingTick = bookingTick,
         };
@@ -96,6 +100,7 @@ namespace Settlement_Services.Framework.Dto
             craftingCommissionLines = CloneLines(craftingCommissionLines),
             craftingCrafterCount = craftingCrafterCount,
             buildingCommissionLines = CloneLines(buildingCommissionLines),
+            marketCartLines = CloneLines(marketCartLines),
             negotiator = negotiator,
             bookingTick = bookingTick,
         };
@@ -113,6 +118,7 @@ namespace Settlement_Services.Framework.Dto
             craftingCommissionLines = CloneLines(craftingCommissionLines),
             craftingCrafterCount = craftingCrafterCount,
             buildingCommissionLines = CloneLines(buildingCommissionLines),
+            marketCartLines = CloneLines(marketCartLines),
             negotiator = negotiator,
             bookingTick = bookingTick,
         };
@@ -122,5 +128,8 @@ namespace Settlement_Services.Framework.Dto
 
         private static List<BuildingCommissionLine> CloneLines(List<BuildingCommissionLine> source) =>
             source?.Select(l => l.Clone()).ToList() ?? new List<BuildingCommissionLine>();
+
+        private static List<MarketCartLine> CloneLines(List<MarketCartLine> source) =>
+            source?.Select(l => l.Clone()).ToList() ?? new List<MarketCartLine>();
     }
 }

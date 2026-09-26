@@ -65,4 +65,12 @@
     <iconTexPath>SettlementServices/UI/Icons/car</iconTexPath>
   </Settlement_Services.Framework.Defs.ServiceCategoryDef>
 
+  <Settlement_Services.Framework.Defs.ServiceCategoryDef>
+    <defName>SettlementService_Commerce</defName>
+    <label>commerce</label>
+    <description>Buying and selling goods directly from a settlement's own stock.</description>
+    <order>90</order>
+    <iconTexPath>SettlementServices/UI/Icons/market-stall</iconTexPath>
+  </Settlement_Services.Framework.Defs.ServiceCategoryDef>
+
 </Defs>

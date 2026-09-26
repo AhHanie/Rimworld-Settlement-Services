@@ -13,6 +13,7 @@ using Settlement_Services.Framework.Validation;
 using Settlement_Services.Framework.Workers;
 using Settlement_Services.Services.Construction;
 using Settlement_Services.Services.Crafting;
+using Settlement_Services.Services.Market;
 
 namespace Settlement_Services.UI
 {
@@ -21,6 +22,7 @@ namespace Settlement_Services.UI
         private readonly ServiceRequestSession session;
         private readonly List<CraftingCommissionRecipe> craftingEligibleRecipes;
         private readonly List<ThingDef> buildingEligibleBuildings;
+        private readonly bool isLocalMarket;
         private Vector2 scrollPosition;
         private float scrollHeight;
         private string quantityBuffer;
@@ -43,6 +45,8 @@ namespace Settlement_Services.UI
 
             if (session.def.Worker is BuildingCommissionServiceWorker)
                 buildingEligibleBuildings = BuildingCommissionCatalog.EligibleBuildings(session.settlement).ToList();
+
+            isLocalMarket = session.def.Worker is LocalMarketServiceWorker;
 
             if (session.def.requireExplicitPriorityTier && session.selectedTierKey == null)
                 session.selectedTierKey = session.def.priorityTiers.Find(t => t.isDefaultTier)?.key;
@@ -72,6 +76,7 @@ namespace Settlement_Services.UI
             if (session.def.EffectiveBatchMode == ServiceBatchMode.Quantity) DrawQuantitySection(listing);
             if (isCrafting) DrawCraftingCommissionSection(listing);
             if (isConstruction) DrawConstructionCommissionSection(listing);
+            if (isLocalMarket) DrawLocalMarketSection(listing);
 
             CraftingMaterialPreview craftingMaterialPreview = isCrafting && session.caravan != null
                 ? CraftingMaterialPreviewBuilder.Build(session)
@@ -131,6 +136,32 @@ namespace Settlement_Services.UI
                     session.AddTarget(thing);
                     session.selectedOptionKeys.Clear();
                 });
+            }
+            GUI.color = prevColor;
+
+            if (session.def.defName == LodgingServiceDefName && session.caravan != null)
+                DrawAddAllEligibleGuestsButton(listing);
+        }
+
+        private const string LodgingServiceDefName = "SettlementService_Lodging";
+
+        private void DrawAddAllEligibleGuestsButton(Listing_Standard listing)
+        {
+            var excluded = new HashSet<Thing>(session.targets);
+            IEnumerable<Thing> eligible = ServiceCaravanTargetSelector.EligibleTargets(session.caravan, session.def.targetRule)
+                .Where(t => !excluded.Contains(t));
+
+            List<Thing> additional = session.def.maxBatchCount > 0
+                ? eligible.Take(Mathf.Max(0, session.def.maxBatchCount - session.targets.Count)).ToList()
+                : eligible.ToList();
+
+            Color prevColor = GUI.color;
+            bool canAdd = additional.Count > 0;
+            if (!canAdd) GUI.color = Color.gray;
+            if (listing.ButtonText("SettlementServices.Button.AddAllEligibleGuests".Translate()) && canAdd)
+            {
+                foreach (Thing thing in additional) session.AddTarget(thing);
+                session.selectedOptionKeys.Clear();
             }
             GUI.color = prevColor;
         }
@@ -287,6 +318,126 @@ namespace Settlement_Services.UI
             listing.Gap();
         }
 
+        private void DrawLocalMarketSection(Listing_Standard listing)
+        {
+            listing.Label("SettlementServices.Label.LocalMarketGoods".Translate());
+
+            List<LocalMarketCatalogRow> rows = LocalMarketCatalog.SortedEligibleRows(session.settlement);
+            if (rows.Count == 0)
+            {
+                listing.Label("SettlementServices.Label.NoMarketGoodsAvailable".Translate());
+                listing.Gap();
+                return;
+            }
+
+            MarketItemGroup? lastGroup = null;
+            foreach (LocalMarketCatalogRow row in rows)
+            {
+                if (lastGroup != row.group)
+                {
+                    if (lastGroup != null) listing.Gap(4f);
+                    listing.Label(MarketGroupLabel(row.group));
+                    lastGroup = row.group;
+                }
+                DrawLocalMarketRow(listing, row);
+            }
+
+            listing.Gap(4f);
+            DrawLocalMarketCartSummary(listing);
+            listing.Gap();
+        }
+
+        private static string MarketGroupLabel(MarketItemGroup group)
+        {
+            switch (group)
+            {
+                case MarketItemGroup.Drinks: return "SettlementServices.Label.MarketGroupDrinks".Translate();
+                case MarketItemGroup.Meat: return "SettlementServices.Label.MarketGroupMeat".Translate();
+                case MarketItemGroup.Produce: return "SettlementServices.Label.MarketGroupProduce".Translate();
+                default: return "SettlementServices.Label.MarketGroupFood".Translate();
+            }
+        }
+
+        private static readonly int[] MarketQuickSetAmounts = { 1, 10, 100 };
+        private const float MarketQuickSetButtonWidth = 28f;
+        private const float MarketQuickSetButtonGap = 2f;
+
+        private void DrawLocalMarketRow(Listing_Standard listing, LocalMarketCatalogRow row)
+        {
+            int current = session.marketCartLines.Find(l => l.thingDefName == row.thingDef.defName)?.count ?? 0;
+            int max = row.availableStock;
+
+            Rect rowRect = listing.GetRect(28f);
+            Rect iconRect = new Rect(rowRect.x, rowRect.y, 28f, 28f);
+            Widgets.DefIcon(iconRect, row.thingDef, drawPlaceholder: true);
+
+            Rect minusRect = new Rect(rowRect.xMax - 90f, rowRect.y, 24f, 24f);
+            Rect amountRect = new Rect(rowRect.xMax - 60f, rowRect.y, 36f, 24f);
+            Rect plusRect = new Rect(rowRect.xMax - 24f, rowRect.y, 24f, 24f);
+
+            float quickSetBlockWidth = MarketQuickSetAmounts.Length * MarketQuickSetButtonWidth
+                + (MarketQuickSetAmounts.Length - 1) * MarketQuickSetButtonGap;
+            Rect quickSetBlock = new Rect(minusRect.x - 6f - quickSetBlockWidth, rowRect.y, quickSetBlockWidth, 24f);
+            Rect labelRect = new Rect(iconRect.xMax + 6f, rowRect.y, quickSetBlock.x - iconRect.xMax - 12f, rowRect.height);
+
+            TextAnchor prevAnchor = Text.Anchor;
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Widgets.Label(labelRect, "SettlementServices.Label.MarketRowLabel".Translate(row.thingDef.LabelCap, row.availableStock, row.unitPrice));
+            Text.Anchor = prevAnchor;
+
+            for (int i = 0; i < MarketQuickSetAmounts.Length; i++)
+            {
+                int amount = MarketQuickSetAmounts[i];
+                Rect quickSetRect = new Rect(quickSetBlock.x + i * (MarketQuickSetButtonWidth + MarketQuickSetButtonGap), rowRect.y, MarketQuickSetButtonWidth, 24f);
+
+                Color prevColor = GUI.color;
+                bool available = amount <= max;
+                if (!available) GUI.color = Color.gray;
+                if (Widgets.ButtonText(quickSetRect, amount.ToString()) && available) SetMarketCartCount(row.thingDef.defName, amount);
+                GUI.color = prevColor;
+            }
+
+            if (Widgets.ButtonText(minusRect, "-") && current > 0) SetMarketCartCount(row.thingDef.defName, current - 1);
+
+            Text.Anchor = TextAnchor.MiddleCenter;
+            Widgets.Label(amountRect, current.ToString());
+            Text.Anchor = prevAnchor;
+
+            if (Widgets.ButtonText(plusRect, "+") && current < max) SetMarketCartCount(row.thingDef.defName, current + 1);
+
+            listing.Gap(4f);
+        }
+
+        private void SetMarketCartCount(string thingDefName, int count)
+        {
+            MarketCartLine existing = session.marketCartLines.Find(l => l.thingDefName == thingDefName);
+            if (count <= 0)
+            {
+                if (existing != null) session.marketCartLines.Remove(existing);
+                return;
+            }
+
+            if (existing != null) existing.count = count;
+            else session.marketCartLines.Add(new MarketCartLine(thingDefName, count));
+        }
+
+        private void DrawLocalMarketCartSummary(Listing_Standard listing)
+        {
+            if (session.marketCartLines.Count == 0)
+            {
+                listing.Label("SettlementServices.Label.MarketCartEmpty".Translate());
+                return;
+            }
+
+            listing.Label("SettlementServices.Label.MarketCart".Translate());
+            foreach (MarketCartLine line in session.marketCartLines)
+            {
+                ThingDef thingDef = DefDatabase<ThingDef>.GetNamedSilentFail(line.thingDefName);
+                string label = thingDef != null ? thingDef.LabelCap.ToString() : line.thingDefName;
+                listing.Label("SettlementServices.Label.MarketCartLine".Translate(label, line.count));
+            }
+        }
+
         private void DrawCraftingProductionPlanSection(Listing_Standard listing)
         {
             if (session.craftingCommissionLines.Count == 0) return;
@@ -437,12 +588,18 @@ namespace Settlement_Services.UI
             }
         }
 
+        private const int MaxOptionPruningIterations = 4;
+
         private void PruneOptionSelections(Thing target, List<string> selectedKeys)
         {
-            if (selectedKeys.Count == 0) return;
-            var ctx = new SettlementServiceContext(SettlementServicesWorldComponent.Current, session.settlement, null, target, session.caravan, selectedKeys, session.selectedTierKey);
-            var validKeys = new HashSet<string>(session.def.Worker.GetDisplayOptions(ctx).Select(o => o.key));
-            selectedKeys.RemoveAll(k => !validKeys.Contains(k));
+            for (int iteration = 0; iteration < MaxOptionPruningIterations && selectedKeys.Count > 0; iteration++)
+            {
+                var ctx = new SettlementServiceContext(SettlementServicesWorldComponent.Current, session.settlement, null, target, session.caravan, selectedKeys, session.selectedTierKey);
+                var validKeys = new HashSet<string>(session.def.Worker.GetDisplayOptions(ctx).Select(o => o.key));
+                int before = selectedKeys.Count;
+                selectedKeys.RemoveAll(k => !validKeys.Contains(k));
+                if (selectedKeys.Count == before) break;
+            }
         }
 
         private void DrawCraftingCrafterSection(Listing_Standard listing)
@@ -521,9 +678,49 @@ namespace Settlement_Services.UI
                 if (!firstTarget) listing.GapLine();
                 firstTarget = false;
 
-                listing.Label("SettlementServices.Label.PerTargetOptionsHeading".Translate(target.LabelCap));
+                DrawPerTargetOptionsHeading(listing, target, i);
                 DrawOptionsForList(listing, options, optionKeys);
             }
+        }
+
+        private void DrawPerTargetOptionsHeading(Listing_Standard listing, Thing target, int index)
+        {
+            bool showApply = session.targets.Count >= 2;
+            Rect row = listing.GetRect(24f);
+
+            Rect labelRect = showApply ? new Rect(row.x, row.y, row.width - 190f, row.height) : row;
+            TextAnchor prevAnchor = Text.Anchor;
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Widgets.Label(labelRect, "SettlementServices.Label.PerTargetOptionsHeading".Translate(target.LabelCap));
+            Text.Anchor = prevAnchor;
+
+            if (!showApply) return;
+
+            Rect buttonRect = new Rect(row.xMax - 184f, row.y, 184f, row.height);
+            if (Widgets.ButtonText(buttonRect, "SettlementServices.Button.ApplyOptionsToAllGuests".Translate()))
+                ApplyGuestOptionsToAllOtherTargets(index);
+        }
+
+        private void ApplyGuestOptionsToAllOtherTargets(int sourceIndex)
+        {
+            List<string> sourceKeys = new List<string>(session.OptionsForTarget(sourceIndex));
+            bool anySkipped = false;
+
+            for (int i = 0; i < session.targets.Count; i++)
+            {
+                if (i == sourceIndex) continue;
+
+                List<string> destKeys = session.OptionsForTarget(i);
+                destKeys.Clear();
+                destKeys.AddRange(sourceKeys);
+
+                int before = destKeys.Count;
+                PruneOptionSelections(session.targets[i], destKeys);
+                if (destKeys.Count < before) anySkipped = true;
+            }
+
+            if (anySkipped)
+                Messages.Message("SettlementServices.Message.GuestOptionsSkippedForSomeGuests".Translate(), MessageTypeDefOf.CautionInput, historical: false);
         }
 
         private void DrawOptionsForList(Listing_Standard listing, List<ServiceDisplayOption> options, List<string> selectedKeys)
@@ -769,7 +966,8 @@ namespace Settlement_Services.UI
             }
 
             listing.Label("SettlementServices.Label.TotalCost".Translate(quote.totalCost));
-            listing.Label((session.def.durationLabelKey ?? "SettlementServices.Label.ExpectedDuration").Translate(quote.expectedDurationTicks.ToStringTicksToPeriod()));
+            if (!isLocalMarket)
+                listing.Label((session.def.durationLabelKey ?? "SettlementServices.Label.ExpectedDuration").Translate(quote.expectedDurationTicks.ToStringTicksToPeriod()));
         }
 
         private void DrawBottomButtons(Rect inRect, SettlementServiceQuote quote)

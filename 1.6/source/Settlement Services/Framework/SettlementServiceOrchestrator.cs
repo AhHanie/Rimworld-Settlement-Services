@@ -110,6 +110,8 @@ namespace Settlement_Services.Framework
                     domain.FreezeCraftingProductionPlan(jobId, productionPlan);
                 if (plan.AcceptedWorkerData is BuildingCommissionPlan buildingPlan)
                     domain.FreezeBuildingCommissionPlan(jobId, buildingPlan);
+                if (plan.AcceptedWorkerData is MarketPurchasePlan marketPlan)
+                    domain.FreezeMarketPurchasePlan(jobId, marketPlan);
                 domain.FreezeConsumedPlayerSuppliedInputs(jobId, plan.InputPlan.playerSuppliedConsumed);
                 return true;
             }

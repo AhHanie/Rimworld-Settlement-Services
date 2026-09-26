@@ -120,6 +120,7 @@
     <Compile Include="Framework\Defs\SettlementStockCategoryDef.cs" />
     <Compile Include="Framework\Defs\SettlementStockItem.cs" />
     <Compile Include="Framework\Defs\SettlementStockItemTier.cs" />
+    <Compile Include="Framework\Defs\LocalMarketDisplayOverridesDef.cs" />
     <Compile Include="Framework\Defs\CraftingCommissionExtension.cs" />
     <Compile Include="Framework\Defs\CraftingCommissionRecipeDef.cs" />
     <Compile Include="Framework\Defs\ServiceEventItemRewardExtension.cs" />
@@ -145,6 +146,8 @@
     <Compile Include="Framework\Dto\CraftingProductionPlan.cs" />
     <Compile Include="Framework\Dto\BuildingCommissionLine.cs" />
     <Compile Include="Framework\Dto\BuildingCommissionPlan.cs" />
+    <Compile Include="Framework\Dto\MarketCartLine.cs" />
+    <Compile Include="Framework\Dto\MarketPurchasePlan.cs" />
     <Compile Include="Framework\Dto\ServiceStockReservation.cs" />
     <Compile Include="Framework\Pricing\IServicePricingContext.cs" />
     <Compile Include="Framework\Pricing\ServicePricingEngine.cs" />
@@ -345,6 +348,7 @@
     <Compile Include="Services\Crafting\CraftingMaterialPreview.cs" />
     <Compile Include="Services\Crafting\CraftingCommissionServiceWorker.cs" />
 
+    <Compile Include="Services\Construction\BuildingCommissionExclusionsDef.cs" />
     <Compile Include="Services\Construction\BuildingCommissionCatalog.cs" />
     <Compile Include="Services\Construction\BuildingCommissionPlanner.cs" />
     <Compile Include="Services\Construction\BuildingCommissionPlanValidator.cs" />
@@ -357,6 +361,9 @@
 
 
     <Compile Include="Services\Vehicle\VehicleMaterialPlanner.cs" />
+
+    <Compile Include="Services\Market\LocalMarketCatalog.cs" />
+    <Compile Include="Services\Market\LocalMarketServiceWorker.cs" />
 
     <Compile Include="Services\Mechanitor\MechRepairServiceWorker.cs" />
     <Compile Include="Services\Mechanitor\MechRechargeServiceWorker.cs" />

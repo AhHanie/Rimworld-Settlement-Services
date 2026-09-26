@@ -10,11 +10,33 @@ namespace Settlement_Services.Services.Construction
 {
     public static class BuildingCommissionCatalog
     {
+        private static HashSet<string> _excludedBuildingDefNames;
+
+        private static HashSet<string> ExcludedBuildingDefNames
+        {
+            get
+            {
+                if (_excludedBuildingDefNames == null)
+                {
+                    _excludedBuildingDefNames = new HashSet<string>();
+                    foreach (BuildingCommissionExclusionsDef def in DefDatabase<BuildingCommissionExclusionsDef>.AllDefsListForReading)
+                    {
+                        foreach (string name in def.excludedBuildingDefNames)
+                        {
+                            if (!name.NullOrEmpty()) _excludedBuildingDefNames.Add(name);
+                        }
+                    }
+                }
+                return _excludedBuildingDefNames;
+            }
+        }
+
         public static bool IsEligibleBuildingDef(ThingDef building) =>
             building != null
             && building.category == ThingCategory.Building
             && building.BuildableByPlayer
-            && building.Minifiable;
+            && building.Minifiable
+            && !ExcludedBuildingDefNames.Contains(building.defName);
 
         public static bool IsEligibleAtSettlement(ThingDef building, Settlement settlement)
         {

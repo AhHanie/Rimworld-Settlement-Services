@@ -5,6 +5,7 @@ using Settlement_Services.Domain;
 using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework;
 using Settlement_Services.Framework.Dto;
+using Settlement_Services.Services.Market;
 
 namespace Settlement_Services.UI
 {
@@ -51,6 +52,9 @@ namespace Settlement_Services.UI
                 Messages.Message((reasonKey ?? "SettlementServices.Message.RequestFailed").Translate(), MessageTypeDefOf.RejectInput, historical: false);
                 return;
             }
+
+            if (session.def.Worker is LocalMarketServiceWorker && session.caravan != null)
+                SettlementServiceOrchestrator.CollectJob(job.jobId, session.caravan);
 
             Messages.Message("SettlementServices.Message.ServiceRequested".Translate(), MessageTypeDefOf.PositiveEvent, historical: false);
             dialogToClose.Close();

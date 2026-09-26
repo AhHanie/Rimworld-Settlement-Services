@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_LocalMarket</defName>
+    <category>SettlementService_Commerce</category>
+    <label>local market</label>
+    <description>Buy food, drinks, and produce directly from the settlement's own stock. Fill your cart, pay, and the goods are loaded into your caravan immediately.</description>
+    <workerClass>Settlement_Services.Services.Market.LocalMarketServiceWorker</workerClass>
+    <requiredTechLevel>Neolithic</requiredTechLevel>
+    <minimumCost>0</minimumCost>
+    <wealthScale>0</wealthScale>
+    <duration>0</duration>
+    <eventChancePct>0</eventChancePct>
+    <targetRule>None</targetRule>
+    <batchMode>None</batchMode>
+    <allowRemoteDiscovery>false</allowRemoteDiscovery>
+    <allowRemoteRequest>false</allowRemoteRequest>
+    <iconTexPath>SettlementServices/UI/Icons/market-stall</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

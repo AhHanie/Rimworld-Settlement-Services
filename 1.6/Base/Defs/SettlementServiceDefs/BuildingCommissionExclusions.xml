@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Services.Construction.BuildingCommissionExclusionsDef>
+    <defName>SettlementServices_BuildingCommissionExclusions</defName>
+    <excludedBuildingDefNames />
+  </Settlement_Services.Services.Construction.BuildingCommissionExclusionsDef>
+
+</Defs>
