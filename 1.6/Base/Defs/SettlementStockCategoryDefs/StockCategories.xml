@@ -753,71 +753,48 @@
     <defName>SettlementStock_Meat</defName>
     <label>meat</label>
     <description>Meat.</description>
-    <stockItems>
+    <dynamicStockPools>
       <li>
-        <thingDefName>Meat_Cow</thingDefName>
-        <capacity>500</capacity>
-        <refreshAmount>20</refreshAmount>
-        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <id>rawMeatRotation</id>
+        <thingCategoryDefName>MeatRaw</thingCategoryDefName>
+        <requireHumanEdible>true</requireHumanEdible>
+        <requireNutritionGiving>true</requireNutritionGiving>
+        <excludeDrugs>true</excludeDrugs>
         <minFactionTechLevel>Neolithic</minFactionTechLevel>
+        <minDifferentGoods>2</minDifferentGoods>
+        <maxDifferentGoods>3</maxDifferentGoods>
+        <minCapacity>150</minCapacity>
+        <maxCapacity>350</maxCapacity>
+        <minRefreshAmount>10</minRefreshAmount>
+        <maxRefreshAmount>30</maxRefreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <replaceCount>1</replaceCount>
         <techLevelTiers>
           <li>
             <minFactionTechLevel>Industrial</minFactionTechLevel>
-            <capacity>1000</capacity>
-            <refreshAmount>40</refreshAmount>
+            <minDifferentGoods>3</minDifferentGoods>
+            <maxDifferentGoods>4</maxDifferentGoods>
+            <minCapacity>200</minCapacity>
+            <maxCapacity>450</maxCapacity>
+            <minRefreshAmount>15</minRefreshAmount>
+            <maxRefreshAmount>40</maxRefreshAmount>
             <refreshIntervalTicks>60000</refreshIntervalTicks>
+            <replaceCount>1</replaceCount>
           </li>
           <li>
             <minFactionTechLevel>Spacer</minFactionTechLevel>
-            <capacity>2000</capacity>
-            <refreshAmount>80</refreshAmount>
+            <minDifferentGoods>4</minDifferentGoods>
+            <maxDifferentGoods>6</maxDifferentGoods>
+            <minCapacity>350</minCapacity>
+            <maxCapacity>500</maxCapacity>
+            <minRefreshAmount>25</minRefreshAmount>
+            <maxRefreshAmount>65</maxRefreshAmount>
             <refreshIntervalTicks>60000</refreshIntervalTicks>
+            <replaceCount>2</replaceCount>
           </li>
         </techLevelTiers>
       </li>
-      <li>
-        <thingDefName>Meat_Duck</thingDefName>
-        <capacity>500</capacity>
-        <refreshAmount>20</refreshAmount>
-        <refreshIntervalTicks>60000</refreshIntervalTicks>
-        <minFactionTechLevel>Neolithic</minFactionTechLevel>
-        <techLevelTiers>
-          <li>
-            <minFactionTechLevel>Industrial</minFactionTechLevel>
-            <capacity>1000</capacity>
-            <refreshAmount>40</refreshAmount>
-            <refreshIntervalTicks>60000</refreshIntervalTicks>
-          </li>
-          <li>
-            <minFactionTechLevel>Spacer</minFactionTechLevel>
-            <capacity>2000</capacity>
-            <refreshAmount>80</refreshAmount>
-            <refreshIntervalTicks>60000</refreshIntervalTicks>
-          </li>
-        </techLevelTiers>
-      </li>
-      <li>
-        <thingDefName>Meat_Turkey</thingDefName>
-        <capacity>500</capacity>
-        <refreshAmount>20</refreshAmount>
-        <refreshIntervalTicks>60000</refreshIntervalTicks>
-        <minFactionTechLevel>Neolithic</minFactionTechLevel>
-        <techLevelTiers>
-          <li>
-            <minFactionTechLevel>Industrial</minFactionTechLevel>
-            <capacity>1000</capacity>
-            <refreshAmount>40</refreshAmount>
-            <refreshIntervalTicks>60000</refreshIntervalTicks>
-          </li>
-          <li>
-            <minFactionTechLevel>Spacer</minFactionTechLevel>
-            <capacity>2000</capacity>
-            <refreshAmount>80</refreshAmount>
-            <refreshIntervalTicks>60000</refreshIntervalTicks>
-          </li>
-        </techLevelTiers>
-      </li>
-    </stockItems>
+    </dynamicStockPools>
   </Settlement_Services.Framework.Defs.SettlementStockCategoryDef>
 
   <Settlement_Services.Framework.Defs.SettlementStockCategoryDef>
@@ -825,69 +802,6 @@
     <label>plant matter</label>
     <description>Plants.</description>
     <stockItems>
-      <li>
-        <thingDefName>RawCorn</thingDefName>
-        <capacity>1000</capacity>
-        <refreshAmount>50</refreshAmount>
-        <refreshIntervalTicks>60000</refreshIntervalTicks>
-        <minFactionTechLevel>Neolithic</minFactionTechLevel>
-        <techLevelTiers>
-          <li>
-            <minFactionTechLevel>Industrial</minFactionTechLevel>
-            <capacity>2000</capacity>
-            <refreshAmount>100</refreshAmount>
-            <refreshIntervalTicks>60000</refreshIntervalTicks>
-          </li>
-          <li>
-            <minFactionTechLevel>Spacer</minFactionTechLevel>
-            <capacity>4000</capacity>
-            <refreshAmount>200</refreshAmount>
-            <refreshIntervalTicks>60000</refreshIntervalTicks>
-          </li>
-        </techLevelTiers>
-      </li>
-      <li>
-        <thingDefName>RawRice</thingDefName>
-        <capacity>1000</capacity>
-        <refreshAmount>50</refreshAmount>
-        <refreshIntervalTicks>60000</refreshIntervalTicks>
-        <minFactionTechLevel>Neolithic</minFactionTechLevel>
-        <techLevelTiers>
-          <li>
-            <minFactionTechLevel>Industrial</minFactionTechLevel>
-            <capacity>2000</capacity>
-            <refreshAmount>100</refreshAmount>
-            <refreshIntervalTicks>60000</refreshIntervalTicks>
-          </li>
-          <li>
-            <minFactionTechLevel>Spacer</minFactionTechLevel>
-            <capacity>4000</capacity>
-            <refreshAmount>200</refreshAmount>
-            <refreshIntervalTicks>60000</refreshIntervalTicks>
-          </li>
-        </techLevelTiers>
-      </li>
-      <li>
-        <thingDefName>RawPotatoes</thingDefName>
-        <capacity>1000</capacity>
-        <refreshAmount>50</refreshAmount>
-        <refreshIntervalTicks>60000</refreshIntervalTicks>
-        <minFactionTechLevel>Neolithic</minFactionTechLevel>
-        <techLevelTiers>
-          <li>
-            <minFactionTechLevel>Industrial</minFactionTechLevel>
-            <capacity>2000</capacity>
-            <refreshAmount>100</refreshAmount>
-            <refreshIntervalTicks>60000</refreshIntervalTicks>
-          </li>
-          <li>
-            <minFactionTechLevel>Spacer</minFactionTechLevel>
-            <capacity>4000</capacity>
-            <refreshAmount>200</refreshAmount>
-            <refreshIntervalTicks>60000</refreshIntervalTicks>
-          </li>
-        </techLevelTiers>
-      </li>
       <li>
         <thingDefName>PsychoidLeaves</thingDefName>
         <capacity>250</capacity>
@@ -910,6 +824,48 @@
         </techLevelTiers>
       </li>
     </stockItems>
+    <dynamicStockPools>
+      <li>
+        <id>rawPlantRotation</id>
+        <thingCategoryDefName>PlantFoodRaw</thingCategoryDefName>
+        <requireHumanEdible>true</requireHumanEdible>
+        <requireNutritionGiving>true</requireNutritionGiving>
+        <excludeDrugs>true</excludeDrugs>
+        <minFactionTechLevel>Neolithic</minFactionTechLevel>
+        <minDifferentGoods>2</minDifferentGoods>
+        <maxDifferentGoods>2</maxDifferentGoods>
+        <minCapacity>150</minCapacity>
+        <maxCapacity>300</maxCapacity>
+        <minRefreshAmount>20</minRefreshAmount>
+        <maxRefreshAmount>50</maxRefreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <replaceCount>1</replaceCount>
+        <techLevelTiers>
+          <li>
+            <minFactionTechLevel>Industrial</minFactionTechLevel>
+            <minDifferentGoods>2</minDifferentGoods>
+            <maxDifferentGoods>3</maxDifferentGoods>
+            <minCapacity>250</minCapacity>
+            <maxCapacity>500</maxCapacity>
+            <minRefreshAmount>35</minRefreshAmount>
+            <maxRefreshAmount>75</maxRefreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+            <replaceCount>1</replaceCount>
+          </li>
+          <li>
+            <minFactionTechLevel>Spacer</minFactionTechLevel>
+            <minDifferentGoods>3</minDifferentGoods>
+            <maxDifferentGoods>5</maxDifferentGoods>
+            <minCapacity>400</minCapacity>
+            <maxCapacity>800</maxCapacity>
+            <minRefreshAmount>50</minRefreshAmount>
+            <maxRefreshAmount>110</maxRefreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+            <replaceCount>2</replaceCount>
+          </li>
+        </techLevelTiers>
+      </li>
+    </dynamicStockPools>
   </Settlement_Services.Framework.Defs.SettlementStockCategoryDef>
 
 </Defs>

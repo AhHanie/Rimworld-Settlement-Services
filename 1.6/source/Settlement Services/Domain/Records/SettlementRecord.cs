@@ -14,6 +14,7 @@ namespace Settlement_Services.Domain.Records
 
         public SettlementCapabilityRecord capability;
         public List<StockRecord> stock = new List<StockRecord>();
+        public List<DynamicStockPoolRecord> dynamicStockPools = new List<DynamicStockPoolRecord>();
 
         public InvestmentRecord investment;
 
@@ -34,6 +35,7 @@ namespace Settlement_Services.Domain.Records
             Scribe_Collections.Look(ref reservations, "reservations", LookMode.Deep);
             Scribe_Deep.Look(ref capability, "capability");
             Scribe_Collections.Look(ref stock, "stock", LookMode.Deep);
+            Scribe_Collections.Look(ref dynamicStockPools, "dynamicStockPools", LookMode.Deep);
             Scribe_Deep.Look(ref investment, "investment");
             Scribe_Collections.Look(ref recentServiceEventTicks, "recentServiceEventTicks", LookMode.Value, LookMode.Value);
             Scribe_Collections.Look(ref hiringCandidates, "hiringCandidates", LookMode.Deep);
@@ -48,6 +50,8 @@ namespace Settlement_Services.Domain.Records
                 if (discoveries == null) discoveries = new List<DiscoveryRecord>();
                 if (reservations == null) reservations = new List<ReservationRecord>();
                 if (stock == null) stock = new List<StockRecord>();
+                if (dynamicStockPools == null) dynamicStockPools = new List<DynamicStockPoolRecord>();
+                dynamicStockPools.RemoveAll(p => p == null || p.poolKey.NullOrEmpty());
                 if (recentServiceEventTicks == null) recentServiceEventTicks = new Dictionary<string, int>();
                 if (hiringCandidates == null) hiringCandidates = new List<HiringCandidateRecord>();
                 hiringCandidates.RemoveAll(c => c == null || c.pawn == null || c.pawn.Destroyed || c.pawn.Dead);

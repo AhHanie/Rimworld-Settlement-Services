@@ -93,6 +93,9 @@
     <Compile Include="Domain\Records\ReservationRecord.cs" />
     <Compile Include="Domain\Records\SettlementCapabilityRecord.cs" />
     <Compile Include="Domain\Records\StockRecord.cs" />
+    <Compile Include="Domain\Records\DynamicStockPoolRecord.cs" />
+    <Compile Include="Domain\Records\DynamicStockEntryRecord.cs" />
+    <Compile Include="Domain\DynamicStockEngine.cs" />
     <Compile Include="Domain\Migration\ISettlementServiceMigration.cs" />
     <Compile Include="Domain\Migration\SettlementServiceMigrationRegistry.cs" />
     <Compile Include="Domain\Migration\SettlementServiceMigrationV1ToV2.cs" />
@@ -120,6 +123,8 @@
     <Compile Include="Framework\Defs\SettlementStockCategoryDef.cs" />
     <Compile Include="Framework\Defs\SettlementStockItem.cs" />
     <Compile Include="Framework\Defs\SettlementStockItemTier.cs" />
+    <Compile Include="Framework\Defs\SettlementDynamicStockPool.cs" />
+    <Compile Include="Framework\Defs\SettlementDynamicStockPoolTier.cs" />
     <Compile Include="Framework\Defs\LocalMarketDisplayOverridesDef.cs" />
     <Compile Include="Framework\Defs\CraftingCommissionExtension.cs" />
     <Compile Include="Framework\Defs\CraftingCommissionRecipeDef.cs" />
@@ -252,6 +257,10 @@
     <Compile Include="Framework\Specialty\SettlementSpecialtyService.cs" />
     <Compile Include="Framework\Stock\SettlementStockCatalog.cs" />
     <Compile Include="Framework\Stock\SettlementStockEffectiveSettings.cs" />
+    <Compile Include="Framework\Stock\SettlementDynamicStockCatalog.cs" />
+    <Compile Include="Framework\Stock\SettlementDynamicStockEffectiveSettings.cs" />
+    <Compile Include="Framework\Stock\SettlementDynamicStockPoolReference.cs" />
+    <Compile Include="Framework\Stock\DynamicStockEntryView.cs" />
     <Compile Include="Framework\Stock\SettlementStockItemReference.cs" />
     <Compile Include="Framework\Stock\SettlementStockService.cs" />
     <Compile Include="Framework\Stock\StockAllocationResult.cs" />
@@ -292,6 +301,7 @@
 
     <Compile Include="Debug\SettlementCapabilityDebugAction.cs" />
     <Compile Include="Debug\ServiceRecordsDebugAction.cs" />
+    <Compile Include="Debug\StockRefreshDebugAction.cs" />
     <Compile Include="Debug\ServiceEventDebugAction.cs" />
     <Compile Include="Debug\ServiceBalanceReportDebugAction.cs" />
     <Compile Include="Debug\CaravanSilverDebugGizmoPatch.cs" />

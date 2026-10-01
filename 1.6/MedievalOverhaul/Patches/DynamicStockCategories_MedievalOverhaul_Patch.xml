@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_Food"]/dynamicStockPools</xpath>
+    <nomatch Class="PatchOperationAdd">
+      <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_Food"]</xpath>
+      <value>
+        <dynamicStockPools />
+      </value>
+    </nomatch>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_Food"]/dynamicStockPools</xpath>
+    <value>
+      <li>
+        <id>moMilkRotation</id>
+        <thingCategoryDefName>DankPyon_Milk</thingCategoryDefName>
+        <requireHumanEdible>true</requireHumanEdible>
+        <requireNutritionGiving>true</requireNutritionGiving>
+        <excludeDrugs>true</excludeDrugs>
+        <minFactionTechLevel>Neolithic</minFactionTechLevel>
+        <minDifferentGoods>1</minDifferentGoods>
+        <maxDifferentGoods>1</maxDifferentGoods>
+        <minCapacity>35</minCapacity>
+        <maxCapacity>75</maxCapacity>
+        <minRefreshAmount>5</minRefreshAmount>
+        <maxRefreshAmount>15</maxRefreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <replaceCount>1</replaceCount>
+        <techLevelTiers>
+          <li>
+            <minFactionTechLevel>Medieval</minFactionTechLevel>
+            <minDifferentGoods>1</minDifferentGoods>
+            <maxDifferentGoods>2</maxDifferentGoods>
+            <minCapacity>50</minCapacity>
+            <maxCapacity>100</maxCapacity>
+            <minRefreshAmount>8</minRefreshAmount>
+            <maxRefreshAmount>20</maxRefreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+            <replaceCount>1</replaceCount>
+          </li>
+          <li>
+            <minFactionTechLevel>Industrial</minFactionTechLevel>
+            <minDifferentGoods>2</minDifferentGoods>
+            <maxDifferentGoods>3</maxDifferentGoods>
+            <minCapacity>65</minCapacity>
+            <maxCapacity>125</maxCapacity>
+            <minRefreshAmount>10</minRefreshAmount>
+            <maxRefreshAmount>25</maxRefreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+            <replaceCount>1</replaceCount>
+          </li>
+        </techLevelTiers>
+      </li>
+      <li>
+        <id>moCheeseBreadRotation</id>
+        <thingCategoryDefName>DankPyon_Cheese</thingCategoryDefName>
+        <thingDefNames>
+          <li>DankPyon_MealBread</li>
+        </thingDefNames>
+        <requireHumanEdible>true</requireHumanEdible>
+        <requireNutritionGiving>true</requireNutritionGiving>
+        <excludeDrugs>true</excludeDrugs>
+        <minFactionTechLevel>Neolithic</minFactionTechLevel>
+        <minDifferentGoods>1</minDifferentGoods>
+        <maxDifferentGoods>2</maxDifferentGoods>
+        <minCapacity>12</minCapacity>
+        <maxCapacity>30</maxCapacity>
+        <minRefreshAmount>2</minRefreshAmount>
+        <maxRefreshAmount>7</maxRefreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <replaceCount>1</replaceCount>
+        <techLevelTiers>
+          <li>
+            <minFactionTechLevel>Medieval</minFactionTechLevel>
+            <minDifferentGoods>2</minDifferentGoods>
+            <maxDifferentGoods>3</maxDifferentGoods>
+            <minCapacity>20</minCapacity>
+            <maxCapacity>45</maxCapacity>
+            <minRefreshAmount>3</minRefreshAmount>
+            <maxRefreshAmount>10</maxRefreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+            <replaceCount>1</replaceCount>
+          </li>
+          <li>
+            <minFactionTechLevel>Industrial</minFactionTechLevel>
+            <minDifferentGoods>3</minDifferentGoods>
+            <maxDifferentGoods>4</maxDifferentGoods>
+            <minCapacity>30</minCapacity>
+            <maxCapacity>60</maxCapacity>
+            <minRefreshAmount>5</minRefreshAmount>
+            <maxRefreshAmount>13</maxRefreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+            <replaceCount>1</replaceCount>
+          </li>
+        </techLevelTiers>
+      </li>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_Drugs"]/dynamicStockPools</xpath>
+    <nomatch Class="PatchOperationAdd">
+      <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_Drugs"]</xpath>
+      <value>
+        <dynamicStockPools />
+      </value>
+    </nomatch>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_Drugs"]/dynamicStockPools</xpath>
+    <value>
+      <li>
+        <id>moAlcoholRotation</id>
+        <thingDefNames>
+          <li>DankPyon_Ale</li>
+          <li>DankPyon_Cider</li>
+          <li>DankPyon_Mead</li>
+          <li>DankPyon_Wine</li>
+        </thingDefNames>
+        <requireHumanEdible>true</requireHumanEdible>
+        <minFactionTechLevel>Neolithic</minFactionTechLevel>
+        <minDifferentGoods>1</minDifferentGoods>
+        <maxDifferentGoods>2</maxDifferentGoods>
+        <minCapacity>60</minCapacity>
+        <maxCapacity>120</maxCapacity>
+        <minRefreshAmount>6</minRefreshAmount>
+        <maxRefreshAmount>12</maxRefreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <replaceCount>1</replaceCount>
+        <techLevelTiers>
+          <li>
+            <minFactionTechLevel>Medieval</minFactionTechLevel>
+            <minDifferentGoods>2</minDifferentGoods>
+            <maxDifferentGoods>3</maxDifferentGoods>
+            <minCapacity>80</minCapacity>
+            <maxCapacity>150</maxCapacity>
+            <minRefreshAmount>8</minRefreshAmount>
+            <maxRefreshAmount>15</maxRefreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+            <replaceCount>1</replaceCount>
+          </li>
+          <li>
+            <minFactionTechLevel>Industrial</minFactionTechLevel>
+            <minDifferentGoods>3</minDifferentGoods>
+            <maxDifferentGoods>4</maxDifferentGoods>
+            <minCapacity>100</minCapacity>
+            <maxCapacity>200</maxCapacity>
+            <minRefreshAmount>10</minRefreshAmount>
+            <maxRefreshAmount>20</maxRefreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+            <replaceCount>1</replaceCount>
+          </li>
+        </techLevelTiers>
+      </li>
+    </value>
+  </Operation>
+
+</Patch>

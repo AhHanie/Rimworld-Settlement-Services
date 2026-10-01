@@ -8,6 +8,7 @@ namespace Settlement_Services.Domain.Records
         public string stockThingDefName;
         public int amountReserved;
         public int reservedAtTick;
+        public bool usesDynamicStock;
 
         public void ExposeData()
         {
@@ -15,6 +16,7 @@ namespace Settlement_Services.Domain.Records
             Scribe_Values.Look(ref stockThingDefName, "stockThingDefName");
             Scribe_Values.Look(ref amountReserved, "amountReserved");
             Scribe_Values.Look(ref reservedAtTick, "reservedAtTick");
+            Scribe_Values.Look(ref usesDynamicStock, "usesDynamicStock");
         }
     }
 }

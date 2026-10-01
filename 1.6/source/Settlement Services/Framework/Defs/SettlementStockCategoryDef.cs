@@ -7,19 +7,22 @@ namespace Settlement_Services.Framework.Defs
     public class SettlementStockCategoryDef : Def
     {
         public List<SettlementStockItem> stockItems = new List<SettlementStockItem>();
+        public List<SettlementDynamicStockPool> dynamicStockPools = new List<SettlementDynamicStockPool>();
 
         public override IEnumerable<string> ConfigErrors()
         {
             foreach (string e in base.ConfigErrors()) yield return e;
 
-            if (stockItems.NullOrEmpty())
+            if (stockItems.NullOrEmpty() && dynamicStockPools.NullOrEmpty())
             {
-                yield return "stockItems must not be empty.";
+                yield return "stockItems and dynamicStockPools must not both be empty.";
                 yield break;
             }
 
+            foreach (string e in DynamicStockPoolErrors()) yield return e;
+
             var seenNames = new HashSet<string>();
-            foreach (SettlementStockItem item in stockItems)
+            foreach (SettlementStockItem item in stockItems ?? new List<SettlementStockItem>())
             {
                 if (item.thingDefName.NullOrEmpty())
                 {
@@ -79,6 +82,29 @@ namespace Settlement_Services.Framework.Defs
                     previousThreshold = (int)tier.minFactionTechLevel;
                     havePreviousThreshold = true;
                 }
+            }
+        }
+
+        private IEnumerable<string> DynamicStockPoolErrors()
+        {
+            if (dynamicStockPools.NullOrEmpty()) yield break;
+
+            var seenIds = new HashSet<string>();
+            for (int i = 0; i < dynamicStockPools.Count; i++)
+            {
+                SettlementDynamicStockPool pool = dynamicStockPools[i];
+                if (pool == null)
+                {
+                    yield return $"dynamicStockPools[{i}] is null.";
+                    continue;
+                }
+
+                string owner = $"dynamicStockPools entry {(pool.id.NullOrEmpty() ? i.ToString() : pool.id)}";
+                if (!pool.id.NullOrEmpty() && !seenIds.Add(pool.id))
+                    yield return $"dynamicStockPools has a duplicate id {pool.id}.";
+
+                foreach (string e in pool.SettingsErrors(owner)) yield return e;
+                foreach (string e in pool.SourceErrors(owner)) yield return e;
             }
         }
     }

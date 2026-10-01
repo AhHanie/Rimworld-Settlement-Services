@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using LudeonTK;
 using RimWorld;
@@ -49,6 +50,24 @@ namespace Settlement_Services.Debug
                 {
                     SettlementStockEffectiveSettings settings = SettlementStockService.EffectiveSettings(settlement, reference);
                     Logger.Message($"    {reference.thing.defName}: tier={settings.selectedThreshold} capacity={settings.capacity} refreshAmount={settings.refreshAmount} refreshIntervalTicks={settings.refreshIntervalTicks}");
+                }
+
+                IReadOnlyList<DynamicStockEntryView> offered = SettlementStockService.OfferedDynamicStock(settlement);
+                foreach (SettlementDynamicStockPoolReference poolRef in SettlementDynamicStockCatalog.PoolsFor(category))
+                {
+                    bool eligible = settlement.Faction?.def != null && SettlementDynamicStockEffectiveSettings.IsEligible(poolRef.pool, settlement.Faction.def.techLevel);
+                    if (!eligible)
+                    {
+                        Logger.Message($"    pool {poolRef.pool.id}: not eligible for faction tech {settlement.Faction?.def?.techLevel}, candidates={poolRef.candidates.Count}");
+                        continue;
+                    }
+
+                    SettlementDynamicStockEffectiveSettings settings = SettlementDynamicStockEffectiveSettings.For(poolRef.pool, settlement.Faction.def.techLevel);
+                    Logger.Message($"    pool {poolRef.pool.id}: tier={settings.selectedThreshold} goods={settings.minDifferentGoods}-{settings.maxDifferentGoods} capacity={settings.minCapacity}-{settings.maxCapacity} "
+                        + $"refreshAmount={settings.minRefreshAmount}-{settings.maxRefreshAmount} refreshIntervalTicks={settings.refreshIntervalTicks} replaceCount={settings.replaceCount} candidates={poolRef.candidates.Count}");
+
+                    foreach (DynamicStockEntryView view in offered.Where(v => v.poolKey == poolRef.key).OrderBy(v => v.thingDefName, StringComparer.Ordinal))
+                        Logger.Message($"      {view.thingDefName}: {view.currentAmount}/{view.baseCapacity} (base capacity)");
                 }
             }
 

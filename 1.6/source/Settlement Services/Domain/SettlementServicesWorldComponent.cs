@@ -13,6 +13,7 @@ using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Custody;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Payment;
+using Settlement_Services.Framework.Stock;
 
 namespace Settlement_Services.Domain
 {
@@ -46,6 +47,7 @@ namespace Settlement_Services.Domain
         private Dictionary<int, List<ServiceJobRecord>> jobsBySettlement;
         private Dictionary<int, ServiceJobRecord> jobsById;
         private List<ServiceJobRecord> activeJobsIndex;
+        private Dictionary<int, int> dynamicStockSyncTicks = new Dictionary<int, int>();
 
         public static SettlementServicesWorldComponent Current => Find.World?.GetComponent<SettlementServicesWorldComponent>();
 
@@ -460,6 +462,8 @@ namespace Settlement_Services.Domain
                 stockThingDefName = thingDefName,
                 amountReserved = amount,
                 reservedAtTick = Find.TickManager.TicksGame,
+                usesDynamicStock = SettlementStockCatalog.ItemFor(thingDefName) == null
+                    && DynamicStockEngine.FindOfferedEntry(record, thingDefName, out _) != null,
             };
             record.reservations.Add(reservation);
             return reservation;
@@ -669,8 +673,89 @@ namespace Settlement_Services.Domain
         public int TotalReserved(int settlementWorldObjectId, string thingDefName)
         {
             if (!settlementsByWorldObjectId.TryGetValue(settlementWorldObjectId, out SettlementRecord record)) return 0;
-            return record.reservations.Where(r => r.stockThingDefName == thingDefName).Sum(r => r.amountReserved);
+            return record.reservations.Where(r => !r.usesDynamicStock && r.stockThingDefName == thingDefName).Sum(r => r.amountReserved);
         }
+
+        public int TotalDynamicReserved(int settlementWorldObjectId, string thingDefName)
+        {
+            if (!settlementsByWorldObjectId.TryGetValue(settlementWorldObjectId, out SettlementRecord record)) return 0;
+            return record.reservations.Where(r => r.usesDynamicStock && r.stockThingDefName == thingDefName).Sum(r => r.amountReserved);
+        }
+
+        public void SyncDynamicStock(Settlement settlement)
+        {
+            if (settlement?.Faction?.def == null) return;
+
+            int now = Find.TickManager.TicksGame;
+            if (dynamicStockSyncTicks.TryGetValue(settlement.ID, out int lastSyncTick) && lastSyncTick == now) return;
+            dynamicStockSyncTicks[settlement.ID] = now;
+
+            DynamicStockEngine.Sync(GetOrCreateSettlementRecord(settlement.ID), settlement, now);
+        }
+
+        public void MarkStockRefreshDue(Settlement settlement)
+        {
+            if (settlement?.Faction?.def == null) return;
+
+            SyncDynamicStock(settlement);
+
+            SettlementRecord record = GetOrCreateSettlementRecord(settlement.ID);
+            DynamicStockEngine.MarkRefreshDue(record, settlement.Faction.def.techLevel, Find.TickManager.TicksGame);
+
+            foreach (StockRecord stock in record.stock)
+            {
+                SettlementStockItemReference reference = SettlementStockCatalog.ItemFor(stock.stockThingDefName);
+                if (reference == null || !SettlementStockService.IsEligibleForSettlement(settlement, reference)) continue;
+                stock.lastRefreshTick -= SettlementStockService.EffectiveRefreshIntervalTicks(settlement, reference);
+            }
+
+            dynamicStockSyncTicks.Remove(settlement.ID);
+        }
+
+        public IReadOnlyList<DynamicStockEntryView> OfferedDynamicStock(int settlementWorldObjectId)
+        {
+            if (!settlementsByWorldObjectId.TryGetValue(settlementWorldObjectId, out SettlementRecord record)) return Array.Empty<DynamicStockEntryView>();
+
+            var views = new List<DynamicStockEntryView>();
+            foreach (DynamicStockPoolRecord pool in record.dynamicStockPools)
+            {
+                if (!pool.wasEligible) continue;
+
+                string categoryDefName = SettlementDynamicStockCatalog.PoolFor(pool.poolKey)?.category.defName;
+                if (categoryDefName == null) continue;
+
+                foreach (DynamicStockEntryRecord entry in pool.entries)
+                    if (!entry.retired) views.Add(ViewOf(pool, entry, categoryDefName));
+            }
+            return views;
+        }
+
+        public bool TryGetOfferedDynamicStock(int settlementWorldObjectId, string thingDefName, out DynamicStockEntryView view)
+        {
+            view = default(DynamicStockEntryView);
+            if (!settlementsByWorldObjectId.TryGetValue(settlementWorldObjectId, out SettlementRecord record)) return false;
+
+            DynamicStockEntryRecord entry = DynamicStockEngine.FindOfferedEntry(record, thingDefName, out DynamicStockPoolRecord pool);
+            if (entry == null) return false;
+
+            string categoryDefName = SettlementDynamicStockCatalog.PoolFor(pool.poolKey)?.category.defName;
+            if (categoryDefName == null) return false;
+
+            view = ViewOf(pool, entry, categoryDefName);
+            return true;
+        }
+
+        public List<int> PruneStaleDynamicStock(SettlementRecord record) => DynamicStockEngine.PruneStale(record);
+
+        private static DynamicStockEntryView ViewOf(DynamicStockPoolRecord pool, DynamicStockEntryRecord entry, string categoryDefName) =>
+            new DynamicStockEntryView
+            {
+                thingDefName = entry.thingDefName,
+                categoryDefName = categoryDefName,
+                poolKey = pool.poolKey,
+                baseCapacity = entry.baseCapacity,
+                currentAmount = entry.currentAmount,
+            };
 
         public void ConsumeReservedStock(int jobId, string thingDefName)
         {
@@ -681,8 +766,16 @@ namespace Settlement_Services.Domain
             ReservationRecord reservation = record.reservations.Find(r => r.jobId == jobId && r.stockThingDefName == thingDefName);
             if (reservation == null) return;
 
-            StockRecord stock = record.stock.Find(s => s.stockThingDefName == thingDefName);
-            if (stock != null) stock.currentAmount = Mathf.Max(0, stock.currentAmount - reservation.amountReserved);
+            if (reservation.usesDynamicStock)
+            {
+                DynamicStockEntryRecord dynamicEntry = DynamicStockEngine.FindEntry(record, thingDefName);
+                if (dynamicEntry != null) dynamicEntry.currentAmount = Mathf.Max(0, dynamicEntry.currentAmount - reservation.amountReserved);
+            }
+            else
+            {
+                StockRecord stock = record.stock.Find(s => s.stockThingDefName == thingDefName);
+                if (stock != null) stock.currentAmount = Mathf.Max(0, stock.currentAmount - reservation.amountReserved);
+            }
 
             record.reservations.Remove(reservation);
         }

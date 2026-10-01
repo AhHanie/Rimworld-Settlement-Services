@@ -39,8 +39,8 @@ namespace Settlement_Services.Services.Medical
             SettlementStockCategoryDef category = ProstheticsCategory;
             if (category == null) yield break;
 
-            foreach (SettlementStockItemReference reference in SettlementStockCatalog.ItemsFor(category))
-                yield return reference.thing;
+            foreach (ThingDef thing in SettlementStockService.CandidateThingDefsFor(category))
+                yield return thing;
         }
 
         private static bool TryGetSupportedImplantItem(RecipeDef recipe, out ThingDef item)
@@ -148,8 +148,8 @@ namespace Settlement_Services.Services.Medical
             var candidateItems = new HashSet<ThingDef>();
             SettlementStockCategoryDef category = ProstheticsCategory;
             if (category != null)
-                foreach (SettlementStockItemReference reference in SettlementStockService.ItemsFor(settlement, category))
-                    candidateItems.Add(reference.thing);
+                foreach (ThingDef thing in SettlementStockService.ThingDefsFor(settlement, category))
+                    candidateItems.Add(thing);
 
             if (caravan != null)
                 foreach (Thing thing in CaravanInventoryUtility.AllInventoryItems(caravan))

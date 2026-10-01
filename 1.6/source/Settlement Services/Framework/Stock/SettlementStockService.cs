@@ -23,13 +23,49 @@ namespace Settlement_Services.Framework.Stock
         public static IEnumerable<SettlementStockItemReference> ItemsFor(Settlement settlement, SettlementStockCategoryDef category) =>
             SettlementStockCatalog.ItemsFor(category).Where(r => IsEligibleForSettlement(settlement, r));
 
-        public static IEnumerable<ThingDef> AllStockedThingDefsFor(Settlement settlement) =>
-            SettlementStockCatalog.AllStockedThingDefs().Where(t => IsEligibleForSettlement(settlement, SettlementStockCatalog.ItemFor(t)));
+        public static IEnumerable<ThingDef> AllStockedThingDefsFor(Settlement settlement)
+        {
+            foreach (ThingDef thing in SettlementStockCatalog.AllStockedThingDefs())
+                if (IsEligibleForSettlement(settlement, SettlementStockCatalog.ItemFor(thing))) yield return thing;
+
+            foreach (DynamicStockEntryView view in OfferedDynamicStock(settlement))
+            {
+                ThingDef thing = DefDatabase<ThingDef>.GetNamedSilentFail(view.thingDefName);
+                if (thing != null) yield return thing;
+            }
+        }
+
+        public static IEnumerable<ThingDef> ThingDefsFor(Settlement settlement, SettlementStockCategoryDef category)
+        {
+            foreach (SettlementStockItemReference reference in ItemsFor(settlement, category))
+                yield return reference.thing;
+
+            foreach (DynamicStockEntryView view in OfferedDynamicStock(settlement))
+            {
+                if (view.categoryDefName != category.defName) continue;
+
+                ThingDef thing = DefDatabase<ThingDef>.GetNamedSilentFail(view.thingDefName);
+                if (thing != null) yield return thing;
+            }
+        }
+
+        public static IEnumerable<ThingDef> CandidateThingDefsFor(SettlementStockCategoryDef category) =>
+            SettlementStockCatalog.ItemsFor(category).Select(r => r.thing).Concat(SettlementDynamicStockCatalog.CandidatesFor(category));
+
+        public static IReadOnlyList<DynamicStockEntryView> OfferedDynamicStock(Settlement settlement)
+        {
+            if (settlement?.Faction?.def == null) return Array.Empty<DynamicStockEntryView>();
+
+            SettlementServicesWorldComponent domain = SettlementServicesWorldComponent.Current;
+            domain.SyncDynamicStock(settlement);
+            return domain.OfferedDynamicStock(settlement.ID);
+        }
 
         public static int GetAvailableStock(Settlement settlement, ThingDef thingDef)
         {
             SettlementStockItemReference reference = SettlementStockCatalog.ItemFor(thingDef);
-            if (reference == null || !IsEligibleForSettlement(settlement, reference)) return 0;
+            if (reference == null) return GetAvailableDynamicStock(settlement, thingDef);
+            if (!IsEligibleForSettlement(settlement, reference)) return 0;
 
             SettlementServicesWorldComponent domain = SettlementServicesWorldComponent.Current;
             int currentAmount = domain.CatchUpStock(settlement.ID, thingDef.defName,
@@ -41,35 +77,60 @@ namespace Settlement_Services.Framework.Stock
             return Mathf.Max(0, currentAmount - reserved);
         }
 
+        private static int GetAvailableDynamicStock(Settlement settlement, ThingDef thingDef)
+        {
+            if (settlement?.Faction?.def == null || thingDef == null) return 0;
+
+            SettlementServicesWorldComponent domain = SettlementServicesWorldComponent.Current;
+            domain.SyncDynamicStock(settlement);
+            if (!domain.TryGetOfferedDynamicStock(settlement.ID, thingDef.defName, out DynamicStockEntryView view)) return 0;
+
+            SettlementStockCategoryDef category = DefDatabase<SettlementStockCategoryDef>.GetNamedSilentFail(view.categoryDefName);
+            int capacity = EffectiveDynamicCapacity(view.baseCapacity, CapacityMultiplier(settlement, category));
+            int reserved = domain.TotalDynamicReserved(settlement.ID, thingDef.defName);
+            return Mathf.Max(0, Mathf.Min(view.currentAmount, capacity) - reserved);
+        }
+
         public static int GetAvailableStock(Settlement settlement, SettlementStockCategoryDef category) =>
-            ItemsFor(settlement, category).Sum(r => GetAvailableStock(settlement, r.thing));
+            ThingDefsFor(settlement, category).Sum(t => GetAvailableStock(settlement, t));
 
         public static SettlementStockEffectiveSettings EffectiveSettings(Settlement settlement, SettlementStockItemReference reference) =>
             SettlementStockEffectiveSettings.For(reference, settlement.Faction.def.techLevel);
 
-        public static int EffectiveCapacity(Settlement settlement, SettlementStockItemReference reference)
-        {
-            float multiplier = SettlementSpecialtyService.GetSpecialties(settlement)
+        public static float CapacityMultiplier(Settlement settlement, SettlementStockCategoryDef category) =>
+            SettlementSpecialtyService.GetSpecialties(settlement)
                 .SelectMany(d => d.stockModifiers)
-                .Where(m => m.stockCategoryDefName == reference.category.defName)
+                .Where(m => m.stockCategoryDefName == category.defName)
                 .Aggregate(1f, (acc, m) => acc * m.capacityMultiplier);
-            return Mathf.RoundToInt(EffectiveSettings(settlement, reference).capacity * multiplier);
-        }
 
-        public static int EffectiveRefreshAmount(Settlement settlement, SettlementStockItemReference reference)
-        {
-            float multiplier = SettlementSpecialtyService.GetSpecialties(settlement)
+        public static float RefreshMultiplier(Settlement settlement, SettlementStockCategoryDef category) =>
+            SettlementSpecialtyService.GetSpecialties(settlement)
                 .SelectMany(d => d.stockModifiers)
-                .Where(m => m.stockCategoryDefName == reference.category.defName)
+                .Where(m => m.stockCategoryDefName == category.defName)
                 .Aggregate(1f, (acc, m) => acc * m.refreshRateMultiplier);
-            return Mathf.RoundToInt(EffectiveSettings(settlement, reference).refreshAmount * multiplier);
-        }
+
+        public static int EffectiveDynamicCapacity(int baseCapacity, float capacityMultiplier) =>
+            Mathf.Max(0, Mathf.RoundToInt(baseCapacity * capacityMultiplier));
+
+        public static int EffectiveCapacity(Settlement settlement, SettlementStockItemReference reference) =>
+            Mathf.RoundToInt(EffectiveSettings(settlement, reference).capacity * CapacityMultiplier(settlement, reference.category));
+
+        public static int EffectiveRefreshAmount(Settlement settlement, SettlementStockItemReference reference) =>
+            Mathf.RoundToInt(EffectiveSettings(settlement, reference).refreshAmount * RefreshMultiplier(settlement, reference.category));
 
         public static int EffectiveRefreshIntervalTicks(Settlement settlement, SettlementStockItemReference reference) =>
             EffectiveSettings(settlement, reference).refreshIntervalTicks;
 
-        public static int EffectiveCapacity(Settlement settlement, SettlementStockCategoryDef category) =>
-            ItemsFor(settlement, category).Sum(r => EffectiveCapacity(settlement, r));
+        public static int EffectiveCapacity(Settlement settlement, SettlementStockCategoryDef category)
+        {
+            int total = ItemsFor(settlement, category).Sum(r => EffectiveCapacity(settlement, r));
+
+            List<DynamicStockEntryView> dynamicViews = OfferedDynamicStock(settlement).Where(v => v.categoryDefName == category.defName).ToList();
+            if (dynamicViews.Count == 0) return total;
+
+            float multiplier = CapacityMultiplier(settlement, category);
+            return total + dynamicViews.Sum(v => EffectiveDynamicCapacity(v.baseCapacity, multiplier));
+        }
 
         public static StockAvailabilityReport CheckAvailability(Settlement settlement, IEnumerable<ServiceStockRequirement> requirements, IEnumerable<ThingDefCountClass> playerSuppliedInputs = null)
         {
@@ -146,10 +207,10 @@ namespace Settlement_Services.Framework.Stock
 
                 if (remaining > 0)
                 {
-                    foreach (SettlementStockItemReference reference in OrderCandidatesBySettlementAvailability(settlement, category, req.preferredThingDefName, settlementLedger))
+                    foreach (ThingDef thing in OrderCandidatesBySettlementAvailability(settlement, category, req.preferredThingDefName, settlementLedger))
                     {
                         if (remaining <= 0) break;
-                        remaining = TakeFromSettlement(settlement, reference.thing, remaining, settlementLedger, settlementResult);
+                        remaining = TakeFromSettlement(settlement, thing, remaining, settlementLedger, settlementResult);
                     }
                 }
 
@@ -204,11 +265,10 @@ namespace Settlement_Services.Framework.Stock
 
         private static float TakeNutritionFromSettlement(Settlement settlement, SettlementStockCategoryDef category, string preferredThingDefName, float remainingNutrition, Dictionary<ThingDef, int> settlementLedger, List<ThingDefCountClass> settlementResult)
         {
-            foreach (SettlementStockItemReference reference in OrderCandidatesBySettlementAvailability(settlement, category, preferredThingDefName, settlementLedger))
+            foreach (ThingDef thing in OrderCandidatesBySettlementAvailability(settlement, category, preferredThingDefName, settlementLedger))
             {
                 if (remainingNutrition <= 0f) break;
 
-                ThingDef thing = reference.thing;
                 float nutritionPerItem = thing.GetStatValueAbstract(StatDefOf.Nutrition);
                 if (nutritionPerItem <= 0f) continue;
 
@@ -242,8 +302,7 @@ namespace Settlement_Services.Framework.Stock
 
         private static IEnumerable<ThingDef> OrderCandidatesByPlayerAvailability(SettlementStockCategoryDef category, string preferredThingDefName, Dictionary<ThingDef, int> playerLedger)
         {
-            return SettlementStockCatalog.ItemsFor(category)
-                .Select(r => r.thing)
+            return CandidateThingDefsFor(category)
                 .Where(t => playerLedger.TryGetValue(t, out int amount) && amount > 0)
                 .OrderByDescending(t => t.defName == preferredThingDefName)
                 .ThenByDescending(t => playerLedger[t])
@@ -251,17 +310,17 @@ namespace Settlement_Services.Framework.Stock
                 .ThenBy(t => t.defName, StringComparer.Ordinal);
         }
 
-        private static IEnumerable<SettlementStockItemReference> OrderCandidatesBySettlementAvailability(Settlement settlement, SettlementStockCategoryDef category, string preferredThingDefName, Dictionary<ThingDef, int> settlementLedger)
+        private static IEnumerable<ThingDef> OrderCandidatesBySettlementAvailability(Settlement settlement, SettlementStockCategoryDef category, string preferredThingDefName, Dictionary<ThingDef, int> settlementLedger)
         {
-            List<SettlementStockItemReference> refs = ItemsFor(settlement, category).ToList();
-            foreach (SettlementStockItemReference r in refs) GetLedgerAvailable(settlement, r.thing, settlementLedger);
+            List<ThingDef> things = ThingDefsFor(settlement, category).ToList();
+            foreach (ThingDef t in things) GetLedgerAvailable(settlement, t, settlementLedger);
 
-            return refs
-                .Where(r => settlementLedger[r.thing] > 0)
-                .OrderByDescending(r => r.thing.defName == preferredThingDefName)
-                .ThenByDescending(r => settlementLedger[r.thing])
-                .ThenBy(r => r.thing.BaseMarketValue)
-                .ThenBy(r => r.thing.defName, StringComparer.Ordinal);
+            return things
+                .Where(t => settlementLedger[t] > 0)
+                .OrderByDescending(t => t.defName == preferredThingDefName)
+                .ThenByDescending(t => settlementLedger[t])
+                .ThenBy(t => t.BaseMarketValue)
+                .ThenBy(t => t.defName, StringComparer.Ordinal);
         }
     }
 }

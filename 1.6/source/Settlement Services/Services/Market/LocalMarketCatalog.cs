@@ -61,6 +61,8 @@ namespace Settlement_Services.Services.Market
             FoodTypeFlags foodType = thingDef.ingestible.foodType;
             if ((foodType & FoodTypeFlags.Meat) != 0) return MarketItemGroup.Meat;
             if ((foodType & FoodTypeFlags.VegetableOrFruit) != 0) return MarketItemGroup.Produce;
+            if (thingDef.IsWithinCategory(ThingCategoryDefOf.MeatRaw)) return MarketItemGroup.Meat;
+            if (thingDef.IsWithinCategory(ThingCategoryDefOf.PlantFoodRaw)) return MarketItemGroup.Produce;
             return MarketItemGroup.Food;
         }
 

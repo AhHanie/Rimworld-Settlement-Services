@@ -80,6 +80,20 @@ namespace Settlement_Services.Domain.Reconciliation
                 droppedSettlements++;
             }
 
+            foreach (SettlementRecord record in component.SettlementRecordsRaw.ToList())
+            {
+                foreach (int jobId in component.PruneStaleDynamicStock(record))
+                {
+                    ServiceJobRecord job = component.GetJob(jobId);
+                    if (job != null && !ServiceJobStatusMachine.IsTerminal(job.status))
+                    {
+                        FailJob(component, job, "SettlementServices.Error.InsufficientStock");
+                        failedJobs++;
+                    }
+                    else component.ReleaseAllReservations(jobId);
+                }
+            }
+
             foreach (SettlementRecord record in component.SettlementRecordsRaw)
             {
                 if (record.capability == null) continue;

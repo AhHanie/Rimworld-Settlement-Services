@@ -14,9 +14,8 @@ namespace Settlement_Services.Services.Hospitality
             SettlementStockCategoryDef category = DefDatabase<SettlementStockCategoryDef>.GetNamedSilentFail("SettlementStock_Drugs");
             if (category == null) return Enumerable.Empty<ThingDef>();
 
-            return SettlementStockService.ItemsFor(settlement, category)
-                .Where(item => SettlementStockService.GetAvailableStock(settlement, item.thing) > 0)
-                .Select(item => item.thing);
+            return SettlementStockService.ThingDefsFor(settlement, category)
+                .Where(thing => SettlementStockService.GetAvailableStock(settlement, thing) > 0);
         }
     }
 }

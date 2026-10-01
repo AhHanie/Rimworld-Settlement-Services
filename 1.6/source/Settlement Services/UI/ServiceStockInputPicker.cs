@@ -85,8 +85,8 @@ namespace Settlement_Services.UI
 
             SettlementStockCategoryDef category = DefDatabase<SettlementStockCategoryDef>.GetNamedSilentFail(req.stockCategoryDefName);
             if (category == null) yield break;
-            foreach (SettlementStockItemReference reference in SettlementStockCatalog.ItemsFor(category))
-                yield return reference.thing;
+            foreach (ThingDef thing in SettlementStockService.CandidateThingDefsFor(category))
+                yield return thing;
         }
 
         public static void ApplyTo(ServiceRequestSession session, List<StockInputRow> rows)
