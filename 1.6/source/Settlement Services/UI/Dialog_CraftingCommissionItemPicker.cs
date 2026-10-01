@@ -15,6 +15,8 @@ namespace Settlement_Services.UI
         private const float RowHeight = 32f;
         private const float IconSize = 28f;
         private const float ListHeight = 260f;
+        private const float QuantityRowHeight = 28f;
+        private const float QuantityGap = 4f;
 
         private readonly Settlement settlement;
         private readonly List<CraftingCommissionRecipe> eligibleRecipes;
@@ -22,6 +24,8 @@ namespace Settlement_Services.UI
 
         private string searchText = string.Empty;
         private Vector2 scrollPosition;
+        private Vector2 detailScrollPosition;
+        private float detailScrollHeight;
         private CraftingCommissionRecipe selectedRecipe;
         private ThingDef selectedStuff;
         private int quantity = 1;
@@ -117,6 +121,8 @@ namespace Settlement_Services.UI
             selectedRecipe = recipe;
             quantity = 1;
             quantityBuffer = null;
+            detailScrollPosition = Vector2.zero;
+            detailScrollHeight = 0f;
 
             if (recipe.Kind == CraftingRecipeKind.Vanilla && recipe.madeFromStuff)
             {
@@ -137,16 +143,24 @@ namespace Settlement_Services.UI
                 return;
             }
 
-            var listing = new Listing_Standard();
-            listing.Begin(rect);
+            Rect quantityRect = new Rect(rect.x, rect.yMax - QuantityRowHeight, rect.width, QuantityRowHeight);
+            Rect bodyRect = new Rect(rect.x, rect.y, rect.width, Mathf.Max(0f, quantityRect.y - QuantityGap - rect.y));
+
+            Rect viewRect = new Rect(0f, 0f, bodyRect.width - 16f, Mathf.Max(bodyRect.height, detailScrollHeight));
+            Widgets.BeginScrollView(bodyRect, ref detailScrollPosition, viewRect);
+            var listing = new Listing_Standard { maxOneColumn = true };
+            listing.Begin(viewRect);
 
             listing.Label(selectedRecipe.label);
             if (!selectedRecipe.description.NullOrEmpty()) listing.Label(selectedRecipe.description);
 
             if (selectedRecipe.Kind == CraftingRecipeKind.Vanilla && selectedRecipe.madeFromStuff) DrawMaterialSelector(listing);
-            DrawQuantityRow(listing);
 
+            detailScrollHeight = listing.CurHeight;
             listing.End();
+            Widgets.EndScrollView();
+
+            DrawQuantityRow(quantityRect);
         }
 
         private void DrawMaterialSelector(Listing_Standard listing)
@@ -164,9 +178,8 @@ namespace Settlement_Services.UI
             listing.Gap(4f);
         }
 
-        private void DrawQuantityRow(Listing_Standard listing)
+        private void DrawQuantityRow(Rect row)
         {
-            Rect row = listing.GetRect(28f);
             Rect labelRect = new Rect(row.x, row.y, row.width - 116f, row.height);
             Rect minusRect = new Rect(row.xMax - 108f, row.y, 28f, 28f);
             Rect amountRect = new Rect(row.xMax - 72f, row.y, 44f, 28f);
