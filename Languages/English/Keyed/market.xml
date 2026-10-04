@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
     <SettlementServices.Error.NoMarketGoodsAvailable>This settlement has nothing available to sell right now.</SettlementServices.Error.NoMarketGoodsAvailable>
+    <SettlementServices.Error.NoMercerGoodsAvailable>This settlement has no materials available to sell right now.</SettlementServices.Error.NoMercerGoodsAvailable>
     <SettlementServices.Error.MarketCartEmpty>Your cart is empty.</SettlementServices.Error.MarketCartEmpty>
     <SettlementServices.Error.MarketItemNoLongerAvailable>An item in your cart is no longer available from this settlement.</SettlementServices.Error.MarketItemNoLongerAvailable>
     <SettlementServices.Error.DuplicateMarketItem>Your cart lists the same item twice.</SettlementServices.Error.DuplicateMarketItem>
@@ -11,6 +12,13 @@
     <SettlementServices.Label.MarketGroupMeat>Meat</SettlementServices.Label.MarketGroupMeat>
     <SettlementServices.Label.MarketGroupProduce>Produce</SettlementServices.Label.MarketGroupProduce>
     <SettlementServices.Label.MarketGroupFood>Food</SettlementServices.Label.MarketGroupFood>
+    <SettlementServices.Label.MercerGoods>Materials for sale</SettlementServices.Label.MercerGoods>
+    <SettlementServices.Label.NoMercerGoodsAvailable>This settlement has no materials available to sell right now.</SettlementServices.Label.NoMercerGoodsAvailable>
+    <SettlementServices.Label.MercerGroupWood>Wood</SettlementServices.Label.MercerGroupWood>
+    <SettlementServices.Label.MercerGroupStone>Stone blocks</SettlementServices.Label.MercerGroupStone>
+    <SettlementServices.Label.MercerGroupMetal>Metal</SettlementServices.Label.MercerGroupMetal>
+    <SettlementServices.Label.MercerGroupFabric>Fabric</SettlementServices.Label.MercerGroupFabric>
+    <SettlementServices.Label.MercerGroupLeather>Leather and fur</SettlementServices.Label.MercerGroupLeather>
     <SettlementServices.Label.MarketRowLabel>{0} (available {1}, {2} silver each)</SettlementServices.Label.MarketRowLabel>
     <SettlementServices.Label.MarketCart>Cart</SettlementServices.Label.MarketCart>
     <SettlementServices.Label.MarketCartEmpty>Your cart is empty.</SettlementServices.Label.MarketCartEmpty>

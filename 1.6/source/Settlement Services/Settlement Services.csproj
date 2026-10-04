@@ -374,6 +374,9 @@
 
     <Compile Include="Services\Market\LocalMarketCatalog.cs" />
     <Compile Include="Services\Market\LocalMarketServiceWorker.cs" />
+    <Compile Include="Services\Market\MarketCatalogRow.cs" />
+    <Compile Include="Services\Market\MercerCatalog.cs" />
+    <Compile Include="Services\Market\MercerServiceWorker.cs" />
 
     <Compile Include="Services\Mechanitor\MechRepairServiceWorker.cs" />
     <Compile Include="Services\Mechanitor\MechRechargeServiceWorker.cs" />

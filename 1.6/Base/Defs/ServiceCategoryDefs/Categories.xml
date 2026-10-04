@@ -70,7 +70,7 @@
     <label>commerce</label>
     <description>Buying and selling goods directly from a settlement's own stock.</description>
     <order>90</order>
-    <iconTexPath>SettlementServices/UI/Icons/market-stall</iconTexPath>
+    <iconTexPath>SettlementServices/UI/Icons/coin</iconTexPath>
   </Settlement_Services.Framework.Defs.ServiceCategoryDef>
 
 </Defs>

@@ -56,6 +56,33 @@
   </Operation>
 
   <Operation Class="PatchOperationAdd">
+    <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_StoneBlocks"]/stockItems</xpath>
+    <value>
+      <li>
+        <thingDefName>DankPyon_BlocksClay</thingDefName>
+        <capacity>300</capacity>
+        <refreshAmount>40</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Neolithic</minFactionTechLevel>
+        <techLevelTiers>
+          <li>
+            <minFactionTechLevel>Industrial</minFactionTechLevel>
+            <capacity>600</capacity>
+            <refreshAmount>80</refreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+          </li>
+          <li>
+            <minFactionTechLevel>Spacer</minFactionTechLevel>
+            <capacity>900</capacity>
+            <refreshAmount>120</refreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+          </li>
+        </techLevelTiers>
+      </li>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
     <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_Food"]/stockItems</xpath>
     <value>
       <li>

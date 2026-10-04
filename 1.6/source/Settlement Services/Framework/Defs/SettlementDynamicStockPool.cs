@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using Verse;
 
@@ -9,6 +10,7 @@ namespace Settlement_Services.Framework.Defs
         public string id;
         public string thingCategoryDefName;
         public List<string> thingDefNames = new List<string>();
+        public List<string> excludeThingDefNames = new List<string>();
         public bool requireHumanEdible;
         public bool requireNutritionGiving;
         public bool excludeDrugs;
@@ -74,6 +76,9 @@ namespace Settlement_Services.Framework.Defs
         {
             if (!thingCategoryDefName.NullOrEmpty() && DefDatabase<ThingCategoryDef>.GetNamedSilentFail(thingCategoryDefName) == null)
                 yield return $"{owner} references unknown ThingCategoryDef {thingCategoryDefName}.";
+
+            if (!excludeThingDefNames.NullOrEmpty() && excludeThingDefNames.Any(n => n.NullOrEmpty()))
+                yield return $"{owner} excludeThingDefNames has an empty entry.";
 
             if (thingDefNames.NullOrEmpty()) yield break;
 

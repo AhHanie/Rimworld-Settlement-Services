@@ -35,6 +35,18 @@ namespace Settlement_Services.Framework.Stock
             }
         }
 
+        public static bool IsOffered(Settlement settlement, ThingDef thingDef)
+        {
+            if (settlement?.Faction?.def == null || thingDef == null) return false;
+
+            SettlementStockItemReference reference = SettlementStockCatalog.ItemFor(thingDef);
+            if (reference != null) return IsEligibleForSettlement(settlement, reference);
+
+            SettlementServicesWorldComponent domain = SettlementServicesWorldComponent.Current;
+            domain.SyncDynamicStock(settlement);
+            return domain.TryGetOfferedDynamicStock(settlement.ID, thingDef.defName, out _);
+        }
+
         public static IEnumerable<ThingDef> ThingDefsFor(Settlement settlement, SettlementStockCategoryDef category)
         {
             foreach (SettlementStockItemReference reference in ItemsFor(settlement, category))

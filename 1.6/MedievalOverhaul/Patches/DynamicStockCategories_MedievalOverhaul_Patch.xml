@@ -159,4 +159,11 @@
     </value>
   </Operation>
 
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_Leather"]/dynamicStockPools/li[id="leatherAndFurRotation"]/excludeThingDefNames</xpath>
+    <value>
+      <li>DankPyon_DummyLeather</li>
+    </value>
+  </Operation>
+
 </Patch>

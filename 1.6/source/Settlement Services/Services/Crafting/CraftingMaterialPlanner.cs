@@ -14,8 +14,7 @@ namespace Settlement_Services.Services.Crafting
 
             foreach (ThingDef stuff in GenStuff.AllowedStuffsFor(producedThingDef, effectiveTechCeiling, checkAllowedInStuffGeneration: true))
             {
-                SettlementStockItemReference reference = SettlementStockCatalog.ItemFor(stuff);
-                if (SettlementStockService.IsEligibleForSettlement(settlement, reference)) yield return stuff;
+                if (SettlementStockService.IsOffered(settlement, stuff)) yield return stuff;
             }
         }
     }

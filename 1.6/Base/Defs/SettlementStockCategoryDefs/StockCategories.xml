@@ -541,71 +541,49 @@
     <defName>SettlementStock_Leather</defName>
     <label>leather</label>
     <description>Tanned leather used for apparel and equipment.</description>
-    <stockItems>
+    <dynamicStockPools>
       <li>
-        <thingDefName>Leather_Plain</thingDefName>
-        <capacity>100</capacity>
-        <refreshAmount>10</refreshAmount>
-        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <id>leatherAndFurRotation</id>
+        <thingCategoryDefName>Leathers</thingCategoryDefName>
+        <excludeThingDefNames>
+          <li>Leather_Human</li>
+          <li>Leather_Dread</li>
+        </excludeThingDefNames>
         <minFactionTechLevel>Neolithic</minFactionTechLevel>
+        <minDifferentGoods>3</minDifferentGoods>
+        <maxDifferentGoods>5</maxDifferentGoods>
+        <minCapacity>60</minCapacity>
+        <maxCapacity>120</maxCapacity>
+        <minRefreshAmount>6</minRefreshAmount>
+        <maxRefreshAmount>15</maxRefreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <replaceCount>1</replaceCount>
         <techLevelTiers>
           <li>
             <minFactionTechLevel>Industrial</minFactionTechLevel>
-            <capacity>200</capacity>
-            <refreshAmount>20</refreshAmount>
+            <minDifferentGoods>4</minDifferentGoods>
+            <maxDifferentGoods>6</maxDifferentGoods>
+            <minCapacity>120</minCapacity>
+            <maxCapacity>240</maxCapacity>
+            <minRefreshAmount>12</minRefreshAmount>
+            <maxRefreshAmount>30</maxRefreshAmount>
             <refreshIntervalTicks>60000</refreshIntervalTicks>
+            <replaceCount>2</replaceCount>
           </li>
           <li>
             <minFactionTechLevel>Spacer</minFactionTechLevel>
-            <capacity>400</capacity>
-            <refreshAmount>40</refreshAmount>
+            <minDifferentGoods>5</minDifferentGoods>
+            <maxDifferentGoods>8</maxDifferentGoods>
+            <minCapacity>240</minCapacity>
+            <maxCapacity>400</maxCapacity>
+            <minRefreshAmount>25</minRefreshAmount>
+            <maxRefreshAmount>50</maxRefreshAmount>
             <refreshIntervalTicks>60000</refreshIntervalTicks>
+            <replaceCount>2</replaceCount>
           </li>
         </techLevelTiers>
       </li>
-      <li>
-        <thingDefName>Leather_Heavy</thingDefName>
-        <capacity>100</capacity>
-        <refreshAmount>10</refreshAmount>
-        <refreshIntervalTicks>60000</refreshIntervalTicks>
-        <minFactionTechLevel>Neolithic</minFactionTechLevel>
-        <techLevelTiers>
-          <li>
-            <minFactionTechLevel>Industrial</minFactionTechLevel>
-            <capacity>200</capacity>
-            <refreshAmount>20</refreshAmount>
-            <refreshIntervalTicks>60000</refreshIntervalTicks>
-          </li>
-          <li>
-            <minFactionTechLevel>Spacer</minFactionTechLevel>
-            <capacity>400</capacity>
-            <refreshAmount>40</refreshAmount>
-            <refreshIntervalTicks>60000</refreshIntervalTicks>
-          </li>
-        </techLevelTiers>
-      </li>
-      <li>
-        <thingDefName>Leather_Patch</thingDefName>
-        <capacity>100</capacity>
-        <refreshAmount>10</refreshAmount>
-        <refreshIntervalTicks>60000</refreshIntervalTicks>
-        <minFactionTechLevel>Neolithic</minFactionTechLevel>
-        <techLevelTiers>
-          <li>
-            <minFactionTechLevel>Industrial</minFactionTechLevel>
-            <capacity>200</capacity>
-            <refreshAmount>20</refreshAmount>
-            <refreshIntervalTicks>60000</refreshIntervalTicks>
-          </li>
-          <li>
-            <minFactionTechLevel>Spacer</minFactionTechLevel>
-            <capacity>400</capacity>
-            <refreshAmount>40</refreshAmount>
-            <refreshIntervalTicks>60000</refreshIntervalTicks>
-          </li>
-        </techLevelTiers>
-      </li>
-    </stockItems>
+    </dynamicStockPools>
   </Settlement_Services.Framework.Defs.SettlementStockCategoryDef>
 
   <Settlement_Services.Framework.Defs.SettlementStockCategoryDef>
@@ -742,6 +720,119 @@
             <minFactionTechLevel>Spacer</minFactionTechLevel>
             <capacity>1000</capacity>
             <refreshAmount>160</refreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+          </li>
+        </techLevelTiers>
+      </li>
+    </stockItems>
+  </Settlement_Services.Framework.Defs.SettlementStockCategoryDef>
+
+  <Settlement_Services.Framework.Defs.SettlementStockCategoryDef>
+    <defName>SettlementStock_StoneBlocks</defName>
+    <label>stone blocks</label>
+    <description>Cut stone blocks used for sturdy construction.</description>
+    <stockItems>
+      <li>
+        <thingDefName>BlocksSandstone</thingDefName>
+        <capacity>300</capacity>
+        <refreshAmount>40</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Neolithic</minFactionTechLevel>
+        <techLevelTiers>
+          <li>
+            <minFactionTechLevel>Industrial</minFactionTechLevel>
+            <capacity>600</capacity>
+            <refreshAmount>80</refreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+          </li>
+          <li>
+            <minFactionTechLevel>Spacer</minFactionTechLevel>
+            <capacity>900</capacity>
+            <refreshAmount>120</refreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+          </li>
+        </techLevelTiers>
+      </li>
+      <li>
+        <thingDefName>BlocksGranite</thingDefName>
+        <capacity>300</capacity>
+        <refreshAmount>40</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Neolithic</minFactionTechLevel>
+        <techLevelTiers>
+          <li>
+            <minFactionTechLevel>Industrial</minFactionTechLevel>
+            <capacity>600</capacity>
+            <refreshAmount>80</refreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+          </li>
+          <li>
+            <minFactionTechLevel>Spacer</minFactionTechLevel>
+            <capacity>900</capacity>
+            <refreshAmount>120</refreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+          </li>
+        </techLevelTiers>
+      </li>
+      <li>
+        <thingDefName>BlocksLimestone</thingDefName>
+        <capacity>300</capacity>
+        <refreshAmount>40</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Neolithic</minFactionTechLevel>
+        <techLevelTiers>
+          <li>
+            <minFactionTechLevel>Industrial</minFactionTechLevel>
+            <capacity>600</capacity>
+            <refreshAmount>80</refreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+          </li>
+          <li>
+            <minFactionTechLevel>Spacer</minFactionTechLevel>
+            <capacity>900</capacity>
+            <refreshAmount>120</refreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+          </li>
+        </techLevelTiers>
+      </li>
+      <li>
+        <thingDefName>BlocksSlate</thingDefName>
+        <capacity>300</capacity>
+        <refreshAmount>40</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Neolithic</minFactionTechLevel>
+        <techLevelTiers>
+          <li>
+            <minFactionTechLevel>Industrial</minFactionTechLevel>
+            <capacity>600</capacity>
+            <refreshAmount>80</refreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+          </li>
+          <li>
+            <minFactionTechLevel>Spacer</minFactionTechLevel>
+            <capacity>900</capacity>
+            <refreshAmount>120</refreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+          </li>
+        </techLevelTiers>
+      </li>
+      <li>
+        <thingDefName>BlocksMarble</thingDefName>
+        <capacity>300</capacity>
+        <refreshAmount>40</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Neolithic</minFactionTechLevel>
+        <techLevelTiers>
+          <li>
+            <minFactionTechLevel>Industrial</minFactionTechLevel>
+            <capacity>600</capacity>
+            <refreshAmount>80</refreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+          </li>
+          <li>
+            <minFactionTechLevel>Spacer</minFactionTechLevel>
+            <capacity>900</capacity>
+            <refreshAmount>120</refreshAmount>
             <refreshIntervalTicks>60000</refreshIntervalTicks>
           </li>
         </techLevelTiers>

@@ -23,6 +23,7 @@ namespace Settlement_Services.UI
         private readonly List<CraftingCommissionRecipe> craftingEligibleRecipes;
         private readonly List<ThingDef> buildingEligibleBuildings;
         private readonly bool isLocalMarket;
+        private readonly LocalMarketServiceWorker marketWorker;
         private Vector2 scrollPosition;
         private float scrollHeight;
         private string quantityBuffer;
@@ -46,7 +47,8 @@ namespace Settlement_Services.UI
             if (session.def.Worker is BuildingCommissionServiceWorker)
                 buildingEligibleBuildings = BuildingCommissionCatalog.EligibleBuildings(session.settlement).ToList();
 
-            isLocalMarket = session.def.Worker is LocalMarketServiceWorker;
+            marketWorker = session.def.Worker as LocalMarketServiceWorker;
+            isLocalMarket = marketWorker != null;
 
             if (session.def.requireExplicitPriorityTier && session.selectedTierKey == null)
                 session.selectedTierKey = session.def.priorityTiers.Find(t => t.isDefaultTier)?.key;
@@ -320,24 +322,24 @@ namespace Settlement_Services.UI
 
         private void DrawLocalMarketSection(Listing_Standard listing)
         {
-            listing.Label("SettlementServices.Label.LocalMarketGoods".Translate());
+            listing.Label(marketWorker.GoodsHeadingKey.Translate());
 
-            List<LocalMarketCatalogRow> rows = LocalMarketCatalog.SortedEligibleRows(session.settlement);
+            List<MarketCatalogRow> rows = marketWorker.GetSortedRows(session.settlement);
             if (rows.Count == 0)
             {
-                listing.Label("SettlementServices.Label.NoMarketGoodsAvailable".Translate());
+                listing.Label(marketWorker.NoGoodsLabelKey.Translate());
                 listing.Gap();
                 return;
             }
 
-            MarketItemGroup? lastGroup = null;
-            foreach (LocalMarketCatalogRow row in rows)
+            int? lastGroup = null;
+            foreach (MarketCatalogRow row in rows)
             {
-                if (lastGroup != row.group)
+                if (lastGroup != row.groupOrder)
                 {
                     if (lastGroup != null) listing.Gap(4f);
-                    listing.Label(MarketGroupLabel(row.group));
-                    lastGroup = row.group;
+                    listing.Label(row.groupLabelKey.Translate());
+                    lastGroup = row.groupOrder;
                 }
                 DrawLocalMarketRow(listing, row);
             }
@@ -347,22 +349,11 @@ namespace Settlement_Services.UI
             listing.Gap();
         }
 
-        private static string MarketGroupLabel(MarketItemGroup group)
-        {
-            switch (group)
-            {
-                case MarketItemGroup.Drinks: return "SettlementServices.Label.MarketGroupDrinks".Translate();
-                case MarketItemGroup.Meat: return "SettlementServices.Label.MarketGroupMeat".Translate();
-                case MarketItemGroup.Produce: return "SettlementServices.Label.MarketGroupProduce".Translate();
-                default: return "SettlementServices.Label.MarketGroupFood".Translate();
-            }
-        }
-
         private static readonly int[] MarketQuickSetAmounts = { 1, 10, 100 };
         private const float MarketQuickSetButtonWidth = 28f;
         private const float MarketQuickSetButtonGap = 2f;
 
-        private void DrawLocalMarketRow(Listing_Standard listing, LocalMarketCatalogRow row)
+        private void DrawLocalMarketRow(Listing_Standard listing, MarketCatalogRow row)
         {
             int current = session.marketCartLines.Find(l => l.thingDefName == row.thingDef.defName)?.count ?? 0;
             int max = row.availableStock;

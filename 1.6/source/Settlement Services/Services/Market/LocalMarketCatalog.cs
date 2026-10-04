@@ -18,14 +18,6 @@ namespace Settlement_Services.Services.Market
         Food,
     }
 
-    public class LocalMarketCatalogRow
-    {
-        public ThingDef thingDef;
-        public MarketItemGroup group;
-        public int availableStock;
-        public int unitPrice;
-    }
-
     public static class LocalMarketCatalog
     {
         private const float RetailMarkupFactor = 1.4f;
@@ -78,7 +70,9 @@ namespace Settlement_Services.Services.Market
         public static int UnitPrice(ThingDef thingDef) =>
             Mathf.Max(1, Mathf.RoundToInt(thingDef.BaseMarketValue * RetailMarkupFactor));
 
-        public static IEnumerable<LocalMarketCatalogRow> EligibleRows(Settlement settlement)
+        public static string GroupLabelKey(MarketItemGroup group) => "SettlementServices.Label.MarketGroup" + group;
+
+        public static IEnumerable<MarketCatalogRow> EligibleRows(Settlement settlement)
         {
             if (settlement == null) yield break;
 
@@ -90,23 +84,22 @@ namespace Settlement_Services.Services.Market
                 int available = SettlementStockService.GetAvailableStock(settlement, thingDef);
                 if (available <= 0) continue;
 
-                yield return new LocalMarketCatalogRow
+                yield return new MarketCatalogRow
                 {
                     thingDef = thingDef,
-                    group = group.Value,
+                    groupOrder = (int)group.Value,
+                    groupLabelKey = GroupLabelKey(group.Value),
                     availableStock = available,
                     unitPrice = UnitPrice(thingDef),
                 };
             }
         }
 
-        public static List<LocalMarketCatalogRow> SortedEligibleRows(Settlement settlement) =>
+        public static List<MarketCatalogRow> SortedEligibleRows(Settlement settlement) =>
             EligibleRows(settlement)
-                .OrderBy(r => (int)r.group)
+                .OrderBy(r => r.groupOrder)
                 .ThenBy(r => r.thingDef.label, StringComparer.Ordinal)
                 .ThenBy(r => r.thingDef.defName, StringComparer.Ordinal)
                 .ToList();
-
-        public static bool HasEligibleStock(Settlement settlement) => EligibleRows(settlement).Any();
     }
 }

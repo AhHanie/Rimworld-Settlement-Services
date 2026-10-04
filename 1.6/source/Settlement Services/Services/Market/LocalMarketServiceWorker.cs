@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
+using RimWorld.Planet;
 using UnityEngine;
 using Verse;
 using Settlement_Services.Framework.Defs;
@@ -13,10 +14,21 @@ namespace Settlement_Services.Services.Market
 {
     public class LocalMarketServiceWorker : SettlementServiceWorker
     {
+        public virtual string GoodsHeadingKey => "SettlementServices.Label.LocalMarketGoods";
+        public virtual string NoGoodsLabelKey => "SettlementServices.Label.NoMarketGoodsAvailable";
+        protected virtual string NoGoodsErrorKey => "SettlementServices.Error.NoMarketGoodsAvailable";
+
+        public virtual List<MarketCatalogRow> GetSortedRows(Settlement settlement) =>
+            LocalMarketCatalog.SortedEligibleRows(settlement);
+
+        protected virtual bool IsInAssortment(ThingDef thingDef) => LocalMarketCatalog.GetGroup(thingDef) != null;
+
+        protected virtual int UnitPrice(ThingDef thingDef) => LocalMarketCatalog.UnitPrice(thingDef);
+
         public override ServiceAvailabilityReport CanOffer(SettlementServiceContext ctx) =>
-            LocalMarketCatalog.HasEligibleStock(ctx.Settlement)
+            GetSortedRows(ctx.Settlement).Count > 0
                 ? ServiceAvailabilityReport.Available
-                : ServiceAvailabilityReport.Unavailable("SettlementServices.Error.NoMarketGoodsAvailable");
+                : ServiceAvailabilityReport.Unavailable(NoGoodsErrorKey);
 
         public override string ValidateUnitRequest(SettlementServiceRequest request) =>
             TryPlan(request, out _, out string errorKey) ? null : errorKey;
@@ -31,7 +43,7 @@ namespace Settlement_Services.Services.Market
                 ThingDef thingDef = DefDatabase<ThingDef>.GetNamedSilentFail(line.thingDefName);
                 if (thingDef == null) continue;
 
-                int cost = LocalMarketCatalog.UnitPrice(thingDef) * line.count;
+                int cost = UnitPrice(thingDef) * line.count;
                 items.Add(new ServiceLineItem("SettlementServices.LineItem.MarketPurchase", cost, labelArgument: thingDef.LabelCap));
             }
 
@@ -92,7 +104,7 @@ namespace Settlement_Services.Services.Market
         private static List<ServiceStockRequirement> ToStockRequirements(MarketPurchasePlan plan) =>
             plan.lines.Select(l => new ServiceStockRequirement { thingDefName = l.thingDefName, amount = l.count, playerCanSupply = false }).ToList();
 
-        private static bool Validate(MarketPurchasePlan plan, out string errorKey)
+        private bool Validate(MarketPurchasePlan plan, out string errorKey)
         {
             if (plan == null || plan.lines.NullOrEmpty())
             {
@@ -109,7 +121,7 @@ namespace Settlement_Services.Services.Market
                 }
 
                 ThingDef thingDef = DefDatabase<ThingDef>.GetNamedSilentFail(line.thingDefName);
-                if (thingDef == null || LocalMarketCatalog.GetGroup(thingDef) == null)
+                if (thingDef == null || !IsInAssortment(thingDef))
                 {
                     errorKey = "SettlementServices.Error.MarketItemNoLongerAvailable";
                     return false;
@@ -120,7 +132,7 @@ namespace Settlement_Services.Services.Market
             return true;
         }
 
-        private static bool TryPlan(SettlementServiceRequest request, out MarketPurchasePlan plan, out string errorKey)
+        private bool TryPlan(SettlementServiceRequest request, out MarketPurchasePlan plan, out string errorKey)
         {
             plan = null;
 
@@ -146,7 +158,7 @@ namespace Settlement_Services.Services.Market
                 }
 
                 ThingDef thingDef = DefDatabase<ThingDef>.GetNamedSilentFail(line.thingDefName);
-                if (thingDef == null || LocalMarketCatalog.GetGroup(thingDef) == null)
+                if (thingDef == null || !IsInAssortment(thingDef))
                 {
                     errorKey = "SettlementServices.Error.MarketItemNoLongerAvailable";
                     return false;

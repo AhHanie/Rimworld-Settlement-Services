@@ -18,5 +18,22 @@
     <allowRemoteRequest>false</allowRemoteRequest>
     <iconTexPath>SettlementServices/UI/Icons/market-stall</iconTexPath>
   </Settlement_Services.Framework.Defs.SettlementServiceDef>
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_Mercer</defName>
+    <category>SettlementService_Commerce</category>
+    <label>mercer</label>
+    <description>Buy basic construction and crafting materials from a materials merchant: wood or planks, stone blocks, metal, and fabric or leather. Fill your cart, pay, and the goods are loaded into your caravan immediately.</description>
+    <workerClass>Settlement_Services.Services.Market.MercerServiceWorker</workerClass>
+    <requiredTechLevel>Neolithic</requiredTechLevel>
+    <minimumCost>0</minimumCost>
+    <wealthScale>0</wealthScale>
+    <duration>0</duration>
+    <eventChancePct>0</eventChancePct>
+    <targetRule>None</targetRule>
+    <batchMode>None</batchMode>
+    <allowRemoteDiscovery>false</allowRemoteDiscovery>
+    <allowRemoteRequest>false</allowRemoteRequest>
+    <iconTexPath>SettlementServices/UI/Icons/wood-pile</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
 
 </Defs>
