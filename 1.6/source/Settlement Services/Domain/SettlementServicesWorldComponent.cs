@@ -33,6 +33,8 @@ namespace Settlement_Services.Domain
 
         private int nextBoardJobId = 1;
         private bool boardReconcilePending;
+        private bool loadReconcilePending;
+        private bool loadReconcileFailed;
         private List<BoardJobRecord> boardJobs = new List<BoardJobRecord>();
 
         private List<int> pendingHomeSilverRefunds = new List<int>();
@@ -86,39 +88,78 @@ namespace Settlement_Services.Domain
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 SupportLog.Info($"Job board load: boardJobs list {(boardJobs == null ? "was null" : "has " + boardJobs.Count + " record(s)")}, itemCustody {(itemCustody == null ? "was null" : "holds " + itemCustody.Count + " thing(s)")}.");
-                if (settlementRecords == null) settlementRecords = new List<SettlementRecord>();
-                if (jobs == null) jobs = new List<ServiceJobRecord>();
-                if (boardJobs == null) boardJobs = new List<BoardJobRecord>();
-                if (pendingHomeSilverRefunds == null) pendingHomeSilverRefunds = new List<int>();
-                if (itemCustody == null) itemCustody = new ThingOwner<Thing>(this);
-                if (hiringCandidateCustody == null) hiringCandidateCustody = new ThingOwner<Pawn>(this);
-                if (hiringTransitCustody == null) hiringTransitCustody = new ThingOwner<Pawn>(this);
-                if (hiringTransits == null) hiringTransits = new List<HiringTransitRecord>();
-                if (pendingHomeDeliveries == null) pendingHomeDeliveries = new List<TargetSnapshot>();
-                if (compatibilityWorldState == null) compatibilityWorldState = new CompatibilityWorldState();
-                settlementRecords.RemoveAll(r => r == null);
-                jobs.RemoveAll(j => j == null);
-                boardJobs.RemoveAll(j => j == null);
-                hiringTransits.RemoveAll(t => t == null);
-                foreach (SettlementRecord record in settlementRecords)
-                    record.hiringCandidates.RemoveAll(c => !hiringCandidateCustody.Contains(c.pawn));
+                EnsureTopLevelState();
             }
+        }
+
+        private void EnsureTopLevelState()
+        {
+            if (settlementRecords == null) settlementRecords = new List<SettlementRecord>();
+            if (jobs == null) jobs = new List<ServiceJobRecord>();
+            if (boardJobs == null) boardJobs = new List<BoardJobRecord>();
+            if (pendingHomeSilverRefunds == null) pendingHomeSilverRefunds = new List<int>();
+            if (itemCustody == null) itemCustody = new ThingOwner<Thing>(this);
+            if (hiringCandidateCustody == null) hiringCandidateCustody = new ThingOwner<Pawn>(this);
+            if (hiringTransitCustody == null) hiringTransitCustody = new ThingOwner<Pawn>(this);
+            if (hiringTransits == null) hiringTransits = new List<HiringTransitRecord>();
+            if (pendingHomeDeliveries == null) pendingHomeDeliveries = new List<TargetSnapshot>();
+            if (compatibilityWorldState == null) compatibilityWorldState = new CompatibilityWorldState();
+
+            settlementRecords.RemoveAll(r => r == null);
+            jobs.RemoveAll(j => j == null);
+            boardJobs.RemoveAll(j => j == null);
+            hiringTransits.RemoveAll(t => t == null);
         }
 
         public override void FinalizeInit(bool fromLoad)
         {
             base.FinalizeInit(fromLoad);
+            EnsureTopLevelState();
             RebuildIndexes();
 
-            if (fromLoad && loadedSchemaVersion < SchemaVersion.Current)
+            if (fromLoad)
             {
-                SettlementServiceMigrationRegistry.Run(this, loadedSchemaVersion, SchemaVersion.Current);
-                RebuildIndexes();
+                loadReconcilePending = true;
+                boardReconcilePending = true;
+                return;
             }
 
             loadedSchemaVersion = SchemaVersion.Current;
             SettlementServicesReconciler.Reconcile(this);
-            boardReconcilePending = fromLoad;
+            RebuildIndexes();
+        }
+
+        private bool EnsureLoadReconciled()
+        {
+            if (loadReconcileFailed) return false;
+            if (!loadReconcilePending) return true;
+
+            try
+            {
+                EnsureTopLevelState();
+                foreach (SettlementRecord record in settlementRecords)
+                    record.hiringCandidates?.RemoveAll(c => c == null || !hiringCandidateCustody.Contains(c.pawn));
+                RebuildIndexes();
+
+                if (loadedSchemaVersion < SchemaVersion.Current)
+                {
+                    SettlementServiceMigrationRegistry.Run(this, loadedSchemaVersion, SchemaVersion.Current);
+                    RebuildIndexes();
+                }
+
+                SettlementServicesReconciler.Reconcile(this);
+                RebuildIndexes();
+
+                loadedSchemaVersion = SchemaVersion.Current;
+                loadReconcilePending = false;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                loadReconcileFailed = true;
+                SupportLog.Error($"Settlement Services failed to finish initializing after loading the save (schema {loadedSchemaVersion} -> {SchemaVersion.Current}); service and board ticking is disabled for this session: {ex}");
+                return false;
+            }
         }
 
         internal void EnsureBoardReconciled()
@@ -132,6 +173,7 @@ namespace Settlement_Services.Domain
 
         public override void WorldComponentTick()
         {
+            if (!EnsureLoadReconciled()) return;
             EnsureBoardReconciled();
             FlushPendingHomeSilverRefunds();
             FlushPendingHomeDeliveries();
@@ -299,6 +341,7 @@ namespace Settlement_Services.Domain
             settlementsByWorldObjectId = new Dictionary<int, SettlementRecord>();
             foreach (SettlementRecord record in settlementRecords)
             {
+                if (record == null) continue;
                 if (settlementsByWorldObjectId.ContainsKey(record.settlementWorldObjectId))
                 {
                     Settlement_Services.SupportLog.Warning($"Duplicate settlement record for world object {record.settlementWorldObjectId}, ignoring extra copy.");
@@ -310,6 +353,7 @@ namespace Settlement_Services.Domain
             boardJobsById = new Dictionary<int, BoardJobRecord>();
             foreach (BoardJobRecord boardJob in boardJobs)
             {
+                if (boardJob == null) continue;
                 if (boardJob.boardJobId < 0 || boardJobsById.ContainsKey(boardJob.boardJobId))
                 {
                     Settlement_Services.SupportLog.Warning($"Duplicate or invalid board job id {boardJob.boardJobId}, assigning a fresh id.");
@@ -324,6 +368,7 @@ namespace Settlement_Services.Domain
             activeJobsIndex = new List<ServiceJobRecord>();
             foreach (ServiceJobRecord job in jobs)
             {
+                if (job == null) continue;
                 if (jobsById.ContainsKey(job.jobId))
                 {
                     Settlement_Services.SupportLog.Warning($"Duplicate job id {job.jobId}, ignoring extra copy.");
