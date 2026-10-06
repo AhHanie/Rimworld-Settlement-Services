@@ -41,8 +41,8 @@ namespace Settlement_Services.UI.Interaction
             if (settlement == null || !settlement.Spawned || settlement.HasMap || !settlement.Visitable) return false;
             if (settlement.Faction != null && settlement.Faction.HostileTo(Faction.OfPlayer))
                 return FloatMenuAcceptanceReport.WithFailReason("SettlementServices.Error.FactionHostile".Translate());
-            if (BestCaravanPawnUtility.FindBestNegotiator(caravan) == null)
-                return FloatMenuAcceptanceReport.WithFailReason("SettlementServices.Command.NoNegotiator".Translate());
+            if (!SettlementServicesInteractionCommands.HasVisitingColonist(caravan))
+                return FloatMenuAcceptanceReport.WithFailReason("SettlementServices.Command.NoVisitingColonist".Translate());
             return true;
         }
 

@@ -5,6 +5,7 @@ using RimWorld.Planet;
 using Verse;
 using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework;
+using Settlement_Services.Framework.Board;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Services.Construction;
 using Settlement_Services.Services.Crafting;
@@ -71,7 +72,8 @@ namespace Settlement_Services.Domain.Reconciliation
 
             List<SettlementRecord> toDrop = component.SettlementRecordsRaw
                 .Where(r => WorldObjectLookup.ResolveSettlement(r.settlementWorldObjectId) == null
-                    && !component.JobsRaw.Any(j => j.settlementWorldObjectId == r.settlementWorldObjectId))
+                    && !component.JobsRaw.Any(j => j.settlementWorldObjectId == r.settlementWorldObjectId)
+                    && !component.BoardJobsRaw.Any(j => j.settlementWorldObjectId == r.settlementWorldObjectId && !j.IsTerminal))
                 .ToList();
             foreach (SettlementRecord orphan in toDrop)
             {
@@ -148,6 +150,21 @@ namespace Settlement_Services.Domain.Reconciliation
                 SettlementServiceOrchestrator.HandleSettlementDestroyed(component, settlementWorldObjectId, tile);
             }
             return affected;
+        }
+
+        public static void HandleMissingBoardProviders(SettlementServicesWorldComponent component)
+        {
+            foreach (int settlementWorldObjectId in component.BoardJobsRaw
+                         .Where(j => !j.IsTerminal)
+                         .Select(j => j.settlementWorldObjectId)
+                         .Distinct()
+                         .ToList())
+            {
+                if (WorldObjectLookup.ResolveSettlement(settlementWorldObjectId) != null) continue;
+
+                BoardJobRecord withTile = component.BoardJobsRaw.FirstOrDefault(j => j.settlementWorldObjectId == settlementWorldObjectId && j.settlementTile.Valid);
+                BoardJobCoordinator.HandleSettlementDestroyed(component, settlementWorldObjectId, withTile?.settlementTile ?? PlanetTile.Invalid);
+            }
         }
 
         public static void ReconcileHiringTransits(SettlementServicesWorldComponent component)

@@ -24,11 +24,21 @@ namespace Settlement_Services.Framework.Custody
             Settlement settlement = ctx.ResolveSettlement();
             if (settlement == null) return false;
 
-            PlanetTile tile = settlement.Tile;
+            if (!TryReturnPawns(ctx, pawns, settlement.Tile, job.requesterCaravanId, $"Job {job.jobId}", () => SettlementServiceNotifier.NotifyShuttleMergeSkipped(job), out _))
+                return false;
+
+            job.targetInCustody = false;
+            return true;
+        }
+
+        internal static bool TryReturnPawns(ServiceJobContext ctx, List<Pawn> pawns, PlanetTile tile, int preferredCaravanId, string logContext, System.Action onShuttleMergeSkipped, out Caravan receiverCaravan)
+        {
+            receiverCaravan = null;
+            if (pawns.Count == 0) return false;
             if (!tile.Valid || !tile.LayerDef.canFormCaravans) return false;
 
             List<Caravan> candidates = SnapshotWaitingCaravans(tile);
-            Caravan receiver = ResolveOriginalRequester(job, candidates) ?? SelectDeterministicReceiver(candidates);
+            Caravan receiver = ResolvePreferredCaravan(preferredCaravanId, candidates) ?? SelectDeterministicReceiver(candidates);
 
             bool createdCaravan = receiver == null;
             if (createdCaravan) receiver = CaravanMaker.MakeCaravan(Enumerable.Empty<Pawn>(), Faction.OfPlayer, tile, true);
@@ -42,18 +52,17 @@ namespace Settlement_Services.Framework.Custody
 
             if (!allReturned)
             {
-                SupportLog.Error($"Job {job.jobId}: automatic return could not verify every pawn back into a caravan; leaving the job awaiting collection.");
+                SupportLog.Error($"{logContext}: automatic return could not verify every pawn back into a caravan; leaving the pawns recoverable.");
                 if (createdCaravan && receiver != null && !receiver.Destroyed && receiver.PawnsListForReading.Count == 0) receiver.Destroy();
                 return false;
             }
 
             if (createdCaravan) receiver.Name = CaravanNameGenerator.GenerateCaravanName(receiver);
 
-            job.targetInCustody = false;
-
             List<Caravan> mergeSources = SnapshotWaitingCaravans(tile).Where(c => c != receiver).ToList();
-            MergeIntoReceiver(receiver, mergeSources, job);
+            MergeIntoReceiver(receiver, mergeSources, onShuttleMergeSkipped);
 
+            receiverCaravan = receiver;
             return true;
         }
 
@@ -63,13 +72,13 @@ namespace Settlement_Services.Framework.Custody
         private static List<Caravan> SnapshotWaitingCaravans(PlanetTile tile) =>
             Find.WorldObjects.Caravans.Where(c => IsWaitingPlayerCaravan(c) && c.Tile == tile).ToList();
 
-        private static Caravan ResolveOriginalRequester(ServiceJobRecord job, List<Caravan> candidates) =>
-            job.requesterCaravanId < 0 ? null : candidates.FirstOrDefault(c => c.ID == job.requesterCaravanId);
+        private static Caravan ResolvePreferredCaravan(int caravanId, List<Caravan> candidates) =>
+            caravanId < 0 ? null : candidates.FirstOrDefault(c => c.ID == caravanId);
 
         private static Caravan SelectDeterministicReceiver(List<Caravan> candidates) =>
             candidates.Count == 0 ? null : candidates.OrderByDescending(c => c.PawnsListForReading.Count).ThenBy(c => c.ID).First();
 
-        private static void MergeIntoReceiver(Caravan receiver, List<Caravan> sources, ServiceJobRecord job)
+        private static void MergeIntoReceiver(Caravan receiver, List<Caravan> sources, System.Action onShuttleMergeSkipped)
         {
             if (sources.Count == 0) return;
 
@@ -98,7 +107,7 @@ namespace Settlement_Services.Framework.Custody
                 receiver.Notify_Merged(merged);
             }
 
-            if (anySkipped) SettlementServiceNotifier.NotifyShuttleMergeSkipped(job);
+            if (anySkipped) onShuttleMergeSkipped?.Invoke();
         }
     }
 }

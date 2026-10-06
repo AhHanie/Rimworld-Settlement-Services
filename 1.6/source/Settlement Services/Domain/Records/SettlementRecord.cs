@@ -18,6 +18,8 @@ namespace Settlement_Services.Domain.Records
 
         public InvestmentRecord investment;
 
+        public JobBoardRecord jobBoard;
+
         public Dictionary<string, int> recentServiceEventTicks = new Dictionary<string, int>();
 
         public List<HiringCandidateRecord> hiringCandidates = new List<HiringCandidateRecord>();
@@ -37,6 +39,7 @@ namespace Settlement_Services.Domain.Records
             Scribe_Collections.Look(ref stock, "stock", LookMode.Deep);
             Scribe_Collections.Look(ref dynamicStockPools, "dynamicStockPools", LookMode.Deep);
             Scribe_Deep.Look(ref investment, "investment");
+            Scribe_Deep.Look(ref jobBoard, "jobBoard");
             Scribe_Collections.Look(ref recentServiceEventTicks, "recentServiceEventTicks", LookMode.Value, LookMode.Value);
             Scribe_Collections.Look(ref hiringCandidates, "hiringCandidates", LookMode.Deep);
             Scribe_Values.Look(ref hiringPoolExpiryTick, "hiringPoolExpiryTick", -1);

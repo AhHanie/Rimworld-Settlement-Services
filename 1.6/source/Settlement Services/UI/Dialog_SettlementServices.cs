@@ -7,9 +7,11 @@ using UnityEngine;
 using Verse;
 using Verse.Sound;
 using Settlement_Services.Domain;
+using Settlement_Services.Framework.Board;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Registry;
 using Settlement_Services.Framework.Specialty;
+using Settlement_Services.UI.JobBoard;
 
 namespace Settlement_Services.UI
 {
@@ -22,11 +24,20 @@ namespace Settlement_Services.UI
         private const float CategoryColumnWidth = 220f;
         private const float ServiceColumnX = CategoryColumnWidth + HeaderGutter;
 
+        private enum Tab
+        {
+            Services,
+            JobBoard
+        }
+
         private readonly ServiceRequestSession contextTemplate;
+        private readonly JobBoardTabPresenter boardPresenter;
+        private readonly List<TabRecord> tabs = new List<TabRecord>();
+        private Tab currentTab = Tab.Services;
         private ServiceCategoryDef selectedCategory;
         private Vector2 categoryScroll, serviceScroll;
 
-        public override Vector2 InitialSize => new Vector2(900f, 700f);
+        public override Vector2 InitialSize => new Vector2(900f, 760f);
         public Settlement Settlement => contextTemplate.settlement;
 
         public Dialog_SettlementServices(ServiceRequestSession session)
@@ -40,13 +51,38 @@ namespace Settlement_Services.UI
                 .OrderBy(c => c.order)
                 .FirstOrDefault();
             ServiceDiscoveryRecorder.RecordCandidates(session.settlement, session.channel);
+
+            if (session.channel == RequestChannel.InPerson && session.caravan != null)
+            {
+                BoardOfferScheduler.EnsureInitialized(session.settlement);
+                boardPresenter = new JobBoardTabPresenter(session, () => Close());
+                tabs.Add(new TabRecord("SettlementServices.JobBoard.Tab.Services".Translate(), () => currentTab = Tab.Services, () => currentTab == Tab.Services));
+                tabs.Add(new TabRecord("SettlementServices.JobBoard.Tab.JobBoard".Translate(), () => currentTab = Tab.JobBoard, () => currentTab == Tab.JobBoard));
+            }
         }
 
         public override void DoWindowContents(Rect inRect)
         {
             DrawHeader(new Rect(0f, 0f, inRect.width, HeaderHeight));
 
-            Rect bodyRect = new Rect(0f, HeaderHeight + HeaderGutter, inRect.width, inRect.height - HeaderHeight - HeaderGutter);
+            float bodyTop = HeaderHeight + HeaderGutter;
+            if (boardPresenter == null)
+            {
+                DrawServicesBody(new Rect(0f, bodyTop, inRect.width, inRect.height - bodyTop));
+                return;
+            }
+
+            Rect frame = new Rect(0f, bodyTop + TabDrawer.TabHeight, inRect.width, inRect.height - bodyTop - TabDrawer.TabHeight);
+            Widgets.DrawMenuSection(frame);
+            TabDrawer.DrawTabs(frame, tabs);
+
+            Rect content = frame.ContractedBy(8f);
+            if (currentTab == Tab.JobBoard) boardPresenter.Draw(content);
+            else DrawServicesBody(content);
+        }
+
+        private void DrawServicesBody(Rect bodyRect)
+        {
             Rect categoryRect = new Rect(bodyRect.x, bodyRect.y, CategoryColumnWidth, bodyRect.height);
             Rect serviceRect = new Rect(ServiceColumnX, bodyRect.y, bodyRect.width - ServiceColumnX, bodyRect.height);
             DrawCategoryList(categoryRect);
@@ -218,6 +254,11 @@ namespace Settlement_Services.UI
         private void DrawServiceRow(Rect rect, SettlementServiceDef def)
         {
             bool unavailable = ServiceCandidacyService.TryGetUnavailableReason(def, contextTemplate.settlement, contextTemplate.caravan, out string reasonKey);
+            if (!unavailable && LacksNegotiator)
+            {
+                unavailable = true;
+                reasonKey = NoNegotiatorKey;
+            }
             Texture2D icon = ServiceUITextures.Resolve(def.iconTexPath ?? selectedCategory.iconTexPath);
             string tooltip = unavailable ? ServiceErrorFormatting.Format(reasonKey, def, contextTemplate.settlement) : null;
             if (DrawSelectableRow(rect, def.LabelCap, icon, false, unavailable, tooltip))
@@ -254,9 +295,18 @@ namespace Settlement_Services.UI
             return clicked;
         }
 
+        private const string NoNegotiatorKey = "SettlementServices.Command.NoNegotiator";
+
+        private bool LacksNegotiator => contextTemplate.channel == RequestChannel.InPerson && contextTemplate.negotiator == null;
+
         private void OpenDetail(SettlementServiceDef def)
         {
             if (Find.WindowStack.IsOpen<Dialog_ServiceRequestDetail>()) return;
+            if (LacksNegotiator)
+            {
+                Messages.Message(NoNegotiatorKey.Translate(), MessageTypeDefOf.RejectInput, historical: false);
+                return;
+            }
             var session = contextTemplate.channel == RequestChannel.Remote
                 ? ServiceRequestSession.ForRemote(contextTemplate.settlement, contextTemplate.negotiator)
                 : ServiceRequestSession.ForInPersonVisit(contextTemplate.settlement, contextTemplate.caravan);

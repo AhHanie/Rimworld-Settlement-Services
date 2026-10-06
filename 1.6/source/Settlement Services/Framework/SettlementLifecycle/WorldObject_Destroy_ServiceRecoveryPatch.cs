@@ -1,6 +1,7 @@
 using HarmonyLib;
 using RimWorld.Planet;
 using Settlement_Services.Domain;
+using Settlement_Services.Framework.Board;
 
 namespace Settlement_Services.Framework.SettlementLifecycle
 {
@@ -15,6 +16,7 @@ namespace Settlement_Services.Framework.SettlementLifecycle
             if (domain == null) return;
 
             SettlementServiceOrchestrator.HandleSettlementDestroyed(domain, settlement.ID, settlement.Tile);
+            BoardJobCoordinator.HandleSettlementDestroyed(domain, settlement.ID, settlement.Tile);
         }
     }
 }

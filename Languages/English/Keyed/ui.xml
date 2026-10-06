@@ -54,8 +54,9 @@
     <SettlementServices.Label.NoServicesToShow>No services to show yet. Visit a settlement to request one.</SettlementServices.Label.NoServicesToShow>
     <SettlementServices.Label.NoKnownServicesToShow>No known services yet.</SettlementServices.Label.NoKnownServicesToShow>
     <SettlementServices.Label.ContactSettlementOption>{0} ({1})</SettlementServices.Label.ContactSettlementOption>
-    <SettlementServices.Label.ViewMode.Jobs>View: Jobs</SettlementServices.Label.ViewMode.Jobs>
-    <SettlementServices.Label.ViewMode.KnownServices>View: Known services</SettlementServices.Label.ViewMode.KnownServices>
+    <SettlementServices.Label.ViewMode.Services>Services</SettlementServices.Label.ViewMode.Services>
+    <SettlementServices.Label.ViewMode.JobBoard>Job board</SettlementServices.Label.ViewMode.JobBoard>
+    <SettlementServices.Label.ViewMode.KnownServices>Known services</SettlementServices.Label.ViewMode.KnownServices>
     <SettlementServices.Label.All>All</SettlementServices.Label.All>
     <SettlementServices.Label.GroupBy>Group by: {0}</SettlementServices.Label.GroupBy>
     <SettlementServices.Label.FilterSettlement>Settlement: {0}</SettlementServices.Label.FilterSettlement>

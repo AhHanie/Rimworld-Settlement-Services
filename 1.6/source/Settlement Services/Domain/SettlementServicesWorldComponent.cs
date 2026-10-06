@@ -9,6 +9,7 @@ using Settlement_Services.Domain.Migration;
 using Settlement_Services.Domain.Reconciliation;
 using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework;
+using Settlement_Services.Framework.Board;
 using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Custody;
 using Settlement_Services.Framework.Dto;
@@ -30,6 +31,10 @@ namespace Settlement_Services.Domain
         private List<SettlementRecord> settlementRecords = new List<SettlementRecord>();
         private List<ServiceJobRecord> jobs = new List<ServiceJobRecord>();
 
+        private int nextBoardJobId = 1;
+        private bool boardReconcilePending;
+        private List<BoardJobRecord> boardJobs = new List<BoardJobRecord>();
+
         private List<int> pendingHomeSilverRefunds = new List<int>();
 
         private ThingOwner<Thing> itemCustody;
@@ -46,6 +51,7 @@ namespace Settlement_Services.Domain
         private Dictionary<int, SettlementRecord> settlementsByWorldObjectId;
         private Dictionary<int, List<ServiceJobRecord>> jobsBySettlement;
         private Dictionary<int, ServiceJobRecord> jobsById;
+        private Dictionary<int, BoardJobRecord> boardJobsById = new Dictionary<int, BoardJobRecord>();
         private List<ServiceJobRecord> activeJobsIndex;
         private Dictionary<int, int> dynamicStockSyncTicks = new Dictionary<int, int>();
 
@@ -67,6 +73,8 @@ namespace Settlement_Services.Domain
             Scribe_Values.Look(ref nextJobId, "nextJobId", 1);
             Scribe_Collections.Look(ref settlementRecords, "settlementRecords", LookMode.Deep);
             Scribe_Collections.Look(ref jobs, "jobs", LookMode.Deep);
+            Scribe_Values.Look(ref nextBoardJobId, "nextBoardJobId", 1);
+            Scribe_Collections.Look(ref boardJobs, "boardJobs", LookMode.Deep);
             Scribe_Collections.Look(ref pendingHomeSilverRefunds, "pendingHomeSilverRefunds", LookMode.Value);
             Scribe_Deep.Look(ref itemCustody, "itemCustody");
             Scribe_Deep.Look(ref hiringCandidateCustody, "hiringCandidateCustody");
@@ -77,8 +85,10 @@ namespace Settlement_Services.Domain
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
+                SupportLog.Info($"Job board load: boardJobs list {(boardJobs == null ? "was null" : "has " + boardJobs.Count + " record(s)")}, itemCustody {(itemCustody == null ? "was null" : "holds " + itemCustody.Count + " thing(s)")}.");
                 if (settlementRecords == null) settlementRecords = new List<SettlementRecord>();
                 if (jobs == null) jobs = new List<ServiceJobRecord>();
+                if (boardJobs == null) boardJobs = new List<BoardJobRecord>();
                 if (pendingHomeSilverRefunds == null) pendingHomeSilverRefunds = new List<int>();
                 if (itemCustody == null) itemCustody = new ThingOwner<Thing>(this);
                 if (hiringCandidateCustody == null) hiringCandidateCustody = new ThingOwner<Pawn>(this);
@@ -88,6 +98,7 @@ namespace Settlement_Services.Domain
                 if (compatibilityWorldState == null) compatibilityWorldState = new CompatibilityWorldState();
                 settlementRecords.RemoveAll(r => r == null);
                 jobs.RemoveAll(j => j == null);
+                boardJobs.RemoveAll(j => j == null);
                 hiringTransits.RemoveAll(t => t == null);
                 foreach (SettlementRecord record in settlementRecords)
                     record.hiringCandidates.RemoveAll(c => !hiringCandidateCustody.Contains(c.pawn));
@@ -107,10 +118,21 @@ namespace Settlement_Services.Domain
 
             loadedSchemaVersion = SchemaVersion.Current;
             SettlementServicesReconciler.Reconcile(this);
+            boardReconcilePending = fromLoad;
+        }
+
+        internal void EnsureBoardReconciled()
+        {
+            if (!boardReconcilePending) return;
+
+            boardReconcilePending = false;
+            BoardJobCoordinator.Reconcile(this);
+            SettlementServicesReconciler.HandleMissingBoardProviders(this);
         }
 
         public override void WorldComponentTick()
         {
+            EnsureBoardReconciled();
             FlushPendingHomeSilverRefunds();
             FlushPendingHomeDeliveries();
             PruneResolvedJobs();
@@ -118,6 +140,8 @@ namespace Settlement_Services.Domain
             SettlementServicesReconciler.DetectAndHandleMissingProviders(this);
             SettlementServicesReconciler.ReconcileHiringTransits(this);
             SettlementServiceJobScheduler.TickAll(this, TickInterval);
+            BoardJobCoordinator.TickDue(this);
+            BoardOfferScheduler.TickDue(this);
             compatibilityWorldState.PruneOlderThan(CompatibilityCooldownRetentionTicks);
         }
 
@@ -185,6 +209,8 @@ namespace Settlement_Services.Domain
 
         public void TakeItemCustody(Thing thing) => itemCustody.TryAdd(thing, canMergeWithExistingStacks: false);
 
+        public bool TryTakeItemCustody(Thing thing) => itemCustody.TryAdd(thing, canMergeWithExistingStacks: false);
+
         public void ReleaseItemCustody(Thing thing)
         {
             if (itemCustody.Contains(thing)) itemCustody.Remove(thing);
@@ -211,6 +237,8 @@ namespace Settlement_Services.Domain
 
         public bool IsTargetReserved(Thing thing, int excludingJobId = -1)
         {
+            if (thing is Pawn boardPawn && IsPawnHeldByBoard(boardPawn)) return true;
+
             foreach (ServiceJobRecord job in jobs)
             {
                 if (job.jobId == excludingJobId) continue;
@@ -240,6 +268,32 @@ namespace Settlement_Services.Domain
             return false;
         }
 
+        public bool IsPawnHeldByBoard(Pawn pawn)
+        {
+            if (pawn == null) return false;
+
+            foreach (BoardJobRecord job in boardJobs)
+            {
+                if (!job.HoldsWorkers || job.pawnsReturned) continue;
+                if (job.assignedPawns.Contains(pawn)) return true;
+            }
+            return false;
+        }
+
+        public bool HasBoardHeldFreeColonist()
+        {
+            foreach (BoardJobRecord job in boardJobs)
+            {
+                if (!job.HoldsWorkers || job.pawnsReturned) continue;
+
+                foreach (Pawn pawn in job.assignedPawns)
+                {
+                    if (pawn != null && !pawn.Destroyed && !pawn.Dead && pawn.IsColonist && pawn.HostFaction == null) return true;
+                }
+            }
+            return false;
+        }
+
         private void RebuildIndexes()
         {
             settlementsByWorldObjectId = new Dictionary<int, SettlementRecord>();
@@ -251,6 +305,18 @@ namespace Settlement_Services.Domain
                     continue;
                 }
                 settlementsByWorldObjectId[record.settlementWorldObjectId] = record;
+            }
+
+            boardJobsById = new Dictionary<int, BoardJobRecord>();
+            foreach (BoardJobRecord boardJob in boardJobs)
+            {
+                if (boardJob.boardJobId < 0 || boardJobsById.ContainsKey(boardJob.boardJobId))
+                {
+                    Settlement_Services.SupportLog.Warning($"Duplicate or invalid board job id {boardJob.boardJobId}, assigning a fresh id.");
+                    boardJob.boardJobId = nextBoardJobId++;
+                }
+                boardJobsById[boardJob.boardJobId] = boardJob;
+                if (boardJob.boardJobId >= nextBoardJobId) nextBoardJobId = boardJob.boardJobId + 1;
             }
 
             jobsById = new Dictionary<int, ServiceJobRecord>();
@@ -278,6 +344,45 @@ namespace Settlement_Services.Domain
 
         internal List<SettlementRecord> SettlementRecordsRaw => settlementRecords;
         internal List<ServiceJobRecord> JobsRaw => jobs;
+        internal List<BoardJobRecord> BoardJobsRaw => boardJobs;
+
+        public IReadOnlyList<BoardJobRecord> AllBoardJobs => boardJobs;
+
+        public List<BoardJobRecord> BoardJobsForSettlement(int settlementWorldObjectId)
+        {
+            var result = new List<BoardJobRecord>();
+            foreach (BoardJobRecord job in boardJobs)
+            {
+                if (job.settlementWorldObjectId == settlementWorldObjectId) result.Add(job);
+            }
+            return result;
+        }
+
+        public BoardJobRecord GetBoardJob(int boardJobId) =>
+            boardJobsById.TryGetValue(boardJobId, out BoardJobRecord job) ? job : null;
+
+        public void AddBoardJob(BoardJobRecord job)
+        {
+            job.boardJobId = nextBoardJobId++;
+            boardJobs.Add(job);
+            boardJobsById[job.boardJobId] = job;
+        }
+
+        public void RemoveBoardJob(BoardJobRecord job)
+        {
+            boardJobs.Remove(job);
+            boardJobsById.Remove(job.boardJobId);
+        }
+
+        public JobBoardRecord GetOrCreateJobBoard(int settlementWorldObjectId)
+        {
+            SettlementRecord record = GetOrCreateSettlementRecord(settlementWorldObjectId);
+            if (record.jobBoard == null) record.jobBoard = new JobBoardRecord();
+            return record.jobBoard;
+        }
+
+        public JobBoardRecord TryGetJobBoard(int settlementWorldObjectId) =>
+            settlementsByWorldObjectId.TryGetValue(settlementWorldObjectId, out SettlementRecord record) ? record.jobBoard : null;
 
 
         public IReadOnlyList<ServiceJobRecord> JobsForSettlement(int settlementWorldObjectId)

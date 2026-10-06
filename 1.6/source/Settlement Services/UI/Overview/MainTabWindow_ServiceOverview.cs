@@ -14,11 +14,12 @@ namespace Settlement_Services.UI.Overview
 {
     public class MainTabWindow_ServiceOverview : MainTabWindow
     {
-        private enum ServiceOverviewViewMode { Jobs, KnownServices }
+        private enum ServiceOverviewViewMode { Services, JobBoard, KnownServices }
 
         private Vector2 scrollPosition;
         private Vector2 knownServicesScrollPosition;
-        private ServiceOverviewViewMode viewMode = ServiceOverviewViewMode.Jobs;
+        private readonly BoardOverviewView boardView = new BoardOverviewView();
+        private ServiceOverviewViewMode viewMode = ServiceOverviewViewMode.Services;
         private ServiceOverviewGrouping grouping = ServiceOverviewGrouping.Settlement;
         private int? filterSettlementWorldObjectId;
         private ServiceCategoryDef filterCategory;
@@ -31,13 +32,22 @@ namespace Settlement_Services.UI.Overview
         {
             Text.Font = GameFont.Small;
 
-            Rect viewToggleRect = new Rect(0f, 0f, 150f, 30f);
-            if (Widgets.ButtonText(viewToggleRect, ("SettlementServices.Label.ViewMode." + viewMode).Translate()))
-                viewMode = viewMode == ServiceOverviewViewMode.Jobs ? ServiceOverviewViewMode.KnownServices : ServiceOverviewViewMode.Jobs;
+            float modeX = 0f;
+            foreach (ServiceOverviewViewMode mode in Enum.GetValues(typeof(ServiceOverviewViewMode)))
+            {
+                Rect modeRect = new Rect(modeX, 0f, 150f, 30f);
+                if (mode == viewMode) Widgets.DrawOptionBackground(modeRect, true);
+                if (Widgets.ButtonText(modeRect, ("SettlementServices.Label.ViewMode." + mode).Translate())) viewMode = mode;
+                modeX += 156f;
+            }
 
-            Rect remainder = new Rect(0f, viewToggleRect.yMax + 4f, inRect.width, inRect.height - viewToggleRect.height - 4f);
-            if (viewMode == ServiceOverviewViewMode.Jobs) DrawJobsView(remainder);
-            else DrawKnownServicesView(remainder);
+            Rect remainder = new Rect(0f, 34f, inRect.width, inRect.height - 34f);
+            switch (viewMode)
+            {
+                case ServiceOverviewViewMode.Services: DrawJobsView(remainder); break;
+                case ServiceOverviewViewMode.JobBoard: boardView.Draw(remainder); break;
+                default: DrawKnownServicesView(remainder); break;
+            }
         }
 
         private void DrawJobsView(Rect inRect)
@@ -329,7 +339,7 @@ namespace Settlement_Services.UI.Overview
             }, destructive: true, title: title));
         }
 
-        private static void JumpToSettlement(Settlement settlement)
+        internal static void JumpToSettlement(Settlement settlement)
         {
             if (settlement == null)
             {

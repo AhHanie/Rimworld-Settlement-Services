@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Command.NoVisitingColonist>No free colonist in this caravan can visit the settlement.</SettlementServices.Command.NoVisitingColonist>
+
+    <SettlementServices.JobBoard.Tab.Services>Services</SettlementServices.JobBoard.Tab.Services>
+    <SettlementServices.JobBoard.Tab.JobBoard>Job Board</SettlementServices.JobBoard.Tab.JobBoard>
+
+    <SettlementServices.JobBoard.Filter.Available>Available</SettlementServices.JobBoard.Filter.Available>
+    <SettlementServices.JobBoard.Filter.Active>Active</SettlementServices.JobBoard.Filter.Active>
+    <SettlementServices.JobBoard.Filter.Recent>Recent</SettlementServices.JobBoard.Filter.Recent>
+    <SettlementServices.JobBoard.Empty.Available>No contracts are posted here right now. Check back later.</SettlementServices.JobBoard.Empty.Available>
+    <SettlementServices.JobBoard.Empty.Active>None of your colonists are working for this settlement.</SettlementServices.JobBoard.Empty.Active>
+    <SettlementServices.JobBoard.Empty.Recent>No recent contracts with this settlement.</SettlementServices.JobBoard.Empty.Recent>
+
+    <SettlementServices.JobBoard.Row.Offer>{0} worker(s) - {1} of work - expires in {2}</SettlementServices.JobBoard.Row.Offer>
+    <SettlementServices.JobBoard.Row.Worked>{0} worker(s) - {1}</SettlementServices.JobBoard.Row.Worked>
+
+    <SettlementServices.JobBoard.Back>Back</SettlementServices.JobBoard.Back>
+    <SettlementServices.JobBoard.Start>Send workers</SettlementServices.JobBoard.Start>
+    <SettlementServices.JobBoard.CancelJob>Cancel job</SettlementServices.JobBoard.CancelJob>
+    <SettlementServices.JobBoard.CancelConfirm>Cancel "{0}"? The workers will return at once, and the reward is forfeited.</SettlementServices.JobBoard.CancelConfirm>
+    <SettlementServices.JobBoard.CancelConfirmYes>Cancel job</SettlementServices.JobBoard.CancelConfirmYes>
+    <SettlementServices.JobBoard.CancelConfirmNo>Keep working</SettlementServices.JobBoard.CancelConfirmNo>
+    <SettlementServices.JobBoard.NoCaravanPawns>No colonists in this caravan can take the job.</SettlementServices.JobBoard.NoCaravanPawns>
+    <SettlementServices.JobBoard.SelectParty>Select workers ({0}/{1})</SettlementServices.JobBoard.SelectParty>
+
+    <SettlementServices.JobBoard.Detail.Workers>Workers needed</SettlementServices.JobBoard.Detail.Workers>
+    <SettlementServices.JobBoard.Detail.Duration>Time of work</SettlementServices.JobBoard.Detail.Duration>
+    <SettlementServices.JobBoard.Detail.Expires>Offer expires in</SettlementServices.JobBoard.Detail.Expires>
+    <SettlementServices.JobBoard.Detail.Status>Status</SettlementServices.JobBoard.Detail.Status>
+    <SettlementServices.JobBoard.Detail.Reward>Reward</SettlementServices.JobBoard.Detail.Reward>
+    <SettlementServices.JobBoard.Detail.RewardValue>worth {0}</SettlementServices.JobBoard.Detail.RewardValue>
+    <SettlementServices.JobBoard.Detail.Requirements>Requirements</SettlementServices.JobBoard.Detail.Requirements>
+    <SettlementServices.JobBoard.Detail.ActiveWorkers>Working: {0}\n\nTime remaining: {1}</SettlementServices.JobBoard.Detail.ActiveWorkers>
+
+    <SettlementServices.JobBoard.Role.Crew>Crew</SettlementServices.JobBoard.Role.Crew>
+    <SettlementServices.JobBoard.Role.Specialist>Specialist</SettlementServices.JobBoard.Role.Specialist>
+    <SettlementServices.JobBoard.Role.Support>Support</SettlementServices.JobBoard.Role.Support>
+    <SettlementServices.JobBoard.Role.Expert>Skill</SettlementServices.JobBoard.Role.Expert>
+    <SettlementServices.JobBoard.Role.Line>{0}: {1} {2}+ (at least {3})</SettlementServices.JobBoard.Role.Line>
+    <SettlementServices.JobBoard.Role.Short>{0} {1}+ x{2}</SettlementServices.JobBoard.Role.Short>
+    <SettlementServices.JobBoard.Role.Progress>{0} - {1}/{2} selected</SettlementServices.JobBoard.Role.Progress>
+
+    <SettlementServices.JobBoard.Status.Available>Available</SettlementServices.JobBoard.Status.Available>
+    <SettlementServices.JobBoard.Status.Active>In progress, {0} remaining</SettlementServices.JobBoard.Status.Active>
+    <SettlementServices.JobBoard.Status.ReturnPending>Workers are returning</SettlementServices.JobBoard.Status.ReturnPending>
+    <SettlementServices.JobBoard.Status.Completed>Completed</SettlementServices.JobBoard.Status.Completed>
+    <SettlementServices.JobBoard.Status.Cancelled>Cancelled</SettlementServices.JobBoard.Status.Cancelled>
+    <SettlementServices.JobBoard.Status.Failed>Failed</SettlementServices.JobBoard.Status.Failed>
+    <SettlementServices.JobBoard.Status.Expired>Expired</SettlementServices.JobBoard.Status.Expired>
+
+    <SettlementServices.JobBoard.Block.Gone>No longer available.</SettlementServices.JobBoard.Block.Gone>
+    <SettlementServices.JobBoard.Block.NotInCaravan>Not in this caravan.</SettlementServices.JobBoard.Block.NotInCaravan>
+    <SettlementServices.JobBoard.Block.NotHumanlike>Cannot do this kind of work.</SettlementServices.JobBoard.Block.NotHumanlike>
+    <SettlementServices.JobBoard.Block.NotFreeColonist>Only free colonists can take contracts.</SettlementServices.JobBoard.Block.NotFreeColonist>
+    <SettlementServices.JobBoard.Block.NotAdult>Too young for contract work.</SettlementServices.JobBoard.Block.NotAdult>
+    <SettlementServices.JobBoard.Block.QuestReserved>Committed to a quest.</SettlementServices.JobBoard.Block.QuestReserved>
+    <SettlementServices.JobBoard.Block.Suspended>Suspended.</SettlementServices.JobBoard.Block.Suspended>
+    <SettlementServices.JobBoard.Block.Downed>Downed.</SettlementServices.JobBoard.Block.Downed>
+    <SettlementServices.JobBoard.Block.MentalState>In a mental break.</SettlementServices.JobBoard.Block.MentalState>
+    <SettlementServices.JobBoard.Block.Drafted>Drafted. Undraft first.</SettlementServices.JobBoard.Block.Drafted>
+    <SettlementServices.JobBoard.Block.AlreadyAssigned>Already working elsewhere.</SettlementServices.JobBoard.Block.AlreadyAssigned>
+    <SettlementServices.JobBoard.Block.Bleeding>Bleeding. Treat the wounds first.</SettlementServices.JobBoard.Block.Bleeding>
+    <SettlementServices.JobBoard.Block.DangerouslySick>Too ill to work.</SettlementServices.JobBoard.Block.DangerouslySick>
+    <SettlementServices.JobBoard.Block.Pregnant>Too close to giving birth to be away that long.</SettlementServices.JobBoard.Block.Pregnant>
+
+    <SettlementServices.JobBoard.Error.NoLongerAvailable>This contract is no longer available.</SettlementServices.JobBoard.Error.NoLongerAvailable>
+    <SettlementServices.JobBoard.Error.Expired>This contract has expired.</SettlementServices.JobBoard.Error.Expired>
+    <SettlementServices.JobBoard.Error.ProviderLost>This settlement can no longer offer the contract.</SettlementServices.JobBoard.Error.ProviderLost>
+    <SettlementServices.JobBoard.Error.ProviderHostile>This settlement is hostile and will not hire you.</SettlementServices.JobBoard.Error.ProviderHostile>
+    <SettlementServices.JobBoard.Error.CaravanNotAtSettlement>The caravan must be waiting at this settlement.</SettlementServices.JobBoard.Error.CaravanNotAtSettlement>
+    <SettlementServices.JobBoard.Error.RewardLost>The promised reward is no longer available.</SettlementServices.JobBoard.Error.RewardLost>
+    <SettlementServices.JobBoard.Error.PartySize>Select exactly {0} worker(s).</SettlementServices.JobBoard.Error.PartySize>
+    <SettlementServices.JobBoard.Error.RequirementsNotMet>The selected workers do not meet every requirement.</SettlementServices.JobBoard.Error.RequirementsNotMet>
+
+    <SettlementServices.JobBoard.Fail.PartyLost>One of the workers was lost.</SettlementServices.JobBoard.Fail.PartyLost>
+    <SettlementServices.JobBoard.Fail.ProviderHostile>The settlement turned hostile.</SettlementServices.JobBoard.Fail.ProviderHostile>
+    <SettlementServices.JobBoard.Fail.ProviderLost>The settlement is gone or changed hands.</SettlementServices.JobBoard.Fail.ProviderLost>
+    <SettlementServices.JobBoard.Fail.DefMissing>The contract is no longer recognised.</SettlementServices.JobBoard.Fail.DefMissing>
+    <SettlementServices.JobBoard.Fail.Aborted>The job was cancelled.</SettlementServices.JobBoard.Fail.Aborted>
+
+    <SettlementServices.JobBoard.Message.Started>{0} worker(s) have begun "{1}" for {2}. They will be done in {3}.</SettlementServices.JobBoard.Message.Started>
+    <SettlementServices.JobBoard.Message.Cancelled>"{0}" at {1} was cancelled. The workers have returned.</SettlementServices.JobBoard.Message.Cancelled>
+    <SettlementServices.JobBoard.Letter.CompletedLabel>Job finished</SettlementServices.JobBoard.Letter.CompletedLabel>
+    <SettlementServices.JobBoard.Letter.CompletedText>Your workers have finished "{0}" for {1} and are waiting at the settlement.\n\nReward: {2} (worth {3}).</SettlementServices.JobBoard.Letter.CompletedText>
+    <SettlementServices.JobBoard.Letter.FailedLabel>Job failed</SettlementServices.JobBoard.Letter.FailedLabel>
+    <SettlementServices.JobBoard.Letter.FailedText>"{0}" for {1} could not be finished. {2}\n\nThe surviving workers have returned, and no reward was paid.</SettlementServices.JobBoard.Letter.FailedText>
+
+    <SettlementServices.JobBoard.Overview.Empty>No job board contracts to show yet. Visit a settlement and send workers to start one.</SettlementServices.JobBoard.Overview.Empty>
+    <SettlementServices.JobBoard.Overview.Line1>{0} - {1} ({2} worker(s))</SettlementServices.JobBoard.Overview.Line1>
+    <SettlementServices.JobBoard.Overview.Line2>{0} - reward {1}</SettlementServices.JobBoard.Overview.Line2>
+    <SettlementServices.JobBoard.Overview.Status.Active>In progress</SettlementServices.JobBoard.Overview.Status.Active>
+    <SettlementServices.JobBoard.Overview.Status.ReturnPending>Returning</SettlementServices.JobBoard.Overview.Status.ReturnPending>
+    <SettlementServices.JobBoard.Overview.Status.Completed>Completed</SettlementServices.JobBoard.Overview.Status.Completed>
+    <SettlementServices.JobBoard.Overview.Status.Failed>Failed</SettlementServices.JobBoard.Overview.Status.Failed>
+    <SettlementServices.JobBoard.Overview.Status.Cancelled>Cancelled</SettlementServices.JobBoard.Overview.Status.Cancelled>
+
+    <SettlementServices.JobBoard.UnknownSettlement>a settlement</SettlementServices.JobBoard.UnknownSettlement>
+    <SettlementServices.JobBoard.FlavorFallback>{0} is looking for workers to help with {1}.</SettlementServices.JobBoard.FlavorFallback>
+</LanguageData>

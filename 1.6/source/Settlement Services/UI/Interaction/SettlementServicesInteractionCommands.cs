@@ -64,13 +64,16 @@ namespace Settlement_Services.UI.Interaction
 
             if (settlement.Faction != null && settlement.Faction.HostileTo(Faction.OfPlayer))
                 command.Disable("SettlementServices.Error.FactionHostile".Translate());
-            else if (BestCaravanPawnUtility.FindBestNegotiator(caravan) == null)
-                command.Disable("SettlementServices.Command.NoNegotiator".Translate());
+            else if (!HasVisitingColonist(caravan))
+                command.Disable("SettlementServices.Command.NoVisitingColonist".Translate());
             else if (SettlementServicesCompatibilityRegistry.GetRequestBlockReason(settlement) is string compatibilityBlockReason)
                 command.Disable(compatibilityBlockReason.Translate());
 
             return command;
         }
+
+        internal static bool HasVisitingColonist(Caravan caravan) =>
+            caravan != null && caravan.PawnsListForReading.Any(p => p.IsFreeColonist);
 
         private static Command_Action BuildInvestCommand(Settlement settlement, Caravan caravan)
         {

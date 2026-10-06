@@ -80,7 +80,7 @@ namespace Settlement_Services.Framework.Custody
             return true;
         }
 
-        private static bool TryDetachPawn(ServiceJobContext ctx, ref Caravan currentCaravan, Pawn pawn, out string errorKey)
+        internal static bool TryDetachPawn(ServiceJobContext ctx, ref Caravan currentCaravan, Pawn pawn, out string errorKey)
         {
             errorKey = null;
 
