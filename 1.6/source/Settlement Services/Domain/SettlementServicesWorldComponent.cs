@@ -632,6 +632,34 @@ namespace Settlement_Services.Domain
             record.recentServiceEventTicks[eventDefName] = Find.TickManager.TicksGame;
         }
 
+        public int RumorCooldownRemainingTicks(int settlementWorldObjectId)
+        {
+            if (!settlementsByWorldObjectId.TryGetValue(settlementWorldObjectId, out SettlementRecord record)) return 0;
+            if (record.nextRumorAvailableTick < 0) return 0;
+            return Mathf.Max(0, record.nextRumorAvailableTick - Find.TickManager.TicksGame);
+        }
+
+        public bool HasRumorQuestFor(int settlementWorldObjectId, int jobId) =>
+            settlementsByWorldObjectId.TryGetValue(settlementWorldObjectId, out SettlementRecord record)
+            && record.lastRumorQuestJobId == jobId;
+
+        public bool HasPendingServiceJob(int settlementWorldObjectId, string serviceDefName, int excludingJobId = -1)
+        {
+            foreach (ServiceJobRecord job in JobsForSettlement(settlementWorldObjectId))
+            {
+                if (job.jobId == excludingJobId || job.serviceDefName != serviceDefName) continue;
+                if (job.status == ServiceJobStatus.Reserved || job.status == ServiceJobStatus.Active) return true;
+            }
+            return false;
+        }
+
+        public void RecordRumorQuestGenerated(int settlementWorldObjectId, int jobId, int cooldownTicks)
+        {
+            SettlementRecord record = GetOrCreateSettlementRecord(settlementWorldObjectId);
+            record.lastRumorQuestJobId = jobId;
+            record.nextRumorAvailableTick = Find.TickManager.TicksGame + cooldownTicks;
+        }
+
         public void ReleaseReservation(int jobId, string thingDefName)
         {
             ServiceJobRecord job = GetJob(jobId);

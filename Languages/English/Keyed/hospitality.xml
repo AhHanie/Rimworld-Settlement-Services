@@ -7,6 +7,9 @@
     <SettlementServices.Message.GuestOptionsSkippedForSomeGuests>Some copied options were not valid for every guest and were skipped.</SettlementServices.Message.GuestOptionsSkippedForSomeGuests>
     <SettlementServices.Error.NoSubstanceAvailable>This settlement has no recreational substance available at your visit.</SettlementServices.Error.NoSubstanceAvailable>
     <SettlementServices.Error.AdultsOnly>This service is only available to adult pawns.</SettlementServices.Error.AdultsOnly>
+    <SettlementServices.Error.NoNewRumors>This settlement currently has no new rumors.</SettlementServices.Error.NoNewRumors>
+    <SettlementServices.Error.RumorSearchInProgress>Someone is already asking around this settlement for rumors.</SettlementServices.Error.RumorSearchInProgress>
+    <SettlementServices.Error.NoRumorLeadsAvailable>The locals have no rumors worth following up right now.</SettlementServices.Error.NoRumorLeadsAvailable>
     <SettlementServices.LineItem.LodgingFood>Food</SettlementServices.LineItem.LodgingFood>
     <SettlementServices.LineItem.HospitalityPackage>{0}</SettlementServices.LineItem.HospitalityPackage>
     <SettlementServices.LineItem.HospitalitySubstance>{0}</SettlementServices.LineItem.HospitalitySubstance>

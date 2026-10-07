@@ -361,6 +361,8 @@
 
     <Compile Include="Services\Hospitality\SubstanceEligibilityService.cs" />
     <Compile Include="Services\Hospitality\LodgingServiceWorker.cs" />
+    <Compile Include="Services\Hospitality\RumorGatheringServiceWorker.cs" />
+    <Compile Include="Services\Hospitality\RumorQuestGenerator.cs" />
     <Compile Include="Services\Hospitality\HospitalityPackageDef.cs" />
     <Compile Include="Services\Hospitality\HospitalityPackagePricing.cs" />
     <Compile Include="Services\Hospitality\HospitalityPackageDefOf.cs" />

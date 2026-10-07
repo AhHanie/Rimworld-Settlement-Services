@@ -22,6 +22,9 @@ namespace Settlement_Services.Domain.Records
 
         public Dictionary<string, int> recentServiceEventTicks = new Dictionary<string, int>();
 
+        public int nextRumorAvailableTick = -1;
+        public int lastRumorQuestJobId = -1;
+
         public List<HiringCandidateRecord> hiringCandidates = new List<HiringCandidateRecord>();
         public int hiringPoolExpiryTick = -1;
         public int nextHiringCandidateId = 1;
@@ -41,6 +44,8 @@ namespace Settlement_Services.Domain.Records
             Scribe_Deep.Look(ref investment, "investment");
             Scribe_Deep.Look(ref jobBoard, "jobBoard");
             Scribe_Collections.Look(ref recentServiceEventTicks, "recentServiceEventTicks", LookMode.Value, LookMode.Value);
+            Scribe_Values.Look(ref nextRumorAvailableTick, "nextRumorAvailableTick", -1);
+            Scribe_Values.Look(ref lastRumorQuestJobId, "lastRumorQuestJobId", -1);
             Scribe_Collections.Look(ref hiringCandidates, "hiringCandidates", LookMode.Deep);
             Scribe_Values.Look(ref hiringPoolExpiryTick, "hiringPoolExpiryTick", -1);
             Scribe_Values.Look(ref nextHiringCandidateId, "nextHiringCandidateId", 1);

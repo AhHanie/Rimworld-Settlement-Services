@@ -10,7 +10,7 @@
     <requiredTechLevel>Neolithic</requiredTechLevel>
     <minimumCost>20</minimumCost>
     <wealthScale>0.01</wealthScale>
-    <duration>60000</duration> <!-- one night -->
+    <duration>60000</duration>    <!-- one night -->
     <targetRule>Pawn</targetRule>
     <batchMode>Targets</batchMode>
     <priorityTiers>
@@ -28,6 +28,24 @@
       </li>
     </priorityTiers>
     <iconTexPath>SettlementServices/UI/Icons/lodging</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_RumorGathering</defName>
+    <category>SettlementService_Hospitality</category>
+    <label>ask around for rumors</label>
+    <description>Pay a colonist's way while they spend a few hours talking with the locals, trading drinks and gossip for leads. When they return, they bring back one rumor worth acting on, delivered as a new quest. A settlement only has so much news to share, so each one can offer a fresh rumor once every five days.</description>
+    <workerClass>Settlement_Services.Services.Hospitality.RumorGatheringServiceWorker</workerClass>
+    <requiredTechLevel>Neolithic</requiredTechLevel>
+    <minimumCost>250</minimumCost>
+    <wealthScale>0.01</wealthScale>
+    <duration>60000</duration>
+    <targetRule>Pawn</targetRule>
+    <batchMode>None</batchMode>
+    <allowRemoteDiscovery>false</allowRemoteDiscovery>
+    <allowRemoteRequest>false</allowRemoteRequest>
+    <eventChancePct>0</eventChancePct>
+    <iconTexPath>SettlementServices/UI/Icons/mouth</iconTexPath>
   </Settlement_Services.Framework.Defs.SettlementServiceDef>
 
 </Defs>
