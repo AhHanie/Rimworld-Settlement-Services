@@ -209,8 +209,8 @@ namespace Settlement_Services.Domain
             foreach (DynamicStockEntryRecord entry in rec.entries)
             {
                 if (entry.retired) continue;
-                int amount = Mathf.RoundToInt(Rand.RangeInclusive(settings.minRefreshAmount, settings.maxRefreshAmount) * refreshMultiplier);
-                entry.currentAmount = Mathf.Min(SettlementStockService.EffectiveDynamicCapacity(entry.baseCapacity, capacityMultiplier), entry.currentAmount + amount);
+                int amount = SettlementStockService.ToQuantity(Rand.RangeInclusive(settings.minRefreshAmount, settings.maxRefreshAmount) * refreshMultiplier);
+                entry.currentAmount = Mathf.Min(SettlementStockService.EffectiveDynamicCapacity(entry.baseCapacity, capacityMultiplier), SettlementStockService.AddQuantities(entry.currentAmount, amount));
             }
 
             int survivors = rec.entries.Count(e => !e.retired);

@@ -12,7 +12,13 @@ namespace Settlement_Services
         public static ModSettings Current =>
             current ?? (current = LoadedModManager.GetMod<Mod>().GetSettings<ModSettings>());
 
+        public const int MinStockQuantityMultiplier = 1;
+
+        public const int MaxStockQuantityMultiplier = 10;
+
         public float wealthPriceScalePct = 1f;
+
+        public int stockQuantityMultiplier = 1;
 
         public Dictionary<string, float> difficultyMultiplierOverrides = new Dictionary<string, float>();
 
@@ -40,6 +46,7 @@ namespace Settlement_Services
         {
             base.ExposeData();
             Scribe_Values.Look(ref wealthPriceScalePct, "wealthPriceScalePct", 1f);
+            Scribe_Values.Look(ref stockQuantityMultiplier, "stockQuantityMultiplier", 1);
             Scribe_Collections.Look(ref difficultyMultiplierOverrides, "difficultyMultiplierOverrides", LookMode.Value, LookMode.Value);
             Scribe_Collections.Look(ref moodThoughtOverrides, "moodThoughtOverrides", LookMode.Value, LookMode.Value);
             Scribe_Values.Look(ref serviceEventFrequencyPct, "serviceEventFrequencyPct", 1f);
@@ -59,6 +66,7 @@ namespace Settlement_Services
             if (compatibilitySettings == null) compatibilitySettings = new CompatibilitySettingsStore();
 
             wealthPriceScalePct = Mathf.Clamp(wealthPriceScalePct, 0f, 3f);
+            stockQuantityMultiplier = Mathf.Clamp(stockQuantityMultiplier, MinStockQuantityMultiplier, MaxStockQuantityMultiplier);
             serviceEventFrequencyPct = Mathf.Clamp(serviceEventFrequencyPct, 0f, 2f);
             goodwillDiscountScalePct = Mathf.Clamp(goodwillDiscountScalePct, 0f, 2f);
             investmentCostScalePct = Mathf.Clamp(investmentCostScalePct, 0f, 3f);

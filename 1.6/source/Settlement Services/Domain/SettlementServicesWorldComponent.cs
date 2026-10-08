@@ -840,7 +840,8 @@ namespace Settlement_Services.Domain
             if (elapsed >= refreshIntervalTicks && refreshIntervalTicks > 0)
             {
                 int intervals = elapsed / refreshIntervalTicks;
-                stock.currentAmount = Mathf.Min(capacity, stock.currentAmount + intervals * refreshAmount);
+                long restored = (long)stock.currentAmount + (long)intervals * Math.Max(0, refreshAmount);
+                stock.currentAmount = (int)Math.Max(0L, Math.Min(restored, capacity));
                 stock.lastRefreshTick += intervals * refreshIntervalTicks;
             }
 

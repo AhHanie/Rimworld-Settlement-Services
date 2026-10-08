@@ -104,44 +104,68 @@ namespace Settlement_Services.Framework.Stock
         }
 
         public static int GetAvailableStock(Settlement settlement, SettlementStockCategoryDef category) =>
-            ThingDefsFor(settlement, category).Sum(t => GetAvailableStock(settlement, t));
+            SumQuantities(ThingDefsFor(settlement, category).Select(t => GetAvailableStock(settlement, t)));
 
         public static SettlementStockEffectiveSettings EffectiveSettings(Settlement settlement, SettlementStockItemReference reference) =>
             SettlementStockEffectiveSettings.For(reference, settlement.Faction.def.techLevel);
+
+        public static int GlobalQuantityMultiplier =>
+            Mathf.Clamp(ModSettings.Current.stockQuantityMultiplier, ModSettings.MinStockQuantityMultiplier, ModSettings.MaxStockQuantityMultiplier);
 
         public static float CapacityMultiplier(Settlement settlement, SettlementStockCategoryDef category) =>
             SettlementSpecialtyService.GetSpecialties(settlement)
                 .SelectMany(d => d.stockModifiers)
                 .Where(m => m.stockCategoryDefName == category.defName)
-                .Aggregate(1f, (acc, m) => acc * m.capacityMultiplier);
+                .Aggregate(1f, (acc, m) => acc * m.capacityMultiplier) * GlobalQuantityMultiplier;
 
         public static float RefreshMultiplier(Settlement settlement, SettlementStockCategoryDef category) =>
             SettlementSpecialtyService.GetSpecialties(settlement)
                 .SelectMany(d => d.stockModifiers)
                 .Where(m => m.stockCategoryDefName == category.defName)
-                .Aggregate(1f, (acc, m) => acc * m.refreshRateMultiplier);
+                .Aggregate(1f, (acc, m) => acc * m.refreshRateMultiplier) * GlobalQuantityMultiplier;
+
+        public static int ToQuantity(float value)
+        {
+            if (!(value > 0f)) return 0;
+            if (value >= int.MaxValue) return int.MaxValue;
+            return Mathf.RoundToInt(value);
+        }
+
+        public static int AddQuantities(int a, int b) =>
+            (int)Math.Max(0L, Math.Min((long)a + b, int.MaxValue));
+
+        public static int SumQuantities(IEnumerable<int> quantities)
+        {
+            long total = 0L;
+            foreach (int quantity in quantities)
+            {
+                total += quantity;
+                if (total >= int.MaxValue) return int.MaxValue;
+            }
+            return (int)Math.Max(0L, total);
+        }
 
         public static int EffectiveDynamicCapacity(int baseCapacity, float capacityMultiplier) =>
-            Mathf.Max(0, Mathf.RoundToInt(baseCapacity * capacityMultiplier));
+            ToQuantity(baseCapacity * capacityMultiplier);
 
         public static int EffectiveCapacity(Settlement settlement, SettlementStockItemReference reference) =>
-            Mathf.RoundToInt(EffectiveSettings(settlement, reference).capacity * CapacityMultiplier(settlement, reference.category));
+            ToQuantity(EffectiveSettings(settlement, reference).capacity * CapacityMultiplier(settlement, reference.category));
 
         public static int EffectiveRefreshAmount(Settlement settlement, SettlementStockItemReference reference) =>
-            Mathf.RoundToInt(EffectiveSettings(settlement, reference).refreshAmount * RefreshMultiplier(settlement, reference.category));
+            ToQuantity(EffectiveSettings(settlement, reference).refreshAmount * RefreshMultiplier(settlement, reference.category));
 
         public static int EffectiveRefreshIntervalTicks(Settlement settlement, SettlementStockItemReference reference) =>
             EffectiveSettings(settlement, reference).refreshIntervalTicks;
 
         public static int EffectiveCapacity(Settlement settlement, SettlementStockCategoryDef category)
         {
-            int total = ItemsFor(settlement, category).Sum(r => EffectiveCapacity(settlement, r));
+            int total = SumQuantities(ItemsFor(settlement, category).Select(r => EffectiveCapacity(settlement, r)));
 
             List<DynamicStockEntryView> dynamicViews = OfferedDynamicStock(settlement).Where(v => v.categoryDefName == category.defName).ToList();
             if (dynamicViews.Count == 0) return total;
 
             float multiplier = CapacityMultiplier(settlement, category);
-            return total + dynamicViews.Sum(v => EffectiveDynamicCapacity(v.baseCapacity, multiplier));
+            return AddQuantities(total, SumQuantities(dynamicViews.Select(v => EffectiveDynamicCapacity(v.baseCapacity, multiplier))));
         }
 
         public static StockAvailabilityReport CheckAvailability(Settlement settlement, IEnumerable<ServiceStockRequirement> requirements, IEnumerable<ThingDefCountClass> playerSuppliedInputs = null)

@@ -25,6 +25,8 @@ namespace Settlement_Services
 
             DrawPricingSection(listing, settings);
             listing.GapLine();
+            DrawStockSection(listing, settings);
+            listing.GapLine();
             DrawDifficultySection(listing, settings);
             listing.GapLine();
             DrawMoodBuffsSection(listing, settings);
@@ -79,6 +81,19 @@ namespace Settlement_Services
             //    "SettlementServices.Settings.InvestmentDecayDurationScalePct".Translate(settings.investmentDecayDurationScalePct.ToStringPercent()),
             //    settings.investmentDecayDurationScalePct, 0f, 3f,
             //    tooltip: "SettlementServices.Settings.InvestmentDecayDurationScalePct.Tooltip".Translate());
+        }
+
+        private static void DrawStockSection(Listing_Standard listing, ModSettings settings)
+        {
+            Text.Font = GameFont.Medium;
+            listing.Label("SettlementServices.Settings.SectionStock".Translate());
+            Text.Font = GameFont.Small;
+
+            settings.stockQuantityMultiplier = SliderLabeledInt(
+                listing,
+                "SettlementServices.Settings.StockQuantityMultiplier".Translate(settings.stockQuantityMultiplier + "×"),
+                settings.stockQuantityMultiplier, ModSettings.MinStockQuantityMultiplier, ModSettings.MaxStockQuantityMultiplier,
+                tooltip: "SettlementServices.Settings.StockQuantityMultiplier.Tooltip".Translate());
         }
 
         private static void DrawDifficultySection(Listing_Standard listing, ModSettings settings)

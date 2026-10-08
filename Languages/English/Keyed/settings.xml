@@ -13,6 +13,9 @@
     <SettlementServices.Settings.InvestmentDiscountScalePct.Tooltip>Scales the discount a fresh investment grants (default: 15% off, before decay).</SettlementServices.Settings.InvestmentDiscountScalePct.Tooltip>
     <SettlementServices.Settings.InvestmentDecayDurationScalePct>Investment decay duration scale: {0}</SettlementServices.Settings.InvestmentDecayDurationScalePct>
     <SettlementServices.Settings.InvestmentDecayDurationScalePct.Tooltip>Scales how long an investment takes to fully decay (default: about 30 in-game days).</SettlementServices.Settings.InvestmentDecayDurationScalePct.Tooltip>
+    <SettlementServices.Settings.SectionStock>Settlement stock</SettlementServices.Settings.SectionStock>
+    <SettlementServices.Settings.StockQuantityMultiplier>Settlement stock multiplier: {0}</SettlementServices.Settings.StockQuantityMultiplier>
+    <SettlementServices.Settings.StockQuantityMultiplier.Tooltip>Scales the capacity and per-refresh replenishment of the stock this mod's settlements hold, including mechanoid hiring stock. Refresh intervals, which goods are stocked, service input costs, and prices are unchanged, and vanilla trader inventories are not affected. 1× is the default balance. Stock that already exists is not topped up retroactively; it fills through future refreshes, and lowering the multiplier caps existing stock at the new limit.</SettlementServices.Settings.StockQuantityMultiplier.Tooltip>
     <SettlementServices.Settings.SectionDifficulty>Per-difficulty price multipliers</SettlementServices.Settings.SectionDifficulty>
     <SettlementServices.Settings.DifficultyMultiplier>{0}: {1}</SettlementServices.Settings.DifficultyMultiplier>
     <SettlementServices.Settings.DifficultyMultiplier.Tooltip>Multiplies the wealth-based price surcharge when this difficulty is active. 100% applies no extra scaling beyond the wealth-based surcharge itself.</SettlementServices.Settings.DifficultyMultiplier.Tooltip>
