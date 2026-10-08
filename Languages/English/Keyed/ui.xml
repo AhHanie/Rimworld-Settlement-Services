@@ -18,6 +18,13 @@
     <SettlementServices.Label.PriorityTier>Priority</SettlementServices.Label.PriorityTier>
     <SettlementServices.Label.BaselineTier>Standard</SettlementServices.Label.BaselineTier>
     <SettlementServices.Label.PriorityTierMinimumGoodwill>Requires at least {0} goodwill.</SettlementServices.Label.PriorityTierMinimumGoodwill>
+    <SettlementServices.Label.CaravanCapacityCurrent>Caravan capacity: {0}</SettlementServices.Label.CaravanCapacityCurrent>
+    <SettlementServices.Label.CaravanCapacityAfterPurchase>After purchase: {0}</SettlementServices.Label.CaravanCapacityAfterPurchase>
+    <SettlementServices.Label.CaravanCapacityEstimatedAfterPurchase>Estimated after purchase: {0}</SettlementServices.Label.CaravanCapacityEstimatedAfterPurchase>
+    <SettlementServices.Label.CaravanCapacityOver>Over capacity by {0}</SettlementServices.Label.CaravanCapacityOver>
+    <SettlementServices.Label.CaravanCapacityTooltip>Mass your caravan is carrying, out of what it can carry. A caravan carrying more than its capacity is immobilized until it drops items or gains capacity.
+
+The after-purchase figure is an estimate until the transaction completes.</SettlementServices.Label.CaravanCapacityTooltip>
     <SettlementServices.Label.TotalCost>Total: {0} silver</SettlementServices.Label.TotalCost>
     <SettlementServices.Label.ExpectedDuration>Expected duration: {0}</SettlementServices.Label.ExpectedDuration>
     <SettlementServices.Label.Quantity>Quantity</SettlementServices.Label.Quantity>

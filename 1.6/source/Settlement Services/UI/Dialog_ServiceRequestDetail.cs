@@ -30,7 +30,10 @@ namespace Settlement_Services.UI
         private string crafterCountBuffer;
         private readonly Dictionary<string, string> craftingMaterialBuffers = new Dictionary<string, string>();
 
+        private List<ServiceDisplayOption> sharedDisplayOptions;
+
         private const int MaxDisplayedCrafterWorkloads = 6;
+        private const float CapacityStripGap = 4f;
 
         public override Vector2 InitialSize => new Vector2(700f, 620f);
 
@@ -60,7 +63,11 @@ namespace Settlement_Services.UI
             bool isConstruction = buildingEligibleBuildings != null;
             List<StockInputRow> stockRows = isCrafting ? new List<StockInputRow>() : ServiceStockInputPicker.BuildRows(session);
 
-            Rect bodyRect = new Rect(inRect.x, inRect.y, inRect.width, inRect.height - 45f);
+            sharedDisplayOptions = null;
+            bool showCapacity = CaravanCapacityPreview.CanShowFor(session);
+            float capacityStripHeight = showCapacity ? CaravanCapacityDisplay.Height + CapacityStripGap : 0f;
+
+            Rect bodyRect = new Rect(inRect.x, inRect.y, inRect.width, inRect.height - 45f - capacityStripHeight);
             Rect viewRect = new Rect(0f, 0f, bodyRect.width - 16f, Mathf.Max(bodyRect.height, scrollHeight));
             Widgets.BeginScrollView(bodyRect, ref scrollPosition, viewRect);
 
@@ -100,6 +107,12 @@ namespace Settlement_Services.UI
             scrollHeight = listing.CurHeight;
             listing.End();
             Widgets.EndScrollView();
+
+            if (showCapacity)
+            {
+                Rect stripRect = new Rect(inRect.x, bodyRect.yMax + CapacityStripGap, inRect.width, CaravanCapacityDisplay.Height);
+                CaravanCapacityDisplay.Draw(stripRect, CaravanCapacityPreview.ForPurchase(session, quote, sharedDisplayOptions));
+            }
 
             DrawBottomButtons(inRect, quote);
         }
@@ -634,6 +647,7 @@ namespace Settlement_Services.UI
             Thing primaryTarget = session.targets.FirstOrDefault();
             var ctx = new SettlementServiceContext(SettlementServicesWorldComponent.Current, session.settlement, null, primaryTarget, session.caravan, session.selectedOptionKeys, session.selectedTierKey);
             List<ServiceDisplayOption> options = session.def.Worker.GetDisplayOptions(ctx).ToList();
+            sharedDisplayOptions = options;
             DrawOptionsForList(listing, options, session.selectedOptionKeys);
         }
 

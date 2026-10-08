@@ -293,6 +293,8 @@
     <Compile Include="Framework\Stock\StockAvailabilityReport.cs" />
     <Compile Include="Framework\Validation\SettlementServiceValidator.cs" />
 
+    <Compile Include="UI\CaravanCapacityDisplay.cs" />
+    <Compile Include="UI\CaravanCapacityPreview.cs" />
     <Compile Include="UI\ServiceRequestSession.cs" />
     <Compile Include="UI\ServiceCandidacyService.cs" />
     <Compile Include="UI\ServiceCaravanTargetSelector.cs" />

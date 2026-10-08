@@ -65,20 +65,31 @@ namespace Settlement_Services.UI
         {
             DrawHeader(new Rect(0f, 0f, inRect.width, HeaderHeight));
 
+            bool showCapacity = CaravanCapacityPreview.CanShowFor(contextTemplate);
+            float capacityStripHeight = showCapacity ? CaravanCapacityDisplay.CompactHeight + HeaderGutter : 0f;
+            float availableHeight = inRect.height - capacityStripHeight;
+
             float bodyTop = HeaderHeight + HeaderGutter;
             if (boardPresenter == null)
             {
-                DrawServicesBody(new Rect(0f, bodyTop, inRect.width, inRect.height - bodyTop));
-                return;
+                DrawServicesBody(new Rect(0f, bodyTop, inRect.width, availableHeight - bodyTop));
+            }
+            else
+            {
+                Rect frame = new Rect(0f, bodyTop + TabDrawer.TabHeight, inRect.width, availableHeight - bodyTop - TabDrawer.TabHeight);
+                Widgets.DrawMenuSection(frame);
+                TabDrawer.DrawTabs(frame, tabs);
+
+                Rect content = frame.ContractedBy(8f);
+                if (currentTab == Tab.JobBoard) boardPresenter.Draw(content);
+                else DrawServicesBody(content);
             }
 
-            Rect frame = new Rect(0f, bodyTop + TabDrawer.TabHeight, inRect.width, inRect.height - bodyTop - TabDrawer.TabHeight);
-            Widgets.DrawMenuSection(frame);
-            TabDrawer.DrawTabs(frame, tabs);
-
-            Rect content = frame.ContractedBy(8f);
-            if (currentTab == Tab.JobBoard) boardPresenter.Draw(content);
-            else DrawServicesBody(content);
+            if (showCapacity)
+            {
+                Rect stripRect = new Rect(0f, inRect.height - CaravanCapacityDisplay.CompactHeight, inRect.width, CaravanCapacityDisplay.CompactHeight);
+                CaravanCapacityDisplay.Draw(stripRect, CaravanCapacityPreview.ForCurrent(contextTemplate));
+            }
         }
 
         private void DrawServicesBody(Rect bodyRect)
