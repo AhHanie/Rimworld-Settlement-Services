@@ -3,6 +3,7 @@ using UnityEngine;
 using Verse;
 using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Pricing;
+using Settlement_Services.Framework.Specialty;
 using Settlement_Services.UI.Audio;
 
 namespace Settlement_Services
@@ -26,6 +27,8 @@ namespace Settlement_Services
             DrawPricingSection(listing, settings);
             listing.GapLine();
             DrawStockSection(listing, settings);
+            listing.GapLine();
+            DrawSpecialtySection(listing, settings);
             listing.GapLine();
             DrawDifficultySection(listing, settings);
             listing.GapLine();
@@ -94,6 +97,57 @@ namespace Settlement_Services
                 "SettlementServices.Settings.StockQuantityMultiplier".Translate(settings.stockQuantityMultiplier + "×"),
                 settings.stockQuantityMultiplier, ModSettings.MinStockQuantityMultiplier, ModSettings.MaxStockQuantityMultiplier,
                 tooltip: "SettlementServices.Settings.StockQuantityMultiplier.Tooltip".Translate());
+        }
+
+        private static void DrawSpecialtySection(Listing_Standard listing, ModSettings settings)
+        {
+            Text.Font = GameFont.Medium;
+            listing.Label("SettlementServices.Settings.SectionSpecialties".Translate());
+            Text.Font = GameFont.Small;
+
+            listing.Label("SettlementServices.Settings.SpecialtiesNotice".Translate());
+
+            int offset = settings.specialtyCountOffset;
+            string signedOffset = (offset > 0 ? "+" : "") + offset;
+            settings.specialtyCountOffset = SliderLabeledInt(
+                listing,
+                "SettlementServices.Settings.SpecialtyCountOffset".Translate(signedOffset),
+                offset, ModSettings.MinSpecialtyCountOffset, ModSettings.MaxSpecialtyCountOffset,
+                tooltip: "SettlementServices.Settings.SpecialtyCountOffset.Tooltip".Translate());
+
+            settings.specialtyChanceOnePct = SliderLabeledInt(
+                listing,
+                "SettlementServices.Settings.SpecialtyChanceOne".Translate(settings.specialtyChanceOnePct),
+                settings.specialtyChanceOnePct, 0, 100,
+                tooltip: "SettlementServices.Settings.SpecialtyChances.Tooltip".Translate());
+
+            int maxChanceTwo = 100 - settings.specialtyChanceOnePct;
+            settings.specialtyChanceTwoPct = Mathf.Min(settings.specialtyChanceTwoPct, maxChanceTwo);
+            settings.specialtyChanceTwoPct = SliderLabeledInt(
+                listing,
+                "SettlementServices.Settings.SpecialtyChanceTwo".Translate(settings.specialtyChanceTwoPct),
+                settings.specialtyChanceTwoPct, 0, maxChanceTwo,
+                tooltip: "SettlementServices.Settings.SpecialtyChances.Tooltip".Translate());
+
+            Rect chanceThreeRect = listing.GetRect(30f);
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Widgets.Label(chanceThreeRect, "SettlementServices.Settings.SpecialtyChanceThree".Translate(settings.SpecialtyChanceThreePct));
+            Text.Anchor = TextAnchor.UpperLeft;
+            TooltipHandler.TipRegion(chanceThreeRect, "SettlementServices.Settings.SpecialtyChances.Tooltip".Translate());
+            listing.Gap(listing.verticalSpacing);
+
+            Rect resetRect = listing.GetRect(30f);
+            if (Widgets.ButtonText(resetRect.LeftPart(0.25f), "SettlementServices.Settings.SpecialtyResetChances".Translate()))
+            {
+                settings.specialtyChanceOnePct = ModSettings.DefaultSpecialtyChanceOnePct;
+                settings.specialtyChanceTwoPct = ModSettings.DefaultSpecialtyChanceTwoPct;
+            }
+            listing.Gap(listing.verticalSpacing);
+
+            int adjustedOne = SettlementSpecialtyGenerator.ResolveCount(1, settings.specialtyCountOffset, int.MaxValue);
+            int adjustedTwo = SettlementSpecialtyGenerator.ResolveCount(2, settings.specialtyCountOffset, int.MaxValue);
+            int adjustedThree = SettlementSpecialtyGenerator.ResolveCount(3, settings.specialtyCountOffset, int.MaxValue);
+            listing.Label("SettlementServices.Settings.SpecialtyPreview".Translate(adjustedOne, adjustedTwo, adjustedThree));
         }
 
         private static void DrawDifficultySection(Listing_Standard listing, ModSettings settings)
@@ -181,6 +235,11 @@ namespace Settlement_Services
             Widgets.Label(rect.LeftPart(labelPct), label);
             if (tooltip != null) TooltipHandler.TipRegion(rect.LeftPart(labelPct), tooltip);
             Text.Anchor = TextAnchor.UpperLeft;
+            if (max <= min)
+            {
+                listing.Gap(listing.verticalSpacing);
+                return min;
+            }
             float result = Widgets.HorizontalSlider(rect.RightPart(1f - labelPct), val, min, max, middleAlignment: true, roundTo: 1f);
             listing.Gap(listing.verticalSpacing);
             return Mathf.RoundToInt(result);

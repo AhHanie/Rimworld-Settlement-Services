@@ -16,9 +16,25 @@ namespace Settlement_Services
 
         public const int MaxStockQuantityMultiplier = 10;
 
+        public const int MinSpecialtyCountOffset = -3;
+
+        public const int MaxSpecialtyCountOffset = 10;
+
+        public const int DefaultSpecialtyChanceOnePct = 65;
+
+        public const int DefaultSpecialtyChanceTwoPct = 30;
+
         public float wealthPriceScalePct = 1f;
 
         public int stockQuantityMultiplier = 1;
+
+        public int specialtyCountOffset = 0;
+
+        public int specialtyChanceOnePct = DefaultSpecialtyChanceOnePct;
+
+        public int specialtyChanceTwoPct = DefaultSpecialtyChanceTwoPct;
+
+        public int SpecialtyChanceThreePct => 100 - specialtyChanceOnePct - specialtyChanceTwoPct;
 
         public Dictionary<string, float> difficultyMultiplierOverrides = new Dictionary<string, float>();
 
@@ -47,6 +63,9 @@ namespace Settlement_Services
             base.ExposeData();
             Scribe_Values.Look(ref wealthPriceScalePct, "wealthPriceScalePct", 1f);
             Scribe_Values.Look(ref stockQuantityMultiplier, "stockQuantityMultiplier", 1);
+            Scribe_Values.Look(ref specialtyCountOffset, "specialtyCountOffset", 0);
+            Scribe_Values.Look(ref specialtyChanceOnePct, "specialtyChanceOnePct", DefaultSpecialtyChanceOnePct);
+            Scribe_Values.Look(ref specialtyChanceTwoPct, "specialtyChanceTwoPct", DefaultSpecialtyChanceTwoPct);
             Scribe_Collections.Look(ref difficultyMultiplierOverrides, "difficultyMultiplierOverrides", LookMode.Value, LookMode.Value);
             Scribe_Collections.Look(ref moodThoughtOverrides, "moodThoughtOverrides", LookMode.Value, LookMode.Value);
             Scribe_Values.Look(ref serviceEventFrequencyPct, "serviceEventFrequencyPct", 1f);
@@ -67,6 +86,9 @@ namespace Settlement_Services
 
             wealthPriceScalePct = Mathf.Clamp(wealthPriceScalePct, 0f, 3f);
             stockQuantityMultiplier = Mathf.Clamp(stockQuantityMultiplier, MinStockQuantityMultiplier, MaxStockQuantityMultiplier);
+            specialtyCountOffset = Mathf.Clamp(specialtyCountOffset, MinSpecialtyCountOffset, MaxSpecialtyCountOffset);
+            specialtyChanceOnePct = Mathf.Clamp(specialtyChanceOnePct, 0, 100);
+            specialtyChanceTwoPct = Mathf.Clamp(specialtyChanceTwoPct, 0, 100 - specialtyChanceOnePct);
             serviceEventFrequencyPct = Mathf.Clamp(serviceEventFrequencyPct, 0f, 2f);
             goodwillDiscountScalePct = Mathf.Clamp(goodwillDiscountScalePct, 0f, 2f);
             investmentCostScalePct = Mathf.Clamp(investmentCostScalePct, 0f, 3f);

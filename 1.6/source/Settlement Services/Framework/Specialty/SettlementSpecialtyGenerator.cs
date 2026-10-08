@@ -10,11 +10,6 @@ namespace Settlement_Services.Framework.Specialty
 {
     public static class SettlementSpecialtyGenerator
     {
-        private static readonly (int count, float weight)[] CountWeights =
-        {
-            (1, 0.65f), (2, 0.30f), (3, 0.05f),
-        };
-
         private const int CountSalt = 1;
         private const int PickSaltBase = 100;
 
@@ -32,8 +27,12 @@ namespace Settlement_Services.Framework.Specialty
             List<SettlementSpecialtyDef> eligible = EligibleSpecialties(settlement);
             if (eligible.Count == 0) return new List<SettlementSpecialtyDef>();
 
-            int count = Mathf.Min(WeightedCount(seed), eligible.Count);
+            ModSettings settings = ModSettings.Current;
+            int baseCount = WeightedCount(seed, settings.specialtyChanceOnePct, settings.specialtyChanceTwoPct);
+            int count = ResolveCount(baseCount, settings.specialtyCountOffset, eligible.Count);
             var result = new List<SettlementSpecialtyDef>();
+            if (count == 0) return result;
+
             var pool = new List<SettlementSpecialtyDef>(eligible);
 
             for (int i = 0; i < count; i++)
@@ -65,16 +64,29 @@ namespace Settlement_Services.Framework.Specialty
             return true;
         }
 
-        private static int WeightedCount(int seed)
+        public static int ResolveCount(int baseCount, int offset, int eligibleCount)
+        {
+            return Mathf.Clamp(baseCount + offset, 0, eligibleCount);
+        }
+
+        private static int WeightedCount(int seed, int chanceOnePct, int chanceTwoPct)
         {
             float roll = Rand.ValueSeeded(Gen.HashCombineInt(seed, CountSalt));
+            int chanceThreePct = 100 - chanceOnePct - chanceTwoPct;
+            int[] chancesPct = { chanceOnePct, chanceTwoPct, chanceThreePct };
+
             float cumulative = 0f;
-            foreach (var (count, weight) in CountWeights)
+            int lastPositive = 1;
+            for (int i = 0; i < chancesPct.Length; i++)
             {
-                cumulative += weight;
+                if (chancesPct[i] <= 0) continue;
+
+                int count = i + 1;
+                lastPositive = count;
+                cumulative += chancesPct[i] / 100f;
                 if (roll <= cumulative) return count;
             }
-            return CountWeights[CountWeights.Length - 1].count;
+            return lastPositive;
         }
 
         private static SettlementSpecialtyDef WeightedPick(List<SettlementSpecialtyDef> pool, int seed)
