@@ -727,12 +727,16 @@ namespace Settlement_Services.UI
 
                 listing.Label(group.Key.Translate());
                 List<ServiceDisplayOption> groupOptions = group.ToList();
+                if (groupOptions[0].pawnPreview != null)
+                {
+                    foreach (ServiceDisplayOption option in groupOptions)
+                        DrawPawnCandidateRow(listing, option, selectedKeys, groupOptions[0].allowMultipleSelectionInGroup ? null : groupOptions);
+                    continue;
+                }
+
                 if (groupOptions[0].allowMultipleSelectionInGroup)
                 {
-                    if (groupOptions[0].pawnPreview != null)
-                        foreach (ServiceDisplayOption option in groupOptions) DrawPawnCandidateRow(listing, option, selectedKeys);
-                    else
-                        DrawCheckboxColumn(listing, groupOptions, selectedKeys);
+                    DrawCheckboxColumn(listing, groupOptions, selectedKeys);
                     continue;
                 }
 
@@ -746,7 +750,7 @@ namespace Settlement_Services.UI
         private const float CandidateRowHeight = 64f;
         private static readonly Vector2 CandidatePortraitVector = new Vector2(CandidatePortraitSize, CandidatePortraitSize);
 
-        private static void DrawPawnCandidateRow(Listing_Standard listing, ServiceDisplayOption option, List<string> selectedKeys)
+        private static void DrawPawnCandidateRow(Listing_Standard listing, ServiceDisplayOption option, List<string> selectedKeys, List<ServiceDisplayOption> singleChoiceGroup)
         {
             Pawn pawn = option.pawnPreview;
             Rect rowRect = listing.GetRect(CandidateRowHeight);
@@ -764,7 +768,7 @@ namespace Settlement_Services.UI
             TextAnchor prevAnchor = Text.Anchor;
             Text.Anchor = TextAnchor.MiddleLeft;
             Widgets.Label(textRect.TopHalf(), pawn.LabelShortCap);
-            Widgets.Label(textRect.BottomHalf(), HighestSkillLabel(pawn));
+            Widgets.Label(textRect.BottomHalf(), option.description);
             Text.Anchor = prevAnchor;
 
             if (!option.description.NullOrEmpty()) TooltipHandler.TipRegion(rowRect, option.description);
@@ -772,23 +776,16 @@ namespace Settlement_Services.UI
             Rect clickRect = new Rect(rowRect.x, rowRect.y, infoButtonRect.x - rowRect.x, rowRect.height);
             if (Widgets.ButtonInvisible(clickRect))
             {
-                if (selected) selectedKeys.Remove(option.key);
+                if (singleChoiceGroup != null)
+                {
+                    if (selected) return;
+                    foreach (ServiceDisplayOption other in singleChoiceGroup) selectedKeys.Remove(other.key);
+                    selectedKeys.Add(option.key);
+                }
+                else if (selected) selectedKeys.Remove(option.key);
                 else selectedKeys.Add(option.key);
                 SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();
             }
-        }
-
-        private static string HighestSkillLabel(Pawn pawn)
-        {
-            SkillRecord best = pawn.skills?.skills
-                .Where(s => s != null && !s.TotallyDisabled)
-                .OrderByDescending(s => s.Level)
-                .ThenBy(s => s.def.defName, StringComparer.Ordinal)
-                .FirstOrDefault();
-
-            return best == null
-                ? "SettlementServices.Label.CandidateNoUsableSkill".Translate()
-                : "SettlementServices.Label.CandidateSkillSummary".Translate(best.def.LabelCap, best.Level);
         }
 
         private void DrawCheckboxColumn(Listing_Standard listing, List<ServiceDisplayOption> group, List<string> selectedKeys)
@@ -945,7 +942,7 @@ namespace Settlement_Services.UI
             }
 
             listing.Label("SettlementServices.Label.TotalCost".Translate(quote.totalCost));
-            if (!isLocalMarket)
+            if (!isLocalMarket && !session.def.hideExpectedDuration)
                 listing.Label((session.def.durationLabelKey ?? "SettlementServices.Label.ExpectedDuration").Translate(quote.expectedDurationTicks.ToStringTicksToPeriod()));
         }
 

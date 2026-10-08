@@ -111,6 +111,7 @@
     <Compile Include="Domain\Records\InvestmentRecord.cs" />
     <Compile Include="Domain\Records\HiringCandidateRecord.cs" />
     <Compile Include="Domain\Records\HiringTransitRecord.cs" />
+    <Compile Include="Domain\Records\AnimalVendorOfferRecord.cs" />
     <Compile Include="Domain\Records\ServiceJobRecord.cs" />
     <Compile Include="Domain\Records\DiscoveryRecord.cs" />
     <Compile Include="Domain\Records\ServiceEventOutcomeRecord.cs" />
@@ -326,6 +327,7 @@
     <Compile Include="Debug\SettlementCapabilityDebugAction.cs" />
     <Compile Include="Debug\ServiceRecordsDebugAction.cs" />
     <Compile Include="Debug\StockRefreshDebugAction.cs" />
+    <Compile Include="Debug\AnimalVendorDebugAction.cs" />
     <Compile Include="Debug\ServiceEventDebugAction.cs" />
     <Compile Include="Debug\ServiceBalanceReportDebugAction.cs" />
     <Compile Include="Debug\CaravanSilverDebugGizmoPatch.cs" />
@@ -394,6 +396,9 @@
     <Compile Include="Services\Hiring\HiringCandidateSkillBiasService.cs" />
     <Compile Include="Services\Hiring\Hediff_TemporaryContract.cs" />
     <Compile Include="Services\Hiring\HiringServiceWorker.cs" />
+
+    <Compile Include="Services\Animals\AnimalVendorOfferGenerator.cs" />
+    <Compile Include="Services\Animals\AnimalVendorServiceWorker.cs" />
 
 
     <Compile Include="Services\Vehicle\VehicleMaterialPlanner.cs" />

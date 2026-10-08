@@ -64,6 +64,13 @@ namespace Settlement_Services.Framework.Validation
                 && !def.requiredCapabilityTags.All(tag => SettlementSpecialtyService.HasCapabilityTag(settlement, tag)))
             { errorKey = "SettlementServices.Error.SpecialtyRequired"; return false; }
 
+            if (!def.requiredSpecialtyDefNames.NullOrEmpty() && settlement != null)
+            {
+                IReadOnlyList<SettlementSpecialtyDef> specialties = SettlementSpecialtyService.GetSpecialties(settlement);
+                if (!def.requiredSpecialtyDefNames.All(defName => specialties.Any(s => s.defName == defName)))
+                { errorKey = "SettlementServices.Error.SpecialtyRequired"; return false; }
+            }
+
             errorKey = null;
             return true;
         }

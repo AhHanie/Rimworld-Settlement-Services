@@ -7,6 +7,7 @@ using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework;
 using Settlement_Services.Framework.Board;
 using Settlement_Services.Framework.Defs;
+using Settlement_Services.Services.Animals;
 using Settlement_Services.Services.Construction;
 using Settlement_Services.Services.Crafting;
 
@@ -69,6 +70,7 @@ namespace Settlement_Services.Domain.Reconciliation
 
             failedJobs += DetectAndHandleMissingProviders(component);
             ReconcileHiringTransits(component);
+            ReconcileAnimalVendorOffers(component);
 
             List<SettlementRecord> toDrop = component.SettlementRecordsRaw
                 .Where(r => WorldObjectLookup.ResolveSettlement(r.settlementWorldObjectId) == null
@@ -78,6 +80,7 @@ namespace Settlement_Services.Domain.Reconciliation
             foreach (SettlementRecord orphan in toDrop)
             {
                 component.DisposeHiringCandidates(orphan);
+                component.DisposeAnimalVendorOffers(orphan);
                 component.SettlementRecordsRaw.Remove(orphan);
                 droppedSettlements++;
             }
@@ -164,6 +167,23 @@ namespace Settlement_Services.Domain.Reconciliation
 
                 BoardJobRecord withTile = component.BoardJobsRaw.FirstOrDefault(j => j.settlementWorldObjectId == settlementWorldObjectId && j.settlementTile.Valid);
                 BoardJobCoordinator.HandleSettlementDestroyed(component, settlementWorldObjectId, withTile?.settlementTile ?? PlanetTile.Invalid);
+            }
+        }
+
+        public static void ReconcileAnimalVendorOffers(SettlementServicesWorldComponent component)
+        {
+            foreach (SettlementRecord record in component.SettlementRecordsRaw)
+            {
+                if (record.animalVendorNextRefreshTick < 0 && record.animalVendorOffers.Count == 0) continue;
+
+                Settlement settlement = WorldObjectLookup.ResolveSettlement(record.settlementWorldObjectId);
+                bool stillEligible = settlement != null
+                    && string.Equals(record.animalVendorGeneratedForFactionLoadId, settlement.Faction?.GetUniqueLoadID(), System.StringComparison.Ordinal)
+                    && component.TryGetCapability(record.settlementWorldObjectId, out IReadOnlyList<string> specialtyDefNames)
+                    && specialtyDefNames.Contains(AnimalVendorServiceWorker.RequiredSpecialtyDefName);
+                if (stillEligible) continue;
+
+                component.ResetAnimalVendor(record);
             }
         }
 

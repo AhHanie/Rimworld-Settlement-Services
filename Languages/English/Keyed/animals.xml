@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Label.AnimalVendorChoice>Animals for sale</SettlementServices.Label.AnimalVendorChoice>
+    <SettlementServices.Label.AnimalVendorOfferDescription>{0} {1}, age {2} - base price {3} silver</SettlementServices.Label.AnimalVendorOfferDescription>
+    <SettlementServices.Label.AnimalVendorRefresh>New animals arrive in {0}.</SettlementServices.Label.AnimalVendorRefresh>
+    <SettlementServices.LineItem.AnimalVendorPurchase>{0}</SettlementServices.LineItem.AnimalVendorPurchase>
+    <SettlementServices.Error.AnimalVendorSoldOut>This animal center has no animals for sale until it restocks.</SettlementServices.Error.AnimalVendorSoldOut>
+    <SettlementServices.Error.AnimalVendorNoneSelected>Select at least one animal to buy.</SettlementServices.Error.AnimalVendorNoneSelected>
+    <SettlementServices.Error.AnimalVendorDuplicateSelection>The same animal was selected more than once.</SettlementServices.Error.AnimalVendorDuplicateSelection>
+    <SettlementServices.Error.AnimalVendorOfferNoLongerAvailable>One or more selected animals are no longer for sale.</SettlementServices.Error.AnimalVendorOfferNoLongerAvailable>
+    <SettlementServices.Error.AnimalVendorNoNegotiator>No one in your caravan is able to complete the purchase.</SettlementServices.Error.AnimalVendorNoNegotiator>
+    <SettlementServices.Error.AnimalVendorHandoffFailed>The animals could not be handed over to your caravan.</SettlementServices.Error.AnimalVendorHandoffFailed>
+    <SettlementServices.Message.AnimalVendorPurchased>{0} has joined your caravan.</SettlementServices.Message.AnimalVendorPurchased>
+    <SettlementServices.Message.AnimalVendorPurchasedMany>{0} animals have joined your caravan.</SettlementServices.Message.AnimalVendorPurchasedMany>
+</LanguageData>

@@ -42,9 +42,12 @@ namespace Settlement_Services.Domain
         private ThingOwner<Thing> itemCustody;
         private ThingOwner<Pawn> hiringCandidateCustody;
         private ThingOwner<Pawn> hiringTransitCustody;
+        private ThingOwner<Pawn> animalVendorCustody;
         private List<HiringTransitRecord> hiringTransits = new List<HiringTransitRecord>();
 
         private const int HiringRosterDurationTicks = 300000;
+        public const int AnimalVendorRefreshPeriodTicks = 600000;
+        public const int AnimalVendorMaxOffers = 20;
 
         private List<TargetSnapshot> pendingHomeDeliveries = new List<TargetSnapshot>();
 
@@ -66,6 +69,7 @@ namespace Settlement_Services.Domain
             itemCustody = new ThingOwner<Thing>(this);
             hiringCandidateCustody = new ThingOwner<Pawn>(this);
             hiringTransitCustody = new ThingOwner<Pawn>(this);
+            animalVendorCustody = new ThingOwner<Pawn>(this);
         }
 
         public override void ExposeData()
@@ -81,6 +85,7 @@ namespace Settlement_Services.Domain
             Scribe_Deep.Look(ref itemCustody, "itemCustody");
             Scribe_Deep.Look(ref hiringCandidateCustody, "hiringCandidateCustody");
             Scribe_Deep.Look(ref hiringTransitCustody, "hiringTransitCustody");
+            Scribe_Deep.Look(ref animalVendorCustody, "animalVendorCustody");
             Scribe_Collections.Look(ref hiringTransits, "hiringTransits", LookMode.Deep);
             Scribe_Collections.Look(ref pendingHomeDeliveries, "pendingHomeDeliveries", LookMode.Deep);
             Scribe_Deep.Look(ref compatibilityWorldState, "compatibilityWorldState");
@@ -101,6 +106,7 @@ namespace Settlement_Services.Domain
             if (itemCustody == null) itemCustody = new ThingOwner<Thing>(this);
             if (hiringCandidateCustody == null) hiringCandidateCustody = new ThingOwner<Pawn>(this);
             if (hiringTransitCustody == null) hiringTransitCustody = new ThingOwner<Pawn>(this);
+            if (animalVendorCustody == null) animalVendorCustody = new ThingOwner<Pawn>(this);
             if (hiringTransits == null) hiringTransits = new List<HiringTransitRecord>();
             if (pendingHomeDeliveries == null) pendingHomeDeliveries = new List<TargetSnapshot>();
             if (compatibilityWorldState == null) compatibilityWorldState = new CompatibilityWorldState();
@@ -138,7 +144,10 @@ namespace Settlement_Services.Domain
             {
                 EnsureTopLevelState();
                 foreach (SettlementRecord record in settlementRecords)
+                {
                     record.hiringCandidates?.RemoveAll(c => c == null || !hiringCandidateCustody.Contains(c.pawn));
+                    record.animalVendorOffers?.RemoveAll(o => o == null || !animalVendorCustody.Contains(o.pawn));
+                }
                 RebuildIndexes();
 
                 if (loadedSchemaVersion < SchemaVersion.Current)
@@ -181,6 +190,7 @@ namespace Settlement_Services.Domain
             if (Find.TickManager.TicksGame % TickInterval != 0) return;
             SettlementServicesReconciler.DetectAndHandleMissingProviders(this);
             SettlementServicesReconciler.ReconcileHiringTransits(this);
+            SettlementServicesReconciler.ReconcileAnimalVendorOffers(this);
             SettlementServiceJobScheduler.TickAll(this, TickInterval);
             BoardJobCoordinator.TickDue(this);
             BoardOfferScheduler.TickDue(this);
@@ -246,6 +256,7 @@ namespace Settlement_Services.Domain
             ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, itemCustody);
             ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, hiringCandidateCustody);
             ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, hiringTransitCustody);
+            ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, animalVendorCustody);
         }
 
 
@@ -1027,6 +1038,153 @@ namespace Settlement_Services.Domain
 
                 if (candidate.pawn != null && hiringCandidateCustody.Contains(candidate.pawn)) hiringCandidateCustody.Remove(candidate.pawn);
                 record.hiringCandidates.Remove(candidate);
+            }
+        }
+
+        public IReadOnlyList<AnimalVendorOfferRecord> GetOrRefreshAnimalVendorOffers(Settlement settlement, Func<List<Pawn>> generator)
+        {
+            if (settlement == null) return Array.Empty<AnimalVendorOfferRecord>();
+
+            SettlementRecord record = GetOrCreateSettlementRecord(settlement.ID);
+            int now = Find.TickManager.TicksGame;
+            string factionLoadId = settlement.Faction?.GetUniqueLoadID();
+
+            PruneAnimalVendorOffers(record);
+
+            if (record.animalVendorNextRefreshTick >= 0
+                && !string.Equals(record.animalVendorGeneratedForFactionLoadId, factionLoadId, StringComparison.Ordinal))
+            {
+                DisposeAnimalVendorOffers(record);
+                record.animalVendorNextRefreshTick = -1;
+            }
+
+            if (record.animalVendorNextRefreshTick >= 0 && now < record.animalVendorNextRefreshTick) return record.animalVendorOffers;
+
+            if (record.animalVendorNextRefreshTick < 0)
+            {
+                record.animalVendorNextRefreshTick = now + AnimalVendorRefreshPeriodTicks;
+            }
+            else
+            {
+                DisposeAnimalVendorOffers(record);
+                int elapsedPeriods = (now - record.animalVendorNextRefreshTick) / AnimalVendorRefreshPeriodTicks + 1;
+                record.animalVendorNextRefreshTick += elapsedPeriods * AnimalVendorRefreshPeriodTicks;
+            }
+            record.animalVendorGeneratedForFactionLoadId = factionLoadId;
+
+            List<Pawn> generated = null;
+            try
+            {
+                generated = generator();
+            }
+            catch (System.Exception ex)
+            {
+                Settlement_Services.SupportLog.Error($"Animal vendor generation threw for settlement {settlement.LabelCap} ({settlement.ID}): {ex}");
+            }
+
+            if (generated.NullOrEmpty())
+            {
+                Settlement_Services.SupportLog.Warning($"Animal vendor for settlement {settlement.LabelCap} ({settlement.ID}) generated no animals; the offer stays empty until the next refresh.");
+                return record.animalVendorOffers;
+            }
+
+            foreach (Pawn pawn in generated)
+            {
+                if (pawn == null || pawn.Destroyed || pawn.Dead) continue;
+
+                if (record.animalVendorOffers.Count >= AnimalVendorMaxOffers || !animalVendorCustody.TryAdd(pawn, canMergeWithExistingStacks: false))
+                {
+                    if (!pawn.Destroyed) pawn.Destroy(DestroyMode.Vanish);
+                    continue;
+                }
+
+                record.animalVendorOffers.Add(new AnimalVendorOfferRecord { offerId = record.nextAnimalVendorOfferId++, pawn = pawn });
+            }
+
+            return record.animalVendorOffers;
+        }
+
+        public bool TryGetAnimalVendorRefreshTick(int settlementWorldObjectId, out int nextRefreshTick)
+        {
+            if (settlementsByWorldObjectId.TryGetValue(settlementWorldObjectId, out SettlementRecord record) && record.animalVendorNextRefreshTick >= 0)
+            {
+                nextRefreshTick = record.animalVendorNextRefreshTick;
+                return true;
+            }
+            nextRefreshTick = -1;
+            return false;
+        }
+
+        public void MakeAnimalVendorOfferDue(int settlementWorldObjectId)
+        {
+            if (settlementsByWorldObjectId.TryGetValue(settlementWorldObjectId, out SettlementRecord record) && record.animalVendorNextRefreshTick >= 0)
+                record.animalVendorNextRefreshTick = Find.TickManager.TicksGame;
+        }
+
+        public bool TryClaimAnimalVendorOffer(int settlementWorldObjectId, int offerId, out AnimalVendorOfferRecord claimed)
+        {
+            claimed = null;
+            if (!settlementsByWorldObjectId.TryGetValue(settlementWorldObjectId, out SettlementRecord record)) return false;
+
+            PruneAnimalVendorOffers(record);
+
+            AnimalVendorOfferRecord offer = record.animalVendorOffers.Find(o => o.offerId == offerId);
+            if (offer == null || !animalVendorCustody.Contains(offer.pawn)) return false;
+
+            animalVendorCustody.Remove(offer.pawn);
+            record.animalVendorOffers.Remove(offer);
+            claimed = offer;
+            return true;
+        }
+
+        public void RestoreAnimalVendorOffer(int settlementWorldObjectId, AnimalVendorOfferRecord offer)
+        {
+            if (offer?.pawn == null || offer.pawn.Destroyed) return;
+
+            if (!settlementsByWorldObjectId.TryGetValue(settlementWorldObjectId, out SettlementRecord record)
+                || !animalVendorCustody.TryAdd(offer.pawn, canMergeWithExistingStacks: false))
+            {
+                Settlement_Services.SupportLog.Warning($"Animal vendor offer {offer.offerId} for settlement {settlementWorldObjectId} could not be restored to vendor custody.");
+                Find.WorldPawns.PassToWorld(offer.pawn);
+                return;
+            }
+
+            int insertAt = record.animalVendorOffers.FindIndex(o => o.offerId > offer.offerId);
+            if (insertAt < 0) record.animalVendorOffers.Add(offer);
+            else record.animalVendorOffers.Insert(insertAt, offer);
+        }
+
+        public void DisposeAnimalVendorOffers(SettlementRecord record)
+        {
+            if (record?.animalVendorOffers == null) return;
+
+            foreach (AnimalVendorOfferRecord offer in record.animalVendorOffers)
+            {
+                if (offer?.pawn == null) continue;
+                if (animalVendorCustody.Contains(offer.pawn)) animalVendorCustody.Remove(offer.pawn);
+                if (!offer.pawn.Destroyed) offer.pawn.Destroy(DestroyMode.Vanish);
+            }
+            record.animalVendorOffers.Clear();
+        }
+
+        public void ResetAnimalVendor(SettlementRecord record)
+        {
+            if (record == null) return;
+
+            DisposeAnimalVendorOffers(record);
+            record.animalVendorNextRefreshTick = -1;
+            record.animalVendorGeneratedForFactionLoadId = null;
+        }
+
+        private void PruneAnimalVendorOffers(SettlementRecord record)
+        {
+            for (int i = record.animalVendorOffers.Count - 1; i >= 0; i--)
+            {
+                AnimalVendorOfferRecord offer = record.animalVendorOffers[i];
+                if (offer?.pawn != null && !offer.pawn.Destroyed && !offer.pawn.Dead && animalVendorCustody.Contains(offer.pawn)) continue;
+
+                if (offer?.pawn != null && animalVendorCustody.Contains(offer.pawn)) animalVendorCustody.Remove(offer.pawn);
+                record.animalVendorOffers.RemoveAt(i);
             }
         }
 

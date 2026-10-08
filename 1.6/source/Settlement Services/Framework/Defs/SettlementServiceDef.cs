@@ -28,12 +28,15 @@ namespace Settlement_Services.Framework.Defs
         public string priorityTierHeaderKey;
         public bool requireExplicitPriorityTier = false;
         public string durationLabelKey;
+        public bool hideExpectedDuration = false;
 
         public float eventChancePct = 0.15f;
 
         public List<ServiceStockRequirement> stockRequirements;
 
         public List<string> requiredCapabilityTags;
+
+        public List<string> requiredSpecialtyDefNames;
 
         public ServiceTargetRule targetRule = ServiceTargetRule.None;
 
@@ -89,6 +92,15 @@ namespace Settlement_Services.Framework.Defs
                 yield return "allowRemoteRequest requires allowRemoteDiscovery.";
             if (allowRemoteRequest && targetRule != ServiceTargetRule.None)
                 yield return "allowRemoteRequest requires targetRule to be None.";
+
+            if (!requiredSpecialtyDefNames.NullOrEmpty())
+            {
+                foreach (string specialtyDefName in requiredSpecialtyDefNames)
+                {
+                    if (DefDatabase<SettlementSpecialtyDef>.GetNamedSilentFail(specialtyDefName) == null)
+                        yield return $"requiredSpecialtyDefNames references unknown SettlementSpecialtyDef '{specialtyDefName}'.";
+                }
+            }
 
             if (maxBatchCount < 0) yield return "maxBatchCount must be >= 0.";
             if (batchMode == ServiceBatchMode.Targets && targetRule == ServiceTargetRule.None)

@@ -29,6 +29,11 @@ namespace Settlement_Services.Domain.Records
         public int hiringPoolExpiryTick = -1;
         public int nextHiringCandidateId = 1;
 
+        public List<AnimalVendorOfferRecord> animalVendorOffers = new List<AnimalVendorOfferRecord>();
+        public int nextAnimalVendorOfferId = 1;
+        public int animalVendorNextRefreshTick = -1;
+        public string animalVendorGeneratedForFactionLoadId;
+
         public bool practicedIdeosInitialized;
         public int practicedIdeoCount;
         public List<string> practicedIdeoLoadIds = new List<string>();
@@ -49,6 +54,10 @@ namespace Settlement_Services.Domain.Records
             Scribe_Collections.Look(ref hiringCandidates, "hiringCandidates", LookMode.Deep);
             Scribe_Values.Look(ref hiringPoolExpiryTick, "hiringPoolExpiryTick", -1);
             Scribe_Values.Look(ref nextHiringCandidateId, "nextHiringCandidateId", 1);
+            Scribe_Collections.Look(ref animalVendorOffers, "animalVendorOffers", LookMode.Deep);
+            Scribe_Values.Look(ref nextAnimalVendorOfferId, "nextAnimalVendorOfferId", 1);
+            Scribe_Values.Look(ref animalVendorNextRefreshTick, "animalVendorNextRefreshTick", -1);
+            Scribe_Values.Look(ref animalVendorGeneratedForFactionLoadId, "animalVendorGeneratedForFactionLoadId");
             Scribe_Values.Look(ref practicedIdeosInitialized, "practicedIdeosInitialized");
             Scribe_Values.Look(ref practicedIdeoCount, "practicedIdeoCount");
             Scribe_Collections.Look(ref practicedIdeoLoadIds, "practicedIdeoLoadIds", LookMode.Value);
@@ -63,6 +72,8 @@ namespace Settlement_Services.Domain.Records
                 if (recentServiceEventTicks == null) recentServiceEventTicks = new Dictionary<string, int>();
                 if (hiringCandidates == null) hiringCandidates = new List<HiringCandidateRecord>();
                 hiringCandidates.RemoveAll(c => c == null || c.pawn == null || c.pawn.Destroyed || c.pawn.Dead);
+                if (animalVendorOffers == null) animalVendorOffers = new List<AnimalVendorOfferRecord>();
+                animalVendorOffers.RemoveAll(o => o == null || o.pawn == null || o.pawn.Destroyed || o.pawn.Dead);
 
                 if (practicedIdeoLoadIds == null) practicedIdeoLoadIds = new List<string>();
                 else

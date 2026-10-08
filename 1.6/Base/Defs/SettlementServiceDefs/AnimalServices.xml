@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_AnimalVendor</defName>
+    <category>SettlementService_Commerce</category>
+    <label>animal vendor</label>
+    <description>Buy any of the live animals this animal center currently has for sale. The animals join your caravan as soon as you pay. The center restocks every ten days.</description>
+    <workerClass>Settlement_Services.Services.Animals.AnimalVendorServiceWorker</workerClass>
+    <requiredTechLevel>Neolithic</requiredTechLevel>
+    <requiredSpecialtyDefNames>
+      <li>SettlementSpecialty_AnimalCenter</li>
+    </requiredSpecialtyDefNames>
+    <minimumCost>0</minimumCost>
+    <wealthScale>0</wealthScale>
+    <duration>0</duration>
+    <hideExpectedDuration>true</hideExpectedDuration>
+    <eventChancePct>0</eventChancePct>
+    <targetRule>None</targetRule>
+    <batchMode>None</batchMode>
+    <allowRemoteDiscovery>false</allowRemoteDiscovery>
+    <allowRemoteRequest>false</allowRemoteRequest>
+    <iconTexPath>SettlementServices/UI/Icons/animal-dog</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>
