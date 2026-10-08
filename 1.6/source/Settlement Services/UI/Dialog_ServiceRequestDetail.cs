@@ -349,11 +349,6 @@ namespace Settlement_Services.UI
             listing.Gap();
         }
 
-        private static readonly int[] MarketAdjustmentSteps = { 1, 10, 100 };
-        private readonly Dictionary<string, int> marketSelectedSteps = new Dictionary<string, int>();
-        private const float MarketQuickSetButtonWidth = 28f;
-        private const float MarketQuickSetButtonGap = 2f;
-
         private void DrawLocalMarketRow(Listing_Standard listing, MarketCatalogRow row)
         {
             int current = session.marketCartLines.Find(l => l.thingDefName == row.thingDef.defName)?.count ?? 0;
@@ -367,10 +362,7 @@ namespace Settlement_Services.UI
             Rect amountRect = new Rect(rowRect.xMax - 60f, rowRect.y, 36f, 24f);
             Rect plusRect = new Rect(rowRect.xMax - 24f, rowRect.y, 24f, 24f);
 
-            float quickSetBlockWidth = MarketAdjustmentSteps.Length * MarketQuickSetButtonWidth
-                + (MarketAdjustmentSteps.Length - 1) * MarketQuickSetButtonGap;
-            Rect quickSetBlock = new Rect(minusRect.x - 6f - quickSetBlockWidth, rowRect.y, quickSetBlockWidth, 24f);
-            Rect labelRect = new Rect(iconRect.xMax + 6f, rowRect.y, quickSetBlock.x - iconRect.xMax - 12f, rowRect.height);
+            Rect labelRect = new Rect(iconRect.xMax + 6f, rowRect.y, minusRect.x - iconRect.xMax - 12f, rowRect.height);
 
             TextAnchor prevAnchor = Text.Anchor;
             Text.Anchor = TextAnchor.MiddleLeft;
@@ -378,16 +370,11 @@ namespace Settlement_Services.UI
             Text.Anchor = prevAnchor;
 
             string defName = row.thingDef.defName;
-            int step = GetMarketStep(defName);
+            int step = Event.current.control ? 100 : Event.current.shift ? 10 : 1;
+            string adjustTip = "SettlementServices.Button.MarketAdjustTip".Translate();
 
-            for (int i = 0; i < MarketAdjustmentSteps.Length; i++)
-            {
-                int amount = MarketAdjustmentSteps[i];
-                Rect quickSetRect = new Rect(quickSetBlock.x + i * (MarketQuickSetButtonWidth + MarketQuickSetButtonGap), rowRect.y, MarketQuickSetButtonWidth, 24f);
-
-                if (Widgets.ButtonText(quickSetRect, amount.ToString())) marketSelectedSteps[defName] = amount;
-                if (amount == step) Widgets.DrawHighlightSelected(quickSetRect);
-            }
+            TooltipHandler.TipRegion(minusRect, adjustTip);
+            TooltipHandler.TipRegion(plusRect, adjustTip);
 
             if (Widgets.ButtonText(minusRect, "-") && current > 0) SetMarketCartCount(defName, Math.Max(0, current - step));
 
@@ -398,11 +385,6 @@ namespace Settlement_Services.UI
             if (Widgets.ButtonText(plusRect, "+") && current < max) SetMarketCartCount(defName, current + Math.Min(step, max - current));
 
             listing.Gap(4f);
-        }
-
-        private int GetMarketStep(string thingDefName)
-        {
-            return marketSelectedSteps.TryGetValue(thingDefName, out int step) ? step : 1;
         }
 
         private void SetMarketCartCount(string thingDefName, int count)

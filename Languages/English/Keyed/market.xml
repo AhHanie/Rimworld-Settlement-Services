@@ -22,5 +22,6 @@
     <SettlementServices.Label.MarketRowLabel>{0} (available {1}, {2} silver each)</SettlementServices.Label.MarketRowLabel>
     <SettlementServices.Label.MarketCart>Cart</SettlementServices.Label.MarketCart>
     <SettlementServices.Label.MarketCartEmpty>Your cart is empty.</SettlementServices.Label.MarketCartEmpty>
+    <SettlementServices.Button.MarketAdjustTip>Click: 1. Shift-click: 10. Ctrl-click: 100.</SettlementServices.Button.MarketAdjustTip>
     <SettlementServices.Label.MarketCartLine>{0} x{1}</SettlementServices.Label.MarketCartLine>
 </LanguageData>
