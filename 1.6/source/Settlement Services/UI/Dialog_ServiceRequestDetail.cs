@@ -349,7 +349,8 @@ namespace Settlement_Services.UI
             listing.Gap();
         }
 
-        private static readonly int[] MarketQuickSetAmounts = { 1, 10, 100 };
+        private static readonly int[] MarketAdjustmentSteps = { 1, 10, 100 };
+        private readonly Dictionary<string, int> marketSelectedSteps = new Dictionary<string, int>();
         private const float MarketQuickSetButtonWidth = 28f;
         private const float MarketQuickSetButtonGap = 2f;
 
@@ -366,8 +367,8 @@ namespace Settlement_Services.UI
             Rect amountRect = new Rect(rowRect.xMax - 60f, rowRect.y, 36f, 24f);
             Rect plusRect = new Rect(rowRect.xMax - 24f, rowRect.y, 24f, 24f);
 
-            float quickSetBlockWidth = MarketQuickSetAmounts.Length * MarketQuickSetButtonWidth
-                + (MarketQuickSetAmounts.Length - 1) * MarketQuickSetButtonGap;
+            float quickSetBlockWidth = MarketAdjustmentSteps.Length * MarketQuickSetButtonWidth
+                + (MarketAdjustmentSteps.Length - 1) * MarketQuickSetButtonGap;
             Rect quickSetBlock = new Rect(minusRect.x - 6f - quickSetBlockWidth, rowRect.y, quickSetBlockWidth, 24f);
             Rect labelRect = new Rect(iconRect.xMax + 6f, rowRect.y, quickSetBlock.x - iconRect.xMax - 12f, rowRect.height);
 
@@ -376,27 +377,32 @@ namespace Settlement_Services.UI
             Widgets.Label(labelRect, "SettlementServices.Label.MarketRowLabel".Translate(row.thingDef.LabelCap, row.availableStock, row.unitPrice));
             Text.Anchor = prevAnchor;
 
-            for (int i = 0; i < MarketQuickSetAmounts.Length; i++)
+            string defName = row.thingDef.defName;
+            int step = GetMarketStep(defName);
+
+            for (int i = 0; i < MarketAdjustmentSteps.Length; i++)
             {
-                int amount = MarketQuickSetAmounts[i];
+                int amount = MarketAdjustmentSteps[i];
                 Rect quickSetRect = new Rect(quickSetBlock.x + i * (MarketQuickSetButtonWidth + MarketQuickSetButtonGap), rowRect.y, MarketQuickSetButtonWidth, 24f);
 
-                Color prevColor = GUI.color;
-                bool available = amount <= max;
-                if (!available) GUI.color = Color.gray;
-                if (Widgets.ButtonText(quickSetRect, amount.ToString()) && available) SetMarketCartCount(row.thingDef.defName, amount);
-                GUI.color = prevColor;
+                if (Widgets.ButtonText(quickSetRect, amount.ToString())) marketSelectedSteps[defName] = amount;
+                if (amount == step) Widgets.DrawHighlightSelected(quickSetRect);
             }
 
-            if (Widgets.ButtonText(minusRect, "-") && current > 0) SetMarketCartCount(row.thingDef.defName, current - 1);
+            if (Widgets.ButtonText(minusRect, "-") && current > 0) SetMarketCartCount(defName, Math.Max(0, current - step));
 
             Text.Anchor = TextAnchor.MiddleCenter;
             Widgets.Label(amountRect, current.ToString());
             Text.Anchor = prevAnchor;
 
-            if (Widgets.ButtonText(plusRect, "+") && current < max) SetMarketCartCount(row.thingDef.defName, current + 1);
+            if (Widgets.ButtonText(plusRect, "+") && current < max) SetMarketCartCount(defName, current + Math.Min(step, max - current));
 
             listing.Gap(4f);
+        }
+
+        private int GetMarketStep(string thingDefName)
+        {
+            return marketSelectedSteps.TryGetValue(thingDefName, out int step) ? step : 1;
         }
 
         private void SetMarketCartCount(string thingDefName, int count)
