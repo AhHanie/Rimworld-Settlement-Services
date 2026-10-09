@@ -15,6 +15,7 @@ namespace Settlement_Services.Services.Market
         Drinks,
         Meat,
         Produce,
+        Ingredients,
         Food,
     }
 
@@ -23,32 +24,69 @@ namespace Settlement_Services.Services.Market
         private const float RetailMarkupFactor = 1.4f;
 
         private static HashSet<string> _overrideDrinkDefNames;
+        private static HashSet<string> _overridePlayerSellOnlyDefNames;
+        private static HashSet<string> _overridePantryIngredientDefNames;
+        private static HashSet<string> _overrideMeatDisplayDefNames;
 
         private static HashSet<string> OverrideDrinkDefNames
         {
             get
             {
-                if (_overrideDrinkDefNames == null)
-                {
-                    _overrideDrinkDefNames = new HashSet<string>();
-                    foreach (LocalMarketDisplayOverridesDef def in DefDatabase<LocalMarketDisplayOverridesDef>.AllDefsListForReading)
-                        foreach (string name in def.drinkDefNames)
-                            if (!name.NullOrEmpty()) _overrideDrinkDefNames.Add(name);
-                }
+                EnsureOverrides();
                 return _overrideDrinkDefNames;
             }
+        }
+
+        private static void EnsureOverrides()
+        {
+            if (_overrideDrinkDefNames != null) return;
+
+            _overrideDrinkDefNames = new HashSet<string>();
+            _overridePlayerSellOnlyDefNames = new HashSet<string>();
+            _overridePantryIngredientDefNames = new HashSet<string>();
+            _overrideMeatDisplayDefNames = new HashSet<string>();
+
+            foreach (LocalMarketDisplayOverridesDef def in DefDatabase<LocalMarketDisplayOverridesDef>.AllDefsListForReading)
+            {
+                AddNames(_overrideDrinkDefNames, def.drinkDefNames);
+                AddNames(_overridePlayerSellOnlyDefNames, def.playerSellOnlyDefNames);
+                AddNames(_overridePantryIngredientDefNames, def.pantryIngredientDefNames);
+                AddNames(_overrideMeatDisplayDefNames, def.meatDisplayDefNames);
+            }
+        }
+
+        private static void AddNames(HashSet<string> target, List<string> names)
+        {
+            if (names == null) return;
+            foreach (string name in names)
+                if (!name.NullOrEmpty()) target.Add(name);
+        }
+
+        private static bool CanBeSold(ThingDef thingDef)
+        {
+            if (thingDef.tradeability.TraderCanSell()) return true;
+            if (thingDef.tradeability != Tradeability.Sellable) return false;
+            EnsureOverrides();
+            return _overridePlayerSellOnlyDefNames.Contains(thingDef.defName);
         }
 
         public static MarketItemGroup? GetGroup(ThingDef thingDef)
         {
             if (thingDef == null || thingDef.category != ThingCategory.Item) return null;
-            if (!thingDef.tradeability.TraderCanSell()) return null;
+            if (!CanBeSold(thingDef)) return null;
             if (thingDef.BaseMarketValue <= 0f) return null;
+
+            EnsureOverrides();
+            if (_overridePantryIngredientDefNames.Contains(thingDef.defName))
+                return thingDef.IsDrug ? (MarketItemGroup?)null : MarketItemGroup.Ingredients;
+
             if (thingDef.ingestible == null || !thingDef.ingestible.HumanEdible) return null;
 
             if (MatchesDrinkRule(thingDef)) return MarketItemGroup.Drinks;
             if (thingDef.IsDrug) return null;
             if (!thingDef.IsNutritionGivingIngestible) return null;
+
+            if (_overrideMeatDisplayDefNames.Contains(thingDef.defName)) return MarketItemGroup.Meat;
 
             FoodTypeFlags foodType = thingDef.ingestible.foodType;
             if ((foodType & FoodTypeFlags.Meat) != 0) return MarketItemGroup.Meat;

@@ -8,4 +8,30 @@
     </value>
   </Operation>
 
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/Settlement_Services.Framework.Defs.LocalMarketDisplayOverridesDef[defName="SettlementServices_LocalMarketDisplayOverrides"]/playerSellOnlyDefNames</xpath>
+    <value>
+      <li>DankPyon_DriedMeat</li>
+      <li>DankPyon_SmokedMeat</li>
+      <li>DankPyon_Sausages</li>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/Settlement_Services.Framework.Defs.LocalMarketDisplayOverridesDef[defName="SettlementServices_LocalMarketDisplayOverrides"]/pantryIngredientDefNames</xpath>
+    <value>
+      <li>DankPyon_Salt</li>
+      <li>DankPyon_Sugar</li>
+      <li>DankPyon_Spices</li>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/Settlement_Services.Framework.Defs.LocalMarketDisplayOverridesDef[defName="SettlementServices_LocalMarketDisplayOverrides"]/meatDisplayDefNames</xpath>
+    <value>
+      <li>DankPyon_SmokedMeat</li>
+      <li>DankPyon_Sausages</li>
+    </value>
+  </Operation>
+
 </Patch>

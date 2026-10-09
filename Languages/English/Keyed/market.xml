@@ -11,6 +11,7 @@
     <SettlementServices.Label.MarketGroupDrinks>Drinks</SettlementServices.Label.MarketGroupDrinks>
     <SettlementServices.Label.MarketGroupMeat>Meat</SettlementServices.Label.MarketGroupMeat>
     <SettlementServices.Label.MarketGroupProduce>Produce</SettlementServices.Label.MarketGroupProduce>
+    <SettlementServices.Label.MarketGroupIngredients>Ingredients</SettlementServices.Label.MarketGroupIngredients>
     <SettlementServices.Label.MarketGroupFood>Food</SettlementServices.Label.MarketGroupFood>
     <SettlementServices.Label.MercerGoods>Materials for sale</SettlementServices.Label.MercerGoods>
     <SettlementServices.Label.NoMercerGoodsAvailable>This settlement has no materials available to sell right now.</SettlementServices.Label.NoMercerGoodsAvailable>

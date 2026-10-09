@@ -118,7 +118,7 @@ namespace Settlement_Services.Framework.Stock
         {
             if (thing.category != ThingCategory.Item) return false;
             if (!pool.excludeThingDefNames.NullOrEmpty() && pool.excludeThingDefNames.Contains(thing.defName)) return false;
-            if (!thing.tradeability.TraderCanSell()) return false;
+            if (!thing.tradeability.TraderCanSell() && !(pool.allowPlayerSellOnlyItems && thing.tradeability == Tradeability.Sellable)) return false;
             if (thing.BaseMarketValue <= 0f) return false;
             if (SettlementStockCatalog.ItemFor(thing) != null) return false;
 

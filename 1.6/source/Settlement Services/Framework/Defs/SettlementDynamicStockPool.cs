@@ -14,6 +14,7 @@ namespace Settlement_Services.Framework.Defs
         public bool requireHumanEdible;
         public bool requireNutritionGiving;
         public bool excludeDrugs;
+        public bool allowPlayerSellOnlyItems;
         public TechLevel minFactionTechLevel = TechLevel.Undefined;
         public int minDifferentGoods = 1;
         public int maxDifferentGoods = 1;
