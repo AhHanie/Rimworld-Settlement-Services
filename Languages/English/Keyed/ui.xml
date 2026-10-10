@@ -78,6 +78,12 @@ The after-purchase figure is an estimate until the transaction completes.</Settl
     <SettlementServices.Message.LeaveEarlyNoLongerEligible>This service can no longer be left early.</SettlementServices.Message.LeaveEarlyNoLongerEligible>
     <SettlementServices.Label.KnownServicesInPerson>Known services (discovered in person): {0}</SettlementServices.Label.KnownServicesInPerson>
     <SettlementServices.Label.KnownServicesRemote>Known services (discovered remotely): {0}</SettlementServices.Label.KnownServicesRemote>
+    <SettlementServices.Label.InspectSpecialties>Specialties: {0}</SettlementServices.Label.InspectSpecialties>
+    <SettlementServices.Label.InspectNoDiscoveries>Services not yet discovered</SettlementServices.Label.InspectNoDiscoveries>
+    <SettlementServices.Label.InspectSpecialtyServicesInPerson>Known specialty services (discovered in person):</SettlementServices.Label.InspectSpecialtyServicesInPerson>
+    <SettlementServices.Label.InspectSpecialtyServicesRemote>Known specialty services (discovered remotely):</SettlementServices.Label.InspectSpecialtyServicesRemote>
+    <SettlementServices.Label.InspectOtherAreasInPerson>Other known service areas (discovered in person): {0}</SettlementServices.Label.InspectOtherAreasInPerson>
+    <SettlementServices.Label.InspectOtherAreasRemote>Other known service areas (discovered remotely): {0}</SettlementServices.Label.InspectOtherAreasRemote>
     <SettlementServices.Label.YourServices>Your services here: {0}</SettlementServices.Label.YourServices>
     <SettlementServices.Label.InvestmentDialogTitle>Invest in {0}</SettlementServices.Label.InvestmentDialogTitle>
     <SettlementServices.Label.InvestmentCost>Investment cost: {0} silver</SettlementServices.Label.InvestmentCost>

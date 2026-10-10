@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
 using Settlement_Services.Domain;
 using Settlement_Services.Domain.Records;
+using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Investment;
+using Settlement_Services.Framework.Specialty;
 using Verse;
 
 namespace Settlement_Services.UI.Interaction
@@ -19,29 +20,23 @@ namespace Settlement_Services.UI.Interaction
             SettlementServicesWorldComponent domain = SettlementServicesWorldComponent.Current;
             if (domain == null) return;
 
-            string knownServices = BuildKnownServicesLine(domain, __instance);
+            var lines = new List<string>();
+
+            Faction faction = __instance.Faction;
+            IReadOnlyList<SettlementSpecialtyDef> specialties = faction != null && !faction.IsPlayer
+                ? SettlementSpecialtyService.GetSpecialties(__instance)
+                : null;
+            IReadOnlyList<DiscoveryRecord> discoveries = domain.DiscoveriesForSettlement(__instance.ID);
+            lines.AddRange(SettlementInspectServiceSummary.BuildLines(specialties, discoveries));
+
             string jobSummary = BuildJobSummaryLine(domain, __instance);
             string investmentLine = BuildInvestmentLine(domain, __instance);
-            if (knownServices == null && jobSummary == null && investmentLine == null) return;
+            if (jobSummary != null) lines.Add(jobSummary);
+            if (investmentLine != null) lines.Add(investmentLine);
+            if (lines.Count == 0) return;
 
-            var sb = new StringBuilder(__result);
-            if (knownServices != null) { sb.AppendLine(); sb.Append(knownServices); }
-            if (jobSummary != null) { sb.AppendLine(); sb.Append(jobSummary); }
-            if (investmentLine != null) { sb.AppendLine(); sb.Append(investmentLine); }
-            __result = sb.ToString();
-        }
-
-        private static string BuildKnownServicesLine(SettlementServicesWorldComponent domain, Settlement settlement)
-        {
-            IReadOnlyList<DiscoveryRecord> discoveries = domain.DiscoveriesForSettlement(settlement.ID);
-            if (discoveries.Count == 0) return null;
-
-            (string inPerson, string remote) = ServiceDiscoveryFormatting.SplitByChannel(discoveries);
-
-            var lines = new List<string>();
-            if (inPerson != null) lines.Add("SettlementServices.Label.KnownServicesInPerson".Translate(inPerson));
-            if (remote != null) lines.Add("SettlementServices.Label.KnownServicesRemote".Translate(remote));
-            return lines.Count == 0 ? null : string.Join("\n", lines);
+            string appended = string.Join("\n", lines);
+            __result = __result.NullOrEmpty() ? appended : __result + "\n" + appended;
         }
 
         private static string BuildJobSummaryLine(SettlementServicesWorldComponent domain, Settlement settlement)

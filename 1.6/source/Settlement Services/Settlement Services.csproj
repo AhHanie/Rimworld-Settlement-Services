@@ -325,6 +325,7 @@
     <Compile Include="UI\Overview\ServiceOverviewQueryService.cs" />
     <Compile Include="UI\Overview\MainTabWindow_ServiceOverview.cs" />
     <Compile Include="UI\Interaction\Settlement_ServicesInspectString_Patch.cs" />
+    <Compile Include="UI\Interaction\SettlementInspectServiceSummary.cs" />
 
     <Compile Include="Debug\SettlementCapabilityDebugAction.cs" />
     <Compile Include="Debug\ServiceRecordsDebugAction.cs" />
