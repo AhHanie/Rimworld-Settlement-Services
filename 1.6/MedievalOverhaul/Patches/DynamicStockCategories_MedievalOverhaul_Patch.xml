@@ -209,6 +209,32 @@
     </value>
   </Operation>
 
+  <Operation Class="MedievalOverhaul.PatchOperation_ToggleSettings">
+    <settings>
+      <li>clothChain</li>
+    </settings>
+    <active Class="PatchOperationAdd">
+      <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_Plantmatter"]/dynamicStockPools</xpath>
+      <value>
+        <li>
+          <id>moFlaxFiber</id>
+          <thingDefNames>
+            <li>DankPyon_RawFlax</li>
+          </thingDefNames>
+          <minFactionTechLevel>Neolithic</minFactionTechLevel>
+          <minDifferentGoods>1</minDifferentGoods>
+          <maxDifferentGoods>1</maxDifferentGoods>
+          <minCapacity>100</minCapacity>
+          <maxCapacity>200</maxCapacity>
+          <minRefreshAmount>10</minRefreshAmount>
+          <maxRefreshAmount>20</maxRefreshAmount>
+          <refreshIntervalTicks>60000</refreshIntervalTicks>
+          <replaceCount>0</replaceCount>
+        </li>
+      </value>
+    </active>
+  </Operation>
+
   <Operation Class="PatchOperationConditional">
     <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_Drugs"]/dynamicStockPools</xpath>
     <nomatch Class="PatchOperationAdd">

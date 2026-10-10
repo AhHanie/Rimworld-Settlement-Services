@@ -32,6 +32,7 @@ namespace Settlement_Services.Services.Market
             { "DankPyon_IronIngot", MercerItemGroup.Metal },
             { "Cloth", MercerItemGroup.Fabric },
             { "DankPyon_Linen", MercerItemGroup.Fabric },
+            { "DankPyon_RawFlax", MercerItemGroup.Fabric },
         };
 
         public static MercerItemGroup? GetGroup(ThingDef thingDef)
