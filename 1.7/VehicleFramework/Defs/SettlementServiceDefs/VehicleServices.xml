@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_VehicleFuelTopUp</defName>
+    <category>SettlementService_Technical</category>
+    <label>fuel top-up</label>
+    <description>Top a caravan vehicle's fuel tank up to full. Supply your own fuel and the settlement fills the rest from its own reserves.</description>
+    <workerClass>Settlement_Services.Framework.Compat.VehicleFramework.VehicleFuelServiceWorker</workerClass>
+    <requiredTechLevel>Industrial</requiredTechLevel>
+    <minimumCost>10</minimumCost>
+    <wealthScale>0.01</wealthScale>
+    <duration>2500</duration>    <!-- 1 hour -->
+    <targetRule>Vehicle</targetRule>
+    <batchMode>Targets</batchMode>
+    <iconTexPath>SettlementServices/UI/Icons/fuel</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_VehicleRepair</defName>
+    <category>SettlementService_Technical</category>
+    <label>vehicle repair</label>
+    <description>Have the settlement's mechanics patch up a damaged caravan vehicle, restoring every component to like-new condition.</description>
+    <workerClass>Settlement_Services.Framework.Compat.VehicleFramework.VehicleRepairServiceWorker</workerClass>
+    <requiredTechLevel>Industrial</requiredTechLevel>
+    <minimumCost>40</minimumCost>
+    <wealthScale>0.03</wealthScale>
+    <duration>20000</duration>    <!-- ticks at 50% aggregate vehicle damage, before specialty duration effects -->
+    <targetRule>Vehicle</targetRule>
+    <batchMode>Targets</batchMode>
+    <iconTexPath>SettlementServices/UI/Icons/wrench</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_VehicleUpgradeInstall</defName>
+    <category>SettlementService_Technical</category>
+    <label>vehicle upgrade</label>
+    <description>Commission the settlement's workshop to install one currently-available upgrade on a caravan vehicle.</description>
+    <workerClass>Settlement_Services.Framework.Compat.VehicleFramework.VehicleUpgradeServiceWorker</workerClass>
+    <requiredTechLevel>Industrial</requiredTechLevel>
+    <requiredCapabilityTags>
+      <li>VehicleUpgrades</li>
+    </requiredCapabilityTags>
+    <minimumCost>80</minimumCost>
+    <wealthScale>0.02</wealthScale>
+    <duration>30000</duration>
+    <targetRule>Vehicle</targetRule>
+    <batchMode>Targets</batchMode>
+    <iconTexPath>SettlementServices/UI/Icons/car-sparkles</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

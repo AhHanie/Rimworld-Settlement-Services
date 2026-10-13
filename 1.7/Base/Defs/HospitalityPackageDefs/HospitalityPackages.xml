@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Services.Hospitality.HospitalityPackageDef>
+    <defName>HospitalityPackage_Recreation</defName>
+    <label>recreation</label>
+    <description>Access to the settlement's recreation facilities: games, sport, and open leisure space to unwind.</description>
+    <minimumCost>15</minimumCost>
+    <wealthScale>0.005</wealthScale>
+    <restoredNeedDefNames>
+      <li>Joy</li>
+    </restoredNeedDefNames>
+  </Settlement_Services.Services.Hospitality.HospitalityPackageDef>
+
+  <Settlement_Services.Services.Hospitality.HospitalityPackageDef>
+    <defName>HospitalityPackage_Spa</defName>
+    <label>spa</label>
+    <description>A guided spa and bathhouse session: massage, bathing, and pampering that leaves guests noticeably more relaxed and refreshed than the room alone provides. The calm lingers for two days after the stay, easing mental strain and slowing rest loss.</description>
+    <minimumCost>35</minimumCost>
+    <wealthScale>0.02</wealthScale>
+    <thoughtDefName>SettlementServiceEvent_Hospitality_Spa</thoughtDefName>
+    <hediffDefName>SettlementService_Hospitality_SpaAfterglow</hediffDefName>
+    <requiredCapabilityTags>
+      <li>Hospitality</li>
+    </requiredCapabilityTags>
+  </Settlement_Services.Services.Hospitality.HospitalityPackageDef>
+
+  <Settlement_Services.Services.Hospitality.HospitalityPackageDef>
+    <defName>HospitalityPackage_Tavern</defName>
+    <label>tavern</label>
+    <description>An evening at the settlement's tavern, drinking and socializing with the locals. Livelier nights mean more chance of something interesting happening during the stay.</description>
+    <minimumCost>15</minimumCost>
+    <wealthScale>0.01</wealthScale>
+    <restoredNeedDefNames>
+      <li>Joy</li>
+    </restoredNeedDefNames>
+    <thoughtDefName>SettlementServiceEvent_Hospitality_Tavern</thoughtDefName>
+    <eventChanceMultiplier>1.5</eventChanceMultiplier>
+  </Settlement_Services.Services.Hospitality.HospitalityPackageDef>
+
+  <Settlement_Services.Services.Hospitality.HospitalityPackageDef>
+    <defName>HospitalityPackage_Adult</defName>
+    <label>private time</label>
+    <description>A private, consensual evening arranged through the settlement's hospitality staff. Guests return in noticeably better spirits; word of an especially memorable night has been known to reach home ahead of them.</description>
+    <minimumCost>40</minimumCost>
+    <wealthScale>0.01</wealthScale>
+    <thoughtDefName>GotSomeLovin</thoughtDefName>
+    <requiresAdultPawn>true</requiresAdultPawn>
+  </Settlement_Services.Services.Hospitality.HospitalityPackageDef>
+
+  <Settlement_Services.Services.Hospitality.HospitalityPackageDef>
+    <defName>HospitalityPackage_Substance</defName>
+    <label>substances</label>
+    <description>Recreational substances from the settlement's own stock, prepared and provided for a guest's use during their stay. Only what the settlement actually has on hand is offered.</description>
+    <minimumCost>10</minimumCost>
+    <wealthScale>0.005</wealthScale>
+  </Settlement_Services.Services.Hospitality.HospitalityPackageDef>
+
+</Defs>

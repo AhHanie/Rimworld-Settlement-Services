@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_CraftingCommission</defName>
+    <category>SettlementService_Crafting</category>
+    <label>crafting commission</label>
+    <description>Commission an item from the settlement's own crafters. Choose what to have made, whether you or the settlement supplies the raw materials, and how skilled a crafter to pay for. Return later to collect the finished piece.</description>
+    <workerClass>Settlement_Services.Services.Crafting.CraftingCommissionServiceWorker</workerClass>
+    <requiredTechLevel>Neolithic</requiredTechLevel>
+    <minimumCost>60</minimumCost>
+    <wealthScale>0.01</wealthScale>
+    <duration>30000</duration>    <!-- half a day -->
+    <targetRule>None</targetRule>
+    <batchMode>None</batchMode>
+    <allowRemoteDiscovery>true</allowRemoteDiscovery>
+    <allowRemoteRequest>true</allowRemoteRequest>
+    <priorityTierHeaderKey>SettlementServices.Label.CrafterSkillLevelHeader</priorityTierHeaderKey>
+    <priorityTiers>
+      <li>
+        <key>Skilled</key>
+        <label>Skilled crafter</label>
+        <durationMultiplier>1</durationMultiplier>
+        <costSurchargePct>0.35</costSurchargePct>
+      </li>
+      <li>
+        <key>Master</key>
+        <label>Master crafter</label>
+        <durationMultiplier>1</durationMultiplier>
+        <costSurchargePct>0.9</costSurchargePct>
+        <minimumGoodwill>60</minimumGoodwill>
+      </li>
+    </priorityTiers>
+    <iconTexPath>SettlementServices/UI/Icons/anvil-mallet</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_GeneExtraction</defName>
+    <category>SettlementService_Medical</category>
+    <label>gene extraction</label>
+    <description>Have a copy of a colonist's, prisoner's, or slave's genes drawn off into a genepack you keep. The donor's own non-archite genes are temporarily suppressed while they regrow.</description>
+    <workerClass>Settlement_Services.Services.Genetics.GeneExtractionServiceWorker</workerClass>
+    <requiredTechLevel>Spacer</requiredTechLevel>
+    <requiredCapabilityTags>
+      <li>AdvancedGenetics</li>
+    </requiredCapabilityTags>
+    <minimumCost>150</minimumCost>
+    <wealthScale>0.02</wealthScale>
+    <duration>30000</duration>    <!-- half a day -->
+    <targetRule>Pawn</targetRule>
+    <batchMode>Targets</batchMode>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+    <iconTexPath>SettlementServices/UI/Icons/genetics</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

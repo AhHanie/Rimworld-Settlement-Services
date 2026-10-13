@@ -1,0 +1,14 @@
+<Defs>
+
+  <MainButtonDef>
+    <defName>SettlementService_ServicesOverview</defName>
+    <label>services</label>
+    <description>Review every active and awaiting-collection settlement service across the world, grouped and filtered.</description>
+    <tabWindowClass>Settlement_Services.UI.Overview.MainTabWindow_ServiceOverview</tabWindowClass>
+    <order>95</order>
+    <validWithoutMap>true</validWithoutMap>
+    <minimized>true</minimized>
+    <iconPath>SettlementServices/UI/Icons/MainButtons/information</iconPath>
+  </MainButtonDef>
+
+</Defs>

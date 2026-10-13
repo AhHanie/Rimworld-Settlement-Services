@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Android_DiagnosticScan</defName>
+    <disabled>true</disabled>
+    <label>diagnostic scan</label>
+    <description>A full diagnostic scan turns up more to check than expected.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Technical</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <durationDeltaTicks>15000</durationDeltaTicks>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Android_EfficientMaintenance</defName>
+    <disabled>true</disabled>
+    <label>efficient maintenance</label>
+    <description>The technician works through the maintenance checklist unusually efficiently.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Technical</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <durationDeltaTicks>-15000</durationDeltaTicks>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Android_RareComponentAvailable</defName>
+    <disabled>true</disabled>
+    <label>rare component available</label>
+    <description>The technician happens to have a rare component in stock that cuts down the cost.</description>
+    <weightClass>Discovery</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Technical</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <refundAmount>10</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Android_MaintenancePackage</defName>
+    <disabled>true</disabled>
+    <label>maintenance package</label>
+    <description>The technician throws in a bundled maintenance package at a reduced rate.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Technical</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <refundAmount>10</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Android_TechnicalLearning</defName>
+    <disabled>true</disabled>
+    <label>technical learning</label>
+    <description>Your colonist picks up a few technical pointers while watching the work.</description>
+    <weightClass>Social</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Technical</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <experienceSkillDefName>Intellectual</experienceSkillDefName>
+      <experienceAmount>60</experienceAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Android_SpecialistReferral</defName>
+    <disabled>true</disabled>
+    <label>android specialist referral</label>
+    <description>The technician mentions another settlement with a specialist technical shop.</description>
+    <weightClass>Discovery</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Technical</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <referralCategoryDefName>SettlementService_Technical</referralCategoryDefName>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+</Defs>

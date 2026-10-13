@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/Settlement_Services.Framework.Defs.ServiceEventDef[defName="SettlementServiceEvent_Education_InspirationalTeacher"]/eligibleServiceDefNames</xpath>
+    <value>
+      <li>SettlementService_RimEducationCourse</li>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/Settlement_Services.Framework.Defs.ServiceEventDef[defName="SettlementServiceEvent_Apprenticeship_MentorBond"]/eligibleServiceDefNames</xpath>
+    <value>
+      <li>SettlementService_RimEducationCourse</li>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/Settlement_Services.Framework.Defs.ServiceEventDef[defName="SettlementServiceEvent_Education_MentorGift"]/eligibleServiceDefNames</xpath>
+    <value>
+      <li>SettlementService_RimEducationCourse</li>
+    </value>
+  </Operation>
+
+</Patch>

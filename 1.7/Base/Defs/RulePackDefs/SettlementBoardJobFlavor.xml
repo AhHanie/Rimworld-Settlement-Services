@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_Logging_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Timber for [SETTLEMENT]</li>
+        <li>r_title->Clearing work at [SETTLEMENT]</li>
+        <li>r_title->Woodcutters wanted</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->A storm took down half the old stand near [SETTLEMENT].</li>
+        <li>sb_opener->[SETTLEMENT] has run through its firewood and building timber.</li>
+        <li>sb_opener->The foresters of [SETTLEMENT] have fallen behind on their cutting.</li>
+        <li>sb_need->They need strong hands to fell, trim and stack the logs.</li>
+        <li>sb_need->They are looking for workers who know trees and can be trusted with an axe.</li>
+        <li>sb_need->They want a steady crew to clear the stand before the wood spoils.</li>
+        <li>sb_closer->Pay is promised on completion.</li>
+        <li>sb_closer->The work is hard but honest, and the reward is fixed in advance.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_Construction_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Builders needed in [SETTLEMENT]</li>
+        <li>r_title->Repairs at [SETTLEMENT]</li>
+        <li>r_title->Workshop raising</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->[SETTLEMENT] is raising new walls and cannot find enough skilled builders.</li>
+        <li>sb_opener->Winter damage has left several buildings in [SETTLEMENT] close to collapse.</li>
+        <li>sb_opener->A new workshop is half built in [SETTLEMENT], and the master builder has fallen ill.</li>
+        <li>sb_need->They will pay for a capable builder to lead the work, and for hands to follow.</li>
+        <li>sb_need->They need people who can read a plan and lay stone straight.</li>
+        <li>sb_need->They are asking for experienced hands to finish the frame and roof.</li>
+        <li>sb_closer->Materials are provided; only labour is wanted.</li>
+        <li>sb_closer->The payment is held in trust until the job is done.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_MedicalAssistance_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Healers wanted</li>
+        <li>r_title->Sickbeds at [SETTLEMENT]</li>
+        <li>r_title->Relief medics for [SETTLEMENT]</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->A fever is moving through [SETTLEMENT] and its healers are exhausted.</li>
+        <li>sb_opener->There were injuries after an accident in [SETTLEMENT], and the sickbeds are full.</li>
+        <li>sb_opener->[SETTLEMENT] has more patients than hands to tend them.</li>
+        <li>sb_need->They want someone with real medical training to take over the wards for a time.</li>
+        <li>sb_need->They are looking for steady caregivers who can treat and nurse without supervision.</li>
+        <li>sb_need->They need medics who will keep their patients alive until the crisis passes.</li>
+        <li>sb_closer->The pay is good for the short engagement.</li>
+        <li>sb_closer->Medicine and bandages will be supplied.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_ExpeditionSupport_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Expedition from [SETTLEMENT]</li>
+        <li>r_title->Guides and guards wanted</li>
+        <li>r_title->Provisioning the survey party</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->[SETTLEMENT] is sending an expedition into the wilds and wants experienced company.</li>
+        <li>sb_opener->A survey party from [SETTLEMENT] is short of guides, guards and foragers.</li>
+        <li>sb_opener->The leaders of [SETTLEMENT] are organising a long trek and need dependable help.</li>
+        <li>sb_need->They need a mix of talents: someone to handle the animals, someone to guard the line, someone to find food.</li>
+        <li>sb_need->They will pay well for a small, capable party with the right mix of skills.</li>
+        <li>sb_need->They want people who can keep beasts calm, shoot straight and forage when supplies run low.</li>
+        <li>sb_closer->The party will be gone for several days.</li>
+        <li>sb_closer->The reward is secured at [SETTLEMENT] until they return.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_QuarryWork_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Quarry hands for [SETTLEMENT]</li>
+        <li>r_title->Stonecutters wanted</li>
+        <li>r_title->Clearing the quarry face</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->The quarry outside [SETTLEMENT] has a backlog of stone that nobody has had time to cut.</li>
+        <li>sb_opener->[SETTLEMENT] needs more building stone than its own quarrymen can cut.</li>
+        <li>sb_opener->The working face at the quarry of [SETTLEMENT] is choked with rubble.</li>
+        <li>sb_need->They want workers who can dig safely, cut clean blocks and carry them out from the face.</li>
+        <li>sb_need->They are looking for steady hands who know how to read rock and work it without waste.</li>
+        <li>sb_need->They need the loose stone cleared and the good stone hauled out in an orderly fashion.</li>
+        <li>sb_closer->The promised reward is held for the end of the work.</li>
+        <li>sb_closer->It is dusty work of a few days, and the pay is set in advance.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_KitchenRelief_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Cooks needed at [SETTLEMENT]</li>
+        <li>r_title->Kitchen help wanted</li>
+        <li>r_title->Meals for a full house</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->The kitchens of [SETTLEMENT] are crowded after a run of new arrivals.</li>
+        <li>sb_opener->[SETTLEMENT] has more mouths to feed than its cooks can manage.</li>
+        <li>sb_opener->The head cook of [SETTLEMENT] has more orders than hands.</li>
+        <li>sb_need->They want cooks who can turn out quick, clean meals without wasting the larder.</li>
+        <li>sb_need->They are looking for people who know their way around a stove and a stockpot.</li>
+        <li>sb_need->They need meals prepared steadily and kept coming until the rush is over.</li>
+        <li>sb_closer->The work is short, and the reward is promised on completion.</li>
+        <li>sb_closer->Ingredients are supplied; only skill and time are wanted.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_TailoringRush_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Clothing order at [SETTLEMENT]</li>
+        <li>r_title->Tailors wanted</li>
+        <li>r_title->A rush of cloth and thread</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->[SETTLEMENT] has an urgent order of clothing to deliver and too few tailors.</li>
+        <li>sb_opener->Cold weather is coming, and the people of [SETTLEMENT] are short of warm garments.</li>
+        <li>sb_opener->Travelers are expected at [SETTLEMENT], and the order for their apparel is far behind.</li>
+        <li>sb_need->They want workers who can cut and sew the cloth they have supplied.</li>
+        <li>sb_need->They are looking for steady hands with needle and shears to finish the order on time.</li>
+        <li>sb_need->They need garments finished well and finished quickly.</li>
+        <li>sb_closer->Materials are provided; only labour is wanted.</li>
+        <li>sb_closer->The reward is fixed in advance and paid when the order is done.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_MonumentCommission_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->A monument for [SETTLEMENT]</li>
+        <li>r_title->Artisans wanted for a memorial</li>
+        <li>r_title->Commission for a public work</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->The people of [SETTLEMENT] want a public monument to mark their history.</li>
+        <li>sb_opener->A memorial is planned in [SETTLEMENT], but no one there has the skill to shape it.</li>
+        <li>sb_opener->The council of [SETTLEMENT] has promised its people a fine piece of public art.</li>
+        <li>sb_need->They want an artist to design and shape the work and, where needed, a builder to set it in place.</li>
+        <li>sb_need->They are looking for someone with a real eye for form who can see the monument through.</li>
+        <li>sb_need->They need skilled hands to give the work a worthy shape.</li>
+        <li>sb_closer->The promised reward is paid once the commission is finished.</li>
+        <li>sb_closer->The commission will take several days of careful work.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_TradeEnvoy_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Merchant talks at [SETTLEMENT]</li>
+        <li>r_title->Envoys wanted</li>
+        <li>r_title->Mediators for the market</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->Trade terms between the merchants of [SETTLEMENT] have stalled.</li>
+        <li>sb_opener->A dispute over weights and prices has soured the market at [SETTLEMENT].</li>
+        <li>sb_opener->The merchants of [SETTLEMENT] cannot agree and will not hear each other out.</li>
+        <li>sb_need->They want a patient negotiator who can bargain and keep the peace.</li>
+        <li>sb_need->They are looking for someone persuasive and fair to broker an agreement.</li>
+        <li>sb_need->They need a calm voice to hear both sides and settle the matter.</li>
+        <li>sb_closer->The reward is promised once terms are agreed.</li>
+        <li>sb_closer->The talks should take only a few days.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_RecordsResearch_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Records to untangle</li>
+        <li>r_title->Scribes and scholars wanted</li>
+        <li>r_title->Ledgers of [SETTLEMENT]</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->The ledgers of [SETTLEMENT] are damaged and no longer agree with one another.</li>
+        <li>sb_opener->Years of records at [SETTLEMENT] have been left in disorder.</li>
+        <li>sb_opener->Conflicting accounts have left the keepers of [SETTLEMENT] unable to settle a long argument.</li>
+        <li>sb_need->They want a careful reader who can catalog the records and compare what they say.</li>
+        <li>sb_need->They are looking for sharp minds to sort the evidence and make sense of it.</li>
+        <li>sb_need->They need the records put in order and their meaning worked out.</li>
+        <li>sb_closer->The reward is held until the findings are handed over.</li>
+        <li>sb_closer->It is slow, careful work of several days.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_PerimeterWatch_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Watch rotation at [SETTLEMENT]</li>
+        <li>r_title->Guards wanted</li>
+        <li>r_title->Reinforcing the watch</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->The guards of [SETTLEMENT] are tired after many nights on watch.</li>
+        <li>sb_opener->The watch at [SETTLEMENT] is short-handed and the rotation is wearing thin.</li>
+        <li>sb_opener->Word of trouble in the area has left [SETTLEMENT] anxious about its perimeter.</li>
+        <li>sb_need->They want dependable people to patrol the edge of the settlement and stand ready to defend it.</li>
+        <li>sb_need->They are looking for guards who can keep watch and answer a threat at a distance or up close.</li>
+        <li>sb_need->They need steady hands to relieve the weary guards for a time.</li>
+        <li>sb_closer->The promised reward is paid when the rotation ends.</li>
+        <li>sb_closer->The watch will last a few days, and the pay is fixed in advance.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_LivestockDrive_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Herders wanted</li>
+        <li>r_title->Livestock drive from [SETTLEMENT]</li>
+        <li>r_title->Hands for the herds</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->The herds of [SETTLEMENT] must be moved to fresh ground.</li>
+        <li>sb_opener->[SETTLEMENT] has more animals than its herders can manage.</li>
+        <li>sb_opener->The herders of [SETTLEMENT] are short-handed at the busiest part of the season.</li>
+        <li>sb_need->They want people who can handle animals, keep them calm and keep the herd together.</li>
+        <li>sb_need->They are looking for experienced hands who understand beasts and how to move them.</li>
+        <li>sb_need->They need the animals driven, watered and kept in good order.</li>
+        <li>sb_closer->The reward is fixed in advance and paid on completion.</li>
+        <li>sb_closer->The drive should take a few days.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_HarvestPreservation_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Bring in the harvest</li>
+        <li>r_title->Harvest help at [SETTLEMENT]</li>
+        <li>r_title->Fields and kitchens at [SETTLEMENT]</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->A crop at [SETTLEMENT] is ripe and in danger of spoiling before it is gathered.</li>
+        <li>sb_opener->The harvest at [SETTLEMENT] is bigger than the settlement can handle in time.</li>
+        <li>sb_opener->The fields of [SETTLEMENT] have given a good yield, but the work to save it has not been done.</li>
+        <li>sb_need->They want hands to gather the crop and cooks to prepare it for storage.</li>
+        <li>sb_need->They are looking for workers who can bring in a harvest and make it keep.</li>
+        <li>sb_need->They need the crop gathered quickly and the food made ready for the stores.</li>
+        <li>sb_closer->The reward is promised once the work is done.</li>
+        <li>sb_closer->It is a few days of busy work, and the pay is set in advance.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_TunnelRescue_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Cave-in relief at [SETTLEMENT]</li>
+        <li>r_title->Diggers and healers wanted</li>
+        <li>r_title->Trapped in the tunnels</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->A tunnel has collapsed near [SETTLEMENT] and the passage is blocked.</li>
+        <li>sb_opener->A cave-in has left several workers of [SETTLEMENT] hurt and cut off.</li>
+        <li>sb_opener->The miners of [SETTLEMENT] cannot clear the fallen rock and tend their wounded at once.</li>
+        <li>sb_need->They want careful diggers to clear the way and skilled hands to tend the injured.</li>
+        <li>sb_need->They are looking for people who can shift rubble carefully and give medical care.</li>
+        <li>sb_need->They need the passage opened and the hurt looked after as quickly as possible.</li>
+        <li>sb_closer->The promised reward is paid once the work is done.</li>
+        <li>sb_closer->Time is short, and the pay is fixed in advance.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+</Defs>

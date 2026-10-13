@@ -1,0 +1,58 @@
+using System.Collections.Generic;
+using RimWorld;
+using RimWorld.Planet;
+using Verse;
+
+namespace Settlement_Services.UI.Interaction
+{
+    public class CaravanArrivalAction_VisitServices : CaravanArrivalAction
+    {
+        private Settlement settlement;
+
+        public CaravanArrivalAction_VisitServices() { }
+        public CaravanArrivalAction_VisitServices(Settlement settlement) { this.settlement = settlement; }
+
+        public override string Label => "SettlementServices.Command.Services".Translate();
+        public override string ReportString => "SettlementServices.Command.TravelingToVisitServices".Translate();
+
+        public override FloatMenuAcceptanceReport StillValid(Caravan caravan, PlanetTile destinationTile)
+        {
+            FloatMenuAcceptanceReport baseReport = base.StillValid(caravan, destinationTile);
+            if (!baseReport.Accepted) return baseReport;
+            if (settlement == null || settlement.Tile != destinationTile) return false;
+            return CanVisit(caravan, settlement);
+        }
+
+        public override void Arrived(Caravan caravan)
+        {
+            if (!CanVisit(caravan, settlement).Accepted) return;
+            CameraJumper.TryJumpAndSelect(caravan);
+            Find.WindowStack.Add(new Dialog_SettlementServices(ServiceRequestSession.ForInPersonVisit(settlement, caravan)));
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_References.Look(ref settlement, "settlement");
+        }
+
+        public static FloatMenuAcceptanceReport CanVisit(Caravan caravan, Settlement settlement)
+        {
+            if (settlement == null || !settlement.Spawned || settlement.HasMap || !settlement.Visitable) return false;
+            if (settlement.Faction != null && settlement.Faction.HostileTo(Faction.OfPlayer))
+                return FloatMenuAcceptanceReport.WithFailReason("SettlementServices.Error.FactionHostile".Translate());
+            if (!SettlementServicesInteractionCommands.HasVisitingColonist(caravan))
+                return FloatMenuAcceptanceReport.WithFailReason("SettlementServices.Command.NoVisitingColonist".Translate());
+            return true;
+        }
+
+        public static IEnumerable<FloatMenuOption> GetFloatMenuOptions(Caravan caravan, Settlement settlement)
+        {
+            return CaravanArrivalActionUtility.GetFloatMenuOptions(
+                () => CanVisit(caravan, settlement),
+                () => new CaravanArrivalAction_VisitServices(settlement),
+                "SettlementServices.Command.Services".Translate(),
+                caravan, settlement.Tile, settlement);
+        }
+    }
+}

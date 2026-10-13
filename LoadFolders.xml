@@ -17,4 +17,21 @@
     <li IfModActive="Ludeon.RimWorld.Odyssey">1.6/Odyssey</li>
     <li>/</li>
   </v1.6>
+  <v1.7>
+    <li>1.7/Base</li>
+    <li IfModActive="DankPyon.Medieval.Overhaul">1.7/MedievalOverhaul</li>
+    <li IfModActive="SmashPhil.VehicleFramework">1.7/VehicleFramework</li>
+    <li IfModActive="OskarPotocki.VanillaVehiclesExpanded">1.7/VanillaVehiclesExpanded</li>
+    <li IfModActive="vanillaracesexpanded.android">1.7/Androids</li>
+    <li IfModActive="DimonSever000.ScienceRework">1.7/RimEducation</li>
+    <li IfModActive="sk.chargehediff">1.7/ChargeableHediffs</li>
+    <li IfModActive="ferny.ProgressionEducation">1.7/ProgressionEducation</li>
+    <li IfModActive="GhostData.lifelessons">1.7/LifeLessons</li>
+    <li IfModActive="Ludeon.RimWorld.Biotech">1.7/Biotech</li>
+    <li IfModActive="Ludeon.RimWorld.Ideology">1.7/Ideology</li>
+    <li IfModActive="Ludeon.RimWorld.Royalty">1.7/Royalty</li>
+    <li IfModActive="Ludeon.RimWorld.Anomaly">1.7/Anomaly</li>
+    <li IfModActive="Ludeon.RimWorld.Odyssey">1.7/Odyssey</li>
+    <li>/</li>
+  </v1.7>
 </loadFolders>

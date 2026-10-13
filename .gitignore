@@ -24,6 +24,8 @@ mono_crash.*
 # is real source, not a build output directory.
 !1.6/source/Settlement Services/Debug/
 !1.6/source/Settlement Services/Debug/**
+!1.7/source/Settlement Services/Debug/
+!1.7/source/Settlement Services/Debug/**
 [Rr]elease/
 [Rr]eleases/
 x64/

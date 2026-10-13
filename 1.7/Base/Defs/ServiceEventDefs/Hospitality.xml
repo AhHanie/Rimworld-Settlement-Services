@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hospitality_PoorMeal</defName>
+    <disabled>true</disabled>
+    <label>poor meal</label>
+    <description>The kitchen has an off night, and the meal shows it.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Hospitality</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <thoughtDefName>SettlementServiceEvent_NegativeExperience</thoughtDefName>
+      <grantThoughtToAllParticipants>true</grantThoughtToAllParticipants>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hospitality_OverbookedInn</defName>
+    <disabled>true</disabled>
+    <label>overbooked inn</label>
+    <description>The inn is more overbooked than expected, and your stay takes a little longer to sort out.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Hospitality</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <durationDeltaPct>0.1</durationDeltaPct>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hospitality_MinorInjury</defName>
+    <disabled>true</disabled>
+    <label>minor mishap</label>
+    <description>A pawn slightly injures themselves during their stay.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.3</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Hospitality</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <hediffDefName>Bruise</hediffDefName>
+      <hediffSeverity>0.05</hediffSeverity>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hospitality_InterestingConversation</defName>
+    <label>interesting conversation</label>
+    <description>A conversation with a local gives the guest some insight into a random skill.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Hospitality</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <workerClass>Settlement_Services.Framework.Events.Workers.InterestingConversationServiceEventWorker</workerClass>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Hospitality_HelpfulInnkeeper</defName>
+    <label>helpful innkeeper</label>
+    <description>The innkeeper shares a lead on work or an opportunity in the region.</description>
+    <weightClass>Discovery</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.4</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Hospitality</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <workerClass>Settlement_Services.Framework.Events.Workers.HelpfulInnkeeperServiceEventWorker</workerClass>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+</Defs>

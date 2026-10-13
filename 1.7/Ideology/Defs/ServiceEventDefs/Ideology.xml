@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Ideology_ReligiousDebate</defName>
+    <disabled>true</disabled>
+    <label>religious debate</label>
+    <description>A spirited debate over belief breaks out, and your colonist comes away having learned something about persuasion.</description>
+    <weightClass>Social</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Ideology</li>
+    </eligibleCategoryDefNames>
+    <requiresPawnTarget>true</requiresPawnTarget>
+    <effects>
+      <experienceSkillDefName>Social</experienceSkillDefName>
+      <experienceAmount>60</experienceAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Ideology_VisitingPreacher</defName>
+    <disabled>true</disabled>
+    <label>visiting preacher</label>
+    <description>A visiting preacher offers their time at a reduced rate.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Ideology</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <refundAmount>10</refundAmount>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Ideology_SacredFestival</defName>
+    <disabled>true</disabled>
+    <label>sacred festival</label>
+    <description>Your visit happens to coincide with a sacred festival, and the settlement's goodwill toward you swells.</description>
+    <weightClass>RareExceptional</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.05</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Ideology</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <goodwillDelta>2</goodwillDelta>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Ideology_MinorityCongregationDiscovered</defName>
+    <disabled>true</disabled>
+    <label>minority congregation discovered</label>
+    <description>Your colonist learns of a minority congregation elsewhere worth visiting.</description>
+    <weightClass>Discovery</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Ideology</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <referralCategoryDefName>SettlementService_Ideology</referralCategoryDefName>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+</Defs>

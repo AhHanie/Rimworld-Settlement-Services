@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Services.Education.SkillLessonServiceDef>
+    <defName>SettlementService_SkillLesson</defName>
+    <category>SettlementService_Education</category>
+    <label>skill lesson</label>
+    <description>A focused tutoring session in a skill of your choosing, at an intensity you pick. Uses standard experience progression, scaled by the settlement's teaching quality; the pupil's own passion affects their learning rate as usual.</description>
+    <workerClass>Settlement_Services.Services.Education.SkillLessonServiceWorker</workerClass>
+    <requiredTechLevel>Neolithic</requiredTechLevel>
+    <minimumCost>500</minimumCost>
+    <wealthScale>0.01</wealthScale>
+    <duration>60000</duration>    <!-- 1 day -->
+    <targetRule>Pawn</targetRule>
+    <batchMode>Targets</batchMode>
+    <lessonOptions>
+      <li>
+        <key>brief</key>
+        <labelKey>SettlementServices.Label.LessonIntensity.Brief</labelKey>
+        <baseXp>2000</baseXp>
+        <durationMultiplier>1</durationMultiplier>
+        <priceMultiplier>0</priceMultiplier>
+      </li>
+      <li>
+        <key>standard</key>
+        <labelKey>SettlementServices.Label.LessonIntensity.Standard</labelKey>
+        <baseXp>4000</baseXp>
+        <durationMultiplier>2</durationMultiplier>
+        <priceMultiplier>0.015</priceMultiplier>
+      </li>
+      <li>
+        <key>intensive</key>
+        <labelKey>SettlementServices.Label.LessonIntensity.Intensive</labelKey>
+        <baseXp>8000</baseXp>
+        <durationMultiplier>4</durationMultiplier>
+        <priceMultiplier>0.02</priceMultiplier>
+      </li>
+    </lessonOptions>
+    <iconTexPath>SettlementServices/UI/Icons/teacher</iconTexPath>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+  </Settlement_Services.Services.Education.SkillLessonServiceDef>
+
+  <Settlement_Services.Services.Education.SkillLessonServiceDef>
+    <defName>SettlementService_Apprenticeship</defName>
+    <category>SettlementService_Education</category>
+    <label>apprenticeship</label>
+    <description>A multi-day placement under the settlement's own tradespeople, at an intensity you pick. Experience progresses as standard, scaled by the settlement's teaching quality; the apprentice's own passion affects their learning rate as usual.</description>
+    <workerClass>Settlement_Services.Services.Education.ApprenticeshipServiceWorker</workerClass>
+    <requiredTechLevel>Neolithic</requiredTechLevel>
+    <minimumCost>250</minimumCost>
+    <wealthScale>0.005</wealthScale>
+    <duration>180000</duration>    <!-- 3 days -->
+    <targetRule>Pawn</targetRule>
+    <batchMode>Targets</batchMode>
+    <lessonOptions>
+      <li>
+        <key>brief</key>
+        <labelKey>SettlementServices.Label.LessonIntensity.Brief</labelKey>
+        <baseXp>2500</baseXp>
+        <durationMultiplier>1</durationMultiplier>
+        <priceMultiplier>0</priceMultiplier>
+      </li>
+      <li>
+        <key>standard</key>
+        <labelKey>SettlementServices.Label.LessonIntensity.Standard</labelKey>
+        <baseXp>5000</baseXp>
+        <durationMultiplier>2</durationMultiplier>
+        <priceMultiplier>0.01</priceMultiplier>
+      </li>
+      <li>
+        <key>intensive</key>
+        <labelKey>SettlementServices.Label.LessonIntensity.Intensive</labelKey>
+        <baseXp>10000</baseXp>
+        <durationMultiplier>3</durationMultiplier>
+        <priceMultiplier>0.015</priceMultiplier>
+      </li>
+    </lessonOptions>
+    <iconTexPath>SettlementServices/UI/Icons/mentor</iconTexPath>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+  </Settlement_Services.Services.Education.SkillLessonServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_ResearchSeminar</defName>
+    <category>SettlementService_Education</category>
+    <label>research seminar</label>
+    <description>Send a colonist to sit in on the settlement's own research effort. Advances a research project you're already working toward or could start with a quality-biased random 10% to 30% of its research point cost, plus a little intellectual experience for the attendee. Normal research unlock requirements still apply.</description>
+    <workerClass>Settlement_Services.Services.Education.ResearchSeminarServiceWorker</workerClass>
+    <requiredTechLevel>Industrial</requiredTechLevel>
+    <requiredCapabilityTags>
+      <li>Research</li>
+    </requiredCapabilityTags>
+    <minimumCost>70</minimumCost>
+    <wealthScale>0.03</wealthScale>
+    <duration>180000</duration>    <!-- 3 day -->
+    <targetRule>Pawn</targetRule>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_AnimalTraining</defName>
+    <category>SettlementService_Animals</category>
+    <label>animal training</label>
+    <description>The settlement's handlers train one or more behaviours into an animal, listing only behaviours currently legal for that animal to learn.</description>
+    <workerClass>Settlement_Services.Services.Education.AnimalTrainingServiceWorker</workerClass>
+    <requiredTechLevel>Neolithic</requiredTechLevel>
+    <requiredCapabilityTags>
+      <li>AnimalHandling</li>
+    </requiredCapabilityTags>
+    <minimumCost>40</minimumCost>
+    <wealthScale>0.02</wealthScale>
+    <duration>180000</duration>    <!-- 3 day -->
+    <targetRule>Animal</targetRule>
+    <batchMode>Targets</batchMode>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

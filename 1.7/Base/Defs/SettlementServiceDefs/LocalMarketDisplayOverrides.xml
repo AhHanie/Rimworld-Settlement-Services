@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.LocalMarketDisplayOverridesDef>
+    <defName>SettlementServices_LocalMarketDisplayOverrides</defName>
+    <drinkDefNames />
+    <playerSellOnlyDefNames />
+    <pantryIngredientDefNames />
+    <meatDisplayDefNames />
+  </Settlement_Services.Framework.Defs.LocalMarketDisplayOverridesDef>
+
+</Defs>

@@ -1,0 +1,105 @@
+using System.Collections.Generic;
+using UnityEngine;
+using Verse;
+using Settlement_Services.Framework.Compatibility;
+
+namespace Settlement_Services
+{
+    public class ModSettings : Verse.ModSettings
+    {
+        private static ModSettings current;
+
+        public static ModSettings Current =>
+            current ?? (current = LoadedModManager.GetMod<Mod>().GetSettings<ModSettings>());
+
+        public const int MinStockQuantityMultiplier = 1;
+
+        public const int MaxStockQuantityMultiplier = 10;
+
+        public const int MinSpecialtyCountOffset = -3;
+
+        public const int MaxSpecialtyCountOffset = 10;
+
+        public const int DefaultSpecialtyChanceOnePct = 65;
+
+        public const int DefaultSpecialtyChanceTwoPct = 30;
+
+        public float wealthPriceScalePct = 1f;
+
+        public int stockQuantityMultiplier = 1;
+
+        public int specialtyCountOffset = 0;
+
+        public int specialtyChanceOnePct = DefaultSpecialtyChanceOnePct;
+
+        public int specialtyChanceTwoPct = DefaultSpecialtyChanceTwoPct;
+
+        public int SpecialtyChanceThreePct => 100 - specialtyChanceOnePct - specialtyChanceTwoPct;
+
+        public Dictionary<string, float> difficultyMultiplierOverrides = new Dictionary<string, float>();
+
+        public Dictionary<string, float> moodThoughtOverrides = new Dictionary<string, float>();
+
+        public float serviceEventFrequencyPct = 1f;
+
+        public float goodwillDiscountScalePct = 1f;
+
+        public float investmentCostScalePct = 1f;
+
+        public float investmentDiscountScalePct = 1f;
+
+        public float investmentDecayDurationScalePct = 1f;
+
+        public bool negotiatorSocialDiscountEnabled = true;
+
+        public CompatibilitySettingsStore compatibilitySettings = new CompatibilitySettingsStore();
+
+        public bool soundtrackEnabled = false;
+
+        public bool verboseLoggingEnabled = false;
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Values.Look(ref wealthPriceScalePct, "wealthPriceScalePct", 1f);
+            Scribe_Values.Look(ref stockQuantityMultiplier, "stockQuantityMultiplier", 1);
+            Scribe_Values.Look(ref specialtyCountOffset, "specialtyCountOffset", 0);
+            Scribe_Values.Look(ref specialtyChanceOnePct, "specialtyChanceOnePct", DefaultSpecialtyChanceOnePct);
+            Scribe_Values.Look(ref specialtyChanceTwoPct, "specialtyChanceTwoPct", DefaultSpecialtyChanceTwoPct);
+            Scribe_Collections.Look(ref difficultyMultiplierOverrides, "difficultyMultiplierOverrides", LookMode.Value, LookMode.Value);
+            Scribe_Collections.Look(ref moodThoughtOverrides, "moodThoughtOverrides", LookMode.Value, LookMode.Value);
+            Scribe_Values.Look(ref serviceEventFrequencyPct, "serviceEventFrequencyPct", 1f);
+            Scribe_Values.Look(ref goodwillDiscountScalePct, "goodwillDiscountScalePct", 1f);
+            Scribe_Values.Look(ref investmentCostScalePct, "investmentCostScalePct", 1f);
+            Scribe_Values.Look(ref investmentDiscountScalePct, "investmentDiscountScalePct", 1f);
+            Scribe_Values.Look(ref investmentDecayDurationScalePct, "investmentDecayDurationScalePct", 1f);
+            Scribe_Values.Look(ref negotiatorSocialDiscountEnabled, "negotiatorSocialDiscountEnabled", true);
+            Scribe_Deep.Look(ref compatibilitySettings, "compatibilitySettings");
+            Scribe_Values.Look(ref soundtrackEnabled, "soundtrackEnabled", false);
+            Scribe_Values.Look(ref verboseLoggingEnabled, "verboseLoggingEnabled", false);
+
+            if (Scribe.mode != LoadSaveMode.PostLoadInit) return;
+
+            if (difficultyMultiplierOverrides == null) difficultyMultiplierOverrides = new Dictionary<string, float>();
+            if (moodThoughtOverrides == null) moodThoughtOverrides = new Dictionary<string, float>();
+            if (compatibilitySettings == null) compatibilitySettings = new CompatibilitySettingsStore();
+
+            wealthPriceScalePct = Mathf.Clamp(wealthPriceScalePct, 0f, 3f);
+            stockQuantityMultiplier = Mathf.Clamp(stockQuantityMultiplier, MinStockQuantityMultiplier, MaxStockQuantityMultiplier);
+            specialtyCountOffset = Mathf.Clamp(specialtyCountOffset, MinSpecialtyCountOffset, MaxSpecialtyCountOffset);
+            specialtyChanceOnePct = Mathf.Clamp(specialtyChanceOnePct, 0, 100);
+            specialtyChanceTwoPct = Mathf.Clamp(specialtyChanceTwoPct, 0, 100 - specialtyChanceOnePct);
+            serviceEventFrequencyPct = Mathf.Clamp(serviceEventFrequencyPct, 0f, 2f);
+            goodwillDiscountScalePct = Mathf.Clamp(goodwillDiscountScalePct, 0f, 2f);
+            investmentCostScalePct = Mathf.Clamp(investmentCostScalePct, 0f, 3f);
+            investmentDiscountScalePct = Mathf.Clamp(investmentDiscountScalePct, 0f, 2f);
+            investmentDecayDurationScalePct = Mathf.Clamp(investmentDecayDurationScalePct, 0f, 3f);
+            var keys = new List<string>(difficultyMultiplierOverrides.Keys);
+            foreach (string key in keys) difficultyMultiplierOverrides[key] = Mathf.Clamp(difficultyMultiplierOverrides[key], 0f, 3f);
+
+            var moodKeys = new List<string>(moodThoughtOverrides.Keys);
+            foreach (string key in moodKeys)
+                moodThoughtOverrides[key] = Mathf.Clamp(moodThoughtOverrides[key], MoodThoughtCatalog.MinMoodEffect, MoodThoughtCatalog.MaxMoodEffect);
+        }
+    }
+}

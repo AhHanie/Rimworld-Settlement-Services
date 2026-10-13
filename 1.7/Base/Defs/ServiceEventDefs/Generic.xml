@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Generic_RepeatCustomer</defName>
+    <label>courtesy discount</label>
+    <description>The provider offers a small courtesy discount, knocking a little off the price.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Animals</li>
+      <li>SettlementService_Medical</li>
+      <li>SettlementService_Hospitality</li>
+      <li>SettlementService_Ideology</li>
+      <li>SettlementService_Crafting</li>
+      <li>SettlementService_Technical</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <refundFraction>0.10</refundFraction>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Generic_QuietDay</defName>
+    <label>quiet day</label>
+    <description>The settlement has spare capacity and completes the service faster.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Ideology</li>
+      <li>SettlementService_Technical</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <durationDeltaPct>-0.1</durationDeltaPct>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Generic_BusySeason</defName>
+    <label>busy season</label>
+    <description>The settlement is busier than expected, and your service is taking longer to get to.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Ideology</li>
+      <li>SettlementService_Technical</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <durationDeltaPct>0.1</durationDeltaPct>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Generic_WordOfMouth</defName>
+    <label>word of mouth</label>
+    <description>Word spreads that you're a good customer to have around, and the settlement warms to you slightly.</description>
+    <weightClass>Social</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <appliesToAllCategories>true</appliesToAllCategories>
+    <effects>
+      <goodwillDelta>1</goodwillDelta>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Generic_BadImpression</defName>
+    <label>bad impression</label>
+    <description>Something about the exchange rubs the settlement the wrong way.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>0.4</selectionWeight>
+    <appliesToAllCategories>true</appliesToAllCategories>
+    <effects>
+      <goodwillDelta>-1</goodwillDelta>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Generic_AnimalJoinsCaravan</defName>
+    <label>animal joins the caravan</label>
+    <description>A tame animal from the settlement takes a liking to your caravan and decides to travel with you.</description>
+    <weightClass>RareExceptional</weightClass>
+    <triggerPhase>OnStart</triggerPhase>
+    <selectionWeight>0.2</selectionWeight>
+    <appliesToAllCategories>true</appliesToAllCategories>
+    <workerClass>Settlement_Services.Framework.Events.Workers.CaravanAnimalJoinServiceEventWorker</workerClass>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+</Defs>

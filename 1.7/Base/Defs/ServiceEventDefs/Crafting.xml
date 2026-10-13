@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Crafting_ExceptionalQuality</defName>
+    <label>exceptional quality</label>
+    <description>The settlement's crafters takes particular pride in this commission and produces exceptional work.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <selectionWeight>1.0</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Crafting</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <qualityOffset>1</qualityOffset>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Crafting_PoorMaterialBatch</defName>
+    <label>poor material batch</label>
+    <description>A batch of raw materials turns out to be poor quality, slowing the work down.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.6</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Crafting</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <durationDeltaPct>0.1</durationDeltaPct>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Crafting_EarlyCompletion</defName>
+    <disabled>true</disabled>
+    <label>early completion</label>
+    <description>The commission comes together faster than expected.</description>
+    <weightClass>MinorPositive</weightClass>
+    <triggerPhase>DuringService</triggerPhase>
+    <selectionWeight>0.8</selectionWeight>
+    <eligibleCategoryDefNames>
+      <li>SettlementService_Crafting</li>
+    </eligibleCategoryDefNames>
+    <effects>
+      <durationDeltaPct>-0.1</durationDeltaPct>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+</Defs>

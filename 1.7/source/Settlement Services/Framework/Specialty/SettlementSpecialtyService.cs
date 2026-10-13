@@ -1,0 +1,81 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using RimWorld.Planet;
+using Verse;
+using Settlement_Services.Domain;
+using Settlement_Services.Framework.Defs;
+
+namespace Settlement_Services.Framework.Specialty
+{
+    public static class SettlementSpecialtyService
+    {
+        public static IReadOnlyList<SettlementSpecialtyDef> GetSpecialties(Settlement settlement)
+        {
+            SettlementServicesWorldComponent domain = SettlementServicesWorldComponent.Current;
+            IReadOnlyList<string> defNames = domain.GetOrRefreshSpecialtyDefNames(
+                settlement, () => SettlementSpecialtyGenerator.Generate(settlement).Select(d => d.defName).ToList());
+
+            return ResolveSpecialties(defNames);
+        }
+
+        public static IReadOnlyList<SettlementSpecialtyDef> PreviewSpecialties(Settlement settlement)
+        {
+            if (settlement == null) return Array.Empty<SettlementSpecialtyDef>();
+
+            IEnumerable<string> defNames = SettlementServicesWorldComponent.Current.TryGetCurrentCapability(settlement, out IReadOnlyList<string> cached)
+                ? cached
+                : SettlementSpecialtyGenerator.Generate(settlement).Select(d => d.defName);
+
+            return ResolveSpecialties(defNames);
+        }
+
+        private static List<SettlementSpecialtyDef> ResolveSpecialties(IEnumerable<string> defNames)
+        {
+            var resolved = new List<SettlementSpecialtyDef>();
+            foreach (string defName in defNames)
+            {
+                SettlementSpecialtyDef def = DefDatabase<SettlementSpecialtyDef>.GetNamedSilentFail(defName);
+                if (def != null) resolved.Add(def);
+            }
+            return resolved;
+        }
+
+        public static bool TryAddSpecialty(Settlement settlement, SettlementSpecialtyDef specialty)
+        {
+            if (settlement == null || specialty == null) return false;
+
+            GetSpecialties(settlement);
+            return SettlementServicesWorldComponent.Current.TryAddSpecialty(settlement.ID, specialty.defName);
+        }
+
+        public static bool HasCapabilityTag(Settlement settlement, string tag) =>
+            GetSpecialties(settlement).Any(d => d.modifiers.capabilityTags.Contains(tag));
+
+        public static float TotalPriceModifierPct(Settlement settlement, ServiceCategoryDef category) =>
+            Relevant(settlement, category, null).Sum(d => d.modifiers.priceModifierPct);
+
+        public static float TotalDurationMultiplierOffset(Settlement settlement, ServiceCategoryDef category) =>
+            Relevant(settlement, category, null).Sum(d => d.modifiers.durationMultiplierOffset);
+
+        public static float TotalQualityOffset(Settlement settlement, ServiceCategoryDef category) =>
+            Relevant(settlement, category, null).Sum(d => d.modifiers.qualityOffset);
+
+        public static float TotalPriceModifierPct(Settlement settlement, SettlementServiceDef def) =>
+            Relevant(settlement, def?.category, def?.defName).Sum(d => d.modifiers.priceModifierPct);
+
+        public static float TotalDurationMultiplierOffset(Settlement settlement, SettlementServiceDef def) =>
+            Relevant(settlement, def?.category, def?.defName).Sum(d => d.modifiers.durationMultiplierOffset);
+
+        public static float TotalQualityOffset(Settlement settlement, SettlementServiceDef def) =>
+            Relevant(settlement, def?.category, def?.defName).Sum(d => d.modifiers.qualityOffset);
+
+        private static IEnumerable<SettlementSpecialtyDef> Relevant(Settlement settlement, ServiceCategoryDef category, string serviceDefName)
+        {
+            if (category == null && serviceDefName == null) return Enumerable.Empty<SettlementSpecialtyDef>();
+            return GetSpecialties(settlement).Where(d =>
+                (category != null && d.modifiers.relevantCategoryDefNames.Contains(category.defName))
+                || (serviceDefName != null && d.modifiers.relevantServiceDefNames.Contains(serviceDefName)));
+        }
+    }
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/Settlement_Services.Services.Construction.BuildingCommissionExclusionsDef[defName="SettlementServices_BuildingCommissionExclusions"]/excludedBuildingDefNames</xpath>
+    <value>
+      <li>DankPyon_LootableChest_RusticChest</li>
+      <li>DankPyon_LootableChest_RoyalChest</li>
+    </value>
+  </Operation>
+
+</Patch>

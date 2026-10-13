@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_MetallicMaterials"]/stockItems</xpath>
+    <value>
+      <li>
+        <thingDefName>Obsidian</thingDefName>
+        <capacity>30</capacity>
+        <refreshAmount>5</refreshAmount>
+        <refreshIntervalTicks>60000</refreshIntervalTicks>
+        <minFactionTechLevel>Industrial</minFactionTechLevel>
+        <techLevelTiers>
+          <li>
+            <minFactionTechLevel>Spacer</minFactionTechLevel>
+            <capacity>60</capacity>
+            <refreshAmount>10</refreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+          </li>
+          <li>
+            <minFactionTechLevel>Ultra</minFactionTechLevel>
+            <capacity>120</capacity>
+            <refreshAmount>20</refreshAmount>
+            <refreshIntervalTicks>60000</refreshIntervalTicks>
+          </li>
+        </techLevelTiers>
+      </li>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_ProstheticsAndBionics"]/stockItems</xpath>
+    <value>
+      <li>
+        <thingDefName>PilotAssistant</thingDefName>
+        <capacity>2</capacity>
+        <refreshAmount>1</refreshAmount>
+        <refreshIntervalTicks>300000</refreshIntervalTicks>
+        <minFactionTechLevel>Spacer</minFactionTechLevel>
+      </li>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThingDef[defName="BloodWarmer"]</xpath>
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_ProstheticsAndBionics"]/stockItems</xpath>
+      <value>
+        <li>
+          <thingDefName>BloodWarmer</thingDefName>
+          <capacity>2</capacity>
+          <refreshAmount>1</refreshAmount>
+          <refreshIntervalTicks>300000</refreshIntervalTicks>
+          <minFactionTechLevel>Industrial</minFactionTechLevel>
+        </li>
+      </value>
+    </match>
+  </Operation>
+
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThingDef[defName="VacskinGland"]</xpath>
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/Settlement_Services.Framework.Defs.SettlementStockCategoryDef[defName="SettlementStock_ProstheticsAndBionics"]/stockItems</xpath>
+      <value>
+        <li>
+          <thingDefName>VacskinGland</thingDefName>
+          <capacity>2</capacity>
+          <refreshAmount>1</refreshAmount>
+          <refreshIntervalTicks>300000</refreshIntervalTicks>
+          <minFactionTechLevel>Spacer</minFactionTechLevel>
+        </li>
+      </value>
+    </match>
+  </Operation>
+
+</Patch>

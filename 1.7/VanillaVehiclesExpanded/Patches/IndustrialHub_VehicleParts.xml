@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/Settlement_Services.Framework.Defs.SettlementSpecialtyDef[defName="SettlementSpecialty_IndustrialHub"]/stockModifiers</xpath>
+    <value>
+      <li>
+        <stockCategoryDefName>SettlementStock_VehicleParts</stockCategoryDefName>
+        <capacityMultiplier>1.75</capacityMultiplier>
+        <refreshRateMultiplier>1.5</refreshRateMultiplier>
+      </li>
+    </value>
+  </Operation>
+
+</Patch>

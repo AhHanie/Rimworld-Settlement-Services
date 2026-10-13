@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <LetterDef>
+    <defName>SettlementService_EventChoice</defName>
+    <letterClass>Settlement_Services.Framework.Events.ChoiceLetter_ServiceEvent</letterClass>
+  </LetterDef>
+
+</Defs>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <TraderKindDef>
+    <defName>SettlementServices_AnimalVendorStock</defName>
+    <label>animal vendor</label>
+    <requestable>false</requestable>
+    <commonality>0</commonality>
+    <stockGenerators>
+      <li Class="StockGenerator_Animals">
+        <countRange>10~20</countRange>
+        <kindCountRange>4~6</kindCountRange>
+        <maxWildness>0.70</maxWildness>
+        <tradeTagsSell>
+          <li>AnimalFarm</li>
+          <li>AnimalPet</li>
+        </tradeTagsSell>
+        <createMatingPair>
+          <li>AnimalFarm</li>
+        </createMatingPair>
+      </li>
+    </stockGenerators>
+  </TraderKindDef>
+
+</Defs>
