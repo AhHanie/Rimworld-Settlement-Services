@@ -3,6 +3,7 @@ using RimWorld.Planet;
 using Verse;
 using Settlement_Services.Domain;
 using Settlement_Services.Framework.Dto;
+using Settlement_Services.Framework.Payment;
 
 namespace Settlement_Services.Domain.Records
 {
@@ -55,6 +56,9 @@ namespace Settlement_Services.Domain.Records
         public List<ThingDefCountClass> consumedPlayerSuppliedInputs = new List<ThingDefCountClass>();
         public bool playerSuppliedInputsRefunded;
 
+        public ServicePaymentKind paymentKind;
+        public float paidBarterValue;
+
         public string providerFactionLoadId;
         public List<string> processedCompatibilityCompletionModuleIds = new List<string>();
 
@@ -105,6 +109,8 @@ namespace Settlement_Services.Domain.Records
             Scribe_Deep.Look(ref marketPurchasePlan, "marketPurchasePlan");
             Scribe_Collections.Look(ref consumedPlayerSuppliedInputs, "consumedPlayerSuppliedInputs", LookMode.Deep);
             Scribe_Values.Look(ref playerSuppliedInputsRefunded, "playerSuppliedInputsRefunded");
+            Scribe_Values.Look(ref paymentKind, "paymentKind", ServicePaymentKind.Silver);
+            Scribe_Values.Look(ref paidBarterValue, "paidBarterValue");
             Scribe_Values.Look(ref providerFactionLoadId, "providerFactionLoadId");
             Scribe_Collections.Look(ref processedCompatibilityCompletionModuleIds, "processedCompatibilityCompletionModuleIds", LookMode.Value);
 

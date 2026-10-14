@@ -962,16 +962,46 @@ namespace Settlement_Services.UI
 
         private void DrawBottomButtons(Rect inRect, SettlementServiceQuote quote)
         {
+            const float gap = 10f;
+            const float minWidth = 120f;
+            const float padding = 24f;
+
+            string[] labels =
+            {
+                "CancelButton".Translate(),
+                "SettlementServices.Button.PayInSilver".Translate(),
+                "SettlementServices.Button.Barter".Translate(),
+            };
+
+            float[] widths = labels.Select(l => Mathf.Max(minWidth, Text.CalcSize(l).x + padding)).ToArray();
+            float totalWidth = widths.Sum() + gap * (widths.Length - 1);
+            if (totalWidth > inRect.width)
+            {
+                float scale = (inRect.width - gap * (widths.Length - 1)) / widths.Sum();
+                for (int i = 0; i < widths.Length; i++) widths[i] *= scale;
+                totalWidth = inRect.width;
+            }
+
+            float x = inRect.xMax - totalWidth;
+            float y = inRect.yMax - 35f;
+            Rect cancelRect = new Rect(x, y, widths[0], 35f);
+            Rect silverRect = new Rect(cancelRect.xMax + gap, y, widths[1], 35f);
+            Rect barterRect = new Rect(silverRect.xMax + gap, y, widths[2], 35f);
+
+            if (Widgets.ButtonText(cancelRect, labels[0])) Close();
+
             bool targetOk = session.def.targetRule == ServiceTargetRule.None || session.targets.Count > 0;
-            Rect confirmRect = new Rect(inRect.width - 150f, inRect.height - 35f, 140f, 35f);
-            Rect cancelRect = new Rect(inRect.width - 300f, inRect.height - 35f, 140f, 35f);
-
-            if (Widgets.ButtonText(cancelRect, "CancelButton".Translate())) Close();
-
             bool prevEnabled = GUI.enabled;
             GUI.enabled = quote.IsValid && targetOk && RequiredOptionsSatisfied();
-            if (Widgets.ButtonText(confirmRect, "SettlementServices.Button.Confirm".Translate())) Confirm(quote);
+            if (Widgets.ButtonText(silverRect, labels[1])) ServiceConfirmationFlow.TryConfirm(session, quote, this);
+            if (Widgets.ButtonText(barterRect, labels[2])) OpenBarter();
             GUI.enabled = prevEnabled;
+        }
+
+        private void OpenBarter()
+        {
+            bool IsRequestReady() => (session.def.targetRule == ServiceTargetRule.None || session.targets.Count > 0) && RequiredOptionsSatisfied();
+            Find.WindowStack.Add(new Dialog_ServiceBarter(session, this, IsRequestReady, sharedDisplayOptions));
         }
 
         private bool RequiredOptionsSatisfied()
@@ -998,7 +1028,5 @@ namespace Settlement_Services.UI
                 .All(g => g.Any(o => optionKeys.Contains(o.key)));
             return anySelected && groupsSatisfied;
         }
-
-        private void Confirm(SettlementServiceQuote quote) => ServiceConfirmationFlow.TryConfirm(session, quote, this);
     }
 }

@@ -37,16 +37,22 @@ namespace Settlement_Services.UI
             };
         }
 
-        public static CaravanCapacityPreview ForPurchase(ServiceRequestSession session, SettlementServiceQuote quote, IReadOnlyList<ServiceDisplayOption> displayedOptions)
+        public static CaravanCapacityPreview ForPurchase(ServiceRequestSession session, SettlementServiceQuote quote, IReadOnlyList<ServiceDisplayOption> displayedOptions) =>
+            ForPurchase(session, quote, displayedOptions, null);
+
+        public static CaravanCapacityPreview ForPurchase(ServiceRequestSession session, SettlementServiceQuote quote, IReadOnlyList<ServiceDisplayOption> displayedOptions, float? massRemovedOverride)
         {
             CaravanCapacityPreview preview = ForCurrent(session);
             if (preview == null || quote == null || !quote.IsValid) return preview;
 
             SettlementServiceWorkerKind kind = ClassifyWorker(session);
             if (kind == SettlementServiceWorkerKind.Market)
-                preview.TryProjectMarket(session, quote);
+                preview.TryProjectMarket(session, quote, massRemovedOverride);
             else if (kind == SettlementServiceWorkerKind.AnimalVendor)
-                preview.TryProjectAnimals(session, quote, displayedOptions);
+                preview.TryProjectAnimals(session, quote, displayedOptions, massRemovedOverride);
+
+            if (!preview.hasProjection && massRemovedOverride.HasValue)
+                preview.SetProjection(massRemovedOverride.Value, 0f, 0f, estimate: false);
 
             return preview;
         }
@@ -65,7 +71,7 @@ namespace Settlement_Services.UI
             return SettlementServiceWorkerKind.Other;
         }
 
-        private void TryProjectMarket(ServiceRequestSession session, SettlementServiceQuote quote)
+        private void TryProjectMarket(ServiceRequestSession session, SettlementServiceQuote quote, float? massRemovedOverride)
         {
             if (session.marketCartLines.Count == 0) return;
 
@@ -77,10 +83,10 @@ namespace Settlement_Services.UI
                 purchasedMass += line.count * thingDef.GetStatValueAbstract(StatDefOf.Mass);
             }
 
-            SetProjection(SilverMassRemoved(session.caravan, quote), purchasedMass, 0f, estimate: false);
+            SetProjection(massRemovedOverride ?? SilverMassRemoved(session.caravan, quote), purchasedMass, 0f, estimate: false);
         }
 
-        private void TryProjectAnimals(ServiceRequestSession session, SettlementServiceQuote quote, IReadOnlyList<ServiceDisplayOption> displayedOptions)
+        private void TryProjectAnimals(ServiceRequestSession session, SettlementServiceQuote quote, IReadOnlyList<ServiceDisplayOption> displayedOptions, float? massRemovedOverride)
         {
             if (session.selectedOptionKeys.Count == 0 || displayedOptions == null) return;
             if (session.selectedOptionKeys.Distinct().Count() != session.selectedOptionKeys.Count) return;
@@ -97,7 +103,7 @@ namespace Settlement_Services.UI
                 addedCapacity += MassUtility.Capacity(pawn);
             }
 
-            SetProjection(SilverMassRemoved(session.caravan, quote), addedUsed, addedCapacity, estimate: true);
+            SetProjection(massRemovedOverride ?? SilverMassRemoved(session.caravan, quote), addedUsed, addedCapacity, estimate: true);
         }
 
         private void SetProjection(float silverMassRemoved, float massAdded, float capacityAdded, bool estimate)

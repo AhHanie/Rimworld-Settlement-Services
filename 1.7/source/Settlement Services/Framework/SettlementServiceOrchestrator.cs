@@ -64,7 +64,10 @@ namespace Settlement_Services.Framework
                 providerFactionLoadId);
         }
 
-        public static bool AcceptQuote(int jobId, SettlementServiceQuote quote, SettlementServiceRequest request)
+        public static bool AcceptQuote(int jobId, SettlementServiceQuote quote, SettlementServiceRequest request) =>
+            AcceptQuote(jobId, quote, request, ServicePaymentSelection.Silver());
+
+        public static bool AcceptQuote(int jobId, SettlementServiceQuote quote, SettlementServiceRequest request, ServicePaymentSelection payment)
         {
             SettlementServicesWorldComponent domain = SettlementServicesWorldComponent.Current;
             ServiceJobRecord job = domain.GetJob(jobId);
@@ -80,10 +83,34 @@ namespace Settlement_Services.Framework
             }
 
             IServicePaymentProvider provider = ResolvePaymentProvider(job.requestChannel);
-            if (!provider.TryDebit(plan.Quote.totalCost, request, out string payErrorKey))
+            bool barter = payment != null && payment.IsBarter;
+            List<ServiceBarterHold> barterHolds = null;
+            decimal barterValue = 0m;
+
+            if (barter)
+            {
+                if (plan.Quote.totalCost != quote.totalCost)
+                {
+                    job.lastErrorKey = "SettlementServices.Error.BarterPriceChanged";
+                    return false;
+                }
+
+                if (!ServiceBarterTransaction.TryTake(payment, request, plan.Quote.totalCost, plan.InputPlan.playerSuppliedConsumed, out barterHolds, out barterValue, out string barterErrorKey))
+                {
+                    job.lastErrorKey = barterErrorKey;
+                    return false;
+                }
+            }
+            else if (!provider.TryDebit(plan.Quote.totalCost, request, out string payErrorKey))
             {
                 job.lastErrorKey = payErrorKey;
                 return false;
+            }
+
+            void ReturnPayment()
+            {
+                if (barter) ServiceBarterTransaction.Restore(barterHolds, request);
+                else provider.Refund(plan.Quote.totalCost, new ServiceJobContext(domain, job));
             }
 
             foreach (ThingDefCountClass stockItem in plan.InputPlan.stockConsumed)
@@ -97,7 +124,7 @@ namespace Settlement_Services.Framework
                 && !CaravanInventoryTransfer.TryConsume(caravan, plan.InputPlan.playerSuppliedConsumed, out string consumeErrorKey))
             {
                 domain.ReleaseAllReservations(jobId);
-                provider.Refund(plan.Quote.totalCost, new ServiceJobContext(domain, job));
+                ReturnPayment();
                 job.lastErrorKey = consumeErrorKey;
                 return false;
             }
@@ -113,12 +140,14 @@ namespace Settlement_Services.Framework
                 if (plan.AcceptedWorkerData is MarketPurchasePlan marketPlan)
                     domain.FreezeMarketPurchasePlan(jobId, marketPlan);
                 domain.FreezeConsumedPlayerSuppliedInputs(jobId, plan.InputPlan.playerSuppliedConsumed);
+                domain.FreezePayment(jobId, barter ? ServicePaymentKind.Barter : ServicePaymentKind.Silver, (float)barterValue);
+                if (barter) ServiceBarterTransaction.Commit(barterHolds);
                 return true;
             }
 
             domain.ReleaseAllReservations(jobId);
             if (!plan.InputPlan.playerSuppliedConsumed.NullOrEmpty()) CaravanInventoryTransfer.Refund(caravan, plan.InputPlan.playerSuppliedConsumed);
-            provider.Refund(plan.Quote.totalCost, new ServiceJobContext(domain, job));
+            ReturnPayment();
             return false;
         }
 

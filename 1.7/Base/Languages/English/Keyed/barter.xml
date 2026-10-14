@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Button.PayInSilver>Pay in silver</SettlementServices.Button.PayInSilver>
+    <SettlementServices.Button.Barter>Barter</SettlementServices.Button.Barter>
+    <SettlementServices.Button.ConfirmBarter>Confirm barter</SettlementServices.Button.ConfirmBarter>
+    <SettlementServices.Label.BarterTitle>Barter payment: {0}</SettlementServices.Label.BarterTitle>
+    <SettlementServices.Label.BarterPolicy>Pledge goods and silver toward the service price. Each item counts at its market value. No change is returned if you pledge more than the price, and pledged goods are not returned after the request is booked. A cancelled or failed request refunds the service price in silver, never the excess value.</SettlementServices.Label.BarterPolicy>
+    <SettlementServices.Label.BarterSourceInPerson>Caravan items</SettlementServices.Label.BarterSourceInPerson>
+    <SettlementServices.Label.BarterSourceRemote>Colony storage</SettlementServices.Label.BarterSourceRemote>
+    <SettlementServices.Label.BarterPledgedHeader>Pledged</SettlementServices.Label.BarterPledgedHeader>
+    <SettlementServices.Label.BarterCountTooltip>Units available to pledge in this stack.</SettlementServices.Label.BarterCountTooltip>
+    <SettlementServices.Label.BarterNoItemsInPerson>Your caravan is not carrying any items to barter.</SettlementServices.Label.BarterNoItemsInPerson>
+    <SettlementServices.Label.BarterNoItemsRemote>Your colonies have no items in valid storage to barter.</SettlementServices.Label.BarterNoItemsRemote>
+    <SettlementServices.Label.BarterSelectedVsPrice>Selected market value: {0} / Service price: {1}</SettlementServices.Label.BarterSelectedVsPrice>
+    <SettlementServices.Label.BarterStillNeeded>Still needed: {0}</SettlementServices.Label.BarterStillNeeded>
+    <SettlementServices.Label.BarterExcess>Excess: {0} (no change is returned)</SettlementServices.Label.BarterExcess>
+    <SettlementServices.Label.BarterRowCredit>{0} each</SettlementServices.Label.BarterRowCredit>
+    <SettlementServices.Label.BarterRowReserved>{0} reserved</SettlementServices.Label.BarterRowReserved>
+    <SettlementServices.Label.BarterCreditTooltip>Counts as {0} per unit toward the service price (market value, regardless of whether traders would buy it).</SettlementServices.Label.BarterCreditTooltip>
+    <SettlementServices.Label.BarterReservedTooltip>{0} unit(s) in this stack are reserved as materials for this request and cannot be pledged.</SettlementServices.Label.BarterReservedTooltip>
+    <SettlementServices.Message.BarterExcessWarning>The selected items are worth {1}, which is {0} more than the service price of {2}. No change will be returned and the pledged items will not be given back. Continue?</SettlementServices.Message.BarterExcessWarning>
+    <SettlementServices.Message.BarterFiguresChanged>The service price or the value of the selected items changed. Review the figures and confirm again.</SettlementServices.Message.BarterFiguresChanged>
+    <SettlementServices.Error.BarterInvalidSelection>The selected items are not a valid payment.</SettlementServices.Error.BarterInvalidSelection>
+    <SettlementServices.Error.BarterItemUnavailable>Some of the selected items are no longer available.</SettlementServices.Error.BarterItemUnavailable>
+    <SettlementServices.Error.BarterInvalidValue>The value of the selected items could not be determined.</SettlementServices.Error.BarterInvalidValue>
+    <SettlementServices.Error.BarterReservedForMaterials>The selected items overlap with materials supplied for this request.</SettlementServices.Error.BarterReservedForMaterials>
+    <SettlementServices.Error.BarterInsufficientValue>The selected items are not worth enough to cover the service price.</SettlementServices.Error.BarterInsufficientValue>
+    <SettlementServices.Error.BarterPriceChanged>The service price changed. Review the figures and confirm again.</SettlementServices.Error.BarterPriceChanged>
+</LanguageData>

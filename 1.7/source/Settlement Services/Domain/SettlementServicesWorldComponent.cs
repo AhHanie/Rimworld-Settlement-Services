@@ -574,6 +574,14 @@ namespace Settlement_Services.Domain
             job.consumedPlayerSuppliedInputs = items?.Select(i => new ThingDefCountClass(i.thingDef, i.count)).ToList() ?? new List<ThingDefCountClass>();
         }
 
+        public void FreezePayment(int jobId, ServicePaymentKind kind, float paidBarterValue)
+        {
+            ServiceJobRecord job = GetJob(jobId);
+            if (job == null) return;
+            job.paymentKind = kind;
+            job.paidBarterValue = kind == ServicePaymentKind.Barter ? paidBarterValue : 0f;
+        }
+
         public void MarkPlayerSuppliedInputsRefunded(int jobId)
         {
             ServiceJobRecord job = GetJob(jobId);
