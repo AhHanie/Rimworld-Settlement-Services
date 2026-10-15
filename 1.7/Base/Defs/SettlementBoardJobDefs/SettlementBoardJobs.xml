@@ -496,4 +496,173 @@
     </patterns>
   </Settlement_Services.Framework.Defs.SettlementBoardJobDef>
 
+  <Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+    <defName>SettlementBoardJob_HuntingParty</defName>
+    <label>hunting party</label>
+    <description>Tracking and bringing down game to feed a settlement.</description>
+    <selectionWeight>0.8</selectionWeight>
+    <durationDays>2~4</durationDays>
+    <difficultyBias>0</difficultyBias>
+    <rewardMultiplier>1</rewardMultiplier>
+    <flavorRulePack>SettlementBoardJob_HuntingParty_Flavor</flavorRulePack>
+    <patterns>
+      <li>
+        <kind>Crew</kind>
+        <weight>2</weight>
+        <minPartySize>2</minPartySize>
+        <maxPartySize>4</maxPartySize>
+        <skills>
+          <li>
+            <skill>Shooting</skill>
+            <requiredWorkTags>Hunting</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+      <li>
+        <kind>Specialist</kind>
+        <weight>1</weight>
+        <minPartySize>1</minPartySize>
+        <maxPartySize>1</maxPartySize>
+        <skills>
+          <li>
+            <skill>Shooting</skill>
+            <requiredWorkTags>Hunting</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+    </patterns>
+  </Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+
+  <Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+    <defName>SettlementBoardJob_HerbalGathering</defName>
+    <label>herbal gathering</label>
+    <description>Gathering medicinal plants and preparing them for a settlement's healers.</description>
+    <selectionWeight>0.6</selectionWeight>
+    <durationDays>1~3</durationDays>
+    <difficultyBias>0</difficultyBias>
+    <rewardMultiplier>1.05</rewardMultiplier>
+    <flavorRulePack>SettlementBoardJob_HerbalGathering_Flavor</flavorRulePack>
+    <patterns>
+      <li>
+        <kind>Mixed</kind>
+        <weight>2</weight>
+        <minPartySize>2</minPartySize>
+        <maxPartySize>3</maxPartySize>
+        <skills>
+          <li>
+            <skill>Plants</skill>
+            <requiredWorkTags>PlantWork</requiredWorkTags>
+          </li>
+          <li>
+            <skill>Medicine</skill>
+            <requiredWorkTags>Caring</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+    </patterns>
+  </Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+
+  <Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+    <defName>SettlementBoardJob_PenRepair</defName>
+    <label>pen repair</label>
+    <description>Mending fences and sheds, and settling the animals back into them.</description>
+    <selectionWeight>0.7</selectionWeight>
+    <durationDays>2~4</durationDays>
+    <difficultyBias>-0.05</difficultyBias>
+    <rewardMultiplier>0.95</rewardMultiplier>
+    <flavorRulePack>SettlementBoardJob_PenRepair_Flavor</flavorRulePack>
+    <patterns>
+      <li>
+        <kind>Mixed</kind>
+        <weight>2</weight>
+        <minPartySize>2</minPartySize>
+        <maxPartySize>3</maxPartySize>
+        <skills>
+          <li>
+            <skill>Construction</skill>
+            <requiredWorkTags>Constructing</requiredWorkTags>
+          </li>
+          <li>
+            <skill>Animals</skill>
+            <requiredWorkTags>Animals</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+    </patterns>
+  </Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+
+  <Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+    <defName>SettlementBoardJob_Tutoring</defName>
+    <label>tutoring</label>
+    <description>Teaching a settlement's children and apprentices.</description>
+    <selectionWeight>0.55</selectionWeight>
+    <durationDays>2~5</durationDays>
+    <difficultyBias>0</difficultyBias>
+    <rewardMultiplier>1</rewardMultiplier>
+    <flavorRulePack>SettlementBoardJob_Tutoring_Flavor</flavorRulePack>
+    <patterns>
+      <li>
+        <kind>Specialist</kind>
+        <weight>2</weight>
+        <minPartySize>1</minPartySize>
+        <maxPartySize>1</maxPartySize>
+        <skills>
+          <li>
+            <skill>Intellectual</skill>
+            <requiredWorkTags>Intellectual</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+      <li>
+        <kind>Mixed</kind>
+        <weight>1</weight>
+        <minPartySize>2</minPartySize>
+        <maxPartySize>2</maxPartySize>
+        <skills>
+          <li>
+            <skill>Intellectual</skill>
+            <requiredWorkTags>Intellectual</requiredWorkTags>
+          </li>
+          <li>
+            <skill>Social</skill>
+            <requiredWorkTags>Social</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+    </patterns>
+  </Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+
+  <Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+    <defName>SettlementBoardJob_FestivalPreparations</defName>
+    <label>festival preparations</label>
+    <description>Preparing food, decorations and entertainment for a settlement's festival.</description>
+    <selectionWeight>0.5</selectionWeight>
+    <durationDays>2~4</durationDays>
+    <difficultyBias>-0.05</difficultyBias>
+    <rewardMultiplier>1</rewardMultiplier>
+    <flavorRulePack>SettlementBoardJob_FestivalPreparations_Flavor</flavorRulePack>
+    <patterns>
+      <li>
+        <kind>Mixed</kind>
+        <weight>1</weight>
+        <minPartySize>2</minPartySize>
+        <maxPartySize>4</maxPartySize>
+        <skills>
+          <li>
+            <skill>Cooking</skill>
+            <requiredWorkTags>Cooking</requiredWorkTags>
+          </li>
+          <li>
+            <skill>Artistic</skill>
+            <requiredWorkTags>Artistic</requiredWorkTags>
+          </li>
+          <li>
+            <skill>Social</skill>
+            <requiredWorkTags>Social</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+    </patterns>
+  </Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+
 </Defs>

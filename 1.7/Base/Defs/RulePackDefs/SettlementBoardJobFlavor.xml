@@ -281,4 +281,104 @@
     </rulePack>
   </RulePackDef>
 
+  <RulePackDef>
+    <defName>SettlementBoardJob_HuntingParty_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Hunters wanted</li>
+        <li>r_title->Game for [SETTLEMENT]</li>
+        <li>r_title->A hunt for the stores</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->The larders of [SETTLEMENT] are running low and the hunters cannot keep up.</li>
+        <li>sb_opener->Game has been seen near [SETTLEMENT], and the settlement wants it brought in.</li>
+        <li>sb_opener->[SETTLEMENT] is short of meat and short of people who can hunt.</li>
+        <li>sb_need->They want sharp-eyed hunters who can track game and bring it down cleanly.</li>
+        <li>sb_need->They are looking for steady shots who can hunt without wasting the kill.</li>
+        <li>sb_need->They need game brought in and dressed before the meat spoils.</li>
+        <li>sb_closer->The reward is promised once the hunt is over.</li>
+        <li>sb_closer->The hunt should last a few days, and the pay is set in advance.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_HerbalGathering_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Herbs for the healers</li>
+        <li>r_title->Gatherers wanted at [SETTLEMENT]</li>
+        <li>r_title->Medicinal plants needed</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->The healers of [SETTLEMENT] have used up their stock of medicinal plants.</li>
+        <li>sb_opener->A fever is spreading near [SETTLEMENT], and the herbalists cannot gather enough to treat it.</li>
+        <li>sb_opener->The wild herbs around [SETTLEMENT] are ready to pick, but nobody has the time.</li>
+        <li>sb_need->They want people who can find the right plants and others who know how to prepare them.</li>
+        <li>sb_need->They are looking for gatherers with a steady hand and healers who can make use of the harvest.</li>
+        <li>sb_need->They need the plants picked carefully and made ready for the sick.</li>
+        <li>sb_closer->The reward is paid when the work is done.</li>
+        <li>sb_closer->It is a short job, and the pay is fixed in advance.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_PenRepair_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Pens and fences at [SETTLEMENT]</li>
+        <li>r_title->Builders and animal hands wanted</li>
+        <li>r_title->Mending the animal pens</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->The animal pens of [SETTLEMENT] were damaged and the stock is loose.</li>
+        <li>sb_opener->The sheds and fences of [SETTLEMENT] are falling apart, and the animals are restless.</li>
+        <li>sb_opener->[SETTLEMENT] is building new pens and needs help to finish them and fill them.</li>
+        <li>sb_need->They want builders to mend the fences and hands who can keep the animals calm meanwhile.</li>
+        <li>sb_need->They are looking for people who can drive posts and settle nervous animals.</li>
+        <li>sb_need->They need the pens made sound and the animals put back safely.</li>
+        <li>sb_closer->Materials are provided, and the pay is fixed in advance.</li>
+        <li>sb_closer->The reward is paid once the animals are settled.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_Tutoring_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Teachers wanted</li>
+        <li>r_title->Lessons at [SETTLEMENT]</li>
+        <li>r_title->A tutor for the young</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->The only teacher of [SETTLEMENT] has left, and the young have nobody to learn from.</li>
+        <li>sb_opener->[SETTLEMENT] has more apprentices than its elders have time to teach.</li>
+        <li>sb_opener->The people of [SETTLEMENT] want their children taught more than they can teach themselves.</li>
+        <li>sb_need->They want a learned person who can explain things clearly and hold a class together.</li>
+        <li>sb_need->They are looking for patient teachers who can share what they know.</li>
+        <li>sb_need->They need lessons given for a few days, in whatever way the teacher sees fit.</li>
+        <li>sb_closer->The reward is fixed in advance and paid when the lessons end.</li>
+        <li>sb_closer->It is a quiet job, and payment is promised on completion.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_FestivalPreparations_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Festival preparations at [SETTLEMENT]</li>
+        <li>r_title->Hands for the feast</li>
+        <li>r_title->Cooks and entertainers wanted</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->[SETTLEMENT] is holding a festival and the preparations have fallen behind.</li>
+        <li>sb_opener->A feast is coming to [SETTLEMENT], and the organisers are short of help.</li>
+        <li>sb_opener->The people of [SETTLEMENT] want a celebration to remember, but have too few hands to arrange it.</li>
+        <li>sb_need->They want skilled hands to help make the festival a success.</li>
+        <li>sb_need->They are looking for a mixed company with the talents a good celebration calls for.</li>
+        <li>sb_need->They need everything ready before the guests arrive.</li>
+        <li>sb_closer->The reward is promised once the festival is ready.</li>
+        <li>sb_closer->The work takes a few days, and the pay is fixed in advance.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
 </Defs>
