@@ -5,6 +5,30 @@ using Verse;
 
 namespace Settlement_Services.Framework.Payment
 {
+    public readonly struct ServiceBarterBalance
+    {
+        public readonly decimal offered;
+        public readonly decimal serviceCost;
+        public readonly decimal goodsCost;
+
+        public ServiceBarterBalance(decimal offered, decimal serviceCost, decimal goodsCost)
+        {
+            this.offered = offered;
+            this.serviceCost = serviceCost;
+            this.goodsCost = goodsCost;
+        }
+
+        public decimal Balance => offered - serviceCost - goodsCost;
+
+        public bool Covers => Balance >= 0m;
+
+        public decimal Shortfall => Math.Max(0m, -Balance);
+
+        public decimal Excess => Math.Max(0m, Balance);
+
+        public bool NeedsExcessWarning => Balance > ServiceBarterValuation.ExcessWarningThreshold;
+    }
+
     public static class ServiceBarterValuation
     {
         public const decimal ExcessWarningThreshold = 10m;
@@ -41,14 +65,6 @@ namespace Settlement_Services.Framework.Payment
 
             return true;
         }
-
-        public static bool Covers(decimal selectedValue, int price) => selectedValue >= price;
-
-        public static decimal Excess(decimal selectedValue, int price) => Math.Max(0m, selectedValue - price);
-
-        public static decimal Shortfall(decimal selectedValue, int price) => Math.Max(0m, price - selectedValue);
-
-        public static bool NeedsExcessWarning(decimal selectedValue, int price) => selectedValue - price > ExcessWarningThreshold;
 
         public static string Format(decimal value) => value.ToString("0.00######", CultureInfo.CurrentCulture);
     }

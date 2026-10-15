@@ -42,6 +42,12 @@ namespace Settlement_Services.UI
 
         public static CaravanCapacityPreview ForPurchase(ServiceRequestSession session, SettlementServiceQuote quote, IReadOnlyList<ServiceDisplayOption> displayedOptions, float? massRemovedOverride)
         {
+            return ForPurchase(session, quote, displayedOptions, massRemovedOverride, 0f, 0f, false);
+        }
+
+        public static CaravanCapacityPreview ForPurchase(ServiceRequestSession session, SettlementServiceQuote quote, IReadOnlyList<ServiceDisplayOption> displayedOptions, float? massRemovedOverride,
+            float extraMassAdded, float extraCapacityAdded, bool extraIsEstimate)
+        {
             CaravanCapacityPreview preview = ForCurrent(session);
             if (preview == null || quote == null || !quote.IsValid) return preview;
 
@@ -51,8 +57,15 @@ namespace Settlement_Services.UI
             else if (kind == SettlementServiceWorkerKind.AnimalVendor)
                 preview.TryProjectAnimals(session, quote, displayedOptions, massRemovedOverride);
 
-            if (!preview.hasProjection && massRemovedOverride.HasValue)
-                preview.SetProjection(massRemovedOverride.Value, 0f, 0f, estimate: false);
+            bool hasExtra = extraMassAdded > 0f || extraCapacityAdded > 0f;
+            if (!preview.hasProjection && (massRemovedOverride.HasValue || hasExtra))
+                preview.SetProjection(massRemovedOverride ?? 0f, extraMassAdded, extraCapacityAdded, estimate: extraIsEstimate);
+            else if (preview.hasProjection && hasExtra)
+            {
+                preview.projectedUsed += extraMassAdded;
+                preview.projectedCapacity += extraCapacityAdded;
+                preview.projectionIsEstimate |= extraIsEstimate;
+            }
 
             return preview;
         }

@@ -84,7 +84,7 @@ namespace Settlement_Services.Framework
 
             IServicePaymentProvider provider = ResolvePaymentProvider(job.requestChannel);
             bool barter = payment != null && payment.IsBarter;
-            List<ServiceBarterHold> barterHolds = null;
+            ServiceBarterBundle barterBundle = null;
             decimal barterValue = 0m;
 
             if (barter)
@@ -95,7 +95,7 @@ namespace Settlement_Services.Framework
                     return false;
                 }
 
-                if (!ServiceBarterTransaction.TryTake(payment, request, plan.Quote.totalCost, plan.InputPlan.playerSuppliedConsumed, out barterHolds, out barterValue, out string barterErrorKey))
+                if (!ServiceBarterTransaction.TryTake(payment, request, plan.Quote.totalCost, plan.InputPlan.playerSuppliedConsumed, out barterBundle, out barterValue, out string barterErrorKey))
                 {
                     job.lastErrorKey = barterErrorKey;
                     return false;
@@ -109,7 +109,7 @@ namespace Settlement_Services.Framework
 
             void ReturnPayment()
             {
-                if (barter) ServiceBarterTransaction.Restore(barterHolds, request);
+                if (barter) ServiceBarterTransaction.Restore(barterBundle, request);
                 else provider.Refund(plan.Quote.totalCost, new ServiceJobContext(domain, job));
             }
 
@@ -140,8 +140,15 @@ namespace Settlement_Services.Framework
                 if (plan.AcceptedWorkerData is MarketPurchasePlan marketPlan)
                     domain.FreezeMarketPurchasePlan(jobId, marketPlan);
                 domain.FreezeConsumedPlayerSuppliedInputs(jobId, plan.InputPlan.playerSuppliedConsumed);
+
+                if (barter && !ServiceBarterTransaction.TryComplete(barterBundle, request, out string bundleErrorKey))
+                {
+                    AbortReservedJob(domain, job, plan.InputPlan.playerSuppliedConsumed, caravan);
+                    job.lastErrorKey = bundleErrorKey;
+                    return false;
+                }
+
                 domain.FreezePayment(jobId, barter ? ServicePaymentKind.Barter : ServicePaymentKind.Silver, (float)barterValue);
-                if (barter) ServiceBarterTransaction.Commit(barterHolds);
                 return true;
             }
 
@@ -149,6 +156,14 @@ namespace Settlement_Services.Framework
             if (!plan.InputPlan.playerSuppliedConsumed.NullOrEmpty()) CaravanInventoryTransfer.Refund(caravan, plan.InputPlan.playerSuppliedConsumed);
             ReturnPayment();
             return false;
+        }
+
+        private static void AbortReservedJob(SettlementServicesWorldComponent domain, ServiceJobRecord job, List<ThingDefCountClass> consumedInputs, Caravan caravan)
+        {
+            domain.ReleaseAllReservations(job.jobId);
+            if (!consumedInputs.NullOrEmpty()) CaravanInventoryTransfer.Refund(caravan, consumedInputs);
+            domain.FreezeConsumedPlayerSuppliedInputs(job.jobId, null);
+            domain.TryTransition(job.jobId, ServiceJobStatus.Cancelled);
         }
 
         public static bool StartJob(int jobId)

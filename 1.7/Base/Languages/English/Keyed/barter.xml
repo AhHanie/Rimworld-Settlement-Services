@@ -3,8 +3,18 @@
     <SettlementServices.Button.PayInSilver>Pay in silver</SettlementServices.Button.PayInSilver>
     <SettlementServices.Button.Barter>Barter</SettlementServices.Button.Barter>
     <SettlementServices.Button.ConfirmBarter>Confirm barter</SettlementServices.Button.ConfirmBarter>
+    <SettlementServices.Button.ResetBarter>Reset</SettlementServices.Button.ResetBarter>
     <SettlementServices.Label.BarterTitle>Barter payment: {0}</SettlementServices.Label.BarterTitle>
     <SettlementServices.Label.BarterPolicy>Pledge goods and silver toward the service price. Each item counts at its market value. No change is returned if you pledge more than the price, and pledged goods are not returned after the request is booked. A cancelled or failed request refunds the service price in silver, never the excess value.</SettlementServices.Label.BarterPolicy>
+    <SettlementServices.Label.BarterPolicyInPerson>Offer goods and silver toward the service price, and optionally take goods from this settlement's trade stock for any value above it. Everything is counted at market value (barter value), which is not the buy and sell price used in the ordinary trade window. Offered goods are not returned after the request is booked. Goods taken from the settlement are yours even if the request is later cancelled or fails, and a cancelled or failed request refunds only the service price in silver. If your offer is worth more than the service plus the goods you take, no change is returned.</SettlementServices.Label.BarterPolicyInPerson>
+    <SettlementServices.Label.BarterOfferPane>Your offer: caravan items</SettlementServices.Label.BarterOfferPane>
+    <SettlementServices.Label.BarterGoodsPane>Settlement goods</SettlementServices.Label.BarterGoodsPane>
+    <SettlementServices.Label.BarterServiceLine>Requested service: {0} (barter value {1})</SettlementServices.Label.BarterServiceLine>
+    <SettlementServices.Label.BarterBalanceLine>Offer {0} - service {1} - settlement goods {2} = balance {3}</SettlementServices.Label.BarterBalanceLine>
+    <SettlementServices.Label.BarterGoodsCountTooltip>Units the settlement currently has in its trade stock.</SettlementServices.Label.BarterGoodsCountTooltip>
+    <SettlementServices.Label.BarterGoodsCreditTooltip>Costs {0} of barter value per unit (market value, not the buy price in the ordinary trade window).</SettlementServices.Label.BarterGoodsCreditTooltip>
+    <SettlementServices.Label.BarterNoGoods>This settlement has no goods it is willing to trade right now.</SettlementServices.Label.BarterNoGoods>
+    <SettlementServices.Label.BarterGoodsUnavailableNote>Settlement goods are unavailable: {0} You can still barter your own goods for the service.</SettlementServices.Label.BarterGoodsUnavailableNote>
     <SettlementServices.Label.BarterSourceInPerson>Caravan items</SettlementServices.Label.BarterSourceInPerson>
     <SettlementServices.Label.BarterSourceRemote>Colony storage</SettlementServices.Label.BarterSourceRemote>
     <SettlementServices.Label.BarterPledgedHeader>Pledged</SettlementServices.Label.BarterPledgedHeader>
@@ -19,11 +29,17 @@
     <SettlementServices.Label.BarterCreditTooltip>Counts as {0} per unit toward the service price (market value, regardless of whether traders would buy it).</SettlementServices.Label.BarterCreditTooltip>
     <SettlementServices.Label.BarterReservedTooltip>{0} unit(s) in this stack are reserved as materials for this request and cannot be pledged.</SettlementServices.Label.BarterReservedTooltip>
     <SettlementServices.Message.BarterExcessWarning>The selected items are worth {1}, which is {0} more than the service price of {2}. No change will be returned and the pledged items will not be given back. Continue?</SettlementServices.Message.BarterExcessWarning>
-    <SettlementServices.Message.BarterFiguresChanged>The service price or the value of the selected items changed. Review the figures and confirm again.</SettlementServices.Message.BarterFiguresChanged>
+    <SettlementServices.Message.BarterExcessWarningWithGoods>The offered items are worth {1}, which is {0} more than the service price of {2} plus the selected settlement goods worth {3}. No change will be returned and the offered items will not be given back. Continue?</SettlementServices.Message.BarterExcessWarningWithGoods>
+    <SettlementServices.Message.BarterFiguresChanged>The service price or the value of the selected items or settlement goods changed. Review the figures and confirm again.</SettlementServices.Message.BarterFiguresChanged>
     <SettlementServices.Error.BarterInvalidSelection>The selected items are not a valid payment.</SettlementServices.Error.BarterInvalidSelection>
     <SettlementServices.Error.BarterItemUnavailable>Some of the selected items are no longer available.</SettlementServices.Error.BarterItemUnavailable>
     <SettlementServices.Error.BarterInvalidValue>The value of the selected items could not be determined.</SettlementServices.Error.BarterInvalidValue>
     <SettlementServices.Error.BarterReservedForMaterials>The selected items overlap with materials supplied for this request.</SettlementServices.Error.BarterReservedForMaterials>
-    <SettlementServices.Error.BarterInsufficientValue>The selected items are not worth enough to cover the service price.</SettlementServices.Error.BarterInsufficientValue>
+    <SettlementServices.Error.BarterInsufficientValue>The offered items are not worth enough to cover the service price and the selected settlement goods.</SettlementServices.Error.BarterInsufficientValue>
+    <SettlementServices.Error.BarterGoodsInPersonOnly>Settlement goods can only be taken while visiting the settlement with a caravan.</SettlementServices.Error.BarterGoodsInPersonOnly>
+    <SettlementServices.Error.BarterGoodsNoTradeAccess>This settlement cannot trade with your caravan right now.</SettlementServices.Error.BarterGoodsNoTradeAccess>
+    <SettlementServices.Error.BarterGoodsStale>The settlement's goods changed or are no longer available. Reset your selection and review it again.</SettlementServices.Error.BarterGoodsStale>
+    <SettlementServices.Error.BarterGoodsDeliveryFailed>The selected settlement goods could not be delivered to your caravan.</SettlementServices.Error.BarterGoodsDeliveryFailed>
+    <SettlementServices.Error.BarterGoodsOrganRefused>Your negotiator will not take part in trading organs.</SettlementServices.Error.BarterGoodsOrganRefused>
     <SettlementServices.Error.BarterPriceChanged>The service price changed. Review the figures and confirm again.</SettlementServices.Error.BarterPriceChanged>
 </LanguageData>
