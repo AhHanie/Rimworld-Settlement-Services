@@ -48,6 +48,7 @@ namespace Settlement_Services.Domain
         private const int HiringRosterDurationTicks = 300000;
         public const int AnimalVendorRefreshPeriodTicks = 600000;
         public const int AnimalVendorMaxOffers = 20;
+        public const int VehicleShopRefreshPeriodTicks = 600000;
 
         private List<TargetSnapshot> pendingHomeDeliveries = new List<TargetSnapshot>();
 
@@ -191,6 +192,7 @@ namespace Settlement_Services.Domain
             SettlementServicesReconciler.DetectAndHandleMissingProviders(this);
             SettlementServicesReconciler.ReconcileHiringTransits(this);
             SettlementServicesReconciler.ReconcileAnimalVendorOffers(this);
+            SettlementServicesReconciler.ReconcileVehicleShopOffers(this);
             SettlementServiceJobScheduler.TickAll(this, TickInterval);
             BoardJobCoordinator.TickDue(this);
             BoardOfferScheduler.TickDue(this);
@@ -1194,6 +1196,116 @@ namespace Settlement_Services.Domain
                 if (offer?.pawn != null && animalVendorCustody.Contains(offer.pawn)) animalVendorCustody.Remove(offer.pawn);
                 record.animalVendorOffers.RemoveAt(i);
             }
+        }
+
+        public IReadOnlyList<VehicleShopOfferRecord> GetOrRefreshVehicleShopOffers(Settlement settlement, Func<int, List<VehicleShopOfferRecord>> generator)
+        {
+            if (settlement == null) return Array.Empty<VehicleShopOfferRecord>();
+
+            SettlementRecord record = GetOrCreateSettlementRecord(settlement.ID);
+            int now = Find.TickManager.TicksGame;
+            string factionLoadId = settlement.Faction?.GetUniqueLoadID();
+
+            PruneVehicleShopOffers(record);
+
+            if (record.vehicleShopNextRefreshTick >= 0
+                && !string.Equals(record.vehicleShopGeneratedForFactionLoadId, factionLoadId, StringComparison.Ordinal))
+            {
+                ResetVehicleShop(record);
+            }
+
+            if (record.vehicleShopNextRefreshTick >= 0 && now < record.vehicleShopNextRefreshTick) return record.vehicleShopOffers;
+
+            int nextRefreshTick = record.vehicleShopNextRefreshTick < 0
+                ? now + VehicleShopRefreshPeriodTicks
+                : record.vehicleShopNextRefreshTick + ((now - record.vehicleShopNextRefreshTick) / VehicleShopRefreshPeriodTicks + 1) * VehicleShopRefreshPeriodTicks;
+
+            List<VehicleShopOfferRecord> generated = null;
+            try
+            {
+                generated = generator(Gen.HashCombineInt(settlement.ID, nextRefreshTick));
+            }
+            catch (System.Exception ex)
+            {
+                Settlement_Services.SupportLog.Error($"Vehicle shop generation threw for settlement {settlement.LabelCap} ({settlement.ID}): {ex}");
+            }
+
+            if (generated == null) return record.vehicleShopOffers;
+
+            record.vehicleShopOffers.Clear();
+            foreach (VehicleShopOfferRecord offer in generated)
+            {
+                if (offer == null || offer.vehicleDefName.NullOrEmpty()) continue;
+
+                offer.offerId = record.nextVehicleShopOfferId++;
+                record.vehicleShopOffers.Add(offer);
+            }
+
+            record.vehicleShopNextRefreshTick = nextRefreshTick;
+            record.vehicleShopGeneratedForFactionLoadId = factionLoadId;
+            return record.vehicleShopOffers;
+        }
+
+        public bool TryGetVehicleShopRefreshTick(int settlementWorldObjectId, out int nextRefreshTick)
+        {
+            if (settlementsByWorldObjectId.TryGetValue(settlementWorldObjectId, out SettlementRecord record) && record.vehicleShopNextRefreshTick >= 0)
+            {
+                nextRefreshTick = record.vehicleShopNextRefreshTick;
+                return true;
+            }
+            nextRefreshTick = -1;
+            return false;
+        }
+
+        public void MakeVehicleShopDue(int settlementWorldObjectId)
+        {
+            if (settlementsByWorldObjectId.TryGetValue(settlementWorldObjectId, out SettlementRecord record) && record.vehicleShopNextRefreshTick >= 0)
+                record.vehicleShopNextRefreshTick = Find.TickManager.TicksGame;
+        }
+
+        public bool TryClaimVehicleShopOffer(int settlementWorldObjectId, int offerId, out VehicleShopOfferRecord claimed)
+        {
+            claimed = null;
+            if (!settlementsByWorldObjectId.TryGetValue(settlementWorldObjectId, out SettlementRecord record)) return false;
+
+            PruneVehicleShopOffers(record);
+
+            VehicleShopOfferRecord offer = record.vehicleShopOffers.Find(o => o.offerId == offerId);
+            if (offer == null) return false;
+
+            record.vehicleShopOffers.Remove(offer);
+            claimed = offer;
+            return true;
+        }
+
+        public void RestoreVehicleShopOffer(int settlementWorldObjectId, VehicleShopOfferRecord offer)
+        {
+            if (offer == null) return;
+
+            if (!settlementsByWorldObjectId.TryGetValue(settlementWorldObjectId, out SettlementRecord record)
+                || record.vehicleShopOffers.Any(o => o.offerId == offer.offerId))
+            {
+                Settlement_Services.SupportLog.Warning($"Vehicle shop offer {offer.offerId} for settlement {settlementWorldObjectId} could not be restored.");
+                return;
+            }
+
+            int insertAt = record.vehicleShopOffers.FindIndex(o => o.offerId > offer.offerId);
+            if (insertAt < 0) record.vehicleShopOffers.Add(offer);
+            else record.vehicleShopOffers.Insert(insertAt, offer);
+        }
+
+        public void ResetVehicleShop(SettlementRecord record)
+        {
+            if (record == null) return;
+
+            record.vehicleShopOffers.Clear();
+            record.vehicleShopNextRefreshTick = -1;
+            record.vehicleShopGeneratedForFactionLoadId = null;
+        }
+
+        public void PruneVehicleShopOffers(SettlementRecord record)
+        {
+            record.vehicleShopOffers.RemoveAll(o => o == null || o.vehicleDefName.NullOrEmpty() || DefDatabase<ThingDef>.GetNamedSilentFail(o.vehicleDefName) == null);
         }
 
         internal IReadOnlyList<HiringTransitRecord> HiringTransitsRaw => hiringTransits;

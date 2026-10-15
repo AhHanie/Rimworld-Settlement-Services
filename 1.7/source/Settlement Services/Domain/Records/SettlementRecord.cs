@@ -34,6 +34,11 @@ namespace Settlement_Services.Domain.Records
         public int animalVendorNextRefreshTick = -1;
         public string animalVendorGeneratedForFactionLoadId;
 
+        public List<VehicleShopOfferRecord> vehicleShopOffers = new List<VehicleShopOfferRecord>();
+        public int nextVehicleShopOfferId = 1;
+        public int vehicleShopNextRefreshTick = -1;
+        public string vehicleShopGeneratedForFactionLoadId;
+
         public bool practicedIdeosInitialized;
         public int practicedIdeoCount;
         public List<string> practicedIdeoLoadIds = new List<string>();
@@ -58,6 +63,10 @@ namespace Settlement_Services.Domain.Records
             Scribe_Values.Look(ref nextAnimalVendorOfferId, "nextAnimalVendorOfferId", 1);
             Scribe_Values.Look(ref animalVendorNextRefreshTick, "animalVendorNextRefreshTick", -1);
             Scribe_Values.Look(ref animalVendorGeneratedForFactionLoadId, "animalVendorGeneratedForFactionLoadId");
+            Scribe_Collections.Look(ref vehicleShopOffers, "vehicleShopOffers", LookMode.Deep);
+            Scribe_Values.Look(ref nextVehicleShopOfferId, "nextVehicleShopOfferId", 1);
+            Scribe_Values.Look(ref vehicleShopNextRefreshTick, "vehicleShopNextRefreshTick", -1);
+            Scribe_Values.Look(ref vehicleShopGeneratedForFactionLoadId, "vehicleShopGeneratedForFactionLoadId");
             Scribe_Values.Look(ref practicedIdeosInitialized, "practicedIdeosInitialized");
             Scribe_Values.Look(ref practicedIdeoCount, "practicedIdeoCount");
             Scribe_Collections.Look(ref practicedIdeoLoadIds, "practicedIdeoLoadIds", LookMode.Value);
@@ -74,6 +83,9 @@ namespace Settlement_Services.Domain.Records
                 hiringCandidates.RemoveAll(c => c == null || c.pawn == null || c.pawn.Destroyed || c.pawn.Dead);
                 if (animalVendorOffers == null) animalVendorOffers = new List<AnimalVendorOfferRecord>();
                 animalVendorOffers.RemoveAll(o => o == null || o.pawn == null || o.pawn.Destroyed || o.pawn.Dead);
+                if (vehicleShopOffers == null) vehicleShopOffers = new List<VehicleShopOfferRecord>();
+                vehicleShopOffers.RemoveAll(o => o == null || o.vehicleDefName.NullOrEmpty());
+                if (nextVehicleShopOfferId < 1) nextVehicleShopOfferId = 1;
 
                 if (practicedIdeoLoadIds == null) practicedIdeoLoadIds = new List<string>();
                 else

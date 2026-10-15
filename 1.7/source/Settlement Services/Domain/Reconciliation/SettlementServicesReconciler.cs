@@ -6,6 +6,7 @@ using Verse;
 using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework;
 using Settlement_Services.Framework.Board;
+using Settlement_Services.Framework.Compat.VehicleFramework;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Services.Animals;
 using Settlement_Services.Services.Construction;
@@ -71,6 +72,7 @@ namespace Settlement_Services.Domain.Reconciliation
             failedJobs += DetectAndHandleMissingProviders(component);
             ReconcileHiringTransits(component);
             ReconcileAnimalVendorOffers(component);
+            ReconcileVehicleShopOffers(component);
 
             List<SettlementRecord> toDrop = component.SettlementRecordsRaw
                 .Where(r => WorldObjectLookup.ResolveSettlement(r.settlementWorldObjectId) == null
@@ -81,6 +83,7 @@ namespace Settlement_Services.Domain.Reconciliation
             {
                 component.DisposeHiringCandidates(orphan);
                 component.DisposeAnimalVendorOffers(orphan);
+                component.ResetVehicleShop(orphan);
                 component.SettlementRecordsRaw.Remove(orphan);
                 droppedSettlements++;
             }
@@ -184,6 +187,27 @@ namespace Settlement_Services.Domain.Reconciliation
                 if (stillEligible) continue;
 
                 component.ResetAnimalVendor(record);
+            }
+        }
+
+        public static void ReconcileVehicleShopOffers(SettlementServicesWorldComponent component)
+        {
+            foreach (SettlementRecord record in component.SettlementRecordsRaw)
+            {
+                if (record.vehicleShopNextRefreshTick < 0 && record.vehicleShopOffers.Count == 0) continue;
+
+                Settlement settlement = WorldObjectLookup.ResolveSettlement(record.settlementWorldObjectId);
+                bool stillEligible = settlement != null
+                    && string.Equals(record.vehicleShopGeneratedForFactionLoadId, settlement.Faction?.GetUniqueLoadID(), System.StringComparison.Ordinal)
+                    && component.TryGetCapability(record.settlementWorldObjectId, out IReadOnlyList<string> specialtyDefNames)
+                    && specialtyDefNames.Contains(VehicleShopServiceWorker.RequiredSpecialtyDefName);
+                if (!stillEligible)
+                {
+                    component.ResetVehicleShop(record);
+                    continue;
+                }
+
+                component.PruneVehicleShopOffers(record);
             }
         }
 

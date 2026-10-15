@@ -4,7 +4,7 @@
   <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
     <defName>SettlementSpecialty_VehicleGarage</defName>
     <label>vehicle garage</label>
-    <description>This settlement runs a dedicated vehicle garage, with mechanics able to install upgrades and turn around fuel, repair, and upgrade work faster and cheaper than most.</description>
+    <description>This settlement runs a dedicated vehicle garage. It sells vehicles from a rotating stock, and its mechanics can install upgrades and turn around fuel, repair, and upgrade work faster and cheaper than most.</description>
     <iconTexPath>SettlementServices/UI/Icons/garage</iconTexPath>
     <selectionWeight>1.0</selectionWeight>
     <minTechLevel>Industrial</minTechLevel>
@@ -19,6 +19,9 @@
         <li>SettlementService_VehicleRepair</li>
       </relevantServiceDefNames>
     </modifiers>
+    <tooltipEffectKeys>
+      <li>SettlementServices.SpecialtyEffect.VehicleGarageVehicleShop</li>
+    </tooltipEffectKeys>
   </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
 
 </Defs>

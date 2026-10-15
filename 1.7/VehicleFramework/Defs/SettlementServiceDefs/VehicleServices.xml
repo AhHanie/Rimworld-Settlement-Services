@@ -49,4 +49,26 @@
     <iconTexPath>SettlementServices/UI/Icons/car-sparkles</iconTexPath>
   </Settlement_Services.Framework.Defs.SettlementServiceDef>
 
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_VehicleShop</defName>
+    <category>SettlementService_Commerce</category>
+    <label>vehicle shop</label>
+    <description>Buy one of the vehicles this garage currently has for sale. The vehicle joins your caravan as soon as you pay. The garage restocks every ten days, and rarer, more advanced models turn up less often.</description>
+    <workerClass>Settlement_Services.Framework.Compat.VehicleFramework.VehicleShopServiceWorker</workerClass>
+    <requiredTechLevel>Industrial</requiredTechLevel>
+    <requiredSpecialtyDefNames>
+      <li>SettlementSpecialty_VehicleGarage</li>
+    </requiredSpecialtyDefNames>
+    <minimumCost>0</minimumCost>
+    <wealthScale>0</wealthScale>
+    <duration>0</duration>
+    <hideExpectedDuration>true</hideExpectedDuration>
+    <eventChancePct>0</eventChancePct>
+    <targetRule>None</targetRule>
+    <batchMode>None</batchMode>
+    <allowRemoteDiscovery>false</allowRemoteDiscovery>
+    <allowRemoteRequest>false</allowRemoteRequest>
+    <iconTexPath>SettlementServices/UI/Icons/car</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
 </Defs>

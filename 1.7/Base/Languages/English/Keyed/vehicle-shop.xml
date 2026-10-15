@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Label.VehicleShopChoice>Vehicles for sale</SettlementServices.Label.VehicleShopChoice>
+    <SettlementServices.Label.VehicleShopOfferLabel>{0} ({1}, tier {2}) - {3} silver</SettlementServices.Label.VehicleShopOfferLabel>
+    <SettlementServices.Label.VehicleShopOfferDescription>{0}: a {1} vehicle, tier {2}. Listed price {3} silver. It joins your caravan as soon as you pay.</SettlementServices.Label.VehicleShopOfferDescription>
+    <SettlementServices.Label.VehicleShopRefresh>New vehicles arrive in {0}.</SettlementServices.Label.VehicleShopRefresh>
+    <SettlementServices.Label.VehicleShopTypeLand>land</SettlementServices.Label.VehicleShopTypeLand>
+    <SettlementServices.Label.VehicleShopTypeSea>sea</SettlementServices.Label.VehicleShopTypeSea>
+    <SettlementServices.Label.VehicleShopTypeAir>air</SettlementServices.Label.VehicleShopTypeAir>
+    <SettlementServices.Label.VehicleShopTypeUniversal>all-terrain</SettlementServices.Label.VehicleShopTypeUniversal>
+    <SettlementServices.Label.VehicleShopTypeUnknown>vehicle</SettlementServices.Label.VehicleShopTypeUnknown>
+    <SettlementServices.LineItem.VehicleShopPurchase>{0}</SettlementServices.LineItem.VehicleShopPurchase>
+    <SettlementServices.Message.VehicleShopPurchased>{0} has joined your caravan.</SettlementServices.Message.VehicleShopPurchased>
+    <SettlementServices.Error.VehicleShopSoldOut>This garage has no vehicles for sale until it restocks.</SettlementServices.Error.VehicleShopSoldOut>
+    <SettlementServices.Error.VehicleShopNoVehicles>This garage has no vehicles it can sell right now.</SettlementServices.Error.VehicleShopNoVehicles>
+    <SettlementServices.Error.VehicleShopUnavailable>This garage's vehicle trade is unavailable right now.</SettlementServices.Error.VehicleShopUnavailable>
+    <SettlementServices.Error.VehicleShopNoneSelected>Select a vehicle to buy.</SettlementServices.Error.VehicleShopNoneSelected>
+    <SettlementServices.Error.VehicleShopSingleOfferOnly>Select exactly one vehicle to buy.</SettlementServices.Error.VehicleShopSingleOfferOnly>
+    <SettlementServices.Error.VehicleShopOfferNoLongerAvailable>The selected vehicle is no longer for sale.</SettlementServices.Error.VehicleShopOfferNoLongerAvailable>
+    <SettlementServices.Error.VehicleShopCannotTravel>This vehicle could not travel from here together with your caravan's other vehicles.</SettlementServices.Error.VehicleShopCannotTravel>
+    <SettlementServices.Error.VehicleShopGenerationFailed>The garage could not prepare the vehicle.</SettlementServices.Error.VehicleShopGenerationFailed>
+    <SettlementServices.Error.VehicleShopHandoffFailed>The vehicle could not be handed over to your caravan.</SettlementServices.Error.VehicleShopHandoffFailed>
+    <SettlementServices.SpecialtyEffect.VehicleGarageVehicleShop>Sells vehicles from a stock that changes every ten days; advanced models are rare</SettlementServices.SpecialtyEffect.VehicleGarageVehicleShop>
+</LanguageData>
