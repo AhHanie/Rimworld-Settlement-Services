@@ -6,6 +6,7 @@ using Settlement_Services.Framework.Compat.ChargeableHediffs;
 using Settlement_Services.Framework.Compat.ProgressionEducation;
 using Settlement_Services.Framework.Compat.LifeLessons;
 using Settlement_Services.Framework.Compat.Empire;
+using Settlement_Services.Framework.Compat.VanillaSkillsExpanded;
 
 namespace Settlement_Services.Framework.Compatibility
 {
@@ -20,6 +21,7 @@ namespace Settlement_Services.Framework.Compatibility
             yield return new ProgressionEducationCompatibilityModule();
             yield return new LifeLessonsCompatibilityModule();
             yield return new EmpireCompatibilityModule();
+            yield return new VanillaSkillsExpandedCompatibilityModule();
         }
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
+using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Defs;
 
 namespace Settlement_Services.Services.Education
@@ -57,12 +58,15 @@ namespace Settlement_Services.Services.Education
 
         private static string PassionLine(EducationExperienceResult result)
         {
+            if (SettlementServicesCompatibilityRegistry.TryGetEducationPassionLabel(result.SkillRecord, out string label))
+                return "SettlementServices.Label.EducationPassionNamed".Translate(label);
+
             switch (result.SkillRecord.passion)
             {
+                case Passion.None: return "SettlementServices.Label.EducationPassionNone".Translate();
                 case Passion.Minor: return "SettlementServices.Label.EducationPassionMinor".Translate();
                 case Passion.Major: return "SettlementServices.Label.EducationPassionMajor".Translate();
-                case Passion.None:
-                default: return "SettlementServices.Label.EducationPassionNone".Translate();
+                default: return "SettlementServices.Label.EducationPassionUnknown".Translate();
             }
         }
     }

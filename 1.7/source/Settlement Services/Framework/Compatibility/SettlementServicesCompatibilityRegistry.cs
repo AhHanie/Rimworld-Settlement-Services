@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
 using Verse;
@@ -21,6 +22,12 @@ namespace Settlement_Services.Framework.Compatibility
             public ICompatibilityCompletionObserver observer;
         }
 
+        private struct EducationPassionLabelProviderEntry
+        {
+            public string moduleId;
+            public IEducationPassionLabelProvider provider;
+        }
+
         private static bool initialized;
 
         private static ICompatibilityAvailabilityRule[] availabilityRules = Array.Empty<ICompatibilityAvailabilityRule>();
@@ -28,6 +35,7 @@ namespace Settlement_Services.Framework.Compatibility
         private static CompletionObserverEntry[] completionObservers = Array.Empty<CompletionObserverEntry>();
         private static ICompatibilitySettingsSection[] settingsSections = Array.Empty<ICompatibilitySettingsSection>();
         private static ICompatibilityCustodyLifecycle[] custodyLifecycles = Array.Empty<ICompatibilityCustodyLifecycle>();
+        private static EducationPassionLabelProviderEntry[] educationPassionLabelProviders = Array.Empty<EducationPassionLabelProviderEntry>();
         private static IRechargeableHediffService rechargeableHediffService = NullRechargeableHediffService.Instance;
 
         internal static bool HasSettingsSections => settingsSections.Length > 0;
@@ -43,6 +51,7 @@ namespace Settlement_Services.Framework.Compatibility
             var completionObserverList = new List<CompletionObserverEntry>();
             var settingsSectionList = new List<ICompatibilitySettingsSection>();
             var custodyLifecycleList = new List<ICompatibilityCustodyLifecycle>();
+            var educationPassionLabelProviderList = new List<EducationPassionLabelProviderEntry>();
             string rechargeableHediffServiceModuleId = null;
 
             foreach (ISettlementServicesCompatibilityModule module in CompatibilityModuleCatalog.CreateModules())
@@ -54,6 +63,9 @@ namespace Settlement_Services.Framework.Compatibility
                 if (module.CompletionObserver != null) completionObserverList.Add(new CompletionObserverEntry { moduleId = module.ModuleId, observer = module.CompletionObserver });
                 if (module.SettingsSection != null) settingsSectionList.Add(module.SettingsSection);
                 if (module.CustodyLifecycle != null) custodyLifecycleList.Add(module.CustodyLifecycle);
+
+                if (module is IEducationPassionLabelProviderModule passionModule && passionModule.EducationPassionLabelProvider != null)
+                    educationPassionLabelProviderList.Add(new EducationPassionLabelProviderEntry { moduleId = module.ModuleId, provider = passionModule.EducationPassionLabelProvider });
 
                 if (module is IRechargeableHediffServiceProvider provider && provider.RechargeableHediffService != null)
                 {
@@ -73,11 +85,25 @@ namespace Settlement_Services.Framework.Compatibility
                 return orderCompare != 0 ? orderCompare : string.CompareOrdinal(a.moduleId, b.moduleId);
             });
 
+            educationPassionLabelProviderList.Sort((a, b) => string.CompareOrdinal(a.moduleId, b.moduleId));
+
             availabilityRules = availabilityRuleList.ToArray();
             quoteModifiers = quoteModifierList.ToArray();
             completionObservers = completionObserverList.ToArray();
             settingsSections = settingsSectionList.ToArray();
             custodyLifecycles = custodyLifecycleList.ToArray();
+            educationPassionLabelProviders = educationPassionLabelProviderList.ToArray();
+        }
+
+        internal static bool TryGetEducationPassionLabel(SkillRecord record, out string label)
+        {
+            for (int i = 0; i < educationPassionLabelProviders.Length; i++)
+            {
+                if (educationPassionLabelProviders[i].provider.TryGetLabel(record, out label) && !label.NullOrEmpty())
+                    return true;
+            }
+            label = null;
+            return false;
         }
 
         internal static bool TryGetCustodyLifecycle(ServiceJobContext context, Caravan caravan, Thing thing, out ICompatibilityCustodyLifecycle lifecycle)

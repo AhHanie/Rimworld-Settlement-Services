@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Label.EducationPassionNamed>Passion: {0}</SettlementServices.Label.EducationPassionNamed>
+    <SettlementServices.Label.EducationPassionUnknown>Passion: other</SettlementServices.Label.EducationPassionUnknown>
+</LanguageData>
