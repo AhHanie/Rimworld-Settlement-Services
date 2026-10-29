@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_Deathrest</defName>
+    <category>SettlementService_Medical</category>
+    <label>deathrest</label>
+    <description>Leave a pawn with an active deathrest gene in a settlement's basic deathrest chamber for one unassisted four-day cycle. It restores 80% of the deathrest need (up to the maximum), clears deathrest exhaustion and interrupted-deathrest sickness, and ends old deathrest building bonuses. It grants no new building bonuses and does not change hemogen.</description>
+    <workerClass>Settlement_Services.Services.Genetics.DeathrestServiceWorker</workerClass>
+    <requiredTechLevel>Industrial</requiredTechLevel>
+    <minimumCost>500</minimumCost>
+    <wealthScale>0.025</wealthScale>
+    <duration>240000</duration>    <!-- 4 days -->
+    <targetRule>Pawn</targetRule>
+    <batchMode>Targets</batchMode>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+    <iconTexPath>SettlementServices/UI/Icons/vampire</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

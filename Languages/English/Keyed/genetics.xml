@@ -7,5 +7,11 @@
     <SettlementServices.Error.NoExtractableGenes>This pawn has no genes that can be extracted.</SettlementServices.Error.NoExtractableGenes>
     <SettlementServices.Error.NoNonArchiteGenes>This pawn has no non-archite genes to extract.</SettlementServices.Error.NoNonArchiteGenes>
     <SettlementServices.Warning.GenesRegrowing>Warning: this pawn's genes are still regrowing from a previous extraction. Extracting again now will kill them.</SettlementServices.Warning.GenesRegrowing>
+    <SettlementServices.Label.DeathrestProjectedNeed>Deathrest need after the stay: {0}</SettlementServices.Label.DeathrestProjectedNeed>
+    <SettlementServices.Error.InvalidDeathrestTarget>Only a living colonist, prisoner, or slave can use deathrest service.</SettlementServices.Error.InvalidDeathrestTarget>
+    <SettlementServices.Error.NoDeathrestGene>This pawn has no active deathrest gene.</SettlementServices.Error.NoDeathrestGene>
+    <SettlementServices.Error.AlreadyDeathresting>This pawn is already deathresting.</SettlementServices.Error.AlreadyDeathresting>
+    <SettlementServices.Error.DeathrestNotNeeded>This pawn's deathrest need is already full.</SettlementServices.Error.DeathrestNotNeeded>
+    <SettlementServices.Error.DeathrestLethalCondition>This pawn is being kept alive by deathrest or coma and cannot be taken in.</SettlementServices.Error.DeathrestLethalCondition>
     <SettlementServices.Error.NoBiosculpterCycleAvailable>No biosculpter cycle is available for this pawn.</SettlementServices.Error.NoBiosculpterCycleAvailable>
 </LanguageData>
