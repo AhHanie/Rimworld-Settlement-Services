@@ -40,4 +40,9 @@
     <SettlementServices.Settings.SoundtrackEnabled.Tooltip>Fade in a short ambient loop while browsing a settlement's services menu, and fade normal music back in when you close it.</SettlementServices.Settings.SoundtrackEnabled.Tooltip>
     <SettlementServices.Settings.VerboseLoggingEnabled>Enable verbose logging</SettlementServices.Settings.VerboseLoggingEnabled>
     <SettlementServices.Settings.VerboseLoggingEnabled.Tooltip>Write Settlement Services' internal diagnostic messages to the log, without needing a debug build. Intended for troubleshooting; leave off for normal play.</SettlementServices.Settings.VerboseLoggingEnabled.Tooltip>
+    <SettlementServices.Settings.SectionCommissionFilters>Commission pickers</SettlementServices.Settings.SectionCommissionFilters>
+    <SettlementServices.Settings.CommissionOnlyPossible>Only show commissions possible with current materials</SettlementServices.Settings.CommissionOnlyPossible>
+    <SettlementServices.Settings.CommissionOnlyPossible.Tooltip>In the crafting and construction "Add commission item" lists, hide items that cannot be made right now. Checks whether one more unit can be produced from the settlement's unreserved stock plus, for a visiting caravan, the materials the caravan carries (you still need to supply them in the request). Remote requests use settlement stock only. Final quantities and quotes are checked again.</SettlementServices.Settings.CommissionOnlyPossible.Tooltip>
+    <SettlementServices.Settings.CommissionOnlyVanilla>Only show vanilla items in commission pickers</SettlementServices.Settings.CommissionOnlyVanilla>
+    <SettlementServices.Settings.CommissionOnlyVanilla.Tooltip>In the crafting and construction "Add commission item" lists, hide items supplied by third-party mods. Shows only items from Core and official expansions.</SettlementServices.Settings.CommissionOnlyVanilla.Tooltip>
 </LanguageData>

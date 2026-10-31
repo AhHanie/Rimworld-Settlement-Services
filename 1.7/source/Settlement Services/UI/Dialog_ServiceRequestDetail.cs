@@ -250,7 +250,7 @@ namespace Settlement_Services.UI
             }
 
             if (listing.ButtonText("SettlementServices.Button.AddCommissionItem".Translate()))
-                Find.WindowStack.Add(new Dialog_CraftingCommissionItemPicker(session, craftingEligibleRecipes, AddOrMergeCommissionLine));
+                Find.WindowStack.Add(new Dialog_CraftingCommissionItemPicker(session, CraftingCommissionCatalog.EligibleRecipes(session.settlement).ToList(), AddOrMergeCommissionLine));
 
             listing.Gap();
         }
@@ -302,7 +302,7 @@ namespace Settlement_Services.UI
             }
 
             if (listing.ButtonText("SettlementServices.Button.AddCommissionItem".Translate()))
-                Find.WindowStack.Add(new Dialog_BuildingCommissionItemPicker(session, buildingEligibleBuildings, AddOrMergeBuildingLine));
+                Find.WindowStack.Add(new Dialog_BuildingCommissionItemPicker(session, BuildingCommissionCatalog.EligibleBuildings(session.settlement).ToList(), AddOrMergeBuildingLine));
 
             listing.Gap();
         }

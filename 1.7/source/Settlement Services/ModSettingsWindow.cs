@@ -35,6 +35,8 @@ namespace Settlement_Services
             DrawMoodBuffsSection(listing, settings);
             listing.GapLine();
             DrawFrameworkSection(listing, settings);
+            listing.GapLine();
+            DrawCommissionFilterSection(listing, settings);
 
             if (SettlementServicesCompatibilityRegistry.HasSettingsSections)
             {
@@ -226,6 +228,25 @@ namespace Settlement_Services
                 "SettlementServices.Settings.VerboseLoggingEnabled".Translate(), ref verboseLoggingEnabled,
                 "SettlementServices.Settings.VerboseLoggingEnabled.Tooltip".Translate());
             settings.verboseLoggingEnabled = verboseLoggingEnabled;
+        }
+
+        private static void DrawCommissionFilterSection(Listing_Standard listing, ModSettings settings)
+        {
+            Text.Font = GameFont.Medium;
+            listing.Label("SettlementServices.Settings.SectionCommissionFilters".Translate());
+            Text.Font = GameFont.Small;
+
+            bool onlyPossible = settings.commissionPickerOnlyPossibleWithCurrentMaterials;
+            listing.CheckboxLabeled(
+                "SettlementServices.Settings.CommissionOnlyPossible".Translate(), ref onlyPossible,
+                "SettlementServices.Settings.CommissionOnlyPossible.Tooltip".Translate());
+            settings.commissionPickerOnlyPossibleWithCurrentMaterials = onlyPossible;
+
+            bool onlyVanilla = settings.commissionPickerOnlyVanillaItems;
+            listing.CheckboxLabeled(
+                "SettlementServices.Settings.CommissionOnlyVanilla".Translate(), ref onlyVanilla,
+                "SettlementServices.Settings.CommissionOnlyVanilla.Tooltip".Translate());
+            settings.commissionPickerOnlyVanillaItems = onlyVanilla;
         }
 
         private static int SliderLabeledInt(Listing_Standard listing, string label, int val, int min, int max, float labelPct = 0.5f, string tooltip = null)

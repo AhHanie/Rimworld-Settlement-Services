@@ -33,4 +33,6 @@
     <SettlementServices.Label.CraftingMaterialRequiredCarried>Required {0}, carried {1}</SettlementServices.Label.CraftingMaterialRequiredCarried>
     <SettlementServices.Label.CraftingMaterialSettlementSupplies>Settlement supplies {0}</SettlementServices.Label.CraftingMaterialSettlementSupplies>
     <SettlementServices.Label.CraftingMaterialAdditionalNeeded>Additional material needed</SettlementServices.Label.CraftingMaterialAdditionalNeeded>
+    <SettlementServices.Label.CommissionFilterEvaluating>Checking available materials...</SettlementServices.Label.CommissionFilterEvaluating>
+    <SettlementServices.Label.CommissionFilterUnavailable>Not possible with the materials currently available. Lower the quantity or choose another material.</SettlementServices.Label.CommissionFilterUnavailable>
 </LanguageData>

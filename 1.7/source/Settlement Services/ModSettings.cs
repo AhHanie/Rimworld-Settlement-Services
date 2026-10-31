@@ -58,6 +58,10 @@ namespace Settlement_Services
 
         public bool verboseLoggingEnabled = false;
 
+        public bool commissionPickerOnlyPossibleWithCurrentMaterials = false;
+
+        public bool commissionPickerOnlyVanillaItems = false;
+
         public override void ExposeData()
         {
             base.ExposeData();
@@ -77,6 +81,8 @@ namespace Settlement_Services
             Scribe_Deep.Look(ref compatibilitySettings, "compatibilitySettings");
             Scribe_Values.Look(ref soundtrackEnabled, "soundtrackEnabled", false);
             Scribe_Values.Look(ref verboseLoggingEnabled, "verboseLoggingEnabled", false);
+            Scribe_Values.Look(ref commissionPickerOnlyPossibleWithCurrentMaterials, "commissionPickerOnlyPossibleWithCurrentMaterials", false);
+            Scribe_Values.Look(ref commissionPickerOnlyVanillaItems, "commissionPickerOnlyVanillaItems", false);
 
             if (Scribe.mode != LoadSaveMode.PostLoadInit) return;
 

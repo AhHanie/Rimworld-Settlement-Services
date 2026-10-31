@@ -19,7 +19,9 @@ namespace Settlement_Services.UI
         private const float QuantityGap = 4f;
 
         private readonly Settlement settlement;
-        private readonly List<ThingDef> eligibleBuildings;
+        private readonly CommissionAvailability availability;
+        private readonly CommissionRowScan<ThingDef> scan;
+        private readonly bool materialFilter;
         private readonly Action<BuildingCommissionLine> onAdd;
 
         private string searchText = string.Empty;
@@ -36,7 +38,13 @@ namespace Settlement_Services.UI
         public Dialog_BuildingCommissionItemPicker(ServiceRequestSession session, List<ThingDef> eligibleBuildings, Action<BuildingCommissionLine> onAdd)
         {
             settlement = session.settlement;
-            this.eligibleBuildings = eligibleBuildings;
+            ModSettings settings = ModSettings.Current;
+            materialFilter = settings.commissionPickerOnlyPossibleWithCurrentMaterials;
+            availability = new CommissionAvailability(session);
+
+            IEnumerable<ThingDef> baseline = eligibleBuildings;
+            if (settings.commissionPickerOnlyVanillaItems) baseline = baseline.Where(CommissionOrigin.IsOfficial);
+            scan = new CommissionRowScan<ThingDef>(baseline, materialFilter ? b => availability.BuildingPossibleWithAnyStuff(b, 1) : (Func<ThingDef, bool>)null);
             this.onAdd = onAdd;
             forcePause = true;
             absorbInputAroundWindow = true;
@@ -48,6 +56,17 @@ namespace Settlement_Services.UI
             Text.Font = GameFont.Medium;
             Widgets.Label(new Rect(inRect.x, inRect.y, inRect.width, 30f), "SettlementServices.Label.AddConstructionItemTitle".Translate());
             Text.Font = GameFont.Small;
+
+            scan.Step(8d);
+            if (!scan.Complete)
+            {
+                TextAnchor titleAnchor = Text.Anchor;
+                Text.Anchor = TextAnchor.MiddleRight;
+                GUI.color = Color.gray;
+                Widgets.Label(new Rect(inRect.x, inRect.y, inRect.width - 30f, 30f), "SettlementServices.Label.CommissionFilterEvaluating".Translate());
+                GUI.color = Color.white;
+                Text.Anchor = titleAnchor;
+            }
 
             Rect searchLabelRect = new Rect(inRect.x, inRect.y + 36f, 60f, 28f);
             Widgets.Label(searchLabelRect, "SettlementServices.Label.CommissionSearchLabel".Translate());
@@ -86,6 +105,7 @@ namespace Settlement_Services.UI
 
         private List<ThingDef> FilterBuildings()
         {
+            List<ThingDef> eligibleBuildings = scan.Visible;
             if (searchText.NullOrEmpty()) return eligibleBuildings;
 
             string needle = searchText.ToLowerInvariant();
@@ -121,7 +141,13 @@ namespace Settlement_Services.UI
             quantityBuffer = null;
             detailScrollPosition = Vector2.zero;
             detailScrollHeight = 0f;
-            selectedStuff = building.MadeFromStuff ? BuildingCommissionCatalog.EligibleStuffs(building, settlement).FirstOrDefault() : null;
+            if (!building.MadeFromStuff)
+            {
+                selectedStuff = null;
+                return;
+            }
+            List<ThingDef> stuffs = availability.BuildingStuffs(building);
+            selectedStuff = (materialFilter ? stuffs.FirstOrDefault(s => availability.BuildingPossible(building, s, 1)) : null) ?? stuffs.FirstOrDefault();
         }
 
         private void DrawSelectedDetail(Rect rect)
@@ -151,6 +177,13 @@ namespace Settlement_Services.UI
             else
                 DrawBillPreview(listing);
 
+            if (materialFilter && !SelectionPossible())
+            {
+                GUI.color = ColorLibrary.RedReadable;
+                listing.Label("SettlementServices.Label.CommissionFilterUnavailable".Translate());
+                GUI.color = Color.white;
+            }
+
             detailScrollHeight = listing.CurHeight;
             listing.End();
             Widgets.EndScrollView();
@@ -165,9 +198,10 @@ namespace Settlement_Services.UI
             string label = selectedStuff != null ? selectedStuff.LabelCap : "SettlementServices.Label.NoTargetSelected".Translate();
             if (Widgets.ButtonText(row, label))
             {
-                List<ThingDef> options = BuildingCommissionCatalog.EligibleStuffs(selectedBuilding, settlement).ToList();
+                IEnumerable<ThingDef> options = availability.BuildingStuffs(selectedBuilding);
+                if (materialFilter) options = options.Where(s => availability.BuildingPossible(selectedBuilding, s, quantity));
                 var floatOptions = options.Select(s => new FloatMenuOption(s.LabelCap, () => selectedStuff = s)).ToList();
-                Find.WindowStack.Add(new FloatMenu(floatOptions));
+                if (floatOptions.Count > 0) Find.WindowStack.Add(new FloatMenu(floatOptions));
             }
             listing.Gap(4f);
         }
@@ -200,6 +234,9 @@ namespace Settlement_Services.UI
             if (Widgets.ButtonText(plusRect, "+") && quantity < 9999) quantity++;
         }
 
+        private bool SelectionPossible() =>
+            selectedBuilding != null && availability.BuildingPossible(selectedBuilding, selectedStuff, quantity);
+
         private void DrawBottomButtons(Rect inRect)
         {
             Rect cancelRect = new Rect(inRect.width - 300f, inRect.height - 35f, 140f, 35f);
@@ -207,7 +244,8 @@ namespace Settlement_Services.UI
 
             if (Widgets.ButtonText(cancelRect, "CancelButton".Translate())) Close();
 
-            bool canAdd = selectedBuilding != null && quantity > 0 && (!selectedBuilding.MadeFromStuff || selectedStuff != null);
+            bool canAdd = selectedBuilding != null && quantity > 0 && (!selectedBuilding.MadeFromStuff || selectedStuff != null)
+                && (!materialFilter || SelectionPossible());
             bool prevEnabled = GUI.enabled;
             GUI.enabled = canAdd;
             if (Widgets.ButtonText(addRect, "SettlementServices.Button.AddCommissionItem".Translate()) && canAdd)
