@@ -133,7 +133,7 @@ namespace Settlement_Services.Framework.Custody
             bool allReturned = true;
             foreach (TargetSnapshot target in job.Targets)
             {
-                if (target?.liveThing == null) continue;
+                if (!RequiresReturn(target?.liveThing)) continue;
                 current = EnsureLiveCaravan(ctx, current);
                 if (current != null && TryReturnThing(ctx, target.liveThing, current, out Caravan updated))
                 {
@@ -171,7 +171,7 @@ namespace Settlement_Services.Framework.Custody
                 bool allReturned = true;
                 foreach (TargetSnapshot target in job.Targets)
                 {
-                    if (target?.liveThing == null) continue;
+                    if (!RequiresReturn(target?.liveThing)) continue;
                     if (TryReturnThing(ctx, target.liveThing, current, out Caravan updated)) current = updated;
                     else allReturned = false;
                 }
@@ -200,7 +200,12 @@ namespace Settlement_Services.Framework.Custody
             if (job.targetInCustody)
             {
                 foreach (TargetSnapshot target in job.Targets)
-                    if (target != null) domain.QueueHomeDelivery(target);
+                {
+                    Thing thing = target?.liveThing;
+                    if (!RequiresReturn(thing)) continue;
+                    if (thing is Pawn pawn && (pawn.Spawned || pawn.holdingOwner != null)) continue;
+                    domain.QueueHomeDelivery(target);
+                }
                 job.targetInCustody = false;
             }
 
@@ -232,13 +237,13 @@ namespace Settlement_Services.Framework.Custody
             }
 
             Caravan caravan = CaravanMaker.MakeCaravan(Enumerable.Empty<Pawn>(), Faction.OfPlayer, tile, true);
-            bool allReturned = true;
+            var failedJobs = new HashSet<ServiceJobRecord>();
             foreach ((ServiceJobRecord job, Pawn pawn) in pawns)
             {
                 if (TryReturnPawnToCaravan(new ServiceJobContext(domain, job), caravan, pawn, out Caravan updated)) caravan = updated;
-                else allReturned = false;
+                else failedJobs.Add(job);
             }
-            if (!allReturned) SupportLog.Error("Recovery caravan creation could not verify every pawn's return; some targets may need manual attention.");
+            if (failedJobs.Count > 0) SupportLog.Error("Recovery caravan creation could not verify every pawn's return; the affected jobs will be delivered home instead.");
 
             foreach (Thing item in items)
             {
@@ -250,11 +255,17 @@ namespace Settlement_Services.Framework.Custody
 
             foreach (ServiceJobRecord job in jobs)
             {
-                job.targetInCustody = false;
+                if (!failedJobs.Contains(job)) job.targetInCustody = false;
                 job.results.Clear();
             }
 
             return true;
+        }
+
+        internal static bool RequiresReturn(Thing thing)
+        {
+            if (thing == null || thing.Destroyed) return false;
+            return !(thing is Pawn pawn && pawn.Dead);
         }
 
         private static void CollectRecoverable(ServiceJobRecord job, IEnumerable<TargetSnapshot> snapshots, List<(ServiceJobRecord job, Pawn pawn)> pawns, List<Thing> items)
@@ -280,7 +291,7 @@ namespace Settlement_Services.Framework.Custody
         public static bool TryDeliverHome(TargetSnapshot snapshot)
         {
             Thing thing = snapshot.liveThing;
-            if (thing == null || thing.Destroyed) return true;
+            if (!RequiresReturn(thing)) return true;
 
             Map homeMap = Find.Maps.FirstOrDefault(m => m.IsPlayerHome);
             if (homeMap == null) return false;

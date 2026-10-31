@@ -263,7 +263,7 @@ namespace Settlement_Services.Framework
             if (settlement == null || collectingCaravan.Tile != settlement.Tile) return false;
 
             TargetCustodyService.CollectAll(ctx, collectingCaravan);
-            if (job.targetInCustody) return false;
+            if (job.targetInCustody || !job.results.NullOrEmpty()) return false;
 
             return domain.TryTransition(jobId, ServiceJobStatus.Collected);
         }
@@ -416,7 +416,7 @@ namespace Settlement_Services.Framework
                 {
                     job.lastErrorKey = "SettlementServices.Error.SettlementNoLongerExists";
                     domain.TryTransition(job.jobId, ServiceJobStatus.AwaitingCollection);
-                    if (!recovered) TargetCustodyService.QueueHomeDeliveryForJob(domain, job);
+                    TargetCustodyService.QueueHomeDeliveryForJob(domain, job);
                     domain.TryTransition(job.jobId, ServiceJobStatus.Collected);
                 }
 

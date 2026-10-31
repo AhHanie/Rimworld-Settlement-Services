@@ -17,9 +17,15 @@ namespace Settlement_Services.Framework.Custody
 
             List<Pawn> pawns = job.Targets
                 .Select(t => t?.liveThing as Pawn)
-                .Where(p => p != null && !p.Destroyed && !p.Dead)
+                .Where(TargetCustodyService.RequiresReturn)
                 .ToList();
-            if (pawns.Count == 0) return false;
+            if (pawns.Count == 0)
+            {
+                if (job.Targets.Any(t => !(t?.liveThing is Pawn) && TargetCustodyService.RequiresReturn(t?.liveThing))) return false;
+
+                job.targetInCustody = false;
+                return true;
+            }
 
             Settlement settlement = ctx.ResolveSettlement();
             if (settlement == null) return false;
