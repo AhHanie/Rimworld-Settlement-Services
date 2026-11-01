@@ -42,6 +42,8 @@ namespace Settlement_Services.Framework.Workers
 
         public virtual string GetTargetBlockReason(Thing target) => null;
 
+        public virtual bool ShouldListTarget(Thing target) => true;
+
         public virtual IEnumerable<ServiceDisplayOption> GetDisplayOptions(SettlementServiceContext ctx) => Enumerable.Empty<ServiceDisplayOption>();
 
         public virtual IEnumerable<string> GetDisplaySummaryLines(SettlementServiceContext ctx) => Enumerable.Empty<string>();
@@ -65,6 +67,19 @@ namespace Settlement_Services.Framework.Workers
         public virtual float EventChanceMultiplierFor(ServiceJobContext ctx) => 1f;
 
         public virtual bool UsesPerTargetOptionSelections => false;
+
+        public virtual bool CompletesAtExpectedTick => true;
+
+        public virtual bool IsReadyToComplete(ServiceJobContext ctx) => true;
+
+        public virtual int? TerminationRefundFor(ServiceJobContext ctx) => null;
+
+        public virtual void OnJobTerminating(ServiceJobContext ctx)
+        {
+        }
+
+        public virtual IEnumerable<ServiceLineItem> BuildPassThroughLineItems(SettlementServiceRequest request, ServiceBatchAllocationContext batchContext) =>
+            Enumerable.Empty<ServiceLineItem>();
 
         public virtual bool RequiresTargetCustody => true;
 

@@ -388,11 +388,20 @@ namespace Settlement_Services.Framework
             ServiceJobRecord job = domain.GetJob(jobId);
             if (job == null) return;
 
+            NotifyWorkerJobTerminating(domain, job);
             RefundConsumedPlayerSuppliedInputsIfApplicable(domain, job, errorKey);
             ApplyRefundAndReleaseReservations(domain, job, refundFraction);
 
             bool neverReserved = job.status == ServiceJobStatus.Drafted || job.status == ServiceJobStatus.Quoted;
             RouteToTerminalOrCollectible(domain, job, errorKey, neverReserved ? ServiceJobStatus.Cancelled : ServiceJobStatus.Failed);
+        }
+
+        private static void NotifyWorkerJobTerminating(SettlementServicesWorldComponent domain, ServiceJobRecord job)
+        {
+            SettlementServiceDef def = DefDatabase<SettlementServiceDef>.GetNamedSilentFail(job.serviceDefName);
+            if (def == null || job.status != ServiceJobStatus.Active) return;
+
+            def.Worker.OnJobTerminating(new ServiceJobContext(domain, job));
         }
 
         private static void ApplyRefundAndReleaseReservations(SettlementServicesWorldComponent domain, ServiceJobRecord job, float refundFraction = 1f)
@@ -401,7 +410,9 @@ namespace Settlement_Services.Framework
             {
                 var ctx = new ServiceJobContext(domain, job);
                 IServicePaymentProvider provider = ResolvePaymentProvider(job.requestChannel);
-                int refundAmount = Mathf.RoundToInt(job.acceptedQuote.totalCost * Mathf.Clamp01(refundFraction));
+                SettlementServiceDef def = DefDatabase<SettlementServiceDef>.GetNamedSilentFail(job.serviceDefName);
+                int? workerRefund = job.status == ServiceJobStatus.Active ? def?.Worker.TerminationRefundFor(ctx) : null;
+                int refundAmount = workerRefund ?? Mathf.RoundToInt(job.acceptedQuote.totalCost * Mathf.Clamp01(refundFraction));
                 if (refundAmount > 0) provider.Refund(refundAmount, ctx);
             }
 
@@ -424,6 +435,7 @@ namespace Settlement_Services.Framework
 
             foreach (ServiceJobRecord job in affectedJobs)
             {
+                NotifyWorkerJobTerminating(domain, job);
                 TargetExecutionService.TryFinalize(domain, job);
                 if (job.executionCommitted) domain.ReleaseAllReservations(job.jobId);
                 else ApplyRefundAndReleaseReservations(domain, job);

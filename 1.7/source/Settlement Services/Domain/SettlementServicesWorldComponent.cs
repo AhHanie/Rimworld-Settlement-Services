@@ -18,7 +18,7 @@ using Settlement_Services.Framework.Stock;
 
 namespace Settlement_Services.Domain
 {
-    public class SettlementServicesWorldComponent : WorldComponent, IThingHolder
+    public partial class SettlementServicesWorldComponent : WorldComponent, IThingHolder
     {
         internal const int TickInterval = 250;
 
@@ -43,6 +43,7 @@ namespace Settlement_Services.Domain
         private ThingOwner<Pawn> hiringCandidateCustody;
         private ThingOwner<Pawn> hiringTransitCustody;
         private ThingOwner<Pawn> animalVendorCustody;
+        private ThingOwner<Thing> growthVatCustody;
         private List<HiringTransitRecord> hiringTransits = new List<HiringTransitRecord>();
 
         private const int HiringRosterDurationTicks = 300000;
@@ -71,6 +72,7 @@ namespace Settlement_Services.Domain
             hiringCandidateCustody = new ThingOwner<Pawn>(this);
             hiringTransitCustody = new ThingOwner<Pawn>(this);
             animalVendorCustody = new ThingOwner<Pawn>(this);
+            growthVatCustody = new ThingOwner<Thing>(this);
         }
 
         public override void ExposeData()
@@ -87,6 +89,7 @@ namespace Settlement_Services.Domain
             Scribe_Deep.Look(ref hiringCandidateCustody, "hiringCandidateCustody");
             Scribe_Deep.Look(ref hiringTransitCustody, "hiringTransitCustody");
             Scribe_Deep.Look(ref animalVendorCustody, "animalVendorCustody");
+            Scribe_Deep.Look(ref growthVatCustody, "growthVatCustody", this);
             Scribe_Collections.Look(ref hiringTransits, "hiringTransits", LookMode.Deep);
             Scribe_Collections.Look(ref pendingHomeDeliveries, "pendingHomeDeliveries", LookMode.Deep);
             Scribe_Deep.Look(ref compatibilityWorldState, "compatibilityWorldState");
@@ -108,6 +111,7 @@ namespace Settlement_Services.Domain
             if (hiringCandidateCustody == null) hiringCandidateCustody = new ThingOwner<Pawn>(this);
             if (hiringTransitCustody == null) hiringTransitCustody = new ThingOwner<Pawn>(this);
             if (animalVendorCustody == null) animalVendorCustody = new ThingOwner<Pawn>(this);
+            if (growthVatCustody == null) growthVatCustody = new ThingOwner<Thing>(this);
             if (hiringTransits == null) hiringTransits = new List<HiringTransitRecord>();
             if (pendingHomeDeliveries == null) pendingHomeDeliveries = new List<TargetSnapshot>();
             if (compatibilityWorldState == null) compatibilityWorldState = new CompatibilityWorldState();
@@ -150,6 +154,7 @@ namespace Settlement_Services.Domain
                     record.animalVendorOffers?.RemoveAll(o => o == null || !animalVendorCustody.Contains(o.pawn));
                 }
                 RebuildIndexes();
+                ReconcileGrowthVats();
 
                 if (loadedSchemaVersion < SchemaVersion.Current)
                 {
@@ -259,6 +264,7 @@ namespace Settlement_Services.Domain
             ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, hiringCandidateCustody);
             ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, hiringTransitCustody);
             ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, animalVendorCustody);
+            ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, growthVatCustody);
         }
 
 

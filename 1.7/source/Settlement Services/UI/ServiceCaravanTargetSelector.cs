@@ -51,7 +51,7 @@ namespace Settlement_Services.UI
         public static void OpenTargetPicker(ServiceRequestSession session, Action<Thing> onChosen)
         {
             var excluded = new HashSet<Thing>(session.targets);
-            List<Thing> options = EligibleTargets(session.caravan, session.def.targetRule).Where(t => !excluded.Contains(t)).ToList();
+            List<Thing> options = EligibleTargets(session.caravan, session.def.targetRule).Where(t => !excluded.Contains(t) && session.def.Worker.ShouldListTarget(t)).ToList();
             if (options.Count == 0)
             {
                 Messages.Message("SettlementServices.Message.NoEligibleTargets".Translate(), MessageTypeDefOf.RejectInput, historical: false);

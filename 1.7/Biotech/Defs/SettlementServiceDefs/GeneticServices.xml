@@ -20,4 +20,42 @@
     <iconTexPath>SettlementServices/UI/Icons/genetics</iconTexPath>
   </Settlement_Services.Framework.Defs.SettlementServiceDef>
 
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_GrowthVatEmbryo</defName>
+    <category>SettlementService_Medical</category>
+    <label>grow embryo in vat</label>
+    <description>Hand over a fertilized embryo to be gestated in the settlement's growth vats, then raised to the age you choose: birth, 3, 7, 10, 13 or 18. The settlement feeds the vat from its own food stock and you pay for the nutrition used. Unused nutrition is refunded.</description>
+    <workerClass>Settlement_Services.Services.Genetics.GrowthVatEmbryoServiceWorker</workerClass>
+    <requiredTechLevel>Spacer</requiredTechLevel>
+    <requiredCapabilityTags>
+      <li>AdvancedGenetics</li>
+    </requiredCapabilityTags>
+    <minimumCost>300</minimumCost>
+    <wealthScale>0.015</wealthScale>
+    <targetRule>Item</targetRule>
+    <batchMode>None</batchMode>
+    <eventChancePct>0</eventChancePct>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+    <iconTexPath>SettlementServices/UI/Icons/child</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_GrowthVatChild</defName>
+    <category>SettlementService_Medical</category>
+    <label>grow child in vat</label>
+    <description>Leave one of your colonists under 18 in the settlement's growth vats until they reach the age you choose: 3, 7, 10, 13 or 18. You only pay for the growth still ahead of them. The settlement feeds the vat from its own food stock and you pay for the nutrition used. Unused nutrition is refunded.</description>
+    <workerClass>Settlement_Services.Services.Genetics.GrowthVatChildServiceWorker</workerClass>
+    <requiredTechLevel>Spacer</requiredTechLevel>
+    <requiredCapabilityTags>
+      <li>AdvancedGenetics</li>
+    </requiredCapabilityTags>
+    <minimumCost>250</minimumCost>
+    <wealthScale>0.015</wealthScale>
+    <targetRule>Pawn</targetRule>
+    <batchMode>None</batchMode>
+    <eventChancePct>0</eventChancePct>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+    <iconTexPath>SettlementServices/UI/Icons/child</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
 </Defs>

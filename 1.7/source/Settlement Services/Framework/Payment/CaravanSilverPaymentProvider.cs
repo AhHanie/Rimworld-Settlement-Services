@@ -46,7 +46,11 @@ namespace Settlement_Services.Framework.Payment
         public void Refund(int amount, ServiceJobContext ctx)
         {
             Caravan caravan = ResolveRequesterCaravan(ctx);
-            if (caravan == null) return;
+            if (caravan == null)
+            {
+                HomeColonySilverPaymentProvider.Instance.Refund(amount, ctx);
+                return;
+            }
 
             Thing silver = ThingMaker.MakeThing(ThingDefOf.Silver);
             silver.stackCount = amount;

@@ -32,7 +32,7 @@ namespace Settlement_Services.Framework.Custody
                 }
                 else
                 {
-                    if (thing.holdingOwner?.Owner != caravan)
+                    if (caravan == null || !CaravanInventoryUtility.AllInventoryItems(caravan).Contains(thing))
                     { errorKey = "SettlementServices.Error.TargetNotInCaravan"; return false; }
                 }
             }
@@ -64,8 +64,11 @@ namespace Settlement_Services.Framework.Custody
                 }
                 else
                 {
-                    thing.holdingOwner.Remove(thing);
-                    ctx.Domain.TakeItemCustody(thing);
+                    if (!TryDetachItem(ctx, thing, out errorKey))
+                    {
+                        RevertDetachedTargets(ctx, detached, currentCaravan);
+                        return false;
+                    }
                 }
 
                 detached.Add(target);
@@ -78,6 +81,24 @@ namespace Settlement_Services.Framework.Custody
             ctx.Job.targetInCustody = true;
             errorKey = null;
             return true;
+        }
+
+        private static bool TryDetachItem(ServiceJobContext ctx, Thing thing, out string errorKey)
+        {
+            errorKey = null;
+            ThingOwner owner = thing.holdingOwner;
+            if (owner == null || !owner.Contains(thing))
+            {
+                errorKey = "SettlementServices.Error.TargetCouldNotBeDetached";
+                return false;
+            }
+
+            owner.Remove(thing);
+            if (ctx.Domain.TryTakeItemCustody(thing)) return true;
+
+            owner.TryAdd(thing, canMergeWithExistingStacks: false);
+            errorKey = "SettlementServices.Error.TargetCouldNotBeDetached";
+            return false;
         }
 
         internal static bool TryDetachPawn(ServiceJobContext ctx, ref Caravan currentCaravan, Pawn pawn, out string errorKey)
@@ -355,6 +376,24 @@ namespace Settlement_Services.Framework.Custody
                 caravan.AddPawn(pawn, true);
             }
             return caravan;
+        }
+
+        internal static void ParkPawnInWorld(Pawn pawn)
+        {
+            if (Find.WorldPawns.Contains(pawn)) Find.WorldPawns.RemovePawn(pawn);
+
+            bool wasTeleporting = pawn.teleporting;
+            pawn.teleporting = true;
+            try
+            {
+                Find.WorldPawns.PassToWorld(pawn, PawnDiscardDecideMode.KeepForever);
+            }
+            finally
+            {
+                pawn.teleporting = wasTeleporting;
+            }
+
+            MothballImmediately(pawn);
         }
 
         private static AccessTools.FieldRef<WorldPawns, HashSet<Pawn>> aliveFieldRef;

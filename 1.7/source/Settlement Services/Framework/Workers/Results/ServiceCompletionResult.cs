@@ -14,6 +14,14 @@ namespace Settlement_Services.Framework.Workers.Results
 
         public ServiceTargetDisposition TargetDisposition { get; }
 
+        public int RefundAmount { get; private set; }
+
+        public ServiceCompletionResult WithRefund(int amount)
+        {
+            RefundAmount = amount > 0 ? amount : 0;
+            return this;
+        }
+
         public ServiceCompletionResult(bool success, bool requiresCollection, List<Thing> resultThings, string errorKey, ServiceTargetDisposition targetDisposition = ServiceTargetDisposition.Return)
         {
             Success = success;

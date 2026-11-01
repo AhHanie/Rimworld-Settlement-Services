@@ -14,4 +14,43 @@
     <SettlementServices.Error.DeathrestNotNeeded>This pawn's deathrest need is already full.</SettlementServices.Error.DeathrestNotNeeded>
     <SettlementServices.Error.DeathrestLethalCondition>This pawn is being kept alive by deathrest or coma and cannot be taken in.</SettlementServices.Error.DeathrestLethalCondition>
     <SettlementServices.Error.NoBiosculpterCycleAvailable>No biosculpter cycle is available for this pawn.</SettlementServices.Error.NoBiosculpterCycleAvailable>
+    <SettlementServices.Label.GrowthVatMilestoneChoice>Grow until</SettlementServices.Label.GrowthVatMilestoneChoice>
+    <SettlementServices.Label.GrowthVatMilestoneBirth>Birth</SettlementServices.Label.GrowthVatMilestoneBirth>
+    <SettlementServices.Label.GrowthVatMilestoneAge>Age {0}</SettlementServices.Label.GrowthVatMilestoneAge>
+    <SettlementServices.Label.GrowthVatMilestoneBirthDesc>Gestate the embryo in the vat and collect the newborn.</SettlementServices.Label.GrowthVatMilestoneBirthDesc>
+    <SettlementServices.Label.GrowthVatMilestoneAgeDesc>Keep growing the child in the vat until their biological age reaches {0}.</SettlementServices.Label.GrowthVatMilestoneAgeDesc>
+    <SettlementServices.Label.GrowthVatMilestoneGrowthMomentDesc>Keep growing the child in the vat until they turn {0}. A growth moment choice (passion or trait) appears on that birthday.</SettlementServices.Label.GrowthVatMilestoneGrowthMomentDesc>
+    <SettlementServices.Label.GrowthVatMilestoneAdultDesc>Keep growing in the vat until adulthood at 18, then collect them as an adult.</SettlementServices.Label.GrowthVatMilestoneAdultDesc>
+    <SettlementServices.Label.GrowthVatEndpoint>Vat endpoint: {0}</SettlementServices.Label.GrowthVatEndpoint>
+    <SettlementServices.Label.GrowthVatProjectedTime>Projected vat time: {0}</SettlementServices.Label.GrowthVatProjectedTime>
+    <SettlementServices.Label.GrowthVatProjectedTimeEmbryo>Projected vat time: {0} (including {1} of gestation)</SettlementServices.Label.GrowthVatProjectedTimeEmbryo>
+    <SettlementServices.Label.GrowthVatRequiredNutrition>Nutrition required: {0}</SettlementServices.Label.GrowthVatRequiredNutrition>
+    <SettlementServices.Label.GrowthVatNutritionCharge>Nutrition charge: {0} silver for {1} nutrition of settlement food. Not discounted.</SettlementServices.Label.GrowthVatNutritionCharge>
+    <SettlementServices.Label.GrowthVatNutritionUnavailable>The settlement does not have enough food in stock for this stay.</SettlementServices.Label.GrowthVatNutritionUnavailable>
+    <SettlementServices.Label.GrowthVatSpeedEstimateNote>Time and nutrition assume standard vat speed for the newborn. Nutrition that goes unused is refunded.</SettlementServices.Label.GrowthVatSpeedEstimateNote>
+    <SettlementServices.Label.GrowthVatGrowthMomentNote>A growth moment choice may appear when the child turns 7, 10 and 13.</SettlementServices.Label.GrowthVatGrowthMomentNote>
+    <SettlementServices.Label.GrowthVatCollectNote>The result stays at the settlement and can be collected later if your caravan leaves.</SettlementServices.Label.GrowthVatCollectNote>
+    <SettlementServices.LineItem.GrowthVatNutrition>Vat nutrition</SettlementServices.LineItem.GrowthVatNutrition>
+    <SettlementServices.LineItem.GrowthVatCancelRefund>Unused vat nutrition and service time</SettlementServices.LineItem.GrowthVatCancelRefund>
+    <SettlementServices.Warning.GrowthVatHold>The settlement's vat will hold the occupant until they reach: {0}. Cancelling early returns them as they are at that moment.</SettlementServices.Warning.GrowthVatHold>
+    <SettlementServices.Letter.GrowthVatBirthGrowing>{0} is now growing in the settlement's vat and will be ready for collection at: {1}.</SettlementServices.Letter.GrowthVatBirthGrowing>
+    <SettlementServices.Letter.GrowthVatStillbirthRefund>The vat stopped growing. Prepaid nutrition that was never used is refunded.</SettlementServices.Letter.GrowthVatStillbirthRefund>
+    <SettlementServices.Error.RequiresBiotech>This service requires the Biotech DLC.</SettlementServices.Error.RequiresBiotech>
+    <SettlementServices.Error.GrowthVatChildrenDisabled>Children are disabled in this game's difficulty settings.</SettlementServices.Error.GrowthVatChildrenDisabled>
+    <SettlementServices.Error.GrowthVatNotEmbryo>Only a fertilized human embryo can be grown in a vat.</SettlementServices.Error.GrowthVatNotEmbryo>
+    <SettlementServices.Error.GrowthVatEmbryoNoGenes>This embryo has no usable genes.</SettlementServices.Error.GrowthVatEmbryoNoGenes>
+    <SettlementServices.Error.GrowthVatEmbryoImplantPending>This embryo is already set to be implanted somewhere else.</SettlementServices.Error.GrowthVatEmbryoImplantPending>
+    <SettlementServices.Error.GrowthVatEmbryoPartialStack>Only a whole, single embryo can be handed over.</SettlementServices.Error.GrowthVatEmbryoPartialStack>
+    <SettlementServices.Error.GrowthVatChildNotColonist>Only a living colonist who is not a quest lodger can be grown in a vat.</SettlementServices.Error.GrowthVatChildNotColonist>
+    <SettlementServices.Error.GrowthVatChildTooOld>The vat only works for people under 18.</SettlementServices.Error.GrowthVatChildTooOld>
+    <SettlementServices.Error.GrowthVatChildBiostarving>This pawn is suffering from biostarvation and cannot enter a vat.</SettlementServices.Error.GrowthVatChildBiostarving>
+    <SettlementServices.Error.GrowthVatNoMilestoneAhead>This pawn has no growth milestone left ahead of them.</SettlementServices.Error.GrowthVatNoMilestoneAhead>
+    <SettlementServices.Error.GrowthVatMilestoneRequired>Choose the age to grow until.</SettlementServices.Error.GrowthVatMilestoneRequired>
+    <SettlementServices.Error.GrowthVatMilestoneAmbiguous>Choose exactly one age to grow until.</SettlementServices.Error.GrowthVatMilestoneAmbiguous>
+    <SettlementServices.Error.GrowthVatMilestoneInvalid>That growth milestone is not available.</SettlementServices.Error.GrowthVatMilestoneInvalid>
+    <SettlementServices.Error.GrowthVatMilestoneNotAhead>That age is not ahead of this pawn's current age.</SettlementServices.Error.GrowthVatMilestoneNotAhead>
+    <SettlementServices.Error.GrowthVatNutritionShortfall>The occupant's vat speed changed and the prepaid nutrition no longer covers the stay. Growth stopped; the unused part was refunded.</SettlementServices.Error.GrowthVatNutritionShortfall>
+    <SettlementServices.Error.GrowthVatSpeedChanged>The occupant's vat speed changed since the quote, so the prepaid nutrition no longer covers the stay.</SettlementServices.Error.GrowthVatSpeedChanged>
+    <SettlementServices.Error.GrowthVatBirthFailed>The birth could not be carried out. The embryo was kept safe.</SettlementServices.Error.GrowthVatBirthFailed>
+    <SettlementServices.Error.GrowthVatNotReady>The occupant has not reached the chosen age yet.</SettlementServices.Error.GrowthVatNotReady>
 </LanguageData>

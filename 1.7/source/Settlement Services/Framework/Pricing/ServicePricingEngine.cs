@@ -44,7 +44,7 @@ namespace Settlement_Services.Framework.Pricing
 
     public static class ServicePricingEngine
     {
-        public static SettlementServiceQuote Finalize(SettlementServiceDef def, SettlementServiceRequest request, List<ServiceLineItem> workerLineItems)
+        public static SettlementServiceQuote Finalize(SettlementServiceDef def, SettlementServiceRequest request, List<ServiceLineItem> workerLineItems, List<ServiceLineItem> passThroughLineItems = null)
         {
             IServicePricingContext ctx = ServicePricingContext.Current;
             float wealthScaleAddition = def.Worker.WealthScaleAdditionFor(request);
@@ -71,10 +71,20 @@ namespace Settlement_Services.Framework.Pricing
             var compatibilityContext = new CompatibilityQuoteContext(def, request, lineItems, Mathf.RoundToInt(preMarketTotal));
             SettlementServicesCompatibilityRegistry.ModifyQuote(compatibilityContext);
 
+            int passThroughTotal = 0;
+            if (!passThroughLineItems.NullOrEmpty())
+            {
+                foreach (ServiceLineItem passThrough in passThroughLineItems)
+                {
+                    lineItems.Add(passThrough);
+                    passThroughTotal += passThrough.amount;
+                }
+            }
+
             return new SettlementServiceQuote
             {
                 lineItems = lineItems,
-                totalCost = compatibilityContext.totalCost,
+                totalCost = compatibilityContext.totalCost + passThroughTotal,
                 selectedTierKey = request.selectedTierKey,
                 expectedDurationTicks = EffectiveDuration(def, request, settlement, tier),
             };

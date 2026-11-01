@@ -63,6 +63,7 @@ namespace Settlement_Services.Domain.Records
         public float paidBarterValue;
 
         public string providerFactionLoadId;
+        public GrowthVatJobState growthVat;
         public List<string> processedCompatibilityCompletionModuleIds = new List<string>();
 
         public IReadOnlyList<TargetSnapshot> Targets => targets;
@@ -117,6 +118,7 @@ namespace Settlement_Services.Domain.Records
             Scribe_Values.Look(ref paymentKind, "paymentKind", ServicePaymentKind.Silver);
             Scribe_Values.Look(ref paidBarterValue, "paidBarterValue");
             Scribe_Values.Look(ref providerFactionLoadId, "providerFactionLoadId");
+            Scribe_Deep.Look(ref growthVat, "growthVat");
             Scribe_Collections.Look(ref processedCompatibilityCompletionModuleIds, "processedCompatibilityCompletionModuleIds", LookMode.Value);
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit && results == null)

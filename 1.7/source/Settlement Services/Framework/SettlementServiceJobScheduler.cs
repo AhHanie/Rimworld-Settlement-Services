@@ -62,8 +62,8 @@ namespace Settlement_Services.Framework
                     continue;
                 }
 
-                bool naturallyDue = job.expectedCompletionTick >= 0 && Find.TickManager.TicksGame >= job.expectedCompletionTick;
-                if (result.CompletedNow || naturallyDue) CompleteJob(domain, def, job, ctx);
+                bool naturallyDue = def.Worker.CompletesAtExpectedTick && job.expectedCompletionTick >= 0 && Find.TickManager.TicksGame >= job.expectedCompletionTick;
+                if ((result.CompletedNow || naturallyDue) && def.Worker.IsReadyToComplete(ctx)) CompleteJob(domain, def, job, ctx);
             }
         }
 
@@ -77,6 +77,8 @@ namespace Settlement_Services.Framework
             if (def == null) return false;
 
             var ctx = new ServiceJobContext(domain, job);
+            if (!def.Worker.IsReadyToComplete(ctx)) return false;
+
             PresentDueDuringServiceEvent(job, ctx);
             CompleteJob(domain, def, job, ctx);
             return true;
@@ -103,6 +105,7 @@ namespace Settlement_Services.Framework
             string failErrorKey = null;
             int totalUnits = targets.Count > 0 ? targets.Count : Mathf.Max(1, job.quantity);
             int succeededUnits = 0;
+            int completionRefund = 0;
 
             if (targets.Count > 0)
             {
@@ -110,6 +113,7 @@ namespace Settlement_Services.Framework
                 {
                     ServiceJobContext targetCtx = ctx.ForTarget(targets[i], i);
                     ServiceCompletionResult unitResult = def.Worker.Complete(targetCtx);
+                    completionRefund += unitResult.RefundAmount;
                     if (!unitResult.ResultThings.NullOrEmpty()) allResultThings.AddRange(unitResult.ResultThings);
                     if (!unitResult.Success) { failErrorKey = unitResult.ErrorKey; break; }
                     RestoreParticipantFoodAndRest(def, targetCtx);
@@ -123,6 +127,7 @@ namespace Settlement_Services.Framework
                 for (int i = 0; i < totalUnits; i++)
                 {
                     ServiceCompletionResult unitResult = def.Worker.Complete(ctx);
+                    completionRefund += unitResult.RefundAmount;
                     if (!unitResult.ResultThings.NullOrEmpty()) allResultThings.AddRange(unitResult.ResultThings);
                     if (!unitResult.Success) { failErrorKey = unitResult.ErrorKey; break; }
                     RestoreParticipantFoodAndRest(def, ctx);
@@ -133,6 +138,9 @@ namespace Settlement_Services.Framework
             }
 
             BankResults(domain, job, allResultThings);
+
+            if (completionRefund > 0 && failErrorKey == null)
+                SettlementServiceOrchestrator.ResolvePaymentProvider(job.requestChannel).Refund(completionRefund, ctx);
 
             if (executionRequested)
             {

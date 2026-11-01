@@ -127,7 +127,8 @@ namespace Settlement_Services.Framework
                 if (unitError != null) { errorKey = unitError; return false; }
 
                 var lineItems = new List<ServiceLineItem>(def.Worker.BuildQuoteLineItems(unit, batchContext));
-                SettlementServiceQuote unitQuote = ServicePricingEngine.Finalize(def, unit, lineItems);
+                var passThroughLineItems = new List<ServiceLineItem>(def.Worker.BuildPassThroughLineItems(unit, batchContext));
+                SettlementServiceQuote unitQuote = ServicePricingEngine.Finalize(def, unit, lineItems, passThroughLineItems);
                 unitQuotes.Add(unitQuote);
                 unitQuoteDtos.Add(new ServiceUnitQuote
                 {

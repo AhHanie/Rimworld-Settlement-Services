@@ -67,7 +67,7 @@
       <li>MechanitorServices</li>
     </requiredCapabilityTags>
     <minimumCost>450</minimumCost>
-    <wealthScale>0.0015</wealthScale>
+    <wealthScale>0.005</wealthScale>
     <duration>7500</duration>    <!-- 3 hours -->
     <eventChancePct>0</eventChancePct>
     <targetRule>Pawn</targetRule>
@@ -96,7 +96,7 @@
       <li>MechanitorServices</li>
     </requiredCapabilityTags>
     <minimumCost>1300</minimumCost>
-    <wealthScale>0.003</wealthScale>
+    <wealthScale>0.005</wealthScale>
     <duration>7500</duration>    <!-- 3 hours -->
     <eventChancePct>0</eventChancePct>
     <targetRule>Pawn</targetRule>
