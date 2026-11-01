@@ -46,7 +46,7 @@ Vanilla checks `pawn.ParentHolder is Building_GrowthVat` for the biological-age 
 
 ## Birth
 
-`GrowthVatBirthService` follows `PregnancyUtility.ApplyBirthOutcome` for a vat (birth quality 0.7, `babiesAreHealthy` honored through the ChildBirth outcome worker) but does not call it: that method needs a spawned or caravan-held birther and would discard the newborn from off-map custody. It generates the newborn from the embryo's genes, inherits xenotype and parent relations, applies infant illness or the stillborn hediff, then sends the vanilla vat birth letter. Parents that no longer exist are ignored and a last name is generated.
+`GrowthVatBirthService` follows `PregnancyUtility.ApplyBirthOutcome` for a vat (birth quality 0.7, `babiesAreHealthy` honored through the ChildBirth outcome worker) but does not call it: that method needs a spawned or caravan-held birther and would discard the newborn from off-map custody. Newborn generation (outcome selection, genes, xenotype, parent relations, infant illness or stillborn hediff) lives in `EmbryoBirthGeneration`, which the surrogacy service also uses (see `SurrogacyService.md`). The vat code then commits the birth and sends the vanilla vat birth letter. Parents that no longer exist are ignored and a last name is generated.
 
 ## Staged nutrition accounting
 

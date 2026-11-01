@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Error.SurrogacyNotEmbryo>Only a fertilized human embryo can be handed to a surrogate.</SettlementServices.Error.SurrogacyNotEmbryo>
+    <SettlementServices.Error.SurrogacyEmbryoNoGenes>This embryo has no usable genes.</SettlementServices.Error.SurrogacyEmbryoNoGenes>
+    <SettlementServices.Error.SurrogacyEmbryoImplantPending>This embryo is already set to be implanted somewhere else.</SettlementServices.Error.SurrogacyEmbryoImplantPending>
+    <SettlementServices.Error.SurrogacyEmbryoPartialStack>Only a whole, single embryo can be handed over.</SettlementServices.Error.SurrogacyEmbryoPartialStack>
+    <SettlementServices.Error.SurrogacyStateMissing>The surrogacy record for this job is missing, so the pregnancy could not continue. The embryo was kept safe and the fee refunded.</SettlementServices.Error.SurrogacyStateMissing>
+    <SettlementServices.Error.SurrogacyBirthFailed>The birth could not be carried out. The embryo was kept safe and the fee refunded.</SettlementServices.Error.SurrogacyBirthFailed>
+    <SettlementServices.Label.SurrogacyEndpoint>Endpoint: a newborn, with the embryo's genes and genetic parents</SettlementServices.Label.SurrogacyEndpoint>
+    <SettlementServices.Label.SurrogacyDuration>Expected time: {0} of gestation. Not shortened by discounts.</SettlementServices.Label.SurrogacyDuration>
+    <SettlementServices.Label.SurrogacyRisk>Birth is not guaranteed healthy: the baby may be born with an infant illness, or stillborn.</SettlementServices.Label.SurrogacyRisk>
+    <SettlementServices.Label.SurrogacyCollectNote>The newborn joins your caravan when the birth happens, or waits at the settlement for you to collect if your caravan has left.</SettlementServices.Label.SurrogacyCollectNote>
+    <SettlementServices.Warning.SurrogacyHold>The settlement keeps your embryo and its anonymous surrogate carries it for {0}. Cancelling before the birth returns the embryo and refunds the unused part of the fee. Once the baby is born the fee is spent.</SettlementServices.Warning.SurrogacyHold>
+    <SettlementServices.Warning.SurrogacyRisk>The baby may be born with an infant illness, or stillborn.</SettlementServices.Warning.SurrogacyRisk>
+    <SettlementServices.LineItem.SurrogacyCancelRefund>Unused surrogacy time</SettlementServices.LineItem.SurrogacyCancelRefund>
+    <SettlementServices.Letter.SurrogacyLabelHealthyBaby>Surrogacy: healthy baby</SettlementServices.Letter.SurrogacyLabelHealthyBaby>
+    <SettlementServices.Letter.SurrogacyLabelInfantIllness>Surrogacy: baby born ill</SettlementServices.Letter.SurrogacyLabelInfantIllness>
+    <SettlementServices.Letter.SurrogacyLabelStillborn>Surrogacy: stillbirth</SettlementServices.Letter.SurrogacyLabelStillborn>
+    <SettlementServices.Letter.SurrogacyHealthyBaby>The settlement's surrogate has given birth to a healthy baby, the child of {0} and {1}.</SettlementServices.Letter.SurrogacyHealthyBaby>
+    <SettlementServices.Letter.SurrogacyHealthyBabyNoParents>The settlement's surrogate has given birth to a healthy baby.</SettlementServices.Letter.SurrogacyHealthyBabyNoParents>
+    <SettlementServices.Letter.SurrogacyInfantIllness>The settlement's surrogate has given birth to the child of {0} and {1}, but the baby was born with an infant illness and needs care right away.</SettlementServices.Letter.SurrogacyInfantIllness>
+    <SettlementServices.Letter.SurrogacyInfantIllnessNoParents>The settlement's surrogate has given birth to a baby, but the baby was born with an infant illness and needs care right away.</SettlementServices.Letter.SurrogacyInfantIllnessNoParents>
+    <SettlementServices.Letter.SurrogacyStillborn>The settlement's surrogate has delivered a stillborn baby, the child of {0} and {1}.</SettlementServices.Letter.SurrogacyStillborn>
+    <SettlementServices.Letter.SurrogacyStillbornNoParents>The settlement's surrogate has delivered a stillborn baby.</SettlementServices.Letter.SurrogacyStillbornNoParents>
+    <SettlementServices.Letter.SurrogacyStillbirthCollect>The body is waiting for you at the settlement. The surrogacy fee is not refunded after a birth.</SettlementServices.Letter.SurrogacyStillbirthCollect>
+</LanguageData>

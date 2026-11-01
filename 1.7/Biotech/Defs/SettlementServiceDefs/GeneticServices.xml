@@ -58,4 +58,20 @@
     <iconTexPath>SettlementServices/UI/Icons/child</iconTexPath>
   </Settlement_Services.Framework.Defs.SettlementServiceDef>
 
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_Surrogacy</defName>
+    <category>SettlementService_Medical</category>
+    <label>surrogacy</label>
+    <description>Hand over one fertilized embryo to an anonymous surrogate contracted by the settlement. After a normal human pregnancy of 18 days you receive a newborn with the embryo's genes and genetic parents. The service ends at birth. Cancelling before the birth returns the embryo and refunds the unused part of the fee.</description>
+    <workerClass>Settlement_Services.Services.Genetics.SurrogacyServiceWorker</workerClass>
+    <requiredTechLevel>Industrial</requiredTechLevel>
+    <minimumCost>500</minimumCost>
+    <wealthScale>0.015</wealthScale>
+    <duration>1080000</duration> <!-- 18 days -->
+    <targetRule>Item</targetRule>
+    <batchMode>None</batchMode>
+    <eventChancePct>0</eventChancePct>
+    <iconTexPath>SettlementServices/UI/Icons/child</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
 </Defs>

@@ -13,14 +13,16 @@ namespace Settlement_Services.Services.Genetics
 
         protected override string TargetBlockKey(Thing target, Caravan caravan, bool atStart)
         {
-            if (!(target is HumanEmbryo embryo) || embryo.def != ThingDefOf.HumanEmbryo) return "SettlementServices.Error.GrowthVatNotEmbryo";
-            if (embryo.Destroyed) return "SettlementServices.Error.TargetNoLongerExists";
-            if (embryo.GeneSet == null) return "SettlementServices.Error.GrowthVatEmbryoNoGenes";
-            if (embryo.implantTarget != null) return "SettlementServices.Error.GrowthVatEmbryoImplantPending";
-            if (embryo.stackCount != 1) return "SettlementServices.Error.GrowthVatEmbryoPartialStack";
-            if (!atStart && caravan != null && !CaravanInventoryUtility.AllInventoryItems(caravan).Contains(embryo))
-                return "SettlementServices.Error.TargetNotInCaravan";
-            return null;
+            switch (EmbryoEligibility.Check(target, caravan, atStart))
+            {
+                case EmbryoBlock.NotEmbryo: return "SettlementServices.Error.GrowthVatNotEmbryo";
+                case EmbryoBlock.Gone: return "SettlementServices.Error.TargetNoLongerExists";
+                case EmbryoBlock.NoGenes: return "SettlementServices.Error.GrowthVatEmbryoNoGenes";
+                case EmbryoBlock.ImplantPending: return "SettlementServices.Error.GrowthVatEmbryoImplantPending";
+                case EmbryoBlock.PartialStack: return "SettlementServices.Error.GrowthVatEmbryoPartialStack";
+                case EmbryoBlock.NotInCaravan: return "SettlementServices.Error.TargetNotInCaravan";
+                default: return null;
+            }
         }
 
         public override bool ShouldListTarget(Thing target) => target is HumanEmbryo;
