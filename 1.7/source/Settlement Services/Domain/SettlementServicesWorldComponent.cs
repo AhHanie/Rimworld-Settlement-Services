@@ -278,7 +278,36 @@ namespace Settlement_Services.Domain
             ServiceJobRecord job = GetJob(jobId);
             if (job == null || job.status != ServiceJobStatus.Active) return false;
 
-            TakeItemCustody(thing);
+            return AddJobResult(job, thing);
+        }
+
+        public bool TryAddRecoveredJobResult(int jobId, Thing thing)
+        {
+            if (thing == null || thing.Destroyed) return false;
+
+            ServiceJobRecord job = GetJob(jobId);
+            if (job == null || (job.status != ServiceJobStatus.Active && job.status != ServiceJobStatus.AwaitingCollection)) return false;
+
+            return AddJobResult(job, thing);
+        }
+
+        public void MarkPendingExecution(int jobId)
+        {
+            ServiceJobRecord job = GetJob(jobId);
+            if (job == null) return;
+            job.pendingExecution = true;
+            job.executionCommitted = true;
+        }
+
+        public void ClearPendingExecution(int jobId)
+        {
+            ServiceJobRecord job = GetJob(jobId);
+            if (job != null) job.pendingExecution = false;
+        }
+
+        private bool AddJobResult(ServiceJobRecord job, Thing thing)
+        {
+            if (!TryTakeItemCustody(thing)) return false;
             job.results.Add(new TargetSnapshot
             {
                 kind = TargetKind.Item,

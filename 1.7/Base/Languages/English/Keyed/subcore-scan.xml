@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Error.SubcoreScanDonorNotHumanlike>Only humanlike pawns can be scanned for a subcore.</SettlementServices.Error.SubcoreScanDonorNotHumanlike>
+    <SettlementServices.Error.SubcoreScanDonorNotOwned>Only your colonists, prisoners and slaves can be scanned for a subcore.</SettlementServices.Error.SubcoreScanDonorNotOwned>
+    <SettlementServices.Error.SubcoreScanDonorQuestLodger>Quest lodgers cannot be scanned for a subcore.</SettlementServices.Error.SubcoreScanDonorQuestLodger>
+    <SettlementServices.Error.SubcoreScanDonorBaby>Babies cannot be scanned for a subcore.</SettlementServices.Error.SubcoreScanDonorBaby>
+    <SettlementServices.Error.SubcoreScanDonorSick>This pawn still has scanning sickness and cannot be scanned again yet.</SettlementServices.Error.SubcoreScanDonorSick>
+    <SettlementServices.Error.SubcoreScanUnavailable>The settlement cannot produce this subcore.</SettlementServices.Error.SubcoreScanUnavailable>
+    <SettlementServices.Warning.SubcoreSoftscanSickness>{0} will survive the scan but will be left with {1}.</SettlementServices.Warning.SubcoreSoftscanSickness>
+    <SettlementServices.Warning.SubcoreRipscanDeath>Warning: the ripscan will kill {0}. Their corpse is returned to your caravan. Stopping the scan once it has started still kills {0} and is not refunded.</SettlementServices.Warning.SubcoreRipscanDeath>
+    <SettlementServices.Message.SubcoreRipscanConfirm>Ripscanning {0} will destroy their brain and kill them. Their corpse will be returned to your caravan, and stopping the scan once it has started will still kill them with no refund. Are you sure you want to continue?</SettlementServices.Message.SubcoreRipscanConfirm>
+</LanguageData>

@@ -56,4 +56,62 @@
     <iconTexPath>SettlementServices/UI/Icons/mechanoid</iconTexPath>
   </Settlement_Services.Framework.Defs.SettlementServiceDef>
 
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_SubcoreSoftscan</defName>
+    <category>SettlementService_Technical</category>
+    <label>subcore softscan</label>
+    <description>Scan one of your colonists, prisoners or slaves with the settlement's subcore softscanner to produce a standard subcore. The donor survives but is left with scanning sickness. The settlement supplies the 50 steel and 4 industrial components the scanner consumes, or you can supply them yourself; either way the materials are included in the fee.</description>
+    <workerClass>Settlement_Services.Services.Mechanitor.SubcoreSoftscanServiceWorker</workerClass>
+    <requiredTechLevel>Spacer</requiredTechLevel>
+    <requiredCapabilityTags>
+      <li>MechanitorServices</li>
+    </requiredCapabilityTags>
+    <minimumCost>450</minimumCost>
+    <wealthScale>0.0015</wealthScale>
+    <duration>7500</duration>    <!-- 3 hours -->
+    <eventChancePct>0</eventChancePct>
+    <targetRule>Pawn</targetRule>
+    <batchMode>None</batchMode>
+    <stockRequirements>
+      <li>
+        <thingDefName>Steel</thingDefName>
+        <amount>50</amount>
+      </li>
+      <li>
+        <thingDefName>ComponentIndustrial</thingDefName>
+        <amount>4</amount>
+      </li>
+    </stockRequirements>
+    <iconTexPath>SettlementServices/UI/Icons/subcore</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_SubcoreRipscan</defName>
+    <category>SettlementService_Technical</category>
+    <label>subcore ripscan</label>
+    <description>Scan one of your colonists, prisoners or slaves with the settlement's subcore ripscanner to produce a high subcore. The scan destroys the donor's brain and kills them; their corpse is returned to your caravan. Stopping the scan once it has started does not save the donor and is not refunded. The settlement supplies the 50 steel and 4 industrial components the scanner consumes, or you can supply them yourself; either way the materials are included in the fee.</description>
+    <workerClass>Settlement_Services.Services.Mechanitor.SubcoreRipscanServiceWorker</workerClass>
+    <requiredTechLevel>Spacer</requiredTechLevel>
+    <requiredCapabilityTags>
+      <li>MechanitorServices</li>
+    </requiredCapabilityTags>
+    <minimumCost>1300</minimumCost>
+    <wealthScale>0.003</wealthScale>
+    <duration>7500</duration>    <!-- 3 hours -->
+    <eventChancePct>0</eventChancePct>
+    <targetRule>Pawn</targetRule>
+    <batchMode>None</batchMode>
+    <stockRequirements>
+      <li>
+        <thingDefName>Steel</thingDefName>
+        <amount>50</amount>
+      </li>
+      <li>
+        <thingDefName>ComponentIndustrial</thingDefName>
+        <amount>4</amount>
+      </li>
+    </stockRequirements>
+    <iconTexPath>SettlementServices/UI/Icons/subcore</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
 </Defs>

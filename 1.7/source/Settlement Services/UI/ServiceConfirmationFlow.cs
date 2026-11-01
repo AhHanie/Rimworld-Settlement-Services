@@ -6,6 +6,7 @@ using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Payment;
+using Settlement_Services.Framework.Workers.Results;
 using Settlement_Services.Services.Market;
 
 namespace Settlement_Services.UI
@@ -13,7 +14,35 @@ namespace Settlement_Services.UI
     internal static class ServiceConfirmationFlow
     {
         public static void TryConfirm(ServiceRequestSession session, SettlementServiceQuote quote, Window dialogToClose) =>
-            TryConfirm(session, quote, dialogToClose, ServicePaymentSelection.Silver(), out _);
+            ConfirmThen(session, () => TryConfirm(session, quote, dialogToClose, ServicePaymentSelection.Silver(), out _));
+
+        public static void ConfirmThen(ServiceRequestSession session, System.Action proceed)
+        {
+            if (!ServiceCaravanTargetSelector.RevalidateStillEligible(session))
+            {
+                Reject("SettlementServices.Message.TargetNoLongerEligible", out _);
+                return;
+            }
+
+            SettlementServiceRequest request = session.BuildRequest();
+            request.bookingTick = Find.TickManager.TicksGame;
+
+            SettlementServiceQuote freshQuote = SettlementServiceOrchestrator.RequestQuote(request, session.def);
+            if (!freshQuote.IsValid)
+            {
+                Reject(freshQuote.validationErrors.First(), out _);
+                return;
+            }
+
+            ServiceConfirmationWarning warning = session.def.Worker.GetConfirmationWarning(request);
+            if (warning == null || warning.Text.NullOrEmpty())
+            {
+                proceed();
+                return;
+            }
+
+            Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation(warning.Text, proceed, warning.Destructive));
+        }
 
         public static bool TryConfirm(ServiceRequestSession session, SettlementServiceQuote quote, Window dialogToClose, ServicePaymentSelection payment, out string failureMessage)
         {

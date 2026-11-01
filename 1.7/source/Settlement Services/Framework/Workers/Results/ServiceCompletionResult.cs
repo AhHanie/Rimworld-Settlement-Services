@@ -12,16 +12,19 @@ namespace Settlement_Services.Framework.Workers.Results
 
         public List<Thing> ResultThings { get; }
 
-        public ServiceCompletionResult(bool success, bool requiresCollection, List<Thing> resultThings, string errorKey)
+        public ServiceTargetDisposition TargetDisposition { get; }
+
+        public ServiceCompletionResult(bool success, bool requiresCollection, List<Thing> resultThings, string errorKey, ServiceTargetDisposition targetDisposition = ServiceTargetDisposition.Return)
         {
             Success = success;
             RequiresCollection = requiresCollection;
             ResultThings = resultThings;
             ErrorKey = errorKey;
+            TargetDisposition = targetDisposition;
         }
 
-        public static ServiceCompletionResult Ok(bool requiresCollection = false, List<Thing> resultThings = null) =>
-            new ServiceCompletionResult(true, requiresCollection, resultThings, null);
+        public static ServiceCompletionResult Ok(bool requiresCollection = false, List<Thing> resultThings = null, ServiceTargetDisposition targetDisposition = ServiceTargetDisposition.Return) =>
+            new ServiceCompletionResult(true, requiresCollection, resultThings, null, targetDisposition);
 
         public static ServiceCompletionResult Fail(string errorKey) => new ServiceCompletionResult(false, false, null, errorKey);
     }

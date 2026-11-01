@@ -463,13 +463,16 @@ namespace Settlement_Services.UI
             }
 
             ServicePaymentSelection payment = ServicePaymentSelection.Barter(BuildPayerEntries(), BuildGoodsEntries(out _));
-            if (ServiceConfirmationFlow.TryConfirm(session, quote, detailDialog, payment, out string failureMessage))
+            ServiceConfirmationFlow.ConfirmThen(session, () =>
             {
-                Close();
-                return;
-            }
+                if (ServiceConfirmationFlow.TryConfirm(session, quote, detailDialog, payment, out string failureMessage))
+                {
+                    Close();
+                    return;
+                }
 
-            errorText = failureMessage;
+                errorText = failureMessage;
+            });
         }
     }
 

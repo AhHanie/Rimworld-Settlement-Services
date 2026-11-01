@@ -37,6 +37,9 @@ namespace Settlement_Services.Domain.Records
 
         public bool targetInCustody;
 
+        public bool pendingExecution;
+        public bool executionCommitted;
+
         public List<TargetSnapshot> results = new List<TargetSnapshot>();
 
         public ServiceEventOutcomeRecord eventOutcome;
@@ -99,6 +102,8 @@ namespace Settlement_Services.Domain.Records
             Scribe_Deep.Look(ref acceptedQuote, "acceptedQuote");
             Scribe_Values.Look(ref lastErrorKey, "lastErrorKey");
             Scribe_Values.Look(ref targetInCustody, "targetInCustody");
+            Scribe_Values.Look(ref pendingExecution, "pendingExecution");
+            Scribe_Values.Look(ref executionCommitted, "executionCommitted");
             Scribe_Collections.Look(ref results, "results", LookMode.Deep);
             Scribe_Deep.Look(ref eventOutcome, "eventOutcome");
             Scribe_Collections.Look(ref selectedOptionKeys, "selectedOptionKeys", LookMode.Value);

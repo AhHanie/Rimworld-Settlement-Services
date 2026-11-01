@@ -99,6 +99,7 @@ namespace Settlement_Services.Framework
             IReadOnlyList<TargetSnapshot> targets = job.Targets;
             var allResultThings = new List<Thing>();
             bool requiresCollection = false;
+            bool executionRequested = false;
             string failErrorKey = null;
             int totalUnits = targets.Count > 0 ? targets.Count : Mathf.Max(1, job.quantity);
             int succeededUnits = 0;
@@ -113,6 +114,7 @@ namespace Settlement_Services.Framework
                     if (!unitResult.Success) { failErrorKey = unitResult.ErrorKey; break; }
                     RestoreParticipantFoodAndRest(def, targetCtx);
                     requiresCollection |= unitResult.RequiresCollection;
+                    executionRequested |= unitResult.TargetDisposition == ServiceTargetDisposition.RipscanExecution;
                     succeededUnits++;
                 }
             }
@@ -125,11 +127,18 @@ namespace Settlement_Services.Framework
                     if (!unitResult.Success) { failErrorKey = unitResult.ErrorKey; break; }
                     RestoreParticipantFoodAndRest(def, ctx);
                     requiresCollection |= unitResult.RequiresCollection;
+                    executionRequested |= unitResult.TargetDisposition == ServiceTargetDisposition.RipscanExecution;
                     succeededUnits++;
                 }
             }
 
             BankResults(domain, job, allResultThings);
+
+            if (executionRequested)
+            {
+                domain.MarkPendingExecution(job.jobId);
+                TargetExecutionService.TryFinalize(domain, job);
+            }
 
             if (failErrorKey != null)
             {

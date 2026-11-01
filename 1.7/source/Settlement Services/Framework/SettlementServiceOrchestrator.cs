@@ -262,6 +262,8 @@ namespace Settlement_Services.Framework
             Settlement settlement = ctx.ResolveSettlement();
             if (settlement == null || collectingCaravan.Tile != settlement.Tile) return false;
 
+            if (!TargetExecutionService.TryFinalize(domain, job)) return false;
+
             TargetCustodyService.CollectAll(ctx, collectingCaravan);
             if (job.targetInCustody || !job.results.NullOrEmpty()) return false;
 
@@ -305,7 +307,16 @@ namespace Settlement_Services.Framework
             }
 
             domain.ReleaseAllReservations(jobId);
+            ApplyCancelDisposition(domain, job, result);
             RouteToTerminalOrCollectible(domain, job, "SettlementServices.Error.CancelledByPlayer", ServiceJobStatus.Cancelled);
+        }
+
+        private static void ApplyCancelDisposition(SettlementServicesWorldComponent domain, ServiceJobRecord job, ServiceCancelResult result)
+        {
+            if (result.TargetDisposition != ServiceTargetDisposition.RipscanExecution || job.status != ServiceJobStatus.Active) return;
+
+            domain.MarkPendingExecution(job.jobId);
+            TargetExecutionService.TryFinalize(domain, job);
         }
 
         public static bool TryLeaveJobEarly(int jobId)
@@ -326,6 +337,13 @@ namespace Settlement_Services.Framework
             }
 
             domain.ReleaseAllReservations(jobId);
+
+            if (result.TargetDisposition != ServiceTargetDisposition.Return)
+            {
+                ApplyCancelDisposition(domain, job, result);
+                RouteToTerminalOrCollectible(domain, job, "SettlementServices.Error.LeftEarlyByPlayer", ServiceJobStatus.Cancelled);
+                return true;
+            }
 
             Caravan caravan = ResolveRequesterCaravan(job);
             TargetCustodyService.ReturnCustody(ctx, caravan);
@@ -405,7 +423,11 @@ namespace Settlement_Services.Framework
             List<ServiceJobRecord> emptyJobs = affectedJobs.Where(j => !custodyJobs.Contains(j)).ToList();
 
             foreach (ServiceJobRecord job in affectedJobs)
-                ApplyRefundAndReleaseReservations(domain, job);
+            {
+                TargetExecutionService.TryFinalize(domain, job);
+                if (job.executionCommitted) domain.ReleaseAllReservations(job.jobId);
+                else ApplyRefundAndReleaseReservations(domain, job);
+            }
 
             if (custodyJobs.Count > 0)
             {

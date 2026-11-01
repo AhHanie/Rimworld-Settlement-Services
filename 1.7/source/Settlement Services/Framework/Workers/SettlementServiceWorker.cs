@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Verse;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Workers.Results;
@@ -36,6 +37,10 @@ namespace Settlement_Services.Framework.Workers
         public abstract ServiceCancelResult Cancel(ServiceJobContext ctx, bool playerInitiated);
 
         public virtual bool CanLeaveEarly(ServiceJobContext ctx) => false;
+
+        public virtual ServiceConfirmationWarning GetConfirmationWarning(SettlementServiceRequest request) => null;
+
+        public virtual string GetTargetBlockReason(Thing target) => null;
 
         public virtual IEnumerable<ServiceDisplayOption> GetDisplayOptions(SettlementServiceContext ctx) => Enumerable.Empty<ServiceDisplayOption>();
 

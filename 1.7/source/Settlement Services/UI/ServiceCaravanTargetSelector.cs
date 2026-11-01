@@ -58,7 +58,13 @@ namespace Settlement_Services.UI
                 return;
             }
 
-            var floatOptions = options.Select(t => new FloatMenuOption(t.LabelCap, () => onChosen(t))).ToList();
+            var floatOptions = options.Select(t =>
+            {
+                string blockReason = session.def.Worker.GetTargetBlockReason(t);
+                return blockReason.NullOrEmpty()
+                    ? new FloatMenuOption(t.LabelCap, () => onChosen(t))
+                    : new FloatMenuOption(t.LabelCap + ": " + blockReason, null);
+            }).ToList();
             Find.WindowStack.Add(new FloatMenu(floatOptions));
         }
 
