@@ -78,6 +78,17 @@ The after-purchase figure is an estimate until the transaction completes.</Settl
     <SettlementServices.Message.LeaveEarlyNoLongerEligible>This service can no longer be left early.</SettlementServices.Message.LeaveEarlyNoLongerEligible>
     <SettlementServices.Label.KnownServicesInPerson>Known services (discovered in person): {0}</SettlementServices.Label.KnownServicesInPerson>
     <SettlementServices.Label.KnownServicesRemote>Known services (discovered remotely): {0}</SettlementServices.Label.KnownServicesRemote>
+    <SettlementServices.Label.KnownServicesViewText>Text</SettlementServices.Label.KnownServicesViewText>
+    <SettlementServices.Label.KnownServicesViewIcons>Icons</SettlementServices.Label.KnownServicesViewIcons>
+    <SettlementServices.Label.KnownServicesFind>Find: {0}</SettlementServices.Label.KnownServicesFind>
+    <SettlementServices.Label.KnownServicesFindSpecialty>Specialty</SettlementServices.Label.KnownServicesFindSpecialty>
+    <SettlementServices.Label.KnownServicesFindService>Service</SettlementServices.Label.KnownServicesFindService>
+    <SettlementServices.Label.KnownServicesFindOption>{0}: {1}</SettlementServices.Label.KnownServicesFindOption>
+    <SettlementServices.Label.KnownServicesNoMatches>No discovered settlements match this selection.</SettlementServices.Label.KnownServicesNoMatches>
+    <SettlementServices.Label.KnownServicesIconsInPerson>Discovered in person:</SettlementServices.Label.KnownServicesIconsInPerson>
+    <SettlementServices.Label.KnownServicesIconsRemote>Discovered remotely:</SettlementServices.Label.KnownServicesIconsRemote>
+    <SettlementServices.Label.KnownServicesServiceTipInPerson>{0}\nCategory: {1}\nDiscovered in person</SettlementServices.Label.KnownServicesServiceTipInPerson>
+    <SettlementServices.Label.KnownServicesServiceTipRemote>{0}\nCategory: {1}\nDiscovered remotely</SettlementServices.Label.KnownServicesServiceTipRemote>
     <SettlementServices.Label.InspectSpecialties>Specialties: {0}</SettlementServices.Label.InspectSpecialties>
     <SettlementServices.Label.InspectNoDiscoveries>Services not yet discovered</SettlementServices.Label.InspectNoDiscoveries>
     <SettlementServices.Label.InspectSpecialtyServicesInPerson>Known specialty services (discovered in person):</SettlementServices.Label.InspectSpecialtyServicesInPerson>
