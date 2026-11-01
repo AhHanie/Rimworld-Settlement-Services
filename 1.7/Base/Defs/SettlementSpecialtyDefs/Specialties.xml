@@ -218,6 +218,23 @@
   </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
 
   <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+    <defName>SettlementSpecialty_CorrectionFacility</defName>
+    <label>correction facility</label>
+    <description>This settlement employs trained staff who rehabilitate captives and integrate them into a new life as free colonists.</description>
+    <iconTexPath>SettlementServices/UI/Icons/prison-guard</iconTexPath>
+    <selectionWeight>0.7</selectionWeight>
+    <minTechLevel>Medieval</minTechLevel>
+    <modifiers>
+      <capabilityTags>
+        <li>CorrectionFacility</li>
+      </capabilityTags>
+      <relevantCategoryDefNames>
+        <li>SettlementService_Correction</li>
+      </relevantCategoryDefNames>
+    </modifiers>
+  </Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
+
+  <Settlement_Services.Framework.Defs.SettlementSpecialtyDef>
     <defName>SettlementSpecialty_LaborMarket</defName>
     <label>labor market</label>
     <description>This settlement has a pool of independent workers willing to take short-term contracts elsewhere.</description>

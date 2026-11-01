@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_PrisonerRehabilitation</defName>
+    <category>SettlementService_Correction</category>
+    <label>prisoner rehabilitation</label>
+    <description>Leave one of your prisoners with the settlement's correction staff for several days. Success is guaranteed for an eligible prisoner, who returns as a free colonist of your faction. The pawn is held for the full duration, and their ideoligion is unchanged.</description>
+    <workerClass>Settlement_Services.Services.Correction.PrisonerRehabilitationServiceWorker</workerClass>
+    <requiredCapabilityTags>
+      <li>CorrectionFacility</li>
+    </requiredCapabilityTags>
+    <minimumCost>800</minimumCost>
+    <wealthScale>0.012</wealthScale>
+    <duration>240000</duration> <!-- 4 days -->
+    <targetRule>Pawn</targetRule>
+    <eventChancePct>0</eventChancePct>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+    <iconTexPath>SettlementServices/UI/Icons/prisoner</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

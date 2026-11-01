@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_SlaveIntegration</defName>
+    <category>SettlementService_Correction</category>
+    <label>slave integration</label>
+    <description>Leave one of your slaves with the settlement's correction staff for several days. Success is guaranteed for an eligible slave, who returns as a free colonist of your faction. The pawn is held for the full duration, and their ideoligion is unchanged.</description>
+    <workerClass>Settlement_Services.Services.Correction.SlaveIntegrationServiceWorker</workerClass>
+    <requiredCapabilityTags>
+      <li>CorrectionFacility</li>
+    </requiredCapabilityTags>
+    <minimumCost>650</minimumCost>
+    <wealthScale>0.010</wealthScale>
+    <duration>180000</duration> <!-- 3 days -->
+    <targetRule>Pawn</targetRule>
+    <eventChancePct>0</eventChancePct>
+    <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
+    <iconTexPath>SettlementServices/UI/Icons/prisoner</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+</Defs>

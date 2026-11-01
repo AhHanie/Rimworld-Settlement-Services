@@ -26,6 +26,14 @@
   </Settlement_Services.Framework.Defs.ServiceCategoryDef>
 
   <Settlement_Services.Framework.Defs.ServiceCategoryDef>
+    <defName>SettlementService_Correction</defName>
+    <label>correction</label>
+    <description>Rehabilitation and integration programs that turn captives into free colonists.</description>
+    <order>35</order>
+    <iconTexPath>SettlementServices/UI/Icons/brain</iconTexPath>
+  </Settlement_Services.Framework.Defs.ServiceCategoryDef>
+
+  <Settlement_Services.Framework.Defs.ServiceCategoryDef>
     <defName>SettlementService_Ideology</defName>
     <label>ideology</label>
     <description>Conversion, ritual, and belief-related services tied to a settlement's ideoligion.</description>

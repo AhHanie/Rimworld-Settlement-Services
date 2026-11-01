@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Error.CorrectionNotPrisoner>This pawn is not one of your prisoners.</SettlementServices.Error.CorrectionNotPrisoner>
+    <SettlementServices.Error.CorrectionNotSlave>This pawn is not one of your slaves.</SettlementServices.Error.CorrectionNotSlave>
+    <SettlementServices.Error.CorrectionUnwavering>This pawn is unwavering and cannot be recruited.</SettlementServices.Error.CorrectionUnwavering>
+    <SettlementServices.Error.CorrectionProtectedTarget>This pawn cannot be taken from you or joined to your colony this way.</SettlementServices.Error.CorrectionProtectedTarget>
+    <SettlementServices.Error.CorrectionRecruitFailed>The program could not make this pawn a free colonist.</SettlementServices.Error.CorrectionRecruitFailed>
+    <SettlementServices.Message.CorrectionSucceeded>{0} has completed the program and is now a free colonist.</SettlementServices.Message.CorrectionSucceeded>
+</LanguageData>
