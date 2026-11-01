@@ -72,7 +72,7 @@ namespace Settlement_Services.Framework.Custody
             return true;
         }
 
-        private static bool IsWaitingPlayerCaravan(Caravan c) =>
+        internal static bool IsWaitingPlayerCaravan(Caravan c) =>
             c != null && !c.Destroyed && c.Spawned && c.IsPlayerControlled && !c.pather.Moving;
 
         private static List<Caravan> SnapshotWaitingCaravans(PlanetTile tile) =>
