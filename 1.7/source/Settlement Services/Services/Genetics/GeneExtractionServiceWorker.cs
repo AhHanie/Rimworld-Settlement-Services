@@ -3,6 +3,7 @@ using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
+using Settlement_Services.Framework.Custody;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Workers;
 using Settlement_Services.Framework.Workers.Results;
@@ -36,6 +37,19 @@ namespace Settlement_Services.Services.Genetics
                 yield return "SettlementServices.Warning.GenesRegrowing".Translate();
         }
 
+        public override ServiceConfirmationWarning GetConfirmationWarning(SettlementServiceRequest request)
+        {
+            List<Pawn> regrowing = request.targets
+                .Select(t => t?.thing as Pawn)
+                .Where(p => p != null && !p.Dead && p.health.hediffSet.HasHediff(HediffDefOf.XenogermReplicating))
+                .Distinct()
+                .ToList();
+            if (regrowing.Count == 0) return null;
+
+            string names = string.Join(", ", regrowing.Select(p => p.LabelShortCap));
+            return new ServiceConfirmationWarning("SettlementServices.Message.GeneExtractionRegrowingConfirm".Translate(names).ToString(), destructive: true);
+        }
+
         public override IEnumerable<ServiceLineItem> BuildQuoteLineItems(SettlementServiceRequest request) => new List<ServiceLineItem>();
 
         public override ServiceInputPlan PlanInputs(SettlementServiceRequest request, SettlementServiceQuote quote) =>
@@ -48,6 +62,10 @@ namespace Settlement_Services.Services.Genetics
             if (!(ctx.CurrentTarget?.liveThing is Pawn pawn) || !GeneEligibilityService.IsValidExtractionSource(pawn, out _))
                 return ServiceCompletionResult.Ok();
 
+            var bankedCargo = new List<ExtractionCargoItem>();
+            if (!ExtractionCargoService.TryBank(ctx, pawn, bankedCargo, out string cargoErrorKey))
+                return ServiceCompletionResult.Fail(cargoErrorKey);
+
             List<GeneDef> extracted;
             Rand.PushState(pawn.thingIDNumber ^ ctx.Job.statusChangedTick);
             try
@@ -59,6 +77,8 @@ namespace Settlement_Services.Services.Genetics
             {
                 Rand.PopState();
             }
+
+            ExtractionCargoService.Settle(ctx, pawn, bankedCargo);
 
             if (!pawn.Dead && (pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony))
                 pawn.needs?.mood?.thoughts?.memories?.TryGainMemory(ThoughtDefOf.XenogermHarvested_Prisoner);

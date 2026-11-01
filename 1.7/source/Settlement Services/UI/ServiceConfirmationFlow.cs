@@ -41,7 +41,23 @@ namespace Settlement_Services.UI
                 return;
             }
 
-            Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation(warning.Text, proceed, warning.Destructive));
+            string shownText = warning.Text;
+            Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation(shownText, () => ProceedIfWarningUnchanged(session, shownText, proceed), warning.Destructive));
+        }
+
+        private static void ProceedIfWarningUnchanged(ServiceRequestSession session, string shownText, System.Action proceed)
+        {
+            SettlementServiceRequest request = session.BuildRequest();
+            request.bookingTick = Find.TickManager.TicksGame;
+
+            ServiceConfirmationWarning current = session.def.Worker.GetConfirmationWarning(request);
+            if (current == null || current.Text.NullOrEmpty() || current.Text == shownText)
+            {
+                proceed();
+                return;
+            }
+
+            Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation(current.Text, proceed, current.Destructive));
         }
 
         public static bool TryConfirm(ServiceRequestSession session, SettlementServiceQuote quote, Window dialogToClose, ServicePaymentSelection payment, out string failureMessage)

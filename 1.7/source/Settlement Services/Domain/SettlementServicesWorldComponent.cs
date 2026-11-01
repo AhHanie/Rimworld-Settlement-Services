@@ -297,6 +297,47 @@ namespace Settlement_Services.Domain
             return AddJobResult(job, thing);
         }
 
+        public bool TryBankHeldItemAsJobResult(int jobId, Thing thing)
+        {
+            if (thing == null || thing.Destroyed) return false;
+
+            ServiceJobRecord job = GetJob(jobId);
+            if (job == null || job.status != ServiceJobStatus.Active) return false;
+
+            ThingOwner owner = thing.holdingOwner;
+            if (owner == null || !owner.Contains(thing)) return false;
+            if (!owner.Remove(thing)) return false;
+
+            if (AddJobResult(job, thing)) return true;
+
+            if (!owner.TryAdd(thing, canMergeWithExistingStacks: false) || !owner.Contains(thing))
+                SupportLog.Error($"Job {jobId}: could not return {thing} to its holder after a failed result banking.");
+            return false;
+        }
+
+        public bool TryReleaseJobResultTo(int jobId, Thing thing, ThingOwner destination)
+        {
+            if (thing == null || thing.Destroyed || destination == null) return false;
+
+            ServiceJobRecord job = GetJob(jobId);
+            if (job == null) return false;
+
+            int index = job.results.FindIndex(r => r.liveThing == thing);
+            if (index < 0 || !itemCustody.Contains(thing)) return false;
+
+            itemCustody.Remove(thing);
+            if (destination.TryAdd(thing, canMergeWithExistingStacks: false) && destination.Contains(thing))
+            {
+                job.results.RemoveAt(index);
+                return true;
+            }
+
+            if (destination.Contains(thing)) destination.Remove(thing);
+            if (!itemCustody.TryAdd(thing, canMergeWithExistingStacks: false) || !itemCustody.Contains(thing))
+                SupportLog.Error($"Job {jobId}: could not return {thing} to saved custody after a failed hand-off.");
+            return false;
+        }
+
         public void MarkPendingExecution(int jobId)
         {
             ServiceJobRecord job = GetJob(jobId);

@@ -7,6 +7,8 @@
     <SettlementServices.Error.NoExtractableGenes>This pawn has no genes that can be extracted.</SettlementServices.Error.NoExtractableGenes>
     <SettlementServices.Error.NoNonArchiteGenes>This pawn has no non-archite genes to extract.</SettlementServices.Error.NoNonArchiteGenes>
     <SettlementServices.Warning.GenesRegrowing>Warning: this pawn's genes are still regrowing from a previous extraction. Extracting again now will kill them.</SettlementServices.Warning.GenesRegrowing>
+    <SettlementServices.Message.GeneExtractionRegrowingConfirm>{0} still has genes regrowing from a previous extraction. Extracting again now will kill them. Their carried, worn and wielded items are kept safe. Proceed anyway?</SettlementServices.Message.GeneExtractionRegrowingConfirm>
+    <SettlementServices.Error.ExtractionCargoCouldNotBeSecured>The donor's carried, worn or wielded items could not be safely set aside, so extraction was not performed.</SettlementServices.Error.ExtractionCargoCouldNotBeSecured>
     <SettlementServices.Label.DeathrestProjectedNeed>Deathrest need after the stay: {0}</SettlementServices.Label.DeathrestProjectedNeed>
     <SettlementServices.Error.InvalidDeathrestTarget>Only a living colonist, prisoner, or slave can use deathrest service.</SettlementServices.Error.InvalidDeathrestTarget>
     <SettlementServices.Error.NoDeathrestGene>This pawn has no active deathrest gene.</SettlementServices.Error.NoDeathrestGene>
