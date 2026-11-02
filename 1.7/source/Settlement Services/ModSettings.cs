@@ -62,6 +62,18 @@ namespace Settlement_Services
 
         public bool commissionPickerOnlyVanillaItems = false;
 
+        public string craftingPickerType;
+
+        public string craftingPickerSubcategory;
+
+        public string craftingPickerSource;
+
+        public string constructionPickerType;
+
+        public string constructionPickerSubcategory;
+
+        public string constructionPickerSource;
+
         public override void ExposeData()
         {
             base.ExposeData();
@@ -83,12 +95,25 @@ namespace Settlement_Services
             Scribe_Values.Look(ref verboseLoggingEnabled, "verboseLoggingEnabled", false);
             Scribe_Values.Look(ref commissionPickerOnlyPossibleWithCurrentMaterials, "commissionPickerOnlyPossibleWithCurrentMaterials", false);
             Scribe_Values.Look(ref commissionPickerOnlyVanillaItems, "commissionPickerOnlyVanillaItems", false);
+            Scribe_Values.Look(ref craftingPickerType, "craftingPickerType");
+            Scribe_Values.Look(ref craftingPickerSubcategory, "craftingPickerSubcategory");
+            Scribe_Values.Look(ref craftingPickerSource, "craftingPickerSource");
+            Scribe_Values.Look(ref constructionPickerType, "constructionPickerType");
+            Scribe_Values.Look(ref constructionPickerSubcategory, "constructionPickerSubcategory");
+            Scribe_Values.Look(ref constructionPickerSource, "constructionPickerSource");
 
             if (Scribe.mode != LoadSaveMode.PostLoadInit) return;
 
             if (difficultyMultiplierOverrides == null) difficultyMultiplierOverrides = new Dictionary<string, float>();
             if (moodThoughtOverrides == null) moodThoughtOverrides = new Dictionary<string, float>();
             if (compatibilitySettings == null) compatibilitySettings = new CompatibilitySettingsStore();
+
+            if (commissionPickerOnlyVanillaItems)
+            {
+                if (craftingPickerSource.NullOrEmpty()) craftingPickerSource = "official";
+                if (constructionPickerSource.NullOrEmpty()) constructionPickerSource = "official";
+                commissionPickerOnlyVanillaItems = false;
+            }
 
             wealthPriceScalePct = Mathf.Clamp(wealthPriceScalePct, 0f, 3f);
             stockQuantityMultiplier = Mathf.Clamp(stockQuantityMultiplier, MinStockQuantityMultiplier, MaxStockQuantityMultiplier);

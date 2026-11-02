@@ -5,6 +5,7 @@ using System.Linq;
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
+using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Stock;
 using Settlement_Services.Services.Construction;
@@ -21,6 +22,13 @@ namespace Settlement_Services.UI
             if (recipe == null || recipe.Kind != CraftingRecipeKind.Vanilla) return false;
             if (!IsOfficial(recipe.VanillaRecipeDef) || !IsOfficial(recipe.primaryOutput)) return false;
             return recipe.products.All(p => IsOfficial(p.thingDef));
+        }
+
+        public static Def DefiningDef(CraftingCommissionRecipe recipe)
+        {
+            if (recipe == null) return null;
+            if (recipe.Kind == CraftingRecipeKind.Vanilla) return recipe.VanillaRecipeDef;
+            return DefDatabase<CraftingCommissionRecipeDef>.GetNamedSilentFail(recipe.identity.defName);
         }
     }
 
@@ -151,6 +159,10 @@ namespace Settlement_Services.UI
         public List<T> Visible => visible;
 
         public bool Complete => next >= candidates.Count;
+
+        public int Evaluated => next;
+
+        public int Total => candidates.Count;
 
         public void Step(double budgetMilliseconds)
         {

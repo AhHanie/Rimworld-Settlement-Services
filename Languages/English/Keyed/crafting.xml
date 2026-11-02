@@ -35,4 +35,32 @@
     <SettlementServices.Label.CraftingMaterialAdditionalNeeded>Additional material needed</SettlementServices.Label.CraftingMaterialAdditionalNeeded>
     <SettlementServices.Label.CommissionFilterEvaluating>Checking available materials...</SettlementServices.Label.CommissionFilterEvaluating>
     <SettlementServices.Label.CommissionFilterUnavailable>Not possible with the materials currently available. Lower the quantity or choose another material.</SettlementServices.Label.CommissionFilterUnavailable>
+    <SettlementServices.Label.CommissionFilterType>Type:</SettlementServices.Label.CommissionFilterType>
+    <SettlementServices.Label.CommissionFilterSubcategory>Subcategory:</SettlementServices.Label.CommissionFilterSubcategory>
+    <SettlementServices.Label.CommissionFilterMod>Mod:</SettlementServices.Label.CommissionFilterMod>
+    <SettlementServices.Button.CommissionSearchClear>Clear</SettlementServices.Button.CommissionSearchClear>
+    <SettlementServices.Button.CommissionResetFilters>Reset filters</SettlementServices.Button.CommissionResetFilters>
+    <SettlementServices.Button.CommissionShowAllMods>Show all mods</SettlementServices.Button.CommissionShowAllMods>
+    <SettlementServices.Button.AddCommissionItemAndClose>Add and close</SettlementServices.Button.AddCommissionItemAndClose>
+    <SettlementServices.Label.CommissionAllTypes>All types</SettlementServices.Label.CommissionAllTypes>
+    <SettlementServices.Label.CommissionAllSubcategories>All</SettlementServices.Label.CommissionAllSubcategories>
+    <SettlementServices.Label.CommissionAllMods>All mods</SettlementServices.Label.CommissionAllMods>
+    <SettlementServices.Label.CommissionSourceOfficial>Official content</SettlementServices.Label.CommissionSourceOfficial>
+    <SettlementServices.Label.CommissionSourceOfficialTip>Items from Core and official expansions. For crafting this is strict: the recipe, the item it makes and every product must all be official, so a modded recipe that makes a Core item is listed under the mod that owns the item instead.</SettlementServices.Label.CommissionSourceOfficialTip>
+    <SettlementServices.Label.CommissionSourceUnknown>Unknown source</SettlementServices.Label.CommissionSourceUnknown>
+    <SettlementServices.Label.CommissionSourcePackage>Package ID: {0}</SettlementServices.Label.CommissionSourcePackage>
+    <SettlementServices.Label.CommissionTypeWeapons>Weapons</SettlementServices.Label.CommissionTypeWeapons>
+    <SettlementServices.Label.CommissionTypeApparel>Apparel</SettlementServices.Label.CommissionTypeApparel>
+    <SettlementServices.Label.CommissionTypeOtherItems>Other items</SettlementServices.Label.CommissionTypeOtherItems>
+    <SettlementServices.Label.CommissionTypeOtherBuildings>Other buildings</SettlementServices.Label.CommissionTypeOtherBuildings>
+    <SettlementServices.Label.CommissionSubRanged>Ranged</SettlementServices.Label.CommissionSubRanged>
+    <SettlementServices.Label.CommissionSubMelee>Melee</SettlementServices.Label.CommissionSubMelee>
+    <SettlementServices.Label.CommissionSubUncategorised>Uncategorised</SettlementServices.Label.CommissionSubUncategorised>
+    <SettlementServices.Label.CommissionShowing>Showing {0} of {1} eligible</SettlementServices.Label.CommissionShowing>
+    <SettlementServices.Label.CommissionShowingPartial>{0} found so far - checked {1} of {2}</SettlementServices.Label.CommissionShowingPartial>
+    <SettlementServices.Label.CommissionActiveFilters>Filters: {0}</SettlementServices.Label.CommissionActiveFilters>
+    <SettlementServices.Label.CommissionNothingEligible>Nothing is eligible here.</SettlementServices.Label.CommissionNothingEligible>
+    <SettlementServices.Label.CommissionNoMatchesForFilters>No matches for these filters.</SettlementServices.Label.CommissionNoMatchesForFilters>
+    <SettlementServices.Label.CommissionItemSource>Item source: {0}</SettlementServices.Label.CommissionItemSource>
+    <SettlementServices.Label.CommissionRecipeSource>Recipe from: {0}</SettlementServices.Label.CommissionRecipeSource>
 </LanguageData>

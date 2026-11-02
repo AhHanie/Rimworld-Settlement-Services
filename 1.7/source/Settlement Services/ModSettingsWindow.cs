@@ -242,11 +242,7 @@ namespace Settlement_Services
                 "SettlementServices.Settings.CommissionOnlyPossible.Tooltip".Translate());
             settings.commissionPickerOnlyPossibleWithCurrentMaterials = onlyPossible;
 
-            bool onlyVanilla = settings.commissionPickerOnlyVanillaItems;
-            listing.CheckboxLabeled(
-                "SettlementServices.Settings.CommissionOnlyVanilla".Translate(), ref onlyVanilla,
-                "SettlementServices.Settings.CommissionOnlyVanilla.Tooltip".Translate());
-            settings.commissionPickerOnlyVanillaItems = onlyVanilla;
+            listing.Label("SettlementServices.Settings.CommissionSourceNote".Translate());
         }
 
         private static int SliderLabeledInt(Listing_Standard listing, string label, int val, int min, int max, float labelPct = 0.5f, string tooltip = null)
