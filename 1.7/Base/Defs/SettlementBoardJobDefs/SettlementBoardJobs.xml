@@ -665,4 +665,161 @@
     </patterns>
   </Settlement_Services.Framework.Defs.SettlementBoardJobDef>
 
+  <Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+    <defName>SettlementBoardJob_PrisonerEscort</defName>
+    <label>prisoner escort</label>
+    <description>Guarding and handling prisoners during a transfer between settlements.</description>
+    <selectionWeight>0.55</selectionWeight>
+    <durationDays>1~3</durationDays>
+    <difficultyBias>0.05</difficultyBias>
+    <rewardMultiplier>1.05</rewardMultiplier>
+    <flavorRulePack>SettlementBoardJob_PrisonerEscort_Flavor</flavorRulePack>
+    <patterns>
+      <li>
+        <kind>Mixed</kind>
+        <weight>2</weight>
+        <minPartySize>2</minPartySize>
+        <maxPartySize>3</maxPartySize>
+        <skills>
+          <li>
+            <skill>Social</skill>
+            <requiredWorkTags>Social</requiredWorkTags>
+          </li>
+          <li>
+            <skill>Melee</skill>
+            <requiredWorkTags>Violent</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+    </patterns>
+  </Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+
+  <Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+    <defName>SettlementBoardJob_ButcheryRush</defName>
+    <label>butchery rush</label>
+    <description>Slaughtering, dressing and cooking a settlement's livestock before it spoils.</description>
+    <selectionWeight>0.7</selectionWeight>
+    <durationDays>1~3</durationDays>
+    <difficultyBias>-0.05</difficultyBias>
+    <rewardMultiplier>0.95</rewardMultiplier>
+    <flavorRulePack>SettlementBoardJob_ButcheryRush_Flavor</flavorRulePack>
+    <patterns>
+      <li>
+        <kind>Mixed</kind>
+        <weight>2</weight>
+        <minPartySize>2</minPartySize>
+        <maxPartySize>3</maxPartySize>
+        <skills>
+          <li>
+            <skill>Animals</skill>
+            <requiredWorkTags>Animals</requiredWorkTags>
+          </li>
+          <li>
+            <skill>Cooking</skill>
+            <requiredWorkTags>Cooking</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+    </patterns>
+  </Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+
+  <Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+    <defName>SettlementBoardJob_CartographyCommission</defName>
+    <label>cartography commission</label>
+    <description>Surveying the surrounding land and drawing it up as a finished map.</description>
+    <selectionWeight>0.5</selectionWeight>
+    <durationDays>2~5</durationDays>
+    <difficultyBias>0.05</difficultyBias>
+    <rewardMultiplier>1.05</rewardMultiplier>
+    <flavorRulePack>SettlementBoardJob_CartographyCommission_Flavor</flavorRulePack>
+    <patterns>
+      <li>
+        <kind>Mixed</kind>
+        <weight>2</weight>
+        <minPartySize>2</minPartySize>
+        <maxPartySize>2</maxPartySize>
+        <skills>
+          <li>
+            <skill>Intellectual</skill>
+            <requiredWorkTags>Intellectual</requiredWorkTags>
+          </li>
+          <li>
+            <skill>Artistic</skill>
+            <requiredWorkTags>Artistic</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+      <li>
+        <kind>Specialist</kind>
+        <weight>1</weight>
+        <minPartySize>1</minPartySize>
+        <maxPartySize>1</maxPartySize>
+        <skills>
+          <li>
+            <skill>Intellectual</skill>
+            <requiredWorkTags>Intellectual</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+    </patterns>
+  </Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+
+  <Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+    <defName>SettlementBoardJob_VerminClearance</defName>
+    <label>vermin clearance</label>
+    <description>Driving infestations of vermin out of a settlement's cellars and tunnels.</description>
+    <selectionWeight>0.5</selectionWeight>
+    <durationDays>1~3</durationDays>
+    <difficultyBias>0.15</difficultyBias>
+    <rewardMultiplier>1.2</rewardMultiplier>
+    <flavorRulePack>SettlementBoardJob_VerminClearance_Flavor</flavorRulePack>
+    <patterns>
+      <li>
+        <kind>Mixed</kind>
+        <weight>2</weight>
+        <minPartySize>2</minPartySize>
+        <maxPartySize>3</maxPartySize>
+        <skills>
+          <li>
+            <skill>Melee</skill>
+            <requiredWorkTags>Violent</requiredWorkTags>
+          </li>
+          <li>
+            <skill>Mining</skill>
+            <requiredWorkTags>Mining</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+    </patterns>
+  </Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+
+  <Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+    <defName>SettlementBoardJob_HospiceCare</defName>
+    <label>hospice care</label>
+    <description>Nursing the dying and comforting those who sit with them.</description>
+    <selectionWeight>0.55</selectionWeight>
+    <durationDays>2~4</durationDays>
+    <difficultyBias>0</difficultyBias>
+    <rewardMultiplier>1.05</rewardMultiplier>
+    <flavorRulePack>SettlementBoardJob_HospiceCare_Flavor</flavorRulePack>
+    <patterns>
+      <li>
+        <kind>Mixed</kind>
+        <weight>2</weight>
+        <minPartySize>2</minPartySize>
+        <maxPartySize>3</maxPartySize>
+        <skills>
+          <li>
+            <skill>Medicine</skill>
+            <requiredWorkTags>Caring</requiredWorkTags>
+          </li>
+          <li>
+            <skill>Social</skill>
+            <requiredWorkTags>Social</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+    </patterns>
+  </Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+
 </Defs>

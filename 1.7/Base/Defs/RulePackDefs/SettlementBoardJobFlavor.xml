@@ -381,4 +381,104 @@
     </rulePack>
   </RulePackDef>
 
+  <RulePackDef>
+    <defName>SettlementBoardJob_PrisonerEscort_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Prisoner transfer from [SETTLEMENT]</li>
+        <li>r_title->Escorts wanted</li>
+        <li>r_title->Guards for a long road</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->[SETTLEMENT] has prisoners to move and too few guards it can spare.</li>
+        <li>sb_opener->A group of captives is due to leave [SETTLEMENT], and nobody trusts the roads.</li>
+        <li>sb_opener->The wardens of [SETTLEMENT] need extra company for a prisoner transfer.</li>
+        <li>sb_need->They want people who can keep captives calm with words and, if that fails, hold them with force.</li>
+        <li>sb_need->They are looking for a steady party that can talk down trouble and fight if it comes to it.</li>
+        <li>sb_need->They need escorts who will deliver every prisoner and lose none along the way.</li>
+        <li>sb_closer->The reward is held at [SETTLEMENT] until the transfer is done.</li>
+        <li>sb_closer->It is a short but tense job, and the pay is fixed in advance.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_ButcheryRush_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Butchers wanted at [SETTLEMENT]</li>
+        <li>r_title->Slaughter and salting</li>
+        <li>r_title->Meat before it spoils</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->[SETTLEMENT] has more livestock than it can feed through the cold months.</li>
+        <li>sb_opener->The herds of [SETTLEMENT] are being culled, and the butchers cannot keep pace.</li>
+        <li>sb_opener->A fodder shortage has forced [SETTLEMENT] to slaughter much of its stock at once.</li>
+        <li>sb_need->They want people who can handle the animals calmly and turn the meat into food that keeps.</li>
+        <li>sb_need->They are looking for hands who know both the beasts and the kitchen.</li>
+        <li>sb_need->They need the work finished quickly, before the meat goes off.</li>
+        <li>sb_closer->Salt and casks are supplied; only labour is wanted.</li>
+        <li>sb_closer->It is messy work of a few days, and the reward is promised on completion.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_CartographyCommission_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Mapmakers for [SETTLEMENT]</li>
+        <li>r_title->Survey and chart</li>
+        <li>r_title->Drawing the land around [SETTLEMENT]</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->[SETTLEMENT] has no reliable map of the land around it.</li>
+        <li>sb_opener->The old charts of [SETTLEMENT] are out of date and half of them are lost.</li>
+        <li>sb_opener->The council of [SETTLEMENT] wants its territory surveyed and recorded properly.</li>
+        <li>sb_need->They want a learned hand to measure and reckon, and a careful one to draw the result.</li>
+        <li>sb_need->They are looking for someone with a head for figures and a good eye for a clean line.</li>
+        <li>sb_need->They need a finished map that others can trust and follow.</li>
+        <li>sb_closer->Paper and ink are provided.</li>
+        <li>sb_closer->The reward is fixed in advance and paid when the map is delivered.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_VerminClearance_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Vermin in the cellars of [SETTLEMENT]</li>
+        <li>r_title->Exterminators wanted</li>
+        <li>r_title->Clearing the tunnels</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->Something has nested in the old tunnels under [SETTLEMENT] and is spreading.</li>
+        <li>sb_opener->[SETTLEMENT] is overrun with vermin, and the stores below ground are being ruined.</li>
+        <li>sb_opener->The cellars of [SETTLEMENT] are infested, and the locals refuse to go down.</li>
+        <li>sb_need->They want fighters who can work in cramped dark and dig out the nests.</li>
+        <li>sb_need->They are looking for tough hands who can break rock, clear the burrows and kill what lives there.</li>
+        <li>sb_need->They need the tunnels cleared and the pests driven out for good.</li>
+        <li>sb_closer->It is nasty work, and the pay reflects it.</li>
+        <li>sb_closer->The reward is held at [SETTLEMENT] until the tunnels are clear.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_HospiceCare_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Hospice help at [SETTLEMENT]</li>
+        <li>r_title->Nurses and comforters wanted</li>
+        <li>r_title->Easing the final days</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->The hospice of [SETTLEMENT] is full, and its few carers are worn thin.</li>
+        <li>sb_opener->Many of the elderly in [SETTLEMENT] are failing, and their families cannot cope.</li>
+        <li>sb_opener->[SETTLEMENT] has more dying patients than it has people to sit with them.</li>
+        <li>sb_need->They want people who can manage pain and illness, and who know how to comfort the afraid.</li>
+        <li>sb_need->They are looking for patient carers with both medical skill and a kind word.</li>
+        <li>sb_need->They need the patients kept comfortable and their families kept calm.</li>
+        <li>sb_closer->Medicine and bedding will be supplied.</li>
+        <li>sb_closer->It is gentle but draining work, and the pay is fixed in advance.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
 </Defs>
