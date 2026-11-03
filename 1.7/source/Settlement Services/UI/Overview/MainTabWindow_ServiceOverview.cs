@@ -68,9 +68,11 @@ namespace Settlement_Services.UI.Overview
         }
 
         private enum KnownServicesDisplayMode { Text, Icons }
+        private enum KnownServicesScope { All, Specialties, Services }
         private enum KnownServicesFilterKind { All, Specialty, Service }
 
         private KnownServicesDisplayMode knownServicesDisplay = KnownServicesDisplayMode.Icons;
+        private KnownServicesScope knownServicesScope = KnownServicesScope.All;
         private KnownServicesFilterKind knownServicesFilterKind = KnownServicesFilterKind.All;
         private string knownServicesFilterDefName;
 
@@ -81,6 +83,7 @@ namespace Settlement_Services.UI.Overview
         private const float KnownServicesToolbarGap = 6f;
         private const float KnownServicesDisplayButtonWidth = 90f;
         private const float KnownServicesFindButtonWidth = 340f;
+        private const float KnownServicesScopeButtonWidth = 170f;
         private const float KnownServicesBadgeSize = 30f;
         private const float KnownServicesBadgeGap = 4f;
 
@@ -124,8 +127,9 @@ namespace Settlement_Services.UI.Overview
             }
 
             bool icons = knownServicesDisplay == KnownServicesDisplayMode.Icons;
+            KnownServicesScope scope = knownServicesScope;
             float textWidth = listRect.width - 16f - KnownServicesJumpButtonWidth - KnownServicesJumpButtonGutter;
-            float[] rowStrides = entries.Select(e => icons ? KnownServicesIconsRowStride(e, textWidth) : KnownServicesRowStride(e, textWidth)).ToArray();
+            float[] rowStrides = entries.Select(e => icons ? KnownServicesIconsRowStride(e, textWidth, scope) : KnownServicesRowStride(e, textWidth, scope == KnownServicesScope.Specialties)).ToArray();
             float totalHeight = rowStrides.Sum();
             knownServicesScrollPosition.y = Mathf.Clamp(knownServicesScrollPosition.y, 0f, Mathf.Max(0f, totalHeight - listRect.height));
 
@@ -138,8 +142,8 @@ namespace Settlement_Services.UI.Overview
                 Rect rowRect = new Rect(0f, y, viewRect.width, stride - 2f);
                 if (rowRect.y + stride >= knownServicesScrollPosition.y && rowRect.y <= knownServicesScrollPosition.y + listRect.height)
                 {
-                    if (icons) DrawKnownServicesIconsRow(rowRect, entries[i]);
-                    else DrawKnownServicesRow(rowRect, entries[i]);
+                    if (icons) DrawKnownServicesIconsRow(rowRect, entries[i], scope);
+                    else DrawKnownServicesRow(rowRect, entries[i], scope == KnownServicesScope.Specialties);
                 }
                 y += stride;
             }
@@ -165,6 +169,17 @@ namespace Settlement_Services.UI.Overview
         {
             knownServicesFilterKind = kind;
             knownServicesFilterDefName = defName;
+            knownServicesScrollPosition.y = 0f;
+        }
+
+        private void SetKnownServicesScope(KnownServicesScope scope)
+        {
+            knownServicesScope = scope;
+            knownServicesScrollPosition.y = 0f;
+            bool filterFits = knownServicesFilterKind == KnownServicesFilterKind.All
+                || (knownServicesFilterKind == KnownServicesFilterKind.Specialty && scope != KnownServicesScope.Services)
+                || (knownServicesFilterKind == KnownServicesFilterKind.Service && scope != KnownServicesScope.Specialties);
+            if (!filterFits) SetKnownServicesFilter(KnownServicesFilterKind.All, null);
         }
 
         private bool MatchesKnownServicesFilter(ServiceDiscoveryOverviewEntry entry)
@@ -176,7 +191,7 @@ namespace Settlement_Services.UI.Overview
                 case KnownServicesFilterKind.Service:
                     return entry.settlement != null && entry.HasDiscoveredService(knownServicesFilterDefName);
                 default:
-                    return true;
+                    return knownServicesScope != KnownServicesScope.Specialties || (entry.settlement != null && entry.specialties.Count > 0);
             }
         }
 
@@ -191,7 +206,12 @@ namespace Settlement_Services.UI.Overview
                 x += KnownServicesDisplayButtonWidth + 6f;
             }
 
-            Rect findRect = new Rect(Mathf.Max(x + 6f, rect.xMax - KnownServicesFindButtonWidth), rect.y, KnownServicesFindButtonWidth, rect.height);
+            float findX = Mathf.Max(x + 6f + KnownServicesScopeButtonWidth + 6f, rect.xMax - KnownServicesFindButtonWidth);
+            Rect scopeRect = new Rect(findX - 6f - KnownServicesScopeButtonWidth, rect.y, KnownServicesScopeButtonWidth, rect.height);
+            if (Widgets.ButtonText(scopeRect, "SettlementServices.Label.KnownServicesScope".Translate(("SettlementServices.Label.KnownServicesScope" + knownServicesScope).Translate())))
+                OpenKnownServicesScopeMenu();
+
+            Rect findRect = new Rect(findX, rect.y, KnownServicesFindButtonWidth, rect.height);
             if (Widgets.ButtonText(findRect, "SettlementServices.Label.KnownServicesFind".Translate(KnownServicesFilterLabel(specialtyChoices, serviceChoices))))
                 OpenKnownServicesFindMenu(specialtyChoices, serviceChoices);
         }
@@ -212,6 +232,17 @@ namespace Settlement_Services.UI.Overview
             return "SettlementServices.Label.All".Translate();
         }
 
+        private void OpenKnownServicesScopeMenu()
+        {
+            var options = new List<FloatMenuOption>();
+            foreach (KnownServicesScope scope in Enum.GetValues(typeof(KnownServicesScope)))
+            {
+                KnownServicesScope chosen = scope;
+                options.Add(new FloatMenuOption(("SettlementServices.Label.KnownServicesScope" + scope).Translate(), () => SetKnownServicesScope(chosen)));
+            }
+            Find.WindowStack.Add(new FloatMenu(options));
+        }
+
         private void OpenKnownServicesFindMenu(List<SettlementSpecialtyDef> specialtyChoices, List<SettlementServiceDef> serviceChoices)
         {
             var options = new List<FloatMenuOption>
@@ -222,6 +253,7 @@ namespace Settlement_Services.UI.Overview
             string specialtyGroup = "SettlementServices.Label.KnownServicesFindSpecialty".Translate();
             foreach (SettlementSpecialtyDef specialty in specialtyChoices)
             {
+                if (knownServicesScope == KnownServicesScope.Services) break;
                 string defName = specialty.defName;
                 options.Add(new FloatMenuOption("SettlementServices.Label.KnownServicesFindOption".Translate(specialtyGroup, specialty.LabelCap),
                     () => SetKnownServicesFilter(KnownServicesFilterKind.Specialty, defName)));
@@ -230,6 +262,7 @@ namespace Settlement_Services.UI.Overview
             string serviceGroup = "SettlementServices.Label.KnownServicesFindService".Translate();
             foreach (SettlementServiceDef service in serviceChoices)
             {
+                if (knownServicesScope == KnownServicesScope.Specialties) break;
                 string defName = service.defName;
                 options.Add(new FloatMenuOption("SettlementServices.Label.KnownServicesFindOption".Translate(serviceGroup, service.LabelCap),
                     () => SetKnownServicesFilter(KnownServicesFilterKind.Service, defName)));
@@ -238,9 +271,11 @@ namespace Settlement_Services.UI.Overview
             Find.WindowStack.Add(new FloatMenu(options));
         }
 
-        private static float KnownServicesRowStride(ServiceDiscoveryOverviewEntry entry, float textWidth)
+        private static float KnownServicesRowStride(ServiceDiscoveryOverviewEntry entry, float textWidth, bool specialtiesOnly)
         {
             float height = Text.CalcHeight(entry.settlementLabel, textWidth);
+            if (specialtiesOnly)
+                return Mathf.Max(height + Text.CalcHeight(KnownServicesSpecialtiesText(entry), textWidth) + 2f, KnownServicesRowMinHeight);
             if (entry.inPersonLabel != null)
                 height += Text.CalcHeight("SettlementServices.Label.KnownServicesInPerson".Translate(entry.inPersonLabel), textWidth);
             if (entry.remoteLabel != null)
@@ -248,7 +283,12 @@ namespace Settlement_Services.UI.Overview
             return Mathf.Max(height + 2f, KnownServicesRowMinHeight);
         }
 
-        private void DrawKnownServicesRow(Rect rect, ServiceDiscoveryOverviewEntry entry)
+        private static string KnownServicesSpecialtiesText(ServiceDiscoveryOverviewEntry entry)
+        {
+            return "SettlementServices.Label.InspectSpecialties".Translate(string.Join(", ", entry.specialties.Select(s => (string)s.LabelCap)));
+        }
+
+        private void DrawKnownServicesRow(Rect rect, ServiceDiscoveryOverviewEntry entry, bool specialtiesOnly)
         {
             Widgets.DrawHighlightIfMouseover(rect);
 
@@ -264,6 +304,13 @@ namespace Settlement_Services.UI.Overview
 
             Color prevColor = GUI.color;
             GUI.color = Color.gray;
+            if (specialtiesOnly)
+            {
+                string specialtiesText = KnownServicesSpecialtiesText(entry);
+                Widgets.Label(new Rect(textRect.x, y, textRect.width, Text.CalcHeight(specialtiesText, textRect.width)), specialtiesText);
+                GUI.color = prevColor;
+                return;
+            }
             if (entry.inPersonLabel != null)
             {
                 string inPersonText = "SettlementServices.Label.KnownServicesInPerson".Translate(entry.inPersonLabel);
@@ -281,13 +328,13 @@ namespace Settlement_Services.UI.Overview
             GUI.color = prevColor;
         }
 
-        private static float KnownServicesIconsRowStride(ServiceDiscoveryOverviewEntry entry, float textWidth)
+        private static float KnownServicesIconsRowStride(ServiceDiscoveryOverviewEntry entry, float textWidth, KnownServicesScope scope)
         {
-            float height = LayoutKnownServicesIcons(entry, new Rect(0f, 0f, textWidth, 0f), false);
+            float height = LayoutKnownServicesIcons(entry, new Rect(0f, 0f, textWidth, 0f), false, scope);
             return Mathf.Max(height + 2f, KnownServicesRowMinHeight);
         }
 
-        private static void DrawKnownServicesIconsRow(Rect rect, ServiceDiscoveryOverviewEntry entry)
+        private static void DrawKnownServicesIconsRow(Rect rect, ServiceDiscoveryOverviewEntry entry, KnownServicesScope scope)
         {
             Widgets.DrawHighlightIfMouseover(rect);
 
@@ -296,19 +343,24 @@ namespace Settlement_Services.UI.Overview
                 JumpToSettlement(entry.settlement);
 
             Rect contentRect = new Rect(jumpRect.xMax + KnownServicesJumpButtonGutter, rect.y, rect.width - jumpRect.width - KnownServicesJumpButtonGutter, rect.height);
-            LayoutKnownServicesIcons(entry, contentRect, true);
+            LayoutKnownServicesIcons(entry, contentRect, true, scope);
         }
 
-        private static float LayoutKnownServicesIcons(ServiceDiscoveryOverviewEntry entry, Rect rect, bool paint)
+        private static float LayoutKnownServicesIcons(ServiceDiscoveryOverviewEntry entry, Rect rect, bool paint, KnownServicesScope scope)
         {
             float y = rect.y;
             float titleHeight = Text.CalcHeight(entry.settlementLabel, rect.width);
             if (paint) Widgets.Label(new Rect(rect.x, y, rect.width, titleHeight), entry.settlementLabel);
             y += titleHeight;
 
-            y = LayoutKnownServicesBadgeSection(rect, y, "SettlementServices.Header.SpecialtiesLabel".Translate(),
-                "SettlementServices.Header.NoSpecialties".Translate(), entry.specialties.Count,
-                (badgeRect, i) => DrawKnownServicesSpecialtyBadge(badgeRect, entry.settlement, entry.specialties[i]), paint);
+            if (scope != KnownServicesScope.Services)
+            {
+                y = LayoutKnownServicesBadgeSection(rect, y, "SettlementServices.Header.SpecialtiesLabel".Translate(),
+                    "SettlementServices.Header.NoSpecialties".Translate(), entry.specialties.Count,
+                    (badgeRect, i) => DrawKnownServicesSpecialtyBadge(badgeRect, entry.settlement, entry.specialties[i]), paint);
+            }
+
+            if (scope == KnownServicesScope.Specialties) return y - rect.y;
 
             if (entry.inPersonServices.Count > 0)
             {

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Label.KnownServicesScope>Show: {0}</SettlementServices.Label.KnownServicesScope>
+    <SettlementServices.Label.KnownServicesScopeAll>All</SettlementServices.Label.KnownServicesScopeAll>
+    <SettlementServices.Label.KnownServicesScopeSpecialties>Specialties</SettlementServices.Label.KnownServicesScopeSpecialties>
+    <SettlementServices.Label.KnownServicesScopeServices>Services</SettlementServices.Label.KnownServicesScopeServices>
+</LanguageData>
