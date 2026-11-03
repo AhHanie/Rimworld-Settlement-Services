@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Button.DeleteRecord>Delete</SettlementServices.Button.DeleteRecord>
+    <SettlementServices.Button.DeleteRecordDesc>Remove this finished service from your saved service history. This does not change its outcome or refund anything.</SettlementServices.Button.DeleteRecordDesc>
+    <SettlementServices.Label.DeleteRecordConfirmTitle>Delete {0} record?</SettlementServices.Label.DeleteRecordConfirmTitle>
+    <SettlementServices.Label.DeleteRecordConfirmBody>The saved record of {0} at {1} will be permanently removed from this save's service history. This cannot be undone. The service itself, its outcome and any payment are not affected. Continue?</SettlementServices.Label.DeleteRecordConfirmBody>
+    <SettlementServices.Message.DeleteRecordNoLongerEligible>This service record no longer exists or can no longer be deleted.</SettlementServices.Message.DeleteRecordNoLongerEligible>
+</LanguageData>

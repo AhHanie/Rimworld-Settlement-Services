@@ -565,6 +565,7 @@ namespace Settlement_Services.UI.Overview
             List<IGrouping<string, ServiceOverviewEntry>> groups = ServiceOverviewQueryService.Grouped(entries, grouping);
             float viewHeight = groups.Sum(g => (grouping == ServiceOverviewGrouping.None ? 0f : headerHeight) + g.Count() * rowHeight);
             Rect viewRect = new Rect(0f, 0f, rect.width - 16f, viewHeight);
+            scrollPosition.y = Mathf.Clamp(scrollPosition.y, 0f, Mathf.Max(0f, viewHeight - rect.height));
 
             Widgets.BeginScrollView(rect, ref scrollPosition, viewRect);
             float y = 0f;
@@ -586,6 +587,7 @@ namespace Settlement_Services.UI.Overview
 
         private const float DebugCompleteButtonWidth = 150f;
         private const float LeaveEarlyButtonWidth = 110f;
+        private const float DeleteButtonWidth = 80f;
 
         private void DrawRow(Rect rect, ServiceOverviewEntry entry)
         {
@@ -599,9 +601,12 @@ namespace Settlement_Services.UI.Overview
             bool canLeaveEarly = entry.job.status == ServiceJobStatus.Active && entry.def != null
                 && entry.def.Worker.CanLeaveEarly(new ServiceJobContext(SettlementServicesWorldComponent.Current, entry.job));
 
+            bool canDelete = SettlementServicesWorldComponent.Current?.CanDeleteResolvedJob(entry.job.jobId) ?? false;
+
             float textWidth = rect.width - jumpRect.width - 6f;
             if (canDebugComplete) textWidth -= DebugCompleteButtonWidth + 6f;
             if (canLeaveEarly) textWidth -= LeaveEarlyButtonWidth + 6f;
+            if (canDelete) textWidth -= DeleteButtonWidth + 6f;
             Rect textRect = new Rect(jumpRect.xMax + 6f, rect.y, textWidth, rect.height);
             string line1 = $"{entry.settlementLabel} - {entry.ServiceLabel} ({entry.TargetLabel})";
             string line2 = $"{ServiceOverviewFormatting.StatusLabel(entry.job.status)}: {ServiceOverviewFormatting.ExpectedCompletionLabel(entry.job)}";
@@ -634,6 +639,29 @@ namespace Settlement_Services.UI.Overview
                 if (Widgets.ButtonText(leaveEarlyRect, "SettlementServices.Button.LeaveEarly".Translate()))
                     ConfirmLeaveEarly(entry);
             }
+
+            if (canDelete)
+            {
+                Rect deleteRect = new Rect(buttonsXMax - DeleteButtonWidth, rect.y, DeleteButtonWidth, rect.height);
+                buttonsXMax -= DeleteButtonWidth + 6f;
+                TooltipHandler.TipRegion(deleteRect, "SettlementServices.Button.DeleteRecordDesc".Translate());
+                if (Widgets.ButtonText(deleteRect, "SettlementServices.Button.DeleteRecord".Translate()))
+                    ConfirmDeleteRecord(entry);
+            }
+        }
+
+        private void ConfirmDeleteRecord(ServiceOverviewEntry entry)
+        {
+            int jobId = entry.job.jobId;
+            TaggedString body = "SettlementServices.Label.DeleteRecordConfirmBody".Translate(entry.ServiceLabel, entry.settlementLabel);
+            string title = "SettlementServices.Label.DeleteRecordConfirmTitle".Translate(entry.ServiceLabel);
+
+            Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation(body, () =>
+            {
+                SettlementServicesWorldComponent component = SettlementServicesWorldComponent.Current;
+                if (component == null || !component.TryDeleteResolvedJob(jobId))
+                    Messages.Message("SettlementServices.Message.DeleteRecordNoLongerEligible".Translate(), MessageTypeDefOf.RejectInput, historical: false);
+            }, destructive: true, title: title));
         }
 
         private static void ConfirmLeaveEarly(ServiceOverviewEntry entry)

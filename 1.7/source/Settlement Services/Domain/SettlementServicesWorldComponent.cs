@@ -250,10 +250,51 @@ namespace Settlement_Services.Domain
                 if (!prunable) continue;
                 if (Find.TickManager.TicksGame - job.statusChangedTick < JobRetentionWindowTicks) continue;
 
-                jobs.RemoveAt(i);
-                jobsById.Remove(job.jobId);
-                if (jobsBySettlement.TryGetValue(job.settlementWorldObjectId, out List<ServiceJobRecord> list)) list.Remove(job);
+                RemoveJobRecord(job);
             }
+        }
+
+        private void RemoveJobRecord(ServiceJobRecord job)
+        {
+            jobs.Remove(job);
+            jobsById.Remove(job.jobId);
+            activeJobsIndex.Remove(job);
+            if (jobsBySettlement.TryGetValue(job.settlementWorldObjectId, out List<ServiceJobRecord> list))
+            {
+                list.Remove(job);
+                if (list.Count == 0) jobsBySettlement.Remove(job.settlementWorldObjectId);
+            }
+        }
+
+        public bool CanDeleteResolvedJob(int jobId)
+        {
+            if (loadReconcilePending || loadReconcileFailed) return false;
+
+            ServiceJobRecord job = GetJob(jobId);
+            if (job == null) return false;
+
+            bool deletableStatus = job.status == ServiceJobStatus.Completed
+                || job.status == ServiceJobStatus.Collected
+                || job.status == ServiceJobStatus.Cancelled
+                || job.status == ServiceJobStatus.Failed;
+            if (!deletableStatus) return false;
+
+            if (job.targetInCustody || job.pendingExecution) return false;
+            if (job.results != null && job.results.Count > 0) return false;
+            if (job.eventOutcome != null && job.eventOutcome.presented && !job.eventOutcome.applied) return false;
+            if (job.growthVat?.vat != null) return false;
+            if (hiringTransits.Exists(t => t.jobId == jobId)) return false;
+            if (ReservationsForJob(jobId).Count > 0) return false;
+
+            return true;
+        }
+
+        public bool TryDeleteResolvedJob(int jobId)
+        {
+            if (!CanDeleteResolvedJob(jobId)) return false;
+
+            RemoveJobRecord(GetJob(jobId));
+            return true;
         }
 
         IThingHolder IThingHolder.ParentHolder => null;
