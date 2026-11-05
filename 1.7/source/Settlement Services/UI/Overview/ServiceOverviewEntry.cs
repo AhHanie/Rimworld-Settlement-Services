@@ -1,6 +1,8 @@
 using RimWorld.Planet;
+using Settlement_Services.Domain;
 using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework.Defs;
+using Settlement_Services.Services.Genetics;
 using Verse;
 
 namespace Settlement_Services.UI.Overview
@@ -22,6 +24,51 @@ namespace Settlement_Services.UI.Overview
 
         public string ServiceLabel => def?.LabelCap ?? "SettlementServices.Label.UnknownService".Translate();
         public string CategoryLabel => def?.category?.LabelCap ?? "SettlementServices.Label.UnknownService".Translate();
+
+        public string RowTitle
+        {
+            get
+            {
+                string vatTitle = GrowthVatChildTitle() ?? GrowthVatEmbryoTitle();
+                return vatTitle != null
+                    ? $"{settlementLabel} - {vatTitle}"
+                    : $"{settlementLabel} - {ServiceLabel} ({TargetLabel})";
+            }
+        }
+
+        private GrowthVatMilestone StoredGrowthVatMilestone()
+        {
+            string key = job.growthVat?.milestoneKey;
+            if (key.NullOrEmpty() && job.selectedOptionKeys != null && job.selectedOptionKeys.Count == 1) key = job.selectedOptionKeys[0];
+            return GrowthVatMilestone.FromKey(key);
+        }
+
+        private string GrowthVatEmbryoTitle()
+        {
+            if (!(def?.Worker is GrowthVatEmbryoServiceWorker)) return null;
+
+            GrowthVatMilestone milestone = StoredGrowthVatMilestone();
+            if (milestone == null) return null;
+
+            return milestone.IsBirth
+                ? "SettlementServices.Label.GrowthVatEmbryoOverviewTitleBirth".Translate().ToString()
+                : "SettlementServices.Label.GrowthVatEmbryoOverviewTitleAge".Translate(milestone.Years).ToString();
+        }
+
+        private string GrowthVatChildTitle()
+        {
+            if (!(def?.Worker is GrowthVatChildServiceWorker)) return null;
+
+            GrowthVatMilestone milestone = StoredGrowthVatMilestone();
+            if (milestone == null || milestone.IsBirth) return null;
+
+            TargetSnapshot snapshot = job.targets.Count > 0 ? job.targets[0] : null;
+            string name = GrowthVatPawnText.FullName(snapshot?.liveThing as Pawn);
+            if (name.NullOrEmpty()) name = snapshot?.snapshotLabel;
+            if (name.NullOrEmpty()) return null;
+
+            return "SettlementServices.Label.GrowthVatOverviewTitle".Translate(milestone.Years, name).ToString();
+        }
 
         public string TargetLabel
         {

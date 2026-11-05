@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Label.GrowthVatOverviewTitle>Grow child in vat until age {0} ({1})</SettlementServices.Label.GrowthVatOverviewTitle>
+    <SettlementServices.Label.GrowthVatEmbryoOverviewTitleBirth>Grow Embryo in vat, until birth</SettlementServices.Label.GrowthVatEmbryoOverviewTitleBirth>
+    <SettlementServices.Label.GrowthVatEmbryoOverviewTitleAge>Grow Embryo in vat, until age {0}</SettlementServices.Label.GrowthVatEmbryoOverviewTitleAge>
+    <SettlementServices.Label.EmbryoGenesTitle>Genes: {0}</SettlementServices.Label.EmbryoGenesTitle>
+    <SettlementServices.Button.InspectEmbryoGenesDesc>Inspect this embryo's genes.</SettlementServices.Button.InspectEmbryoGenesDesc>
+    <SettlementServices.Label.GrowthVatSelectedChild>{0} (age {1})</SettlementServices.Label.GrowthVatSelectedChild>
+    <SettlementServices.Letter.GrowthVatGrownLabel>{0} has grown to age {1}</SettlementServices.Letter.GrowthVatGrownLabel>
+    <SettlementServices.Letter.GrowthVatGrownReturnedText>{0} has finished growing in the vat at {2} and is now age {1}. They have rejoined your caravan.</SettlementServices.Letter.GrowthVatGrownReturnedText>
+    <SettlementServices.Letter.GrowthVatGrownWaitingText>{0} has finished growing in the vat at {2} and is now age {1}. They are ready for collection at the settlement.</SettlementServices.Letter.GrowthVatGrownWaitingText>
+</LanguageData>

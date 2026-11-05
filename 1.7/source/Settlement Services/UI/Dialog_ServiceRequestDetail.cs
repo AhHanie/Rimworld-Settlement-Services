@@ -13,6 +13,7 @@ using Settlement_Services.Framework.Validation;
 using Settlement_Services.Framework.Workers;
 using Settlement_Services.Services.Construction;
 using Settlement_Services.Services.Crafting;
+using Settlement_Services.Services.Genetics;
 using Settlement_Services.Services.Market;
 
 namespace Settlement_Services.UI
@@ -124,7 +125,29 @@ namespace Settlement_Services.UI
             {
                 Thing member = snapshot[i];
                 Rect row = listing.GetRect(24f);
-                Widgets.Label(new Rect(row.x, row.y, row.width - 24f, row.height), member.LabelCap);
+                if (session.def.Worker is GrowthVatChildServiceWorker && member is Pawn selectedChild)
+                {
+                    Rect infoRect = new Rect(row.xMax - 24f - 4f - 24f, row.y, 24f, 24f);
+                    Rect nameRect = new Rect(row.x, row.y, infoRect.x - row.x - 4f, row.height);
+                    string childText = GrowthVatPawnText.SelectedTargetText(selectedChild);
+                    Widgets.LabelEllipses(nameRect, childText);
+                    TooltipHandler.TipRegion(nameRect, childText);
+                    Widgets.InfoCardButton(infoRect.x, infoRect.y, selectedChild);
+                }
+                else if ((session.def.Worker is SurrogacyServiceWorker || session.def.Worker is GrowthVatEmbryoServiceWorker) && member is HumanEmbryo selectedEmbryo)
+                {
+                    Rect infoRect = new Rect(row.xMax - 24f - 4f - 24f, row.y, 24f, 24f);
+                    Rect nameRect = new Rect(row.x, row.y, infoRect.x - row.x - 4f, row.height);
+                    Widgets.LabelEllipses(nameRect, member.LabelCap);
+                    TooltipHandler.TipRegion(nameRect, member.LabelCap);
+                    TooltipHandler.TipRegion(infoRect, "SettlementServices.Button.InspectEmbryoGenesDesc".Translate());
+                    if (Widgets.ButtonImage(infoRect, TexButton.Info))
+                        Find.WindowStack.Add(new Dialog_EmbryoGenes(selectedEmbryo));
+                }
+                else
+                {
+                    Widgets.Label(new Rect(row.x, row.y, row.width - 24f, row.height), member.LabelCap);
+                }
                 if (Widgets.ButtonText(new Rect(row.xMax - 24f, row.y, 24f, 24f), "-"))
                 {
                     session.RemoveTargetAt(i);

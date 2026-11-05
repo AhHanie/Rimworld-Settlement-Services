@@ -608,10 +608,12 @@ namespace Settlement_Services.UI.Overview
             if (canLeaveEarly) textWidth -= LeaveEarlyButtonWidth + 6f;
             if (canDelete) textWidth -= DeleteButtonWidth + 6f;
             Rect textRect = new Rect(jumpRect.xMax + 6f, rect.y, textWidth, rect.height);
-            string line1 = $"{entry.settlementLabel} - {entry.ServiceLabel} ({entry.TargetLabel})";
+            string line1 = entry.RowTitle;
             string line2 = $"{ServiceOverviewFormatting.StatusLabel(entry.job.status)}: {ServiceOverviewFormatting.ExpectedCompletionLabel(entry.job)}";
 
-            Widgets.Label(new Rect(textRect.x, textRect.y, textRect.width, textRect.height / 2f), line1);
+            Rect titleRect = new Rect(textRect.x, textRect.y, textRect.width, textRect.height / 2f);
+            Widgets.LabelEllipses(titleRect, line1);
+            TooltipHandler.TipRegion(titleRect, line1);
             Color prevColor = GUI.color;
             GUI.color = Color.gray;
             Widgets.Label(new Rect(textRect.x, textRect.y + textRect.height / 2f, textRect.width, textRect.height / 2f), line2);

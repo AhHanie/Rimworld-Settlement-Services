@@ -12,6 +12,7 @@ using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Events;
 using Settlement_Services.Framework.Workers;
 using Settlement_Services.Framework.Workers.Results;
+using Settlement_Services.Services.Genetics;
 
 namespace Settlement_Services.Framework
 {
@@ -169,15 +170,27 @@ namespace Settlement_Services.Framework
             bool needsCollection = requiresCollection || job.targetInCustody || !job.results.NullOrEmpty();
             domain.TryTransition(job.jobId, needsCollection ? ServiceJobStatus.AwaitingCollection : ServiceJobStatus.Completed);
 
-            if (needsCollection)
-            {
-                SettlementServiceNotifier.NotifyReadyForCollection(job);
-            }
-            else
-            {
-                domain.TryTransition(job.jobId, ServiceJobStatus.Collected);
-                SettlementServiceNotifier.NotifyCompleted(job);
-            }
+            if (!needsCollection) domain.TryTransition(job.jobId, ServiceJobStatus.Collected);
+
+            if (TryNotifyGrowthVatGrown(job)) return;
+
+            if (needsCollection) SettlementServiceNotifier.NotifyReadyForCollection(job);
+            else SettlementServiceNotifier.NotifyCompleted(job);
+        }
+
+        private static bool TryNotifyGrowthVatGrown(ServiceJobRecord job)
+        {
+            GrowthVatJobState state = job.growthVat;
+            if (state == null || !state.targetReached || !state.completed || state.stillborn) return false;
+
+            GrowthVatMilestone milestone = GrowthVatMilestone.FromKey(state.milestoneKey);
+            if (milestone == null || (milestone.Years != 3 && milestone.Years != 18)) return false;
+
+            Pawn pawn = job.Targets.Count > 0 ? job.Targets[0]?.liveThing as Pawn : null;
+            if (pawn == null || pawn.Destroyed || pawn.ageTracker == null) return false;
+
+            SettlementServiceNotifier.NotifyGrowthVatGrown(job, pawn, job.targetInCustody);
+            return true;
         }
 
         private static void RestoreParticipantFoodAndRest(SettlementServiceDef def, ServiceJobContext targetContext)

@@ -5,6 +5,7 @@ using Settlement_Services.Domain;
 using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Workers;
+using Settlement_Services.Services.Genetics;
 
 namespace Settlement_Services.Framework
 {
@@ -46,6 +47,25 @@ namespace Settlement_Services.Framework
                     : LetterDefOf.NeutralEvent;
 
             Send(job, "SettlementServices.Letter.ServiceEventLabel", "SettlementServices.Letter.ServiceEventText", tone, eventDef);
+        }
+
+        public static void NotifyGrowthVatGrown(ServiceJobRecord job, Pawn pawn, bool awaitingCollection)
+        {
+            Settlement settlement = new ServiceJobContext(SettlementServicesWorldComponent.Current, job).ResolveSettlement();
+            LookTargets lookTargets = settlement != null ? new LookTargets(settlement) : LookTargets.Invalid;
+
+            string name = GrowthVatPawnText.FullName(pawn);
+            int age = pawn.ageTracker.AgeBiologicalYears;
+            string settlementLabel = settlement?.LabelCap ?? "SettlementServices.Label.UnknownSettlement".Translate();
+            string textKey = awaitingCollection
+                ? "SettlementServices.Letter.GrowthVatGrownWaitingText"
+                : "SettlementServices.Letter.GrowthVatGrownReturnedText";
+
+            Find.LetterStack.ReceiveLetter(
+                "SettlementServices.Letter.GrowthVatGrownLabel".Translate(name, age),
+                textKey.Translate(name, age, settlementLabel),
+                LetterDefOf.PositiveEvent,
+                lookTargets);
         }
 
         private static void Send(ServiceJobRecord job, string labelKey, string textKey, LetterDef def, ServiceEventDef eventDef = null)
