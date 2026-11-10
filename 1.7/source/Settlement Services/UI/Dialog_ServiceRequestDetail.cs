@@ -8,6 +8,7 @@ using Verse.Sound;
 using Settlement_Services.Domain;
 using Settlement_Services.Framework;
 using Settlement_Services.Framework.Defs;
+using Settlement_Services.Framework.Delivery;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Validation;
 using Settlement_Services.Framework.Workers;
@@ -100,10 +101,12 @@ namespace Settlement_Services.UI
             if (isCrafting) DrawCraftingCrafterSection(listing);
             DrawOptionsSection(listing);
             DrawWorkerSummarySection(listing);
+            ServicePodDeliveryUi.Draw(listing, session, isCrafting || isConstruction, this);
 
             listing.GapLine();
             SettlementServiceQuote quote = SettlementServiceOrchestrator.RequestQuote(session.BuildRequest(), session.def);
             DrawQuote(listing, quote);
+            ServicePodDeliveryUi.DrawStats(listing, session, quote);
 
             scrollHeight = listing.CurHeight;
             listing.End();
@@ -1037,7 +1040,10 @@ namespace Settlement_Services.UI
             bool prevEnabled = GUI.enabled;
             GUI.enabled = quote.IsValid && targetOk && RequiredOptionsSatisfied();
             if (Widgets.ButtonText(silverRect, labels[1])) ServiceConfirmationFlow.TryConfirm(session, quote, this);
+            bool podBlocksBarter = session.podDelivery.enabled;
+            GUI.enabled = GUI.enabled && !podBlocksBarter;
             if (Widgets.ButtonText(barterRect, labels[2])) OpenBarter();
+            if (podBlocksBarter) TooltipHandler.TipRegion(barterRect, ServicePodDeliveryPlanner.RequiresSilverKey.Translate());
             GUI.enabled = prevEnabled;
         }
 

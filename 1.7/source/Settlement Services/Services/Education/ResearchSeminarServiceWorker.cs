@@ -11,6 +11,8 @@ namespace Settlement_Services.Services.Education
 {
     public class ResearchSeminarServiceWorker : SettlementServiceWorker
     {
+        public override bool PodManifestIsTargetsOnly => true;
+
         private const string ProjectGroupKey = "SettlementServices.Label.ResearchProjectChoice";
         private const float LowBandMinFraction = 0.10f;
         private const float LowBandMaxFraction = 0.15f;

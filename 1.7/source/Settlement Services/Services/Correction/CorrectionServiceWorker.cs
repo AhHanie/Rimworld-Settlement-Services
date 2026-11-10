@@ -10,6 +10,8 @@ namespace Settlement_Services.Services.Correction
 {
     public abstract class CorrectionServiceWorker : SettlementServiceWorker
     {
+        public override bool PodManifestIsTargetsOnly => true;
+
         internal abstract CaptiveKind Kind { get; }
 
         public override ServiceAvailabilityReport CanOffer(SettlementServiceContext ctx)

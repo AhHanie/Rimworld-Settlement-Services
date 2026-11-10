@@ -14,6 +14,8 @@ namespace Settlement_Services.Services.Medical
 {
     public class SurgeryServiceWorker : SettlementServiceWorker
     {
+        public override bool PodManifestIsTargetsOnly => true;
+
         private const string ImplantGroupKey = "SettlementServices.Label.ImplantChoice";
         private const string MedicineStockCategory = "SettlementStock_Medicine";
         private const int MedicineAmount = 2;

@@ -189,7 +189,7 @@ namespace Settlement_Services.Services.Genetics
             return Mathf.Clamp(Mathf.RoundToInt(days * GenDate.TicksPerDay), GenDate.TicksPerDay, 60 * GenDate.TicksPerDay);
         }
 
-        private static int TotalFee(ServiceJobRecord job) => Mathf.Max(0, job.acceptedQuote?.totalCost ?? 0);
+        private static int TotalFee(ServiceJobRecord job) => Mathf.Max(0, job.acceptedQuote?.BaseCost ?? 0);
 
         private static int UnusedFee(ServiceJobRecord job, SurrogacyJobState state)
         {

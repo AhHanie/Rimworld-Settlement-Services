@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using Verse;
 using Settlement_Services.Framework.Defs;
+using Settlement_Services.Framework.Delivery;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Workers.Results;
 
@@ -82,6 +83,11 @@ namespace Settlement_Services.Framework.Workers
             Enumerable.Empty<ServiceLineItem>();
 
         public virtual bool RequiresTargetCustody => true;
+
+        public virtual bool PodManifestIsTargetsOnly => false;
+
+        public virtual ServicePodManifestEstimate EstimatePodManifest(SettlementServiceRequest unit, ServicePodManifestContext context) =>
+            PodManifestIsTargetsOnly && RequiresTargetCustody ? ServicePodManifestEstimate.ForTargets(unit, context) : null;
 
         protected int ExpectedDurationTicks(ServiceJobContext ctx)
         {

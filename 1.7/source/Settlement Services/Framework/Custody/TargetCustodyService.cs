@@ -41,12 +41,18 @@ namespace Settlement_Services.Framework.Custody
             return true;
         }
 
+        private static readonly Dictionary<int, CaravanCustodyCargoTransfer> pendingCargoTransfers = new Dictionary<int, CaravanCustodyCargoTransfer>();
+
         public static bool TryTakeCustody(ServiceJobContext ctx, Caravan caravan, out string errorKey)
         {
             if (!ValidateTargets(ctx, caravan, out errorKey)) return false;
 
             List<TargetSnapshot> targets = ctx.Job.Targets.ToList();
             if (targets.Count == 0) return true;
+
+            List<Pawn> departing = targets.Select(t => t?.liveThing as Pawn).Where(p => p != null).ToList();
+            CaravanCustodyCargoTransfer cargo = CaravanCustodyCargoTransfer.Empty;
+            if (departing.Count > 0 && !CaravanCustodyCargoTransfer.TryPrepare(caravan, departing, out cargo, out errorKey)) return false;
 
             Caravan currentCaravan = caravan;
             var detached = new List<TargetSnapshot>();
@@ -59,6 +65,7 @@ namespace Settlement_Services.Framework.Custody
                     if (!TryDetachPawn(ctx, ref currentCaravan, pawn, out errorKey))
                     {
                         RevertDetachedTargets(ctx, detached, currentCaravan);
+                        cargo.Rollback();
                         return false;
                     }
                 }
@@ -67,6 +74,7 @@ namespace Settlement_Services.Framework.Custody
                     if (!TryDetachItem(ctx, thing, out errorKey))
                     {
                         RevertDetachedTargets(ctx, detached, currentCaravan);
+                        cargo.Rollback();
                         return false;
                     }
                 }
@@ -78,9 +86,27 @@ namespace Settlement_Services.Framework.Custody
 
             if (currentCaravan != caravan) ctx.Domain.UpdateJobRequesterCaravan(ctx.Job.jobId, currentCaravan);
 
+            if (cargo.MovedCount > 0) pendingCargoTransfers[ctx.Job.jobId] = cargo;
+
             ctx.Job.targetInCustody = true;
             errorKey = null;
             return true;
+        }
+
+        internal static void CommitCargoTransfer(int jobId)
+        {
+            if (!pendingCargoTransfers.TryGetValue(jobId, out CaravanCustodyCargoTransfer cargo)) return;
+            pendingCargoTransfers.Remove(jobId);
+            cargo.Commit();
+        }
+
+        internal static void RollbackCargoTransfer(ServiceJobRecord job)
+        {
+            if (!pendingCargoTransfers.TryGetValue(job.jobId, out CaravanCustodyCargoTransfer cargo)) return;
+            pendingCargoTransfers.Remove(job.jobId);
+
+            if (job.targetInCustody) cargo.Commit();
+            else cargo.Rollback();
         }
 
         private static bool TryDetachItem(ServiceJobContext ctx, Thing thing, out string errorKey)
@@ -105,15 +131,17 @@ namespace Settlement_Services.Framework.Custody
         {
             errorKey = null;
 
-            // Must run before the pawn is physically detached below: PassToWorld fires Notify_PassedToWorld,
-            // which reassigns a player-faction pawn with no caravan tie to a random faction.
-            if (Find.WorldPawns.Contains(pawn)) Find.WorldPawns.RemovePawn(pawn);
+            bool wasInWorld = Find.WorldPawns.Contains(pawn);
+            if (wasInWorld) Find.WorldPawns.RemovePawn(pawn);
             Find.WorldPawns.PassToWorld(pawn, PawnDiscardDecideMode.KeepForever);
 
             if (SettlementServicesCompatibilityRegistry.TryGetCustodyLifecycle(ctx, currentCaravan, pawn, out ICompatibilityCustodyLifecycle lifecycle))
             {
                 if (!lifecycle.TryPrepareForTargetCustody(ctx, currentCaravan, pawn, out Caravan preparedCaravan, out errorKey))
+                {
+                    RestoreWorldPawnState(pawn, wasInWorld);
                     return false;
+                }
 
                 currentCaravan = preparedCaravan;
             }
@@ -124,6 +152,7 @@ namespace Settlement_Services.Framework.Custody
 
             if (pawn.holdingOwner != null)
             {
+                RestoreWorldPawnState(pawn, wasInWorld);
                 errorKey = "SettlementServices.Error.TargetCouldNotBeDetached";
                 return false;
             }
@@ -132,17 +161,15 @@ namespace Settlement_Services.Framework.Custody
             return true;
         }
 
+        private static void RestoreWorldPawnState(Pawn pawn, bool wasInWorld)
+        {
+            if (pawn.holdingOwner == null || wasInWorld) return;
+            if (Find.WorldPawns.Contains(pawn)) Find.WorldPawns.RemovePawn(pawn);
+        }
+
         private static void RevertDetachedTargets(ServiceJobContext ctx, List<TargetSnapshot> detached, Caravan currentCaravan)
         {
-            Caravan current = currentCaravan;
-            foreach (TargetSnapshot target in detached)
-            {
-                Thing thing = target?.liveThing;
-                if (thing == null || thing.Destroyed) continue;
-                current = EnsureLiveCaravan(ctx, current);
-                if (current == null) continue;
-                if (TryReturnThing(ctx, thing, current, out Caravan updated)) current = updated;
-            }
+            ReturnTargets(ctx, detached, currentCaravan, allowCreatingCaravan: true, out _);
         }
 
         public static void ReturnCustody(ServiceJobContext ctx, Caravan caravan)
@@ -150,29 +177,44 @@ namespace Settlement_Services.Framework.Custody
             ServiceJobRecord job = ctx.Job;
             if (!job.targetInCustody) return;
 
-            Caravan current = caravan;
-            bool allReturned = true;
-            foreach (TargetSnapshot target in job.Targets)
-            {
-                if (!RequiresReturn(target?.liveThing)) continue;
-                current = EnsureLiveCaravan(ctx, current);
-                if (current != null && TryReturnThing(ctx, target.liveThing, current, out Caravan updated))
-                {
-                    current = updated;
-                }
-                else
-                {
-                    allReturned = false;
-                }
-            }
-
+            bool allReturned = ReturnTargets(ctx, job.Targets, caravan, allowCreatingCaravan: true, out _);
             if (allReturned) job.targetInCustody = false;
             else SupportLog.Error($"Job {job.jobId}: could not verify every custody target's return to its caravan; leaving the job recoverable instead of losing it.");
         }
 
-        private static Caravan EnsureLiveCaravan(ServiceJobContext ctx, Caravan current)
+        private static bool ReturnTargets(ServiceJobContext ctx, IEnumerable<TargetSnapshot> snapshots, Caravan caravan, bool allowCreatingCaravan, out Caravan finalCaravan)
         {
-            if (current != null && !current.Destroyed) return current;
+            List<Thing> things = snapshots.Select(t => t?.liveThing).Where(RequiresReturn).ToList();
+            List<Pawn> pawns = things.OfType<Pawn>().ToList();
+            Caravan current = ResolveReturnCaravan(ctx, caravan, pawns, allowCreatingCaravan);
+            bool allReturned = true;
+
+            foreach (Pawn pawn in pawns)
+            {
+                if (current != null && TryReturnPawnToCaravan(ctx, current, pawn, out Caravan updated)) current = updated;
+                else allReturned = false;
+            }
+
+            foreach (Thing item in things.Where(t => !(t is Pawn)))
+            {
+                if (current != null && TryReturnItem(item, current)) continue;
+                allReturned = false;
+            }
+
+            finalCaravan = current;
+            return allReturned;
+        }
+
+        private static Caravan ResolveReturnCaravan(ServiceJobContext ctx, Caravan current, List<Pawn> returning, bool allowCreatingCaravan)
+        {
+            if (current != null && !current.Destroyed)
+            {
+                if (returning.Count == 0) return current;
+                return CaravanOwnershipRules.GroupWouldHaveCapableOwner(current, returning) ? current : null;
+            }
+
+            if (!allowCreatingCaravan || returning.Count == 0) return null;
+            if (!CaravanOwnershipRules.HasCapableOwner(returning, Faction.OfPlayer)) return null;
 
             PlanetTile tile = ctx.ResolveSettlement()?.Tile ?? ctx.Job.settlementTile;
             if (!tile.Valid || !tile.LayerDef.canFormCaravans) return null;
@@ -182,6 +224,25 @@ namespace Settlement_Services.Framework.Custody
             return created;
         }
 
+        internal static List<Pawn> HeldPawns(ServiceJobRecord job)
+        {
+            var pawns = new List<Pawn>();
+            if (job == null) return pawns;
+            if (job.targetInCustody)
+                pawns.AddRange(job.Targets.Select(t => t?.liveThing as Pawn).Where(RequiresReturn));
+            if (!job.results.NullOrEmpty())
+                pawns.AddRange(job.results.Select(t => t?.liveThing as Pawn).Where(RequiresReturn));
+            return pawns;
+        }
+
+        internal static string GetCollectBlockKey(ServiceJobRecord job, Caravan caravan, PlanetTile settlementTile)
+        {
+            if (caravan == null || caravan.Destroyed || !caravan.Spawned || !caravan.IsPlayerControlled) return "SettlementServices.Error.CollectCaravanIneligible";
+            if (caravan.pather != null && caravan.pather.Moving) return "SettlementServices.Error.CollectCaravanMoving";
+            if (caravan.Tile != settlementTile) return "SettlementServices.Error.CollectCaravanWrongTile";
+            return CaravanOwnershipRules.GroupWouldHaveCapableOwner(caravan, HeldPawns(job)) ? null : CaravanOwnershipRules.NoCapableOwnerKey;
+        }
+
         public static void CollectAll(ServiceJobContext ctx, Caravan caravan)
         {
             ServiceJobRecord job = ctx.Job;
@@ -189,13 +250,8 @@ namespace Settlement_Services.Framework.Custody
 
             if (job.targetInCustody)
             {
-                bool allReturned = true;
-                foreach (TargetSnapshot target in job.Targets)
-                {
-                    if (!RequiresReturn(target?.liveThing)) continue;
-                    if (TryReturnThing(ctx, target.liveThing, current, out Caravan updated)) current = updated;
-                    else allReturned = false;
-                }
+                bool allReturned = ReturnTargets(ctx, job.Targets, current, allowCreatingCaravan: false, out Caravan updatedCaravan);
+                if (updatedCaravan != null) current = updatedCaravan;
 
                 if (allReturned) job.targetInCustody = false;
                 else SupportLog.Error($"Job {job.jobId}: could not verify every custody target's return during collection; leaving the job recoverable instead of losing it.");
@@ -206,7 +262,7 @@ namespace Settlement_Services.Framework.Custody
                 var remainingResults = new List<TargetSnapshot>();
                 foreach (TargetSnapshot result in job.results)
                 {
-                    if (result.liveThing == null || result.liveThing.Destroyed) continue;
+                    if (!RequiresReturn(result.liveThing)) continue;
 
                     if (TryReturnThing(ctx, result.liveThing, current, out Caravan updated)) current = updated;
                     else remainingResults.Add(result);
@@ -252,6 +308,7 @@ namespace Settlement_Services.Framework.Custody
             if (pawns.Count == 0) return false;
 
             List<Pawn> pawnList = pawns.Select(p => p.pawn).ToList();
+            if (!CaravanOwnershipRules.HasCapableOwner(pawnList, Faction.OfPlayer)) return false;
             foreach (Thing item in items)
             {
                 if (CaravanInventoryUtility.FindPawnToMoveInventoryTo(item, pawnList, null) == null) return false;
@@ -335,11 +392,21 @@ namespace Settlement_Services.Framework.Custody
             if (thing is Pawn pawn) return TryReturnPawnToCaravan(ctx, caravan, pawn, out resultCaravan);
 
             resultCaravan = caravan;
-            if (caravan == null) return false;
+            return TryReturnItem(thing, caravan);
+        }
+
+        private static bool TryReturnItem(Thing thing, Caravan caravan)
+        {
+            if (thing == null || caravan == null || caravan.Destroyed) return false;
+
+            Pawn receiver = CaravanInventoryUtility.FindPawnToMoveInventoryTo(thing, caravan.PawnsListForReading, null);
+            if (receiver?.inventory?.innerContainer == null) return false;
 
             SettlementServicesWorldComponent.Current.ReleaseItemCustody(thing);
-            CaravanInventoryUtility.GiveThing(caravan, thing);
-            return true;
+            if (receiver.inventory.innerContainer.TryAdd(thing)) return true;
+
+            SettlementServicesWorldComponent.Current.TakeItemCustody(thing);
+            return false;
         }
 
         internal static bool TryReturnPawnToCaravan(ServiceJobContext ctx, Caravan caravan, Pawn pawn, out Caravan resultCaravan)

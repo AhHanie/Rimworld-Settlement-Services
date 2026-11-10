@@ -10,6 +10,7 @@
     <SettlementServices.Command.ContactSettlement>Contact settlement</SettlementServices.Command.ContactSettlement>
     <SettlementServices.Command.ContactSettlementDesc>Reach a faction settlement remotely for Settlement Services, without needing to send a caravan.</SettlementServices.Command.ContactSettlementDesc>
     <SettlementServices.Command.Collect>Collect</SettlementServices.Command.Collect>
+    <SettlementServices.Command.CollectHeldPawns>Waiting at this settlement ({0}): {1}.</SettlementServices.Command.CollectHeldPawns>
     <SettlementServices.Command.CollectDesc>Collect the results of finished services from this settlement into your caravan.</SettlementServices.Command.CollectDesc>
     <SettlementServices.Label.NoServicesInCategory>This settlement offers no services in this category yet.</SettlementServices.Label.NoServicesInCategory>
     <SettlementServices.Label.NoTargetSelected>None selected</SettlementServices.Label.NoTargetSelected>

@@ -9,6 +9,7 @@ using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Custody;
 using Settlement_Services.Framework.Defs;
+using Settlement_Services.Framework.Delivery;
 using Settlement_Services.Framework.Events;
 using Settlement_Services.Framework.Workers;
 using Settlement_Services.Framework.Workers.Results;
@@ -162,6 +163,8 @@ namespace Settlement_Services.Framework
                 if (eventDef != null) ServiceEventEffectApplier.Present(eventDef, job, ctx.ForUnitIndex(job.eventTargetIndex));
                 else { job.eventOutcome.presented = true; job.eventOutcome.applied = true; }
             }
+
+            if (ServicePodDeliveryService.TryDispatch(domain, job, ctx)) requiresCollection = false;
 
             ServicePawnCaravanReturn.TryReturnCompletedPawn(ctx);
 

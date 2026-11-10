@@ -20,12 +20,16 @@ namespace Settlement_Services.Framework.Board
             Caravan current = caravan;
             var touched = new List<Pawn>();
 
+            if (!CaravanCustodyCargoTransfer.TryPrepare(caravan, pawns.ToList(), out CaravanCustodyCargoTransfer cargo, out errorKey))
+                return false;
+
             foreach (Pawn pawn in pawns)
             {
                 touched.Add(pawn);
                 if (!TargetCustodyService.TryDetachPawn(ctx, ref current, pawn, out errorKey))
                 {
                     Rollback(ctx, ref current, touched, tile);
+                    cargo.Rollback();
                     return false;
                 }
 
@@ -36,13 +40,49 @@ namespace Settlement_Services.Framework.Board
                 }
             }
 
-            if (current != null && !current.Destroyed)
+            if (current != null && !current.Destroyed && current.PawnsListForReading.Count == 0) current.Destroy();
+
+            cargo.Commit();
+            return true;
+        }
+
+        internal static bool TryCollect(SettlementServicesWorldComponent domain, BoardJobRecord job, Caravan caravan, out string errorKey)
+        {
+            errorKey = null;
+            if (job.status != BoardJobStatus.ReturnPending || job.pawnsReturned) return false;
+
+            Settlement settlement = WorldObjectLookup.ResolveSettlement(job.settlementWorldObjectId);
+            if (settlement == null) return false;
+
+            List<Pawn> living = job.assignedPawns.Where(p => p != null && !p.Destroyed && !p.Dead).ToList();
+            errorKey = GetCollectBlockKey(caravan, settlement.Tile, living);
+            if (errorKey != null) return false;
+
+            var ctx = new ServiceJobContext(domain, null);
+            bool allReturned = true;
+            Caravan receiver = caravan;
+            foreach (Pawn pawn in living)
             {
-                if (current.PawnsListForReading.Count == 0) current.Destroy();
-                else OffloadInventory(pawns, current);
+                if (TargetCustodyService.TryReturnPawnToCaravan(ctx, receiver, pawn, out Caravan updated)) receiver = updated;
+                else allReturned = false;
             }
 
+            if (!allReturned)
+            {
+                errorKey = "SettlementServices.Error.CollectIncomplete";
+                return false;
+            }
+
+            job.pawnsReturned = true;
             return true;
+        }
+
+        internal static string GetCollectBlockKey(Caravan caravan, PlanetTile settlementTile, List<Pawn> held)
+        {
+            if (caravan == null || caravan.Destroyed || !caravan.Spawned || !caravan.IsPlayerControlled) return "SettlementServices.Error.CollectCaravanIneligible";
+            if (caravan.pather != null && caravan.pather.Moving) return "SettlementServices.Error.CollectCaravanMoving";
+            if (caravan.Tile != settlementTile) return "SettlementServices.Error.CollectCaravanWrongTile";
+            return CaravanOwnershipRules.GroupWouldHaveCapableOwner(caravan, held) ? null : CaravanOwnershipRules.NoCapableOwnerKey;
         }
 
         internal static bool TryReturn(SettlementServicesWorldComponent domain, BoardJobRecord job, out Caravan receiver)
@@ -59,7 +99,7 @@ namespace Settlement_Services.Framework.Board
             Settlement settlement = WorldObjectLookup.ResolveSettlement(job.settlementWorldObjectId);
             PlanetTile tile = settlement != null ? settlement.Tile : job.settlementTile;
 
-            if (!tile.Valid || !tile.LayerDef.canFormCaravans)
+            if (settlement == null || !tile.Valid || !tile.LayerDef.canFormCaravans)
             {
                 foreach (Pawn pawn in living)
                 {
@@ -75,7 +115,7 @@ namespace Settlement_Services.Framework.Board
             }
 
             var ctx = new ServiceJobContext(domain, null);
-            if (!ServicePawnCaravanReturn.TryReturnPawns(ctx, living, tile, job.sourceCaravanId, $"Board job {job.boardJobId}", null, out receiver))
+            if (!ServicePawnCaravanReturn.TryReturnPawns(ctx, living, tile, job.sourceCaravanId, $"Board job {job.boardJobId}", out receiver))
                 return false;
 
             job.pawnsReturned = true;
@@ -107,18 +147,6 @@ namespace Settlement_Services.Framework.Board
                 }
 
                 if (TargetCustodyService.TryReturnPawnToCaravan(ctx, current, pawn, out Caravan updated)) current = updated;
-            }
-        }
-
-        private static void OffloadInventory(IReadOnlyList<Pawn> departing, Caravan remaining)
-        {
-            List<Pawn> receivers = remaining.PawnsListForReading.Where(p => !departing.Contains(p)).ToList();
-            if (receivers.Count == 0) return;
-
-            foreach (Pawn pawn in departing)
-            {
-                if (pawn.inventory?.innerContainer == null || pawn.inventory.innerContainer.Count == 0) continue;
-                CaravanInventoryUtility.MoveAllInventoryToSomeoneElse(pawn, receivers);
             }
         }
     }

@@ -13,6 +13,8 @@ namespace Settlement_Services.Services.Android
 {
     public class AndroidNeutroamineServiceWorker : SettlementServiceWorker
     {
+        public override bool PodManifestIsTargetsOnly => true;
+
         private const float NeutroaminePerSeverityUnit = 100f;
         private const float MarkupPct = 1.4f;
         private const float ReferenceSeverity = 0.5f;

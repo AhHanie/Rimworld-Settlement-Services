@@ -10,6 +10,8 @@ namespace Settlement_Services.Services.Education
 {
     public class AnimalTrainingServiceWorker : SettlementServiceWorker
     {
+        public override bool PodManifestIsTargetsOnly => true;
+
         private const float WealthScalePerBehavior = 0.01f;
 
         public override bool UsesPerTargetOptionSelections => true;

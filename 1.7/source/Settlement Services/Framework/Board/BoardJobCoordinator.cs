@@ -5,6 +5,7 @@ using RimWorld.Planet;
 using Verse;
 using Settlement_Services.Domain;
 using Settlement_Services.Domain.Records;
+using Settlement_Services.Framework.Custody;
 using Settlement_Services.Framework.Defs;
 
 namespace Settlement_Services.Framework.Board
@@ -42,7 +43,7 @@ namespace Settlement_Services.Framework.Board
             }
 
             if (!BoardRequirementMatcher.IsSatisfied(job.requirements, job.partySize, selected)) return "SettlementServices.JobBoard.Error.RequirementsNotMet";
-            return null;
+            return CaravanOwnershipRules.GetDepartureBlockKey(caravan, selected.ToList());
         }
 
         internal static bool TryStart(SettlementServicesWorldComponent domain, BoardJobRecord job, Settlement settlement, Caravan caravan, IReadOnlyList<Pawn> selected, out string errorKey)
@@ -67,6 +68,16 @@ namespace Settlement_Services.Framework.Board
             SetStatus(job, BoardJobStatus.Active);
 
             BoardJobNotifier.NotifyStarted(job, settlement);
+            return true;
+        }
+
+        internal static bool TryCollectWorkers(SettlementServicesWorldComponent domain, BoardJobRecord job, Caravan caravan, out string errorKey)
+        {
+            errorKey = null;
+            if (job == null || job.status != BoardJobStatus.ReturnPending || job.pawnsReturned) return false;
+            if (!BoardPawnCustodyService.TryCollect(domain, job, caravan, out errorKey)) return false;
+
+            AdvanceReturn(domain, job);
             return true;
         }
 
@@ -254,6 +265,7 @@ namespace Settlement_Services.Framework.Board
             job.failureKey = failureKey;
             SetStatus(job, BoardJobStatus.ReturnPending);
             AdvanceReturn(domain, job);
+            if (job.status == BoardJobStatus.ReturnPending && !job.pawnsReturned) BoardJobNotifier.NotifyAwaitingPickup(job);
         }
 
         private static void AdvanceReturn(SettlementServicesWorldComponent domain, BoardJobRecord job)

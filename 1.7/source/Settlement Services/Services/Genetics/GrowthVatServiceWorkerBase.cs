@@ -162,7 +162,7 @@ namespace Settlement_Services.Services.Genetics
             if (prepaidNutrition <= 0f) return ServiceStartResult.Fail("SettlementServices.Error.InsufficientStock");
             if (projection.Nutrition > prepaidNutrition + NutritionTolerance) return ServiceStartResult.Fail("SettlementServices.Error.GrowthVatSpeedChanged");
 
-            int totalCost = job.acceptedQuote?.totalCost ?? 0;
+            int totalCost = job.acceptedQuote?.BaseCost ?? 0;
             var state = new GrowthVatJobState
             {
                 kind = Kind,

@@ -83,9 +83,9 @@ namespace Settlement_Services.Framework.Events
             {
                 int amount = 0;
                 if (effects.refundAmount > 0)
-                    amount = Mathf.Min(effects.refundAmount, Mathf.RoundToInt(job.acceptedQuote.totalCost * ServiceEventEffects.MaxRefundFraction));
+                    amount = Mathf.Min(effects.refundAmount, Mathf.RoundToInt(job.acceptedQuote.BaseCost * ServiceEventEffects.MaxRefundFraction));
                 else if (effects.refundFraction > 0f)
-                    amount = Mathf.RoundToInt(job.acceptedQuote.totalCost * Mathf.Min(effects.refundFraction, ServiceEventEffects.MaxRefundFraction));
+                    amount = Mathf.RoundToInt(job.acceptedQuote.BaseCost * Mathf.Min(effects.refundFraction, ServiceEventEffects.MaxRefundFraction));
 
                 if (amount > 0) SettlementServiceOrchestrator.ResolvePaymentProvider(job.requestChannel).Refund(amount, ctx);
             }

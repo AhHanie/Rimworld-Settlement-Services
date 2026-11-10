@@ -10,6 +10,8 @@ namespace Settlement_Services.Services.Technical
 {
     public class BionicRechargeServiceWorker : SettlementServiceWorker
     {
+        public override bool PodManifestIsTargetsOnly => true;
+
         private const float ReferenceDeficitFraction = 0.5f;
         private const float MinDurationFactor = 0.25f;
         private const float MaxDurationFactor = 2f;

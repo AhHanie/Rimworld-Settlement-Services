@@ -21,6 +21,8 @@ namespace Settlement_Services.Services.Android
 
     public class AndroidPartInstallServiceWorker : SettlementServiceWorker
     {
+        public override bool PodManifestIsTargetsOnly => true;
+
         private const string PartGroupKey = "SettlementServices.Label.AndroidPartInstallChoice";
         private const float MaterialMarkupPct = 1.4f;
 

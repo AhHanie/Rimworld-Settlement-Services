@@ -9,6 +9,7 @@ using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Custody;
 using Settlement_Services.Framework.Defs;
+using Settlement_Services.Framework.Delivery;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Events;
 using Settlement_Services.Framework.Payment;
@@ -87,6 +88,21 @@ namespace Settlement_Services.Framework
             ServiceBarterBundle barterBundle = null;
             decimal barterValue = 0m;
 
+            if (plan.PodPlan != null)
+            {
+                if (barter)
+                {
+                    job.lastErrorKey = ServicePodDeliveryPlanner.RequiresSilverKey;
+                    return false;
+                }
+
+                if (plan.Quote.totalCost != quote.totalCost || plan.Quote.podDeliveryCost != quote.podDeliveryCost)
+                {
+                    job.lastErrorKey = ServicePodDeliveryPlanner.QuoteChangedKey;
+                    return false;
+                }
+            }
+
             if (barter)
             {
                 if (plan.Quote.totalCost != quote.totalCost)
@@ -132,6 +148,7 @@ namespace Settlement_Services.Framework
             if (domain.TryTransition(jobId, ServiceJobStatus.Reserved))
             {
                 domain.FreezeQuote(jobId, plan.Quote);
+                if (plan.PodPlan != null) domain.FreezePodDelivery(jobId, ServicePodDeliveryService.BuildContract(plan.PodPlan, request.settlement));
                 domain.FreezeOptionSelections(jobId, request);
                 if (plan.AcceptedWorkerData is CraftingProductionPlan productionPlan)
                     domain.FreezeCraftingProductionPlan(jobId, productionPlan);
@@ -221,6 +238,7 @@ namespace Settlement_Services.Framework
             if (!result.Success)
             {
                 TargetCustodyService.ReturnCustody(ctx, caravan);
+                TargetCustodyService.RollbackCargoTransfer(job);
                 FailJob(domain, jobId, result.ErrorKey);
                 return false;
             }
@@ -228,8 +246,11 @@ namespace Settlement_Services.Framework
             if (!domain.TryTransition(jobId, ServiceJobStatus.Active))
             {
                 TargetCustodyService.ReturnCustody(ctx, caravan);
+                TargetCustodyService.RollbackCargoTransfer(job);
                 return false;
             }
+
+            TargetCustodyService.CommitCargoTransfer(jobId);
 
             foreach (string thingDefName in domain.ReservationsForJob(jobId).Select(r => r.stockThingDefName).ToList())
                 domain.ConsumeReservedStock(jobId, thingDefName);
@@ -261,6 +282,7 @@ namespace Settlement_Services.Framework
             var ctx = new ServiceJobContext(domain, job);
             Settlement settlement = ctx.ResolveSettlement();
             if (settlement == null || collectingCaravan.Tile != settlement.Tile) return false;
+            if (GetCollectBlockKey(job, collectingCaravan) != null) return false;
 
             if (!TargetExecutionService.TryFinalize(domain, job)) return false;
 
@@ -268,6 +290,14 @@ namespace Settlement_Services.Framework
             if (job.targetInCustody || !job.results.NullOrEmpty()) return false;
 
             return domain.TryTransition(jobId, ServiceJobStatus.Collected);
+        }
+
+        public static string GetCollectBlockKey(ServiceJobRecord job, Caravan collectingCaravan)
+        {
+            var ctx = new ServiceJobContext(SettlementServicesWorldComponent.Current, job);
+            Settlement settlement = ctx.ResolveSettlement();
+            if (settlement == null) return "SettlementServices.Error.SettlementNoLongerExists";
+            return TargetCustodyService.GetCollectBlockKey(job, collectingCaravan, settlement.Tile);
         }
 
         private static Caravan ResolveRequesterCaravan(ServiceJobRecord job) =>
@@ -302,9 +332,11 @@ namespace Settlement_Services.Framework
                 IServicePaymentProvider provider = ResolvePaymentProvider(job.requestChannel);
                 int refundAmount = result.RefundLineItems != null
                     ? result.RefundLineItems.Sum(li => li.amount)
-                    : job.acceptedQuote.totalCost;
+                    : job.acceptedQuote.BaseCost;
                 if (refundAmount > 0) provider.Refund(refundAmount, ctx);
             }
+
+            ServicePodDeliveryService.RefundSurchargeOnce(job, ctx);
 
             domain.ReleaseAllReservations(jobId);
             ApplyCancelDisposition(domain, job, result);
@@ -337,6 +369,7 @@ namespace Settlement_Services.Framework
             }
 
             domain.ReleaseAllReservations(jobId);
+            ServicePodDeliveryService.RefundSurchargeOnce(job, ctx);
 
             if (result.TargetDisposition != ServiceTargetDisposition.Return)
             {
@@ -406,15 +439,17 @@ namespace Settlement_Services.Framework
 
         private static void ApplyRefundAndReleaseReservations(SettlementServicesWorldComponent domain, ServiceJobRecord job, float refundFraction = 1f)
         {
-            if (job.acceptedQuote != null && job.acceptedQuote.totalCost > 0 && refundFraction > 0f)
+            var ctx = new ServiceJobContext(domain, job);
+            if (job.acceptedQuote != null && job.acceptedQuote.BaseCost > 0 && refundFraction > 0f)
             {
-                var ctx = new ServiceJobContext(domain, job);
                 IServicePaymentProvider provider = ResolvePaymentProvider(job.requestChannel);
                 SettlementServiceDef def = DefDatabase<SettlementServiceDef>.GetNamedSilentFail(job.serviceDefName);
                 int? workerRefund = job.status == ServiceJobStatus.Active ? def?.Worker.TerminationRefundFor(ctx) : null;
-                int refundAmount = workerRefund ?? Mathf.RoundToInt(job.acceptedQuote.totalCost * Mathf.Clamp01(refundFraction));
+                int refundAmount = workerRefund ?? Mathf.RoundToInt(job.acceptedQuote.BaseCost * Mathf.Clamp01(refundFraction));
                 if (refundAmount > 0) provider.Refund(refundAmount, ctx);
             }
+
+            ServicePodDeliveryService.RefundSurchargeOnce(job, ctx);
 
             domain.ReleaseAllReservations(job.jobId);
         }
@@ -437,7 +472,11 @@ namespace Settlement_Services.Framework
             {
                 NotifyWorkerJobTerminating(domain, job);
                 TargetExecutionService.TryFinalize(domain, job);
-                if (job.executionCommitted) domain.ReleaseAllReservations(job.jobId);
+                if (job.executionCommitted)
+                {
+                    domain.ReleaseAllReservations(job.jobId);
+                    ServicePodDeliveryService.RefundSurchargeOnce(job, new ServiceJobContext(domain, job));
+                }
                 else ApplyRefundAndReleaseReservations(domain, job);
             }
 

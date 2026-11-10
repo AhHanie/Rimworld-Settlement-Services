@@ -12,11 +12,19 @@ namespace Settlement_Services.Framework.Dto
         public int unitCount = 1;
         public int unitPrice;
 
+        public int podCount;
+        public int podDeliveryCost;
+        public float podMassBound;
+        public int podMaxRange;
+        public int podDistance;
+
         public List<ServiceUnitQuote> perUnitQuotes = new List<ServiceUnitQuote>();
 
         public List<string> validationErrors = new List<string>();
 
         public bool IsValid => validationErrors.Count == 0;
+
+        public int BaseCost => totalCost - podDeliveryCost;
 
         public static SettlementServiceQuote Invalid(string errorKey)
         {
@@ -31,6 +39,11 @@ namespace Settlement_Services.Framework.Dto
             Scribe_Values.Look(ref expectedDurationTicks, "expectedDurationTicks");
             Scribe_Values.Look(ref unitCount, "unitCount", 1);
             Scribe_Values.Look(ref unitPrice, "unitPrice");
+            Scribe_Values.Look(ref podCount, "podCount");
+            Scribe_Values.Look(ref podDeliveryCost, "podDeliveryCost");
+            Scribe_Values.Look(ref podMassBound, "podMassBound");
+            Scribe_Values.Look(ref podMaxRange, "podMaxRange");
+            Scribe_Values.Look(ref podDistance, "podDistance");
             Scribe_Collections.Look(ref perUnitQuotes, "perUnitQuotes", LookMode.Deep);
             Scribe_Collections.Look(ref validationErrors, "validationErrors", LookMode.Value);
 

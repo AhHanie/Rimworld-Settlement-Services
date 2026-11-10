@@ -5,6 +5,7 @@ using RimWorld;
 using RimWorld.Planet;
 using Verse;
 using Settlement_Services.Domain;
+using Settlement_Services.Framework.Delivery;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Dto;
 
@@ -28,6 +29,7 @@ namespace Settlement_Services.UI
         public int craftingCrafterCount = 1;
         public readonly List<BuildingCommissionLine> buildingCommissionLines = new List<BuildingCommissionLine>();
         public readonly List<MarketCartLine> marketCartLines = new List<MarketCartLine>();
+        public readonly ServicePodDeliverySelection podDelivery = new ServicePodDeliverySelection();
 
         private ServiceRequestSession(RequestChannel channel, Settlement settlement, Caravan caravan, Pawn negotiator)
         {
@@ -42,6 +44,10 @@ namespace Settlement_Services.UI
 
         public static ServiceRequestSession ForRemote(Settlement settlement, Pawn negotiator) =>
             new ServiceRequestSession(RequestChannel.Remote, settlement, null, negotiator);
+
+        public ServiceRequestSession CreateTemplate() => channel == RequestChannel.Remote
+            ? ForRemote(settlement, negotiator)
+            : ForInPersonVisit(settlement, caravan);
 
         public TargetKind TargetKindForDef => def == null || def.targetRule == ServiceTargetRule.None
             ? TargetKind.None
@@ -86,6 +92,7 @@ namespace Settlement_Services.UI
                 buildingCommissionLines = buildingCommissionLines.Select(l => l.Clone()).ToList(),
                 marketCartLines = marketCartLines.Select(l => l.Clone()).ToList(),
                 negotiator = negotiator,
+                podDelivery = podDelivery.enabled ? podDelivery.Clone() : null,
             };
         }
 

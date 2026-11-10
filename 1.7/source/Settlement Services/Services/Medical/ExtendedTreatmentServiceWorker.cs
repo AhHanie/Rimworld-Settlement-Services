@@ -10,6 +10,8 @@ namespace Settlement_Services.Services.Medical
 {
     public class ExtendedTreatmentServiceWorker : SettlementServiceWorker
     {
+        public override bool PodManifestIsTargetsOnly => true;
+
         public override ServiceAvailabilityReport CanOffer(SettlementServiceContext ctx)
         {
             if (!(ctx.SelectedTarget is Pawn pawn)) return ServiceAvailabilityReport.Available;

@@ -6,7 +6,9 @@ using Verse;
 using Settlement_Services.Domain;
 using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework;
+using Settlement_Services.Framework.Board;
 using Settlement_Services.Framework.Compatibility;
+using Settlement_Services.Framework.Custody;
 
 namespace Settlement_Services.UI.Interaction
 {
@@ -33,23 +35,59 @@ namespace Settlement_Services.UI.Interaction
 
         private static Command_Action BuildCollectCommand(Settlement settlement, Caravan caravan)
         {
-            List<ServiceJobRecord> awaitingCollection = SettlementServicesWorldComponent.Current
+            SettlementServicesWorldComponent domain = SettlementServicesWorldComponent.Current;
+            List<ServiceJobRecord> awaitingCollection = domain
                 .JobsForSettlement(settlement.ID)
                 .Where(j => j.status == ServiceJobStatus.AwaitingCollection)
                 .ToList();
-            if (awaitingCollection.Count == 0) return null;
+            List<BoardJobRecord> boardPickups = domain
+                .BoardJobsForSettlement(settlement.ID)
+                .Where(j => j.status == BoardJobStatus.ReturnPending && !j.pawnsReturned && j.assignedPawns.Any(p => p != null && !p.Destroyed && !p.Dead))
+                .ToList();
+            if (awaitingCollection.Count == 0 && boardPickups.Count == 0) return null;
 
-            return new Command_Action
+            var heldPawns = new List<Pawn>();
+            foreach (ServiceJobRecord job in awaitingCollection) heldPawns.AddRange(TargetCustodyService.HeldPawns(job));
+            foreach (BoardJobRecord job in boardPickups) heldPawns.AddRange(job.assignedPawns.Where(p => p != null && !p.Destroyed && !p.Dead));
+            heldPawns = heldPawns.Distinct().ToList();
+
+            TaggedString description = "SettlementServices.Command.CollectDesc".Translate();
+            if (heldPawns.Count > 0)
+                description += "\n\n" + "SettlementServices.Command.CollectHeldPawns".Translate(heldPawns.Count, string.Join(", ", heldPawns.Select(p => p.LabelShortCap)));
+
+            string firstBlockKey = null;
+            bool anyCollectible = false;
+            foreach (ServiceJobRecord job in awaitingCollection)
+            {
+                string key = SettlementServiceOrchestrator.GetCollectBlockKey(job, caravan);
+                if (key == null) anyCollectible = true;
+                else if (firstBlockKey == null) firstBlockKey = key;
+            }
+            foreach (BoardJobRecord job in boardPickups)
+            {
+                string key = BoardPawnCustodyService.GetCollectBlockKey(caravan, settlement.Tile, job.assignedPawns.Where(p => p != null && !p.Destroyed && !p.Dead).ToList());
+                if (key == null) anyCollectible = true;
+                else if (firstBlockKey == null) firstBlockKey = key;
+            }
+
+            var command = new Command_Action
             {
                 defaultLabel = "SettlementServices.Command.Collect".Translate(),
-                defaultDesc = "SettlementServices.Command.CollectDesc".Translate(),
+                defaultDesc = description,
                 icon = ServiceUITextures.CollectCommand,
                 action = () =>
                 {
                     int collected = awaitingCollection.Count(j => SettlementServiceOrchestrator.CollectJob(j.jobId, caravan));
+                    foreach (BoardJobRecord boardJob in boardPickups)
+                    {
+                        if (BoardJobCoordinator.TryCollectWorkers(domain, boardJob, caravan, out _)) collected++;
+                    }
                     Messages.Message("SettlementServices.Message.JobsCollected".Translate(collected), MessageTypeDefOf.PositiveEvent, historical: false);
                 },
             };
+
+            if (!anyCollectible && firstBlockKey != null) command.Disable(firstBlockKey.Translate());
+            return command;
         }
 
         private static Command_Action BuildServicesCommand(Settlement settlement, Caravan caravan)

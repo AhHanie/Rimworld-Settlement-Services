@@ -13,6 +13,8 @@ namespace Settlement_Services.Services.Genetics
 {
     public class BiosculpterTreatmentServiceWorker : SettlementServiceWorker
     {
+        public override bool PodManifestIsTargetsOnly => true;
+
         private const string CycleGroupKey = "SettlementServices.Label.BiosculpterCycleChoice";
 
         public override ServiceAvailabilityReport CanOffer(SettlementServiceContext ctx)

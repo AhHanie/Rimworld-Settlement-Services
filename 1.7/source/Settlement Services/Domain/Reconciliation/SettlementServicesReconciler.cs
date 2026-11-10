@@ -127,11 +127,34 @@ namespace Settlement_Services.Domain.Reconciliation
                 droppedIdeoEntries += staleCount;
             }
 
+            NotifyOwnerlessServiceCaravans(component);
+
             if (failedJobs > 0 || droppedSettlements > 0 || droppedSpecialties > 0 || droppedIdeoEntries > 0)
             {
                 Settlement_Services.SupportLog.Info(
                     $"Reconciliation: failed {failedJobs} orphaned job(s), dropped {droppedSettlements} orphaned settlement record(s), dropped {droppedSpecialties} specialty grant(s) whose gate is no longer met, "
                     + $"dropped {droppedIdeoEntries} stale practiced ideoligion entries.");
+            }
+        }
+
+        private static void NotifyOwnerlessServiceCaravans(SettlementServicesWorldComponent component)
+        {
+            var seen = new HashSet<Caravan>();
+            foreach (ServiceJobRecord job in component.JobsRaw)
+            {
+                foreach (TargetSnapshot target in job.Targets)
+                {
+                    if (!(target?.liveThing is Pawn pawn) || pawn.Dead || pawn.Destroyed) continue;
+
+                    Caravan caravan = pawn.GetCaravan();
+                    if (caravan == null || !caravan.IsPlayerControlled || caravan.PawnsListForReading.Any(caravan.IsOwner) || !seen.Add(caravan)) continue;
+
+                    Find.LetterStack.ReceiveLetter(
+                        "SettlementServices.Letter.OwnerlessCaravanLabel".Translate(),
+                        "SettlementServices.Letter.OwnerlessCaravanText".Translate(caravan.LabelCap),
+                        LetterDefOf.NeutralEvent,
+                        caravan);
+                }
             }
         }
 

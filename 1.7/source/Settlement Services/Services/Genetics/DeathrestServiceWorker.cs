@@ -11,6 +11,8 @@ namespace Settlement_Services.Services.Genetics
 {
     public class DeathrestServiceWorker : SettlementServiceWorker
     {
+        public override bool PodManifestIsTargetsOnly => true;
+
         private const int CycleTicks = Gene_Deathrest.BaseDeathrestTicksWithoutInterruptedHediff;
         private const float NeedTolerance = 0.001f;
 

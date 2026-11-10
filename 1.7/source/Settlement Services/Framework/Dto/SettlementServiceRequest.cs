@@ -5,6 +5,7 @@ using RimWorld.Planet;
 using UnityEngine;
 using Verse;
 using Settlement_Services.Domain;
+using Settlement_Services.Framework.Delivery;
 
 namespace Settlement_Services.Framework.Dto
 {
@@ -33,6 +34,8 @@ namespace Settlement_Services.Framework.Dto
         public Pawn negotiator;
 
         public int bookingTick = -1;
+
+        public ServicePodDeliverySelection podDelivery;
 
         public ServiceTargetSelection target
         {
@@ -121,6 +124,7 @@ namespace Settlement_Services.Framework.Dto
             marketCartLines = CloneLines(marketCartLines),
             negotiator = negotiator,
             bookingTick = bookingTick,
+            podDelivery = podDelivery?.Clone(),
         };
 
         private static List<CraftingCommissionLine> CloneLines(List<CraftingCommissionLine> source) =>

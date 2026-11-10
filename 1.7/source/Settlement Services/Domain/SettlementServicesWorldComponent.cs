@@ -12,6 +12,7 @@ using Settlement_Services.Framework;
 using Settlement_Services.Framework.Board;
 using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Custody;
+using Settlement_Services.Framework.Delivery;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Payment;
 using Settlement_Services.Framework.Stock;
@@ -198,6 +199,7 @@ namespace Settlement_Services.Domain
             SettlementServicesReconciler.ReconcileHiringTransits(this);
             SettlementServicesReconciler.ReconcileAnimalVendorOffers(this);
             SettlementServicesReconciler.ReconcileVehicleShopOffers(this);
+            ServicePodDeliveryService.ReconcileInFlight(this);
             SettlementServiceJobScheduler.TickAll(this, TickInterval);
             BoardJobCoordinator.TickDue(this);
             BoardOfferScheduler.TickDue(this);
@@ -248,6 +250,7 @@ namespace Settlement_Services.Domain
                     || job.status == ServiceJobStatus.Cancelled
                     || job.status == ServiceJobStatus.Failed;
                 if (!prunable) continue;
+                if (job.podDelivery != null && job.podDelivery.IsOutstanding) continue;
                 if (Find.TickManager.TicksGame - job.statusChangedTick < JobRetentionWindowTicks) continue;
 
                 RemoveJobRecord(job);
@@ -280,6 +283,7 @@ namespace Settlement_Services.Domain
             if (!deletableStatus) return false;
 
             if (job.targetInCustody || job.pendingExecution) return false;
+            if (job.podDelivery != null && job.podDelivery.IsOutstanding) return false;
             if (job.results != null && job.results.Count > 0) return false;
             if (job.eventOutcome != null && job.eventOutcome.presented && !job.eventOutcome.applied) return false;
             if (job.growthVat?.vat != null) return false;
@@ -310,6 +314,8 @@ namespace Settlement_Services.Domain
 
 
         public void TakeItemCustody(Thing thing) => itemCustody.TryAdd(thing, canMergeWithExistingStacks: false);
+
+        public bool IsInItemCustody(Thing thing) => thing != null && itemCustody.Contains(thing);
 
         public bool TryTakeItemCustody(Thing thing) => itemCustody.TryAdd(thing, canMergeWithExistingStacks: false);
 
@@ -699,6 +705,13 @@ namespace Settlement_Services.Domain
             if (job == null) return;
             job.paymentKind = kind;
             job.paidBarterValue = kind == ServicePaymentKind.Barter ? paidBarterValue : 0f;
+        }
+
+        public void FreezePodDelivery(int jobId, ServicePodDeliveryContract contract)
+        {
+            ServiceJobRecord job = GetJob(jobId);
+            if (job == null) return;
+            job.podDelivery = contract;
         }
 
         public void MarkPlayerSuppliedInputsRefunded(int jobId)

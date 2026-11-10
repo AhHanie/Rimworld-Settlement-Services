@@ -35,9 +35,6 @@ namespace Settlement_Services.Framework
         public static void NotifyLeftEarlyAwaitingCollection(ServiceJobRecord job) =>
             Send(job, "SettlementServices.Letter.LeftEarlyLabel", "SettlementServices.Letter.LeftEarlyText", LetterDefOf.NeutralEvent);
 
-        public static void NotifyShuttleMergeSkipped(ServiceJobRecord job) =>
-            Messages.Message("SettlementServices.Message.ShuttleMergeSkipped".Translate(), MessageTypeDefOf.NeutralEvent, historical: false);
-
         public static void NotifyEvent(ServiceJobRecord job, ServiceEventDef eventDef)
         {
             LetterDef tone = eventDef.weightClass == ServiceEventWeightClass.Complication

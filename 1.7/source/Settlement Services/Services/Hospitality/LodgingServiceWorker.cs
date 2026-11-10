@@ -17,6 +17,8 @@ namespace Settlement_Services.Services.Hospitality
 {
     public class LodgingServiceWorker : SettlementServiceWorker
     {
+        public override bool PodManifestIsTargetsOnly => true;
+
         private const string DrugStockCategory = "SettlementStock_Drugs";
         private const string SubstanceDrugGroupKey = "SettlementServices.Label.SubstanceChoice";
         private const float TavernSocialXp = 600f;

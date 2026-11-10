@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using RimWorld.Planet;
 using Verse;
 using Settlement_Services.Domain;
+using Settlement_Services.Framework.Delivery;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Payment;
 
@@ -66,6 +67,7 @@ namespace Settlement_Services.Domain.Records
         public GrowthVatJobState growthVat;
         public SurrogacyJobState surrogacy;
         public List<string> processedCompatibilityCompletionModuleIds = new List<string>();
+        public ServicePodDeliveryContract podDelivery;
 
         public IReadOnlyList<TargetSnapshot> Targets => targets;
 
@@ -122,6 +124,7 @@ namespace Settlement_Services.Domain.Records
             Scribe_Deep.Look(ref growthVat, "growthVat");
             Scribe_Deep.Look(ref surrogacy, "surrogacy");
             Scribe_Collections.Look(ref processedCompatibilityCompletionModuleIds, "processedCompatibilityCompletionModuleIds", LookMode.Value);
+            Scribe_Deep.Look(ref podDelivery, "podDelivery");
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit && results == null)
             {

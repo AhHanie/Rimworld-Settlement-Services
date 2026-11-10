@@ -10,6 +10,8 @@ namespace Settlement_Services.Services.Education
 {
     public class SkillLessonServiceWorker : SettlementServiceWorker
     {
+        public override bool PodManifestIsTargetsOnly => true;
+
         private const string IntensityGroupKey = "SettlementServices.Label.LessonIntensityChoice";
 
         private SkillLessonServiceDef LessonDef => def as SkillLessonServiceDef;

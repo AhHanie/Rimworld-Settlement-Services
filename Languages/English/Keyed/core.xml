@@ -39,6 +39,8 @@
     <SettlementServices.LineItem.NegotiatorSocialDiscount>Negotiator Social skill ({0})</SettlementServices.LineItem.NegotiatorSocialDiscount>
     <SettlementServices.Letter.ReadyForCollectionLabel>Service complete</SettlementServices.Letter.ReadyForCollectionLabel>
     <SettlementServices.Letter.ReadyForCollectionText>A service at a settlement has finished. Send a caravan to collect the result.</SettlementServices.Letter.ReadyForCollectionText>
+    <SettlementServices.Letter.OwnerlessCaravanLabel>Caravan without a leader</SettlementServices.Letter.OwnerlessCaravanLabel>
+    <SettlementServices.Letter.OwnerlessCaravanText>{0} has no free colonist to lead it after a settlement service returned its pawns, so it cannot travel. Bring another caravan with a free colonist to the same tile and merge the two to get them moving again.</SettlementServices.Letter.OwnerlessCaravanText>
     <SettlementServices.Letter.InterruptedLabel>Service interrupted</SettlementServices.Letter.InterruptedLabel>
     <SettlementServices.Letter.InterruptedText>A service at a settlement was interrupted before finishing. You have been refunded; send a caravan to collect what was left behind.</SettlementServices.Letter.InterruptedText>
     <SettlementServices.Letter.FailedLabel>Service failed</SettlementServices.Letter.FailedLabel>
@@ -50,6 +52,41 @@
     <SettlementServices.Message.DeliveredHome>A settlement that was holding your property no longer exists; it has been delivered to your colony instead.</SettlementServices.Message.DeliveredHome>
     <SettlementServices.Message.RecoveryCaravanCreated>A settlement holding your property was destroyed. A recovery caravan has formed at the former settlement.</SettlementServices.Message.RecoveryCaravanCreated>
     <SettlementServices.Message.ShuttleMergeSkipped>A returning pawn's caravan was not merged with another waiting shuttle caravan at the settlement, to avoid losing a passenger shuttle. Merge them manually if desired.</SettlementServices.Message.ShuttleMergeSkipped>
+    <SettlementServices.Error.LastOwnerDeparture>This would leave the rest of your caravan without a free colonist able to lead it. Keep another capable colonist in the caravan, or include everyone in the service.</SettlementServices.Error.LastOwnerDeparture>
+    <SettlementServices.Error.NoCapableCaravanOwner>That caravan would have no free, able colonist to lead it, so it cannot take the held pawns.</SettlementServices.Error.NoCapableCaravanOwner>
+    <SettlementServices.Error.CargoTransferFailed>The caravan's cargo could not be safely moved to the colonists who are staying behind, so nothing was changed.</SettlementServices.Error.CargoTransferFailed>
+    <SettlementServices.Error.CollectCaravanIneligible>Only a stationary player caravan at this settlement can collect.</SettlementServices.Error.CollectCaravanIneligible>
+    <SettlementServices.Error.CollectCaravanMoving>The caravan must stop moving before it can collect.</SettlementServices.Error.CollectCaravanMoving>
+    <SettlementServices.Error.CollectCaravanWrongTile>This caravan is not at the settlement holding the pawns.</SettlementServices.Error.CollectCaravanWrongTile>
+    <SettlementServices.Error.CollectIncomplete>Not every held pawn could be added to the caravan. They remain waiting at the settlement.</SettlementServices.Error.CollectIncomplete>
+    <SettlementServices.Message.CargoOverburdened>{0} is now carrying more than they can comfortably handle after taking on the departing colonists' cargo.</SettlementServices.Message.CargoOverburdened>
+    <SettlementServices.Error.PodDeliveryTechTooLow>Only industrial-or-higher-tech factions can deliver by transport pod.</SettlementServices.Error.PodDeliveryTechTooLow>
+    <SettlementServices.Error.PodDeliveryNoHomeMap>You have no home colony map to deliver to.</SettlementServices.Error.PodDeliveryNoHomeMap>
+    <SettlementServices.Error.PodDeliveryNoDestination>Choose a landing cell on one of your home maps for the pod delivery.</SettlementServices.Error.PodDeliveryNoDestination>
+    <SettlementServices.Error.PodDeliveryDestinationInvalid>The chosen pod landing site is no longer available. Choose another.</SettlementServices.Error.PodDeliveryDestinationInvalid>
+    <SettlementServices.Error.PodDeliveryOutOfRange>The chosen destination is beyond the settlement's transport pod range. More pods add capacity, not range.</SettlementServices.Error.PodDeliveryOutOfRange>
+    <SettlementServices.Error.PodDeliveryManifestUnbounded>This service's finished contents cannot be sized in advance, so pod delivery cannot be guaranteed for it.</SettlementServices.Error.PodDeliveryManifestUnbounded>
+    <SettlementServices.Error.PodDeliveryItemTooHeavy>Something being returned is too heavy for a single transport pod, or needs more pods than a delivery can use.</SettlementServices.Error.PodDeliveryItemTooHeavy>
+    <SettlementServices.Error.PodDeliveryUnavailable>Transport pods are not available for this delivery.</SettlementServices.Error.PodDeliveryUnavailable>
+    <SettlementServices.Error.PodDeliveryRequiresSilver>Pod delivery must be paid for in silver, not barter.</SettlementServices.Error.PodDeliveryRequiresSilver>
+    <SettlementServices.Error.PodDeliveryQuoteChanged>The pod delivery quote changed. Review it and try again.</SettlementServices.Error.PodDeliveryQuoteChanged>
+    <SettlementServices.Error.PodDeliveryNothingToDeliver>There was nothing to deliver by pod.</SettlementServices.Error.PodDeliveryNothingToDeliver>
+    <SettlementServices.Error.PodDeliveryOverCapacity>The finished contents no longer fit in the contracted pods.</SettlementServices.Error.PodDeliveryOverCapacity>
+    <SettlementServices.Error.PodDeliveryLaunchFailed>The pods could not be loaded and launched.</SettlementServices.Error.PodDeliveryLaunchFailed>
+    <SettlementServices.LineItem.PodDelivery>Transport pod delivery ({0} pods)</SettlementServices.LineItem.PodDelivery>
+    <SettlementServices.LineItem.PodDeliveryFuel>Transport pod fuel</SettlementServices.LineItem.PodDeliveryFuel>
+    <SettlementServices.Label.PodDeliveryToggle>Deliver finished contents by transport pod</SettlementServices.Label.PodDeliveryToggle>
+    <SettlementServices.Label.PodDeliveryToggleDesc>The settlement will launch everything this service returns, by transport pod, to the landing cell you choose on a home map as soon as it finishes. Paid now, refunded in full if it cannot be delivered; you can then collect in person instead.</SettlementServices.Label.PodDeliveryToggleDesc>
+    <SettlementServices.Label.PodDestinationNone>Landing site: not chosen</SettlementServices.Label.PodDestinationNone>
+    <SettlementServices.Label.PodDestination>Landing site: {0} ({1}, {2})</SettlementServices.Label.PodDestination>
+    <SettlementServices.Label.PodDeliveryStats>Pods: {0} - estimated cargo mass: {1} kg - distance: {2} tiles (maximum range {3})</SettlementServices.Label.PodDeliveryStats>
+    <SettlementServices.Button.ChoosePodDestination>Choose landing site</SettlementServices.Button.ChoosePodDestination>
+    <SettlementServices.Message.PodDeliveryLaunched>{0} transport pod(s) carrying your finished service launched toward {1}.</SettlementServices.Message.PodDeliveryLaunched>
+    <SettlementServices.Message.PodDeliveryArrived>Transport pods from a settlement service have landed.</SettlementServices.Message.PodDeliveryArrived>
+    <SettlementServices.Message.PodDeliveryArrivedRerouted>The pod delivery's landing site was lost, so the transport pods landed at another home map.</SettlementServices.Message.PodDeliveryArrivedRerouted>
+    <SettlementServices.Message.PodDeliveryFellBack>Pod delivery was cancelled: {0} Everything is waiting to be collected at the settlement, and the {1} silver delivery charge was refunded.</SettlementServices.Message.PodDeliveryFellBack>
+    <SettlementServices.Letter.PodDeliveryHeldLabel>Pod delivery has nowhere to land</SettlementServices.Letter.PodDeliveryHeldLabel>
+    <SettlementServices.Letter.PodDeliveryHeldText>Transport pods arrived but no home map exists to receive them. {0} item(s) or pawn(s) are being held safely and will be delivered as soon as you have a home map again.</SettlementServices.Letter.PodDeliveryHeldText>
     <SettlementServices.Status.Drafted>Drafted</SettlementServices.Status.Drafted>
     <SettlementServices.Status.Quoted>Quoted</SettlementServices.Status.Quoted>
     <SettlementServices.Status.Reserved>Reserved</SettlementServices.Status.Reserved>

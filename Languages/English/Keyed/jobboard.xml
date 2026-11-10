@@ -80,6 +80,7 @@
     <SettlementServices.JobBoard.Fail.Aborted>The job was cancelled.</SettlementServices.JobBoard.Fail.Aborted>
 
     <SettlementServices.JobBoard.Message.Started>{0} worker(s) have begun "{1}" for {2}. They will be done in {3}.</SettlementServices.JobBoard.Message.Started>
+    <SettlementServices.JobBoard.Message.AwaitingPickup>The workers from "{0}" are waiting at {1} because their original caravan is no longer there to take them back. Send a caravan with a free colonist and use Collect.</SettlementServices.JobBoard.Message.AwaitingPickup>
     <SettlementServices.JobBoard.Message.Cancelled>"{0}" at {1} was cancelled. The workers have returned.</SettlementServices.JobBoard.Message.Cancelled>
     <SettlementServices.JobBoard.Letter.CompletedLabel>Job finished</SettlementServices.JobBoard.Letter.CompletedLabel>
     <SettlementServices.JobBoard.Letter.CompletedText>Your workers have finished "{0}" for {1} and are waiting at the settlement.\n\nReward: {2} (worth {3}).</SettlementServices.JobBoard.Letter.CompletedText>

@@ -11,6 +11,8 @@ namespace Settlement_Services.Services.Android
 {
     public class AndroidRepairServiceWorker : SettlementServiceWorker
     {
+        public override bool PodManifestIsTargetsOnly => true;
+
         private const float ReferenceDamageFraction = 0.5f;
         private const float MaxRepairFactor = 2.5f;
 

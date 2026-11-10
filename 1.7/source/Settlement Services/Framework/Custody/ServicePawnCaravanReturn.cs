@@ -30,24 +30,22 @@ namespace Settlement_Services.Framework.Custody
             Settlement settlement = ctx.ResolveSettlement();
             if (settlement == null) return false;
 
-            if (!TryReturnPawns(ctx, pawns, settlement.Tile, job.requesterCaravanId, $"Job {job.jobId}", () => SettlementServiceNotifier.NotifyShuttleMergeSkipped(job), out _))
+            if (!TryReturnPawns(ctx, pawns, settlement.Tile, job.requesterCaravanId, $"Job {job.jobId}", out _))
                 return false;
 
             job.targetInCustody = false;
             return true;
         }
 
-        internal static bool TryReturnPawns(ServiceJobContext ctx, List<Pawn> pawns, PlanetTile tile, int preferredCaravanId, string logContext, System.Action onShuttleMergeSkipped, out Caravan receiverCaravan)
+        internal static bool TryReturnPawns(ServiceJobContext ctx, List<Pawn> pawns, PlanetTile tile, int preferredCaravanId, string logContext, out Caravan receiverCaravan)
         {
             receiverCaravan = null;
             if (pawns.Count == 0) return false;
             if (!tile.Valid || !tile.LayerDef.canFormCaravans) return false;
+            if (preferredCaravanId < 0) return false;
 
-            List<Caravan> candidates = SnapshotWaitingCaravans(tile);
-            Caravan receiver = ResolvePreferredCaravan(preferredCaravanId, candidates) ?? SelectDeterministicReceiver(candidates);
-
-            bool createdCaravan = receiver == null;
-            if (createdCaravan) receiver = CaravanMaker.MakeCaravan(Enumerable.Empty<Pawn>(), Faction.OfPlayer, tile, true);
+            Caravan receiver = Find.WorldObjects.Caravans.FirstOrDefault(c => c.ID == preferredCaravanId);
+            if (receiver == null || receiver.Tile != tile || !CaravanOwnershipRules.IsEligibleReceiver(receiver, pawns)) return false;
 
             bool allReturned = true;
             foreach (Pawn pawn in pawns)
@@ -58,15 +56,9 @@ namespace Settlement_Services.Framework.Custody
 
             if (!allReturned)
             {
-                SupportLog.Error($"{logContext}: automatic return could not verify every pawn back into a caravan; leaving the pawns recoverable.");
-                if (createdCaravan && receiver != null && !receiver.Destroyed && receiver.PawnsListForReading.Count == 0) receiver.Destroy();
+                SupportLog.Error($"{logContext}: automatic return could not verify every pawn back into the original caravan; leaving the pawns recoverable.");
                 return false;
             }
-
-            if (createdCaravan) receiver.Name = CaravanNameGenerator.GenerateCaravanName(receiver);
-
-            List<Caravan> mergeSources = SnapshotWaitingCaravans(tile).Where(c => c != receiver).ToList();
-            MergeIntoReceiver(receiver, mergeSources, onShuttleMergeSkipped);
 
             receiverCaravan = receiver;
             return true;
@@ -74,46 +66,5 @@ namespace Settlement_Services.Framework.Custody
 
         internal static bool IsWaitingPlayerCaravan(Caravan c) =>
             c != null && !c.Destroyed && c.Spawned && c.IsPlayerControlled && !c.pather.Moving;
-
-        private static List<Caravan> SnapshotWaitingCaravans(PlanetTile tile) =>
-            Find.WorldObjects.Caravans.Where(c => IsWaitingPlayerCaravan(c) && c.Tile == tile).ToList();
-
-        private static Caravan ResolvePreferredCaravan(int caravanId, List<Caravan> candidates) =>
-            caravanId < 0 ? null : candidates.FirstOrDefault(c => c.ID == caravanId);
-
-        private static Caravan SelectDeterministicReceiver(List<Caravan> candidates) =>
-            candidates.Count == 0 ? null : candidates.OrderByDescending(c => c.PawnsListForReading.Count).ThenBy(c => c.ID).First();
-
-        private static void MergeIntoReceiver(Caravan receiver, List<Caravan> sources, System.Action onShuttleMergeSkipped)
-        {
-            if (sources.Count == 0) return;
-
-            bool odyssey = ModsConfig.OdysseyActive;
-            int shuttleCount = (odyssey && receiver.Shuttle != null ? 1 : 0) + (odyssey ? sources.Count(c => c.Shuttle != null) : 0);
-
-            List<Caravan> mergeable = sources;
-            bool anySkipped = false;
-            if (shuttleCount >= 2)
-            {
-                mergeable = sources.Where(c => c.Shuttle == null).ToList();
-                anySkipped = mergeable.Count < sources.Count;
-            }
-
-            if (mergeable.Count > 0)
-            {
-                var merged = new List<Caravan> { receiver };
-                foreach (Caravan source in mergeable)
-                {
-                    source.pawns.TryTransferAllToContainer(receiver.pawns);
-                    merged.Add(source);
-                    source.Destroy();
-                }
-
-                receiver.hasShuttleDirty = true;
-                receiver.Notify_Merged(merged);
-            }
-
-            if (anySkipped) onShuttleMergeSkipped?.Invoke();
-        }
     }
 }

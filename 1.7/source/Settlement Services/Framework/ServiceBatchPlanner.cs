@@ -5,6 +5,8 @@ using RimWorld.Planet;
 using UnityEngine;
 using Verse;
 using Settlement_Services.Domain;
+using Settlement_Services.Framework.Custody;
+using Settlement_Services.Framework.Delivery;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Pricing;
@@ -20,6 +22,7 @@ namespace Settlement_Services.Framework
         public SettlementServiceQuote Quote;
         public ServiceInputPlan InputPlan;
         public object AcceptedWorkerData;
+        public ServicePodDeliveryPlan PodPlan;
     }
 
     internal static class ServiceBatchPlanner
@@ -73,32 +76,47 @@ namespace Settlement_Services.Framework
             return true;
         }
 
+        private static bool TryValidateDeparture(SettlementServiceDef def, SettlementServiceRequest request, out string errorKey)
+        {
+            errorKey = null;
+            if (!def.Worker.RequiresTargetCustody || request.targets.NullOrEmpty()) return true;
+
+            Caravan caravan = request.negotiator?.GetCaravan();
+            if (caravan == null) return true;
+
+            List<Pawn> departing = request.targets.Select(t => t?.thing as Pawn).Where(p => p != null).ToList();
+            errorKey = CaravanOwnershipRules.GetDepartureBlockKey(caravan, departing);
+            return errorKey == null;
+        }
+
         internal static bool TryBuildBatchQuote(SettlementServiceDef def, SettlementServiceRequest request, out SettlementServiceQuote quote, out string errorKey)
         {
-            bool ok = TryBuildBatchQuoteAndPlan(def, request, includeInputPlan: false, out quote, out _, out _, out errorKey);
+            bool ok = TryBuildBatchQuoteAndPlan(def, request, includeInputPlan: false, out quote, out _, out _, out _, out errorKey);
             return ok;
         }
 
         internal static bool TryBuildAcceptancePlan(SettlementServiceDef def, SettlementServiceRequest request, out ServiceBatchPlan plan, out string errorKey)
         {
             plan = null;
-            if (!TryBuildBatchQuoteAndPlan(def, request, includeInputPlan: true, out SettlementServiceQuote quote, out ServiceInputPlan inputPlan, out object workerData, out errorKey))
+            if (!TryBuildBatchQuoteAndPlan(def, request, includeInputPlan: true, out SettlementServiceQuote quote, out ServiceInputPlan inputPlan, out object workerData, out ServicePodDeliveryPlan podPlan, out errorKey))
                 return false;
 
-            plan = new ServiceBatchPlan { Quote = quote, InputPlan = inputPlan, AcceptedWorkerData = workerData };
+            plan = new ServiceBatchPlan { Quote = quote, InputPlan = inputPlan, AcceptedWorkerData = workerData, PodPlan = podPlan };
             return true;
         }
 
         private static bool TryBuildBatchQuoteAndPlan(SettlementServiceDef def, SettlementServiceRequest request, bool includeInputPlan,
-            out SettlementServiceQuote quote, out ServiceInputPlan inputPlan, out object workerData, out string errorKey)
+            out SettlementServiceQuote quote, out ServiceInputPlan inputPlan, out object workerData, out ServicePodDeliveryPlan podPlan, out string errorKey)
         {
             quote = null;
             inputPlan = null;
             workerData = null;
+            podPlan = null;
 
             if (!SettlementServiceValidator.Validate(def, request, out errorKey)) return false;
             if (!SettlementServiceOrchestrator.TierGoodwillMet(def, request, out errorKey)) return false;
             if (!TryBuildUnits(def, request, out List<SettlementServiceRequest> units, out errorKey)) return false;
+            if (!TryValidateDeparture(def, request, out errorKey)) return false;
 
             SettlementServicesWorldComponent domain = SettlementServicesWorldComponent.Current;
             Settlement settlement = request.settlement;
@@ -159,6 +177,12 @@ namespace Settlement_Services.Framework
             }
 
             quote = AggregateQuotes(def, request, units, unitQuotes, unitQuoteDtos);
+            if (request.podDelivery != null && request.podDelivery.enabled)
+            {
+                if (!ServicePodDeliveryPlanner.TryBuildPlan(def, request, units, out podPlan, out errorKey)) { quote = null; return false; }
+                ServicePodDeliveryPlanner.ApplyToQuote(quote, podPlan);
+            }
+
             if (includeInputPlan) inputPlan = new ServiceInputPlan { stockConsumed = stockConsumed, playerSuppliedConsumed = playerSuppliedConsumed, specialStockReservations = specialStockReservations };
             workerData = acceptedWorkerData;
             errorKey = null;

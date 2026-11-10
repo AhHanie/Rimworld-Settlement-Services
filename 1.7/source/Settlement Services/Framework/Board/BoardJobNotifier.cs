@@ -17,6 +17,16 @@ namespace Settlement_Services.Framework.Board
                 historical: false);
         }
 
+        internal static void NotifyAwaitingPickup(BoardJobRecord job)
+        {
+            Settlement settlement = WorldObjectLookup.ResolveSettlement(job.settlementWorldObjectId);
+            Messages.Message(
+                "SettlementServices.JobBoard.Message.AwaitingPickup".Translate(job.title, settlement?.LabelCap ?? "SettlementServices.JobBoard.UnknownSettlement".Translate().Resolve()),
+                settlement != null ? new LookTargets(settlement) : LookTargets.Invalid,
+                MessageTypeDefOf.NeutralEvent,
+                historical: false);
+        }
+
         internal static void NotifyFinished(BoardJobRecord job)
         {
             if (job.resultNotified) return;
