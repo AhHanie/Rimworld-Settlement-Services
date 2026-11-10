@@ -125,14 +125,14 @@ namespace Settlement_Services.UI
             {
                 Thing member = snapshot[i];
                 Rect row = listing.GetRect(24f);
-                if (session.def.Worker is GrowthVatChildServiceWorker && member is Pawn selectedChild)
+                if (member is Pawn selectedPawn)
                 {
                     Rect infoRect = new Rect(row.xMax - 24f - 4f - 24f, row.y, 24f, 24f);
                     Rect nameRect = new Rect(row.x, row.y, infoRect.x - row.x - 4f, row.height);
-                    string childText = GrowthVatPawnText.SelectedTargetText(selectedChild);
-                    Widgets.LabelEllipses(nameRect, childText);
-                    TooltipHandler.TipRegion(nameRect, childText);
-                    Widgets.InfoCardButton(infoRect.x, infoRect.y, selectedChild);
+                    string pawnText = session.def.Worker is GrowthVatChildServiceWorker ? GrowthVatPawnText.SelectedTargetText(selectedPawn) : selectedPawn.LabelCap;
+                    Widgets.LabelEllipses(nameRect, pawnText);
+                    TooltipHandler.TipRegion(nameRect, pawnText);
+                    Widgets.InfoCardButton(infoRect.x, infoRect.y, selectedPawn);
                 }
                 else if ((session.def.Worker is SurrogacyServiceWorker || session.def.Worker is GrowthVatEmbryoServiceWorker) && member is HumanEmbryo selectedEmbryo)
                 {
@@ -705,16 +705,32 @@ namespace Settlement_Services.UI
             Rect row = listing.GetRect(24f);
 
             Rect labelRect = showApply ? new Rect(row.x, row.y, row.width - 190f, row.height) : row;
-            TextAnchor prevAnchor = Text.Anchor;
-            Text.Anchor = TextAnchor.MiddleLeft;
-            Widgets.Label(labelRect, "SettlementServices.Label.PerTargetOptionsHeading".Translate(target.LabelCap));
-            Text.Anchor = prevAnchor;
+            DrawTargetHeadingLabel(labelRect, "SettlementServices.Label.PerTargetOptionsHeading".Translate(target.LabelCap), target);
 
             if (!showApply) return;
 
             Rect buttonRect = new Rect(row.xMax - 184f, row.y, 184f, row.height);
             if (Widgets.ButtonText(buttonRect, "SettlementServices.Button.ApplyOptionsToAllGuests".Translate()))
                 ApplyGuestOptionsToAllOtherTargets(index);
+        }
+
+        private static void DrawTargetHeadingLabel(Rect rect, string text, Thing target)
+        {
+            TextAnchor prevAnchor = Text.Anchor;
+            Text.Anchor = TextAnchor.MiddleLeft;
+            if (target is Pawn pawn)
+            {
+                float textWidth = Mathf.Min(Text.CalcSize(text).x, Mathf.Max(0f, rect.width - 28f));
+                Rect textRect = new Rect(rect.x, rect.y, textWidth, rect.height);
+                Widgets.LabelEllipses(textRect, text);
+                TooltipHandler.TipRegion(textRect, text);
+                Widgets.InfoCardButton(textRect.xMax + 4f, rect.y + (rect.height - 24f) / 2f, pawn);
+            }
+            else
+            {
+                Widgets.Label(rect, text);
+            }
+            Text.Anchor = prevAnchor;
         }
 
         private void ApplyGuestOptionsToAllOtherTargets(int sourceIndex)
@@ -899,7 +915,11 @@ namespace Settlement_Services.UI
 
                 listing.Gap();
                 any = true;
-                if (showPerTargetHeader) listing.Label(target.LabelCap);
+                if (showPerTargetHeader)
+                {
+                    if (target is Pawn) DrawTargetHeadingLabel(listing.GetRect(24f), target.LabelCap, target);
+                    else listing.Label(target.LabelCap);
+                }
                 foreach (string line in lines) listing.Label(line);
             }
 

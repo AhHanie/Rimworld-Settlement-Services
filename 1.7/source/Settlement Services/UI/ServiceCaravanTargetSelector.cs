@@ -61,9 +61,11 @@ namespace Settlement_Services.UI
             var floatOptions = options.Select(t =>
             {
                 string blockReason = session.def.Worker.GetTargetBlockReason(t);
-                return blockReason.NullOrEmpty()
-                    ? new FloatMenuOption(t.LabelCap, () => onChosen(t))
-                    : new FloatMenuOption(t.LabelCap + ": " + blockReason, null);
+                string label = blockReason.NullOrEmpty() ? t.LabelCap : t.LabelCap + ": " + blockReason;
+                Action chosen = blockReason.NullOrEmpty() ? () => onChosen(t) : (Action)null;
+                if (t is Pawn pawn)
+                    return new FloatMenuOption(label, chosen, extraPartWidth: 24f, extraPartOnGUI: rect => Widgets.InfoCardButton(rect.x, rect.y + (rect.height - 24f) / 2f, pawn));
+                return new FloatMenuOption(label, chosen);
             }).ToList();
             Find.WindowStack.Add(new FloatMenu(floatOptions));
         }
