@@ -53,20 +53,22 @@ namespace Settlement_Services.Framework.Pricing
             scaled *= def.Worker.BasePriceMultiplierFor(request);
 
             var lineItems = new List<ServiceLineItem>(workerLineItems);
+            bool includeWorkerCharges = def.Worker.PercentageModifiersIncludeWorkerCharges;
+            float modifierBase = includeWorkerCharges ? scaled + workerLineItems.Where(li => !li.isModifier).Sum(li => li.amount) : scaled;
             Settlement settlement = request.settlement;
             Faction faction = settlement?.Faction;
 
-            AddPctModifier(lineItems, scaled, settlement != null ? SettlementSpecialtyService.TotalPriceModifierPct(settlement, def) : 0f, "SettlementServices.LineItem.SpecialtyModifier");
-            AddPctModifier(lineItems, scaled, ctx.ReputationModifierPct(faction), "SettlementServices.LineItem.ReputationModifier");
-            AddPctModifier(lineItems, scaled, settlement != null ? -SettlementInvestmentService.CurrentDiscountPct(settlement) : 0f, "SettlementServices.LineItem.InvestmentDiscount");
+            AddPctModifier(lineItems, modifierBase, settlement != null ? SettlementSpecialtyService.TotalPriceModifierPct(settlement, def) : 0f, "SettlementServices.LineItem.SpecialtyModifier");
+            AddPctModifier(lineItems, modifierBase, ctx.ReputationModifierPct(faction), "SettlementServices.LineItem.ReputationModifier");
+            AddPctModifier(lineItems, modifierBase, settlement != null ? -SettlementInvestmentService.CurrentDiscountPct(settlement) : 0f, "SettlementServices.LineItem.InvestmentDiscount");
 
             ServicePriorityTierDef tier = ResolveTier(def, request.selectedTierKey);
-            AddPctModifier(lineItems, scaled, tier?.costSurchargePct ?? 0f, "SettlementServices.LineItem.PriorityTier");
+            AddPctModifier(lineItems, modifierBase, tier?.costSurchargePct ?? 0f, "SettlementServices.LineItem.PriorityTier");
 
             float coreSubtotal = lineItems.Aggregate(scaled, (acc, li) => acc + li.amount);
-            AddNegotiatorDiscount(lineItems, coreSubtotal, def.minimumCost, request.negotiator);
+            AddNegotiatorDiscount(lineItems, coreSubtotal, includeWorkerCharges ? 0 : def.minimumCost, request.negotiator);
 
-            float preMarketTotal = Mathf.Max(def.minimumCost, lineItems.Aggregate(scaled, (acc, li) => acc + li.amount));
+            float preMarketTotal = Mathf.Max(includeWorkerCharges ? 0 : def.minimumCost, lineItems.Aggregate(scaled, (acc, li) => acc + li.amount));
 
             var compatibilityContext = new CompatibilityQuoteContext(def, request, lineItems, Mathf.RoundToInt(preMarketTotal));
             SettlementServicesCompatibilityRegistry.ModifyQuote(compatibilityContext);
@@ -84,7 +86,7 @@ namespace Settlement_Services.Framework.Pricing
             return new SettlementServiceQuote
             {
                 lineItems = lineItems,
-                totalCost = compatibilityContext.totalCost + passThroughTotal,
+                totalCost = Mathf.Max(0, compatibilityContext.totalCost + passThroughTotal),
                 selectedTierKey = request.selectedTierKey,
                 expectedDurationTicks = EffectiveDuration(def, request, settlement, tier),
             };

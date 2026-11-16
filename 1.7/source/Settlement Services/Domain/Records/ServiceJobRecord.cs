@@ -5,6 +5,7 @@ using Settlement_Services.Domain;
 using Settlement_Services.Framework.Delivery;
 using Settlement_Services.Framework.Dto;
 using Settlement_Services.Framework.Payment;
+using Settlement_Services.Services.Medical;
 
 namespace Settlement_Services.Domain.Records
 {
@@ -66,6 +67,7 @@ namespace Settlement_Services.Domain.Records
         public string providerFactionLoadId;
         public GrowthVatJobState growthVat;
         public SurrogacyJobState surrogacy;
+        public BionicHarvestAcceptedData bionicHarvest;
         public List<string> processedCompatibilityCompletionModuleIds = new List<string>();
         public ServicePodDeliveryContract podDelivery;
 
@@ -123,6 +125,7 @@ namespace Settlement_Services.Domain.Records
             Scribe_Values.Look(ref providerFactionLoadId, "providerFactionLoadId");
             Scribe_Deep.Look(ref growthVat, "growthVat");
             Scribe_Deep.Look(ref surrogacy, "surrogacy");
+            Scribe_Deep.Look(ref bionicHarvest, "bionicHarvest");
             Scribe_Collections.Look(ref processedCompatibilityCompletionModuleIds, "processedCompatibilityCompletionModuleIds", LookMode.Value);
             Scribe_Deep.Look(ref podDelivery, "podDelivery");
 

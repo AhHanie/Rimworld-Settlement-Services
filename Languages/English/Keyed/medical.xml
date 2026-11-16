@@ -8,4 +8,15 @@
     <SettlementServices.LineItem.SurgeryPart>Implant: {0}</SettlementServices.LineItem.SurgeryPart>
     <SettlementServices.LineItem.SurgeryMedicine>Medicine</SettlementServices.LineItem.SurgeryMedicine>
     <SettlementServices.Label.SurgeryPlayerSuppliedExplanation>The caravan may bring any compatible implant or bionic, or the medicine the operation consumes, instead of buying them from the settlement. Assign them below in Supply your own materials: once assigned, only the operation charge remains.</SettlementServices.Label.SurgeryPlayerSuppliedExplanation>
+    <SettlementServices.Label.BionicHarvestChoice>Parts to remove</SettlementServices.Label.BionicHarvestChoice>
+    <SettlementServices.LineItem.BionicHarvestParts>Recovered bionics (10% of market value)</SettlementServices.LineItem.BionicHarvestParts>
+    <SettlementServices.Error.HarvestPrisonerOnly>Only a prisoner travelling with the caravan can receive this service.</SettlementServices.Error.HarvestPrisonerOnly>
+    <SettlementServices.Error.HarvestProtectedTarget>This prisoner is protected and cannot be harvested.</SettlementServices.Error.HarvestProtectedTarget>
+    <SettlementServices.Error.HarvestNoParts>This prisoner has no removable bionic or archotech replacement parts.</SettlementServices.Error.HarvestNoParts>
+    <SettlementServices.Error.HarvestSelectPart>Select at least one part to remove.</SettlementServices.Error.HarvestSelectPart>
+    <SettlementServices.Error.HarvestStaleSelection>A selected replacement part is no longer available.</SettlementServices.Error.HarvestStaleSelection>
+    <SettlementServices.Error.HarvestConflict>Selected parts overlap or duplicate one another.</SettlementServices.Error.HarvestConflict>
+    <SettlementServices.Error.HarvestRemovalFailed>The selected part could not be removed.</SettlementServices.Error.HarvestRemovalFailed>
+    <SettlementServices.Message.BionicHarvestConfirm>Remove {1} from {0}? Vital part removal can kill the prisoner. You will receive the recovered parts and, if they die, the corpse.</SettlementServices.Message.BionicHarvestConfirm>
+    <SettlementServices.Message.BionicHarvestPartial>Only some selected parts could be removed from {0}. Charges for the remaining parts were refunded.</SettlementServices.Message.BionicHarvestPartial>
 </LanguageData>

@@ -692,6 +692,13 @@ namespace Settlement_Services.Domain
             job.marketPurchasePlan = plan;
         }
 
+        public void FreezeBionicHarvest(int jobId, Services.Medical.BionicHarvestAcceptedData data)
+        {
+            ServiceJobRecord job = GetJob(jobId);
+            if (job == null) return;
+            job.bionicHarvest = data;
+        }
+
         public void FreezeConsumedPlayerSuppliedInputs(int jobId, List<ThingDefCountClass> items)
         {
             ServiceJobRecord job = GetJob(jobId);

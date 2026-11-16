@@ -156,6 +156,8 @@ namespace Settlement_Services.Framework
                     domain.FreezeBuildingCommissionPlan(jobId, buildingPlan);
                 if (plan.AcceptedWorkerData is MarketPurchasePlan marketPlan)
                     domain.FreezeMarketPurchasePlan(jobId, marketPlan);
+                if (plan.AcceptedWorkerData is Services.Medical.BionicHarvestAcceptedData harvestData)
+                    domain.FreezeBionicHarvest(jobId, harvestData);
                 domain.FreezeConsumedPlayerSuppliedInputs(jobId, plan.InputPlan.playerSuppliedConsumed);
 
                 if (barter && !ServiceBarterTransaction.TryComplete(barterBundle, request, out string bundleErrorKey))

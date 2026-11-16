@@ -65,6 +65,8 @@ namespace Settlement_Services.Framework.Workers
 
         public virtual float BasePriceMultiplierFor(SettlementServiceRequest request) => 1f;
 
+        public virtual bool PercentageModifiersIncludeWorkerCharges => false;
+
         public virtual float EventChanceMultiplierFor(ServiceJobContext ctx) => 1f;
 
         public virtual bool UsesPerTargetOptionSelections => false;
