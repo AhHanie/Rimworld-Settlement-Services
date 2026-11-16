@@ -7,7 +7,9 @@ using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework;
 using Settlement_Services.Framework.Board;
 using Settlement_Services.Framework.Compat.VehicleFramework;
+using Settlement_Services.Framework.Custody;
 using Settlement_Services.Framework.Defs;
+using Settlement_Services.Framework.Workers;
 using Settlement_Services.Services.Animals;
 using Settlement_Services.Services.Construction;
 using Settlement_Services.Services.Crafting;
@@ -70,6 +72,7 @@ namespace Settlement_Services.Domain.Reconciliation
             }
 
             failedJobs += DetectAndHandleMissingProviders(component);
+            RecoverCompletedCustodyPawns(component);
             ReconcileHiringTransits(component);
             ReconcileAnimalVendorOffers(component);
             ReconcileVehicleShopOffers(component);
@@ -134,6 +137,26 @@ namespace Settlement_Services.Domain.Reconciliation
                 Settlement_Services.SupportLog.Info(
                     $"Reconciliation: failed {failedJobs} orphaned job(s), dropped {droppedSettlements} orphaned settlement record(s), dropped {droppedSpecialties} specialty grant(s) whose gate is no longer met, "
                     + $"dropped {droppedIdeoEntries} stale practiced ideoligion entries.");
+            }
+        }
+
+        private static void RecoverCompletedCustodyPawns(SettlementServicesWorldComponent component)
+        {
+            // Reconcile runs on the first world tick after load, after saved pawn references
+            // and world objects have been resolved. Never return an active service early.
+            foreach (ServiceJobRecord job in component.JobsRaw)
+            {
+                if (job.status != ServiceJobStatus.AwaitingCollection || !job.targetInCustody
+                    || job.requestChannel != RequestChannel.InPerson || job.requesterCaravanId < 0
+                    || Find.WorldObjects.Caravans.Any(c => c.ID == job.requesterCaravanId)) continue;
+
+                List<Pawn> pawns = job.Targets.Select(t => t?.liveThing as Pawn)
+                    .Where(TargetCustodyService.RequiresReturn).ToList();
+                if (pawns.Count == 0 || pawns.Any(p => p.GetCaravan() != null)) continue;
+
+                if (!ServicePawnCaravanReturn.TryReturnCompletedPawn(new ServiceJobContext(component, job))) continue;
+                if (!job.targetInCustody && job.results.NullOrEmpty())
+                    component.TryTransition(job.jobId, ServiceJobStatus.Collected);
             }
         }
 

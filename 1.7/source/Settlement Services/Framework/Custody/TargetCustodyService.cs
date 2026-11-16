@@ -229,9 +229,11 @@ namespace Settlement_Services.Framework.Custody
             var pawns = new List<Pawn>();
             if (job == null) return pawns;
             if (job.targetInCustody)
-                pawns.AddRange(job.Targets.Select(t => t?.liveThing as Pawn).Where(RequiresReturn));
+                pawns.AddRange(job.Targets.Select(t => t?.liveThing as Pawn)
+                    .Where(p => RequiresReturn(p) && p.GetCaravan() == null && !p.Spawned));
             if (!job.results.NullOrEmpty())
-                pawns.AddRange(job.results.Select(t => t?.liveThing as Pawn).Where(RequiresReturn));
+                pawns.AddRange(job.results.Select(t => t?.liveThing as Pawn)
+                    .Where(p => RequiresReturn(p) && p.GetCaravan() == null && !p.Spawned));
             return pawns;
         }
 
@@ -416,8 +418,8 @@ namespace Settlement_Services.Framework.Custody
 
             if (pawn.holdingOwner != null)
             {
-                resultCaravan = pawn.holdingOwner.Owner as Caravan;
-                return resultCaravan != null && !resultCaravan.Destroyed;
+                Caravan owner = pawn.holdingOwner.Owner as Caravan;
+                return owner == caravan && !caravan.Destroyed && caravan.pawns.Contains(pawn);
             }
 
             resultCaravan = SettlementServicesCompatibilityRegistry.TryGetCustodyLifecycle(ctx, caravan, pawn, out ICompatibilityCustodyLifecycle lifecycle)
