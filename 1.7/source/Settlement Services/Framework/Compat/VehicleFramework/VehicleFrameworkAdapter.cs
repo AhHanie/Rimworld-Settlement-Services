@@ -22,6 +22,9 @@ namespace Settlement_Services.Framework.Compat.VehicleFramework
         private static bool resolveFailed;
 
         private static Type vehiclePawnType;
+        private static Type vehicleCaravanType;
+        private static FieldInfo vehiclePatherField;
+        private static PropertyInfo vehiclePatherMovingProp;
         private static Type compFueledTravelType;
         private static Type compUpgradeTreeType;
         private static Type upgradeNodeType;
@@ -58,6 +61,23 @@ namespace Settlement_Services.Framework.Compat.VehicleFramework
         public static Type VehiclePawnType { get { EnsureResolved(); return resolveFailed ? null : vehiclePawnType; } }
 
         public static bool IsVehicle(Thing thing) => VehiclePawnType != null && VehiclePawnType.IsInstanceOfType(thing);
+
+        public static bool IsStationaryVehicleCaravan(Caravan caravan)
+        {
+            EnsureResolved();
+            if (resolveFailed || caravan == null || vehicleCaravanType == null || !vehicleCaravanType.IsInstanceOfType(caravan)
+                || vehiclePatherField == null || vehiclePatherMovingProp == null) return false;
+
+            try
+            {
+                object pather = vehiclePatherField.GetValue(caravan);
+                return pather != null && vehiclePatherMovingProp.GetValue(pather) is bool moving && !moving;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
 
         public static IEnumerable<Thing> VehiclesInCaravan(Caravan caravan)
         {
@@ -259,6 +279,10 @@ namespace Settlement_Services.Framework.Compat.VehicleFramework
             resolveAttempted = true;
 
             vehiclePawnType = SettlementServicesModCompat.ResolveOptionalType("VehiclePawn", "Vehicles");
+            vehicleCaravanType = SettlementServicesModCompat.ResolveOptionalType("VehicleCaravan", "Vehicles.World");
+            Type vehiclePatherType = SettlementServicesModCompat.ResolveOptionalType("VehicleCaravan_PathFollower", "Vehicles.World");
+            vehiclePatherField = vehicleCaravanType?.GetField("vehiclePather", BindingFlags.Public | BindingFlags.Instance);
+            vehiclePatherMovingProp = vehiclePatherType?.GetProperty("Moving");
             compFueledTravelType = SettlementServicesModCompat.ResolveOptionalType("CompFueledTravel", "Vehicles");
             compUpgradeTreeType = SettlementServicesModCompat.ResolveOptionalType("CompUpgradeTree", "Vehicles");
             Type vehicleStatHandlerType = SettlementServicesModCompat.ResolveOptionalType("VehicleStatHandler", "Vehicles");

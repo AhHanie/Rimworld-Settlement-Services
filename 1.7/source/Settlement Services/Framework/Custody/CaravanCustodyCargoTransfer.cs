@@ -30,10 +30,11 @@ namespace Settlement_Services.Framework.Custody
 
         internal static CaravanCustodyCargoTransfer Empty => new CaravanCustodyCargoTransfer(null) { finished = true };
 
-        internal static bool TryPrepare(Caravan caravan, IReadOnlyCollection<Pawn> departing, out CaravanCustodyCargoTransfer transfer, out string errorKey)
+        internal static bool TryPrepare(Caravan caravan, IReadOnlyCollection<Pawn> departing, out CaravanCustodyCargoTransfer transfer,
+            out string errorKey, Settlement intendedSettlement = null, bool allowVehicleParking = false)
         {
             transfer = new CaravanCustodyCargoTransfer(caravan);
-            errorKey = CaravanOwnershipRules.GetDepartureBlockKey(caravan, departing);
+            errorKey = CaravanOwnershipRules.GetDepartureBlockKey(caravan, departing, intendedSettlement, allowVehicleParking);
             if (errorKey != null) return false;
 
             if (caravan == null || caravan.Destroyed || departing == null || departing.Count == 0) return true;

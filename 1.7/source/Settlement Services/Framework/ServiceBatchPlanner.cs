@@ -85,7 +85,9 @@ namespace Settlement_Services.Framework
             if (caravan == null) return true;
 
             List<Pawn> departing = request.targets.Select(t => t?.thing as Pawn).Where(p => p != null).ToList();
-            errorKey = CaravanOwnershipRules.GetDepartureBlockKey(caravan, departing);
+            bool inPerson = request.channel == RequestChannel.InPerson;
+            errorKey = CaravanOwnershipRules.GetDepartureBlockKey(caravan, departing,
+                inPerson ? request.settlement : null, allowVehicleParking: inPerson);
             return errorKey == null;
         }
 

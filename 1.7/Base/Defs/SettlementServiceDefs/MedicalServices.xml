@@ -150,8 +150,8 @@
     <workerClass>Settlement_Services.Services.Medical.PrisonerBionicHarvestServiceWorker</workerClass>
     <requiredTechLevel>Industrial</requiredTechLevel>
     <minimumCost>150</minimumCost>
-    <wealthScale>0</wealthScale>
-    <duration>120000</duration> <!-- 2 days -->
+    <wealthScale>0.005</wealthScale>
+    <duration>120000</duration>    <!-- 2 days -->
     <targetRule>Pawn</targetRule>
     <batchMode>None</batchMode>
     <eventChancePct>0</eventChancePct>
