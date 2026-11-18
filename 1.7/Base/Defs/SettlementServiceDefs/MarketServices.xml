@@ -2,6 +2,23 @@
 <Defs>
 
   <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_Stash</defName>
+    <category>SettlementService_Commerce</category>
+    <label>item stashing</label>
+    <description>Store caravan inventory at this settlement for prepaid days. Perishables are preserved while held. Return in person before the deadline to collect everything or buy more days. Contents are lost immediately at expiry; early pickup gives no refund.</description>
+    <workerClass>Settlement_Services.Services.Stashing.StashServiceWorker</workerClass>
+    <requiredTechLevel>Neolithic</requiredTechLevel>
+    <minimumCost>0</minimumCost>
+    <wealthScale>0</wealthScale>
+    <duration>0</duration>
+    <eventChancePct>0</eventChancePct>
+    <targetRule>None</targetRule>
+    <allowRemoteDiscovery>false</allowRemoteDiscovery>
+    <allowRemoteRequest>false</allowRemoteRequest>
+    <iconTexPath>SettlementServices/UI/Icons/chest</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
     <defName>SettlementService_LocalMarket</defName>
     <category>SettlementService_Commerce</category>
     <label>local market</label>

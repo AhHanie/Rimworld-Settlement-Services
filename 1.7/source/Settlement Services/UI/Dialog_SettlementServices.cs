@@ -12,6 +12,7 @@ using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Registry;
 using Settlement_Services.Framework.Specialty;
 using Settlement_Services.UI.JobBoard;
+using Settlement_Services.Services.Stashing;
 
 namespace Settlement_Services.UI
 {
@@ -312,6 +313,13 @@ namespace Settlement_Services.UI
 
         private void OpenDetail(SettlementServiceDef def)
         {
+            if (def.Worker is StashServiceWorker)
+            {
+                if (contextTemplate.channel == RequestChannel.InPerson && contextTemplate.caravan != null
+                    && !Find.WindowStack.IsOpen<Dialog_SettlementStash>())
+                    Find.WindowStack.Add(new Dialog_SettlementStash(contextTemplate.settlement, contextTemplate.caravan));
+                return;
+            }
             if (Find.WindowStack.IsOpen<Dialog_ServiceRequestDetail>()) return;
             if (LacksNegotiator)
             {

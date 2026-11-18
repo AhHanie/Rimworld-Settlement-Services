@@ -14,10 +14,11 @@ namespace Settlement_Services.UI.Overview
 {
     public class MainTabWindow_ServiceOverview : MainTabWindow
     {
-        private enum ServiceOverviewViewMode { Services, JobBoard, KnownServices }
+        private enum ServiceOverviewViewMode { Services, JobBoard, KnownServices, Stashes }
 
         private Vector2 scrollPosition;
         private Vector2 knownServicesScrollPosition;
+        private Vector2 stashesScrollPosition;
         private readonly BoardOverviewView boardView = new BoardOverviewView();
         private ServiceOverviewViewMode viewMode = ServiceOverviewViewMode.Services;
         private ServiceOverviewGrouping grouping = ServiceOverviewGrouping.Settlement;
@@ -46,8 +47,42 @@ namespace Settlement_Services.UI.Overview
             {
                 case ServiceOverviewViewMode.Services: DrawJobsView(remainder); break;
                 case ServiceOverviewViewMode.JobBoard: boardView.Draw(remainder); break;
+                case ServiceOverviewViewMode.Stashes: DrawStashesView(remainder); break;
                 default: DrawKnownServicesView(remainder); break;
             }
+        }
+
+        private void DrawStashesView(Rect rect)
+        {
+            SettlementServicesWorldComponent domain = SettlementServicesWorldComponent.Current;
+            if (domain == null) return;
+            domain.ExpireDueStashes();
+            var entries = domain.ActiveStashes.OrderBy(s => s.expiryTick).ToList();
+            if (entries.Count == 0)
+            {
+                Widgets.NoneLabelCenteredVertically(rect, "SettlementServices.Stash.None".Translate());
+                return;
+            }
+            Rect view = new Rect(0f, 0f, rect.width - 16f, Mathf.Max(rect.height, entries.Count * 72f));
+            Widgets.BeginScrollView(rect, ref stashesScrollPosition, view);
+            float y = 0f;
+            foreach (var stash in entries)
+            {
+                Settlement settlement = WorldObjectLookup.ResolveSettlement(stash.settlementWorldObjectId);
+                string place = settlement?.LabelCap ?? stash.settlementLabel;
+                Widgets.Label(new Rect(6f, y + 3f, view.width - 120f, 25f),
+                    "SettlementServices.Stash.OverviewRow".Translate(stash.stashId, place,
+                        (stash.expiryTick - Find.TickManager.TicksGame).ToStringTicksToPeriod(),
+                        settlement == null ? "?" : GenDate.DateFullStringWithHourAt(
+                            GenTicks.TicksAbs + (long)stash.expiryTick - Find.TickManager.TicksGame,
+                            Find.WorldGrid.LongLatOf(settlement.Tile))));
+                Widgets.Label(new Rect(6f, y + 29f, view.width - 120f, 34f),
+                    string.Join(", ", stash.items.Where(t => t != null).Select(t => t.LabelCap + " x" + t.stackCount)));
+                if (settlement != null && Widgets.ButtonText(new Rect(view.width - 105f, y + 18f, 100f, 32f),
+                    "SettlementServices.Stash.Jump".Translate())) JumpToSettlement(settlement);
+                y += 72f;
+            }
+            Widgets.EndScrollView();
         }
 
         private void DrawJobsView(Rect inRect)

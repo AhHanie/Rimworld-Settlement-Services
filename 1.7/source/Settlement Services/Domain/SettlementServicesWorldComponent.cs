@@ -28,6 +28,8 @@ namespace Settlement_Services.Domain
 
         private int loadedSchemaVersion = SchemaVersion.Current;
         private int nextJobId = 1;
+        private int nextStashId = 1;
+        private List<StashContractRecord> stashes = new List<StashContractRecord>();
 
         private List<SettlementRecord> settlementRecords = new List<SettlementRecord>();
         private List<ServiceJobRecord> jobs = new List<ServiceJobRecord>();
@@ -81,6 +83,8 @@ namespace Settlement_Services.Domain
             base.ExposeData();
             Scribe_Values.Look(ref loadedSchemaVersion, "schemaVersion", 1);
             Scribe_Values.Look(ref nextJobId, "nextJobId", 1);
+            Scribe_Values.Look(ref nextStashId, "nextStashId", 1);
+            Scribe_Collections.Look(ref stashes, "stashes", LookMode.Deep);
             Scribe_Collections.Look(ref settlementRecords, "settlementRecords", LookMode.Deep);
             Scribe_Collections.Look(ref jobs, "jobs", LookMode.Deep);
             Scribe_Values.Look(ref nextBoardJobId, "nextBoardJobId", 1);
@@ -106,6 +110,7 @@ namespace Settlement_Services.Domain
         {
             if (settlementRecords == null) settlementRecords = new List<SettlementRecord>();
             if (jobs == null) jobs = new List<ServiceJobRecord>();
+            if (stashes == null) stashes = new List<StashContractRecord>();
             if (boardJobs == null) boardJobs = new List<BoardJobRecord>();
             if (pendingHomeSilverRefunds == null) pendingHomeSilverRefunds = new List<int>();
             if (itemCustody == null) itemCustody = new ThingOwner<Thing>(this);
@@ -119,6 +124,7 @@ namespace Settlement_Services.Domain
 
             settlementRecords.RemoveAll(r => r == null);
             jobs.RemoveAll(j => j == null);
+            stashes.RemoveAll(s => s == null);
             boardJobs.RemoveAll(j => j == null);
             hiringTransits.RemoveAll(t => t == null);
         }
@@ -137,6 +143,7 @@ namespace Settlement_Services.Domain
             }
 
             loadedSchemaVersion = SchemaVersion.Current;
+            ReconcileStashes();
             SettlementServicesReconciler.Reconcile(this);
             RebuildIndexes();
         }
@@ -155,6 +162,7 @@ namespace Settlement_Services.Domain
                     record.animalVendorOffers?.RemoveAll(o => o == null || !animalVendorCustody.Contains(o.pawn));
                 }
                 RebuildIndexes();
+                ReconcileStashes();
                 ReconcileGrowthVats();
 
                 if (loadedSchemaVersion < SchemaVersion.Current)
@@ -191,6 +199,7 @@ namespace Settlement_Services.Domain
         {
             if (!EnsureLoadReconciled()) return;
             EnsureBoardReconciled();
+            TickStashes();
             FlushPendingHomeSilverRefunds();
             FlushPendingHomeDeliveries();
             PruneResolvedJobs();

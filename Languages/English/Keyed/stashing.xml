@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <SettlementServices.Label.ViewMode.Stashes>Stashes</SettlementServices.Label.ViewMode.Stashes>
+  <SettlementServices.Stash.Title>Settlement item stashing</SettlementServices.Stash.Title>
+  <SettlementServices.Stash.DepositTab>Deposit</SettlementServices.Stash.DepositTab>
+  <SettlementServices.Stash.ActiveTab>Active stashes</SettlementServices.Stash.ActiveTab>
+  <SettlementServices.Stash.ActiveTabCount>Active stashes ({0})</SettlementServices.Stash.ActiveTabCount>
+  <SettlementServices.Stash.InPersonShort>Store items here, then return before the deadline to collect or extend your stash.</SettlementServices.Stash.InPersonShort>
+  <SettlementServices.Stash.ChooseItems>Choose items to store</SettlementServices.Stash.ChooseItems>
+  <SettlementServices.Stash.Available>Carried</SettlementServices.Stash.Available>
+  <SettlementServices.Stash.Store>Store</SettlementServices.Stash.Store>
+  <SettlementServices.Stash.StacksInCaravan>{0} silver stacks in the caravan</SettlementServices.Stash.StacksInCaravan>
+  <SettlementServices.Stash.GroupedStacks>{0} stacks in the caravan</SettlementServices.Stash.GroupedStacks>
+  <SettlementServices.Stash.GroupedTooltip>{0} compatible stacks are shown together. A partial amount takes from the first carried stacks; each stored stack keeps its own condition.</SettlementServices.Stash.GroupedTooltip>
+  <SettlementServices.Stash.GroupedHeldTooltip>{0} compatible stacks are shown together. Each stored stack keeps its own condition.</SettlementServices.Stash.GroupedHeldTooltip>
+  <SettlementServices.Stash.StackNumber>Stack {0} of {1}</SettlementServices.Stash.StackNumber>
+  <SettlementServices.Stash.CarriedBy>Carried by {0}</SettlementServices.Stash.CarriedBy>
+  <SettlementServices.Stash.Term>Storage term (days)</SettlementServices.Stash.Term>
+  <SettlementServices.Stash.TotalDue>Total due: {0} silver</SettlementServices.Stash.TotalDue>
+  <SettlementServices.Stash.FeeBreakdown>{0} silver per day × {1} days + {2} silver handling</SettlementServices.Stash.FeeBreakdown>
+  <SettlementServices.Stash.GoodsSummary>Selected goods: {0} silver value, {1} kg</SettlementServices.Stash.GoodsSummary>
+  <SettlementServices.Stash.PaymentBalance>Silver left for payment: {0} / {1} required</SettlementServices.Stash.PaymentBalance>
+  <SettlementServices.Stash.PreservationShort>Perishables are preserved. Contents are lost at the deadline; early collection has no refund.</SettlementServices.Stash.PreservationShort>
+  <SettlementServices.Stash.CardTitle>Stash #{0}  ·  {1} remaining</SettlementServices.Stash.CardTitle>
+  <SettlementServices.Stash.CollectionCapacity>Caravan mass after collection: {0} / {1} kg</SettlementServices.Stash.CollectionCapacity>
+  <SettlementServices.Stash.AddDays>Add days</SettlementServices.Stash.AddDays>
+  <SettlementServices.Stash.ExtensionOffer>{0} silver</SettlementServices.Stash.ExtensionOffer>
+  <SettlementServices.Stash.InPerson>Deposit, payment, extension, and collection require a visiting caravan at this settlement.</SettlementServices.Stash.InPerson>
+  <SettlementServices.Stash.Days>Days</SettlementServices.Stash.Days>
+  <SettlementServices.Stash.All>All</SettlementServices.Stash.All>
+  <SettlementServices.Stash.Silver>Unselected silver available for payment: {0}</SettlementServices.Stash.Silver>
+  <SettlementServices.Stash.Quote>Value: {0} silver  |  Mass: {1} kg  |  Daily fee: {2}  |  Handling: {3}  |  {4} days  |  Total: {5} silver</SettlementServices.Stash.Quote>
+  <SettlementServices.Stash.Deadline>Deadline: {0}</SettlementServices.Stash.Deadline>
+  <SettlementServices.Stash.DepositCapacity>Projected caravan mass after deposit: {0} / {1} kg</SettlementServices.Stash.DepositCapacity>
+  <SettlementServices.Stash.SelectItems>Select inventory items and counts to see a quote.</SettlementServices.Stash.SelectItems>
+  <SettlementServices.Stash.Preservation>Perishables keep their condition in storage. Everything is lost at the deadline. Early collection gives no refund.</SettlementServices.Stash.Preservation>
+  <SettlementServices.Stash.Deposit>Deposit items</SettlementServices.Stash.Deposit>
+  <SettlementServices.Stash.ConfirmDeposit>Pay {0} silver to store these items for {1} days, until {2}? Perishables are preserved. Uncollected contents are destroyed at the deadline without a grace period.</SettlementServices.Stash.ConfirmDeposit>
+  <SettlementServices.Stash.Deposited>Created stash #{0}.</SettlementServices.Stash.Deposited>
+  <SettlementServices.Stash.None>No active stashes.</SettlementServices.Stash.None>
+  <SettlementServices.Stash.Contract>Stash #{0}  |  Deadline: {1}  |  Remaining: {2}</SettlementServices.Stash.Contract>
+  <SettlementServices.Stash.ExtensionQuote>Daily: {0}  |  Extension: {1} silver</SettlementServices.Stash.ExtensionQuote>
+  <SettlementServices.Stash.Extend>Buy more days</SettlementServices.Stash.Extend>
+  <SettlementServices.Stash.ConfirmExtension>Pay {1} silver to add {0} days to this stash's existing deadline?</SettlementServices.Stash.ConfirmExtension>
+  <SettlementServices.Stash.Extended>Extended stash #{0} for {1} silver.</SettlementServices.Stash.Extended>
+  <SettlementServices.Stash.Collect>Collect all</SettlementServices.Stash.Collect>
+  <SettlementServices.Stash.ConfirmCollect>Collect every item from stash #{0}? Projected caravan mass: {1} / {2} kg. Early collection gives no refund.</SettlementServices.Stash.ConfirmCollect>
+  <SettlementServices.Stash.Collected>Collected stash #{0}. Caravan mass: {1} / {2} kg.</SettlementServices.Stash.Collected>
+  <SettlementServices.Stash.OverviewRow>Stash #{0} at {1}  |  {2} remaining  |  Deadline: {3}</SettlementServices.Stash.OverviewRow>
+  <SettlementServices.Stash.Jump>Jump</SettlementServices.Stash.Jump>
+  <SettlementServices.Stash.WarningTitle>Stash expires tomorrow</SettlementServices.Stash.WarningTitle>
+  <SettlementServices.Stash.WarningBody>Stash #{0} at {1} expires in one day. Visit that settlement to collect or extend it.</SettlementServices.Stash.WarningBody>
+  <SettlementServices.Stash.LostTitle>Stash lost</SettlementServices.Stash.LostTitle>
+  <SettlementServices.Stash.LostBody>Stash #{0} at {1} reached its deadline. Its contents were destroyed.</SettlementServices.Stash.LostBody>
+  <SettlementServices.Stash.RecoveryTitle>Stash sent home</SettlementServices.Stash.RecoveryTitle>
+  <SettlementServices.Stash.RecoveryBody>Settlement {1} disappeared while stash #{0} was active. Its contents are queued for delivery to a home colony.</SettlementServices.Stash.RecoveryBody>
+  <SettlementServices.Stash.Error.Invalid>The selected stash items are no longer eligible.</SettlementServices.Stash.Error.Invalid>
+  <SettlementServices.Stash.Error.Transfer>The stash transfer failed. Items and payment were restored where possible.</SettlementServices.Stash.Error.Transfer>
+  <SettlementServices.Stash.Error.Expired>This stash has expired or is no longer available.</SettlementServices.Stash.Error.Expired>
+  <SettlementServices.Stash.Error.Price>The stash price or deadline cannot be calculated for this selection.</SettlementServices.Stash.Error.Price>
+  <SettlementServices.Stash.Error.NoRecipient>No caravan pawn can receive every item in this stash.</SettlementServices.Stash.Error.NoRecipient>
+  <SettlementServices.Stash.Error.DedicatedDialog>Use the item stashing dialog for this service.</SettlementServices.Stash.Error.DedicatedDialog>
+</LanguageData>
