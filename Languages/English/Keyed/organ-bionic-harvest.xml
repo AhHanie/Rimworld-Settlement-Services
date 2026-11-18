@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SettlementServices.Label.OrganBionicHarvestChoice>Organs and replacement parts to remove</SettlementServices.Label.OrganBionicHarvestChoice>
+    <SettlementServices.LineItem.OrganBionicHarvestParts>Recovered organs and bionics (10% of market value)</SettlementServices.LineItem.OrganBionicHarvestParts>
+    <SettlementServices.Error.OrganBionicHarvestHumanlikeOnly>Only a living humanlike pawn in the caravan can receive this service.</SettlementServices.Error.OrganBionicHarvestHumanlikeOnly>
+    <SettlementServices.Error.OrganBionicHarvestNoParts>This pawn has no clean, recoverable natural organs or removable bionic or archotech replacement parts.</SettlementServices.Error.OrganBionicHarvestNoParts>
+    <SettlementServices.Error.OrganBionicHarvestSelectPart>Select at least one organ or replacement part to remove.</SettlementServices.Error.OrganBionicHarvestSelectPart>
+    <SettlementServices.Error.OrganBionicHarvestStaleSelection>A selected organ or replacement part is no longer recoverable.</SettlementServices.Error.OrganBionicHarvestStaleSelection>
+    <SettlementServices.Error.OrganBionicHarvestConflict>Selected parts overlap or duplicate one another.</SettlementServices.Error.OrganBionicHarvestConflict>
+    <SettlementServices.Error.OrganBionicHarvestRemovalFailed>The selected organ or replacement part could not be removed.</SettlementServices.Error.OrganBionicHarvestRemovalFailed>
+    <SettlementServices.Message.OrganBionicHarvestConfirm>Remove {1} from {0}? The pawn can die if a vital part is removed. You will receive the recovered parts and, if the pawn dies, their corpse.</SettlementServices.Message.OrganBionicHarvestConfirm>
+    <SettlementServices.Message.OrganBionicHarvestPartial>Only some selected parts could be removed from {0}. Charges for the remaining parts were refunded.</SettlementServices.Message.OrganBionicHarvestPartial>
+</LanguageData>

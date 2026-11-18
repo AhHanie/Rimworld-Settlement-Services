@@ -145,8 +145,8 @@
   <Settlement_Services.Framework.Defs.SettlementServiceDef>
     <defName>SettlementService_PrisonerBionicHarvest</defName>
     <category>SettlementService_Medical</category>
-    <label>prisoner bionic harvesting</label>
-    <description>Remove selected installed bionic or archotech replacement parts from a caravan prisoner. The recovered parts belong to you. Removing a vital part can kill the prisoner; a corpse is returned if that happens.</description>
+    <label>organ and bionic harvesting</label>
+    <description>Remove selected clean natural organs or installed bionic and archotech replacement parts from a humanlike pawn in your caravan. Recovered parts belong to you. Removing a vital part can kill the pawn; a corpse is returned if that happens. The settlement's doctors may object to the procedure and reduce goodwill.</description>
     <workerClass>Settlement_Services.Services.Medical.PrisonerBionicHarvestServiceWorker</workerClass>
     <requiredTechLevel>Industrial</requiredTechLevel>
     <minimumCost>150</minimumCost>
@@ -154,7 +154,7 @@
     <duration>120000</duration>    <!-- 2 days -->
     <targetRule>Pawn</targetRule>
     <batchMode>None</batchMode>
-    <eventChancePct>0</eventChancePct>
+    <eventChancePct>0.15</eventChancePct>
     <iconTexPath>SettlementServices/UI/Icons/surgery</iconTexPath>
     <restoresParticipantFoodAndRest>true</restoresParticipantFoodAndRest>
   </Settlement_Services.Framework.Defs.SettlementServiceDef>

@@ -15,9 +15,24 @@ namespace Settlement_Services.Framework.Events
         private const int ChanceSalt = 401;
         private const int PickSalt = 402;
         private const int TimingSalt = 403;
+        private const int HarvestDoctorsSalt = 404;
+        private const string HarvestServiceDefName = "SettlementService_PrisonerBionicHarvest";
+        internal const string HarvestDoctorsEventDefName = "SettlementServiceEvent_Medical_HarvestDoctorsUnhappy";
 
         public static void RollAndPresent(SettlementServicesWorldComponent domain, SettlementServiceDef def, ServiceJobRecord job, ServiceJobContext ctx)
         {
+            // This job-specific roll is independent of the ordinary event-frequency setting and cooldowns.
+            if (def.defName == HarvestServiceDefName
+                && Rand.ValueSeeded(Gen.HashCombineInt(job.jobId, HarvestDoctorsSalt)) < 0.5f)
+            {
+                ServiceEventDef doctorsEvent = DefDatabase<ServiceEventDef>.GetNamedSilentFail(HarvestDoctorsEventDefName);
+                if (doctorsEvent != null && !doctorsEvent.disabled)
+                {
+                    RecordAndPresent(domain, doctorsEvent, job, ctx);
+                    return;
+                }
+            }
+
             float chance = Mathf.Clamp01(def.eventChancePct * ModSettings.Current.serviceEventFrequencyPct * def.Worker.EventChanceMultiplierFor(ctx));
 
             if (Rand.ValueSeeded(Gen.HashCombineInt(job.jobId, ChanceSalt)) > chance)
@@ -26,7 +41,8 @@ namespace Settlement_Services.Framework.Events
                 return;
             }
 
-            List<ServiceEventDef> eligible = ServiceEventRegistry.EligibleEvents(def, ctx).ToList();
+            List<ServiceEventDef> eligible = ServiceEventRegistry.EligibleEvents(def, ctx)
+                .Where(e => e.defName != HarvestDoctorsEventDefName).ToList();
             if (eligible.Count == 0)
             {
                 job.eventOutcome = ServiceEventOutcomeRecord.None(Find.TickManager.TicksGame);
@@ -39,7 +55,8 @@ namespace Settlement_Services.Framework.Events
 
         internal static bool ForceRandom(SettlementServicesWorldComponent domain, SettlementServiceDef def, ServiceJobRecord job, ServiceJobContext ctx)
         {
-            List<ServiceEventDef> eligible = ServiceEventRegistry.EligibleEvents(def, ctx).ToList();
+            List<ServiceEventDef> eligible = ServiceEventRegistry.EligibleEvents(def, ctx)
+                .Where(e => e.defName != HarvestDoctorsEventDefName).ToList();
             if (eligible.Count == 0) return false;
 
             int debugSeed = Gen.HashCombineInt(job.jobId, Find.TickManager.TicksGame);

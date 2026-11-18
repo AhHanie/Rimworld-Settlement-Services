@@ -2,6 +2,20 @@
 <Defs>
 
   <Settlement_Services.Framework.Defs.ServiceEventDef>
+    <defName>SettlementServiceEvent_Medical_HarvestDoctorsUnhappy</defName>
+    <label>doctors object to harvesting</label>
+    <description>The settlement's doctors are unhappy that they were asked to harvest a caravan pawn's organs or replacement parts. The settlement's goodwill falls by 1.</description>
+    <weightClass>Complication</weightClass>
+    <triggerPhase>OnComplete</triggerPhase>
+    <eligibleServiceDefNames>
+      <li>SettlementService_PrisonerBionicHarvest</li>
+    </eligibleServiceDefNames>
+    <effects>
+      <goodwillDelta>-1</goodwillDelta>
+    </effects>
+  </Settlement_Services.Framework.Defs.ServiceEventDef>
+
+  <Settlement_Services.Framework.Defs.ServiceEventDef>
     <defName>SettlementServiceEvent_Medical_ExceptionalTreatment</defName>
     <label>exceptional treatment</label>
     <description>The medical staff handle the case with unusual skill, finishing well ahead of schedule.</description>

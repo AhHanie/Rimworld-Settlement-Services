@@ -24,8 +24,27 @@ namespace Settlement_Services.Services.Medical
                 this.ordinal = ordinal;
             }
 
-            internal string Key => $"{part.Index}|{hediff.def.defName}|{item.defName}|{ordinal}";
+            internal Option(BodyPartRecord part)
+            {
+                hediff = null;
+                this.part = part;
+                item = part.def.spawnThingOnRemoved;
+                ordinal = 0;
+            }
+
+            internal bool IsNatural => hediff == null;
+            internal string Key => IsNatural
+                ? $"organ|{part.Index}|{item.defName}"
+                : $"{part.Index}|{hediff.def.defName}|{item.defName}|{ordinal}";
             internal string Label => $"{item.LabelCap} ({part.LabelCap})";
+
+            internal bool IsAvailable(Pawn pawn)
+            {
+                if (pawn == null || pawn.Destroyed || pawn.Dead || pawn.health.hediffSet.PartIsMissing(part)) return false;
+                if (IsNatural)
+                    return part.def.spawnThingOnRemoved == item && MedicalRecipesUtility.IsCleanAndDroppable(pawn, part);
+                return pawn.health.hediffSet.hediffs.Contains(hediff) && hediff.Part == part && hediff.def.spawnThingOnRemoved == item;
+            }
         }
 
         internal static List<Option> Find(Pawn pawn)
@@ -34,6 +53,7 @@ namespace Settlement_Services.Services.Medical
             if (pawn == null || pawn.Destroyed || pawn.Dead || !pawn.RaceProps.Humanlike) return result;
             ThingCategoryDef bionic = DefDatabase<ThingCategoryDef>.GetNamedSilentFail("BodyPartsBionic");
             ThingCategoryDef archotech = DefDatabase<ThingCategoryDef>.GetNamedSilentFail("BodyPartsArchotech");
+            ThingCategoryDef natural = DefDatabase<ThingCategoryDef>.GetNamedSilentFail("BodyPartsNatural");
             var ordinals = new Dictionary<string, int>();
             var present = new HashSet<BodyPartRecord>(pawn.health.hediffSet.GetNotMissingParts());
             foreach (Hediff hediff in pawn.health.hediffSet.hediffs)
@@ -45,6 +65,13 @@ namespace Settlement_Services.Services.Medical
                 ordinals.TryGetValue(identity, out int ordinal);
                 ordinals[identity] = ordinal + 1;
                 result.Add(new Option(added, ordinal));
+            }
+            foreach (BodyPartRecord part in present)
+            {
+                ThingDef item = part.def.spawnThingOnRemoved;
+                if (item != null && natural != null && item.IsWithinCategory(natural)
+                    && MedicalRecipesUtility.IsCleanAndDroppable(pawn, part))
+                    result.Add(new Option(part));
             }
             result.Sort((a, b) => string.Compare(a.Key, b.Key, StringComparison.Ordinal));
             return result;
@@ -68,7 +95,7 @@ namespace Settlement_Services.Services.Medical
                 {
                     key = option.Key,
                     label = option.Label,
-                    groupKey = "SettlementServices.Label.BionicHarvestChoice",
+                    groupKey = "SettlementServices.Label.OrganBionicHarvestChoice",
                     allowMultipleSelectionInGroup = true,
                     conflictingOptionKeys = options.Where(o => o.Key != option.Key && Conflicts(o, option)).Select(o => o.Key).ToList(),
                 };
@@ -78,18 +105,18 @@ namespace Settlement_Services.Services.Medical
         {
             selected = new List<Option>();
             error = null;
-            if (keys == null || keys.Count == 0) { error = "SettlementServices.Error.HarvestSelectPart"; return false; }
+            if (keys == null || keys.Count == 0) { error = "SettlementServices.Error.OrganBionicHarvestSelectPart"; return false; }
             Dictionary<string, Option> options = Find(pawn).ToDictionary(o => o.Key);
             var seen = new HashSet<string>();
             foreach (string key in keys)
             {
-                if (!seen.Add(key)) { error = "SettlementServices.Error.HarvestConflict"; return false; }
-                if (key == null || !options.TryGetValue(key, out Option option)) { error = "SettlementServices.Error.HarvestStaleSelection"; return false; }
+                if (!seen.Add(key)) { error = "SettlementServices.Error.OrganBionicHarvestConflict"; return false; }
+                if (key == null || !options.TryGetValue(key, out Option option)) { error = "SettlementServices.Error.OrganBionicHarvestStaleSelection"; return false; }
                 selected.Add(option);
             }
             for (int i = 0; i < selected.Count; i++)
                 for (int j = i + 1; j < selected.Count; j++)
-                    if (Conflicts(selected[i], selected[j])) { error = "SettlementServices.Error.HarvestConflict"; return false; }
+                    if (Conflicts(selected[i], selected[j])) { error = "SettlementServices.Error.OrganBionicHarvestConflict"; return false; }
             return true;
         }
     }

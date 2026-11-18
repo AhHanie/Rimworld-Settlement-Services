@@ -6,6 +6,7 @@ using Verse;
 using Settlement_Services.Domain;
 using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework;
+using Settlement_Services.Framework.Events;
 using Settlement_Services.Framework.Workers;
 
 namespace Settlement_Services.Framework.Custody
@@ -32,7 +33,9 @@ namespace Settlement_Services.Framework.Custody
             Settlement settlement = ctx.ResolveSettlement();
             if (settlement == null) return false;
 
-            if (settlement.Faction != null && settlement.Faction.HostileTo(Faction.OfPlayer)) return false;
+            bool harvestEventJustApplied = job.eventOutcome?.eventDefName == ServiceEventRollService.HarvestDoctorsEventDefName
+                && job.eventOutcome.applied;
+            if (settlement.Faction != null && settlement.Faction.HostileTo(Faction.OfPlayer) && !harvestEventJustApplied) return false;
             if (job.requestChannel != RequestChannel.InPerson) return false;
 
             if (!TryReturnPawns(ctx, pawns, settlement.Tile, job.requesterCaravanId, $"Job {job.jobId}", out Caravan receiver, createIfMissing: true))
