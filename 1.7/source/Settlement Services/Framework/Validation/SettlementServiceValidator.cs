@@ -22,6 +22,12 @@ namespace Settlement_Services.Framework.Validation
             if (faction != null && faction.HostileTo(Faction.OfPlayer))
             { errorKey = "SettlementServices.Error.FactionHostile"; return false; }
 
+            if (request.channel == RequestChannel.Remote && EmpireTradePermitAccess.IsVanillaEmpireSettlement(settlement))
+            { errorKey = "SettlementServices.Error.RemoteRequiresPhysicalPresence"; return false; }
+
+            string empireBlockReason = EmpireTradePermitAccess.GetBlockReason(settlement, request.negotiator?.GetCaravan());
+            if (empireBlockReason != null) { errorKey = empireBlockReason; return false; }
+
             string compatibilityBlockReason = SettlementServicesCompatibilityRegistry.GetRequestBlockReason(settlement);
             if (compatibilityBlockReason != null) { errorKey = compatibilityBlockReason; return false; }
 

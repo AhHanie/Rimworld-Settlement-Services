@@ -19,6 +19,12 @@ namespace Settlement_Services.UI
 
         public static bool TryGetUnavailableReason(SettlementServiceDef def, Settlement settlement, Caravan caravan, out string reasonKey)
         {
+            if (caravan != null)
+            {
+                reasonKey = EmpireTradePermitAccess.GetBlockReason(settlement, caravan);
+                if (reasonKey != null) return true;
+            }
+
             if (!SettlementServiceValidator.GoodwillMet(def, settlement, out reasonKey)) return true;
 
             var ctx = new SettlementServiceContext(SettlementServicesWorldComponent.Current, settlement, null, requestingCaravan: caravan);

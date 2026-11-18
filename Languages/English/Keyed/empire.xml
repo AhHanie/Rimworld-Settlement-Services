@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
     <SettlementServices.Error.EmpireSettlementUnderAttack>This settlement is currently under attack.</SettlementServices.Error.EmpireSettlementUnderAttack>
+    <SettlementServices.Error.EmpireTradePermitRequired>Someone in your caravan needs the Empire's settlement trade permit to buy services here.</SettlementServices.Error.EmpireTradePermitRequired>
 </LanguageData>
