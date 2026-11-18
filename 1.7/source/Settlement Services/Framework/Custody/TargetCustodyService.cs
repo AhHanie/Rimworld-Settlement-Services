@@ -8,7 +8,6 @@ using Verse;
 using Settlement_Services.Domain;
 using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework.Compatibility;
-using Settlement_Services.Framework.Compat.VehicleFramework;
 using Settlement_Services.Framework.Workers;
 
 namespace Settlement_Services.Framework.Custody
@@ -53,13 +52,7 @@ namespace Settlement_Services.Framework.Custody
 
             List<Pawn> departing = targets.Select(t => t?.liveThing as Pawn).Where(p => p != null).ToList();
             Settlement intendedSettlement = ctx.Job.requestChannel == RequestChannel.InPerson ? ctx.ResolveSettlement() : null;
-            bool parkedVehicleException = departing.Count > 0
-                && CaravanOwnershipRules.GetDepartureBlockKey(caravan, departing) != null
-                && CaravanOwnershipRules.CanParkVehicleCaravanForService(caravan, departing, intendedSettlement);
-            int originalCaravanId = parkedVehicleException ? caravan.ID : -1;
-            PlanetTile originalTile = parkedVehicleException ? caravan.Tile : PlanetTile.Invalid;
-            List<Pawn> parkedVehicles = parkedVehicleException
-                ? caravan.pawns.InnerListForReading.Where(p => VehicleFrameworkAdapter.IsVehicle(p)).ToList() : null;
+            ParkedVehicleCaravanGuard parkedCaravan = ParkedVehicleCaravanGuard.Capture(caravan, departing, intendedSettlement);
             CaravanCustodyCargoTransfer cargo = CaravanCustodyCargoTransfer.Empty;
             if (departing.Count > 0 && !CaravanCustodyCargoTransfer.TryPrepare(caravan, departing, out cargo, out errorKey,
                 intendedSettlement, allowVehicleParking: intendedSettlement != null)) return false;
@@ -92,11 +85,7 @@ namespace Settlement_Services.Framework.Custody
                 detached.Add(target);
             }
 
-            if (parkedVehicleException && (currentCaravan != caravan || caravan.Destroyed || !caravan.Spawned
-                || caravan.ID != originalCaravanId || caravan.Tile != originalTile
-                || parkedVehicles.Count == 0 || parkedVehicles.Any(v => v.Destroyed || !caravan.pawns.Contains(v)
-                    || !caravan.PawnsListForReading.Contains(v))
-                || caravan.PawnsListForReading.Any(p => !VehicleFrameworkAdapter.IsVehicle(p))))
+            if (!parkedCaravan.IsIntact(currentCaravan))
             {
                 SupportLog.Error($"Job {ctx.Job.jobId}: the parked vehicle caravan changed while taking custody; restoring the targets.");
                 RevertDetachedTargets(ctx, detached, currentCaravan);

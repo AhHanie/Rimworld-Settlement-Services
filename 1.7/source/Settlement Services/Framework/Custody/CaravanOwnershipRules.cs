@@ -34,11 +34,11 @@ namespace Settlement_Services.Framework.Custody
             if (remaining.Count == 0) return null;
 
             if (HasCapableOwner(remaining, caravan.Faction)) return null;
-            return allowVehicleParking && CanParkVehicleCaravanForService(caravan, departing, intendedSettlement)
+            return allowVehicleParking && CanParkVehicleCaravanForDeparture(caravan, departing, intendedSettlement)
                 ? null : LastOwnerDepartureKey;
         }
 
-        internal static bool CanParkVehicleCaravanForService(Caravan caravan, IReadOnlyCollection<Pawn> departing, Settlement intendedSettlement)
+        internal static bool CanParkVehicleCaravanForDeparture(Caravan caravan, IReadOnlyCollection<Pawn> departing, Settlement intendedSettlement)
         {
             if (intendedSettlement == null || !IsStationaryPlayerCaravan(caravan)
                 || CaravanVisitUtility.SettlementVisitedNow(caravan) != intendedSettlement

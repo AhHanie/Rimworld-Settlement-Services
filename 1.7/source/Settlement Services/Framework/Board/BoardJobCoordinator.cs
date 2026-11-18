@@ -43,7 +43,7 @@ namespace Settlement_Services.Framework.Board
             }
 
             if (!BoardRequirementMatcher.IsSatisfied(job.requirements, job.partySize, selected)) return "SettlementServices.JobBoard.Error.RequirementsNotMet";
-            return CaravanOwnershipRules.GetDepartureBlockKey(caravan, selected.ToList());
+            return CaravanOwnershipRules.GetDepartureBlockKey(caravan, selected.ToList(), settlement, allowVehicleParking: true);
         }
 
         internal static bool TryStart(SettlementServicesWorldComponent domain, BoardJobRecord job, Settlement settlement, Caravan caravan, IReadOnlyList<Pawn> selected, out string errorKey)
@@ -55,7 +55,7 @@ namespace Settlement_Services.Framework.Board
             PlanetTile originTile = caravan.Tile;
             List<Pawn> party = selected.ToList();
 
-            if (!BoardPawnCustodyService.TryDispatch(domain, caravan, party, out errorKey)) return false;
+            if (!BoardPawnCustodyService.TryDispatch(domain, settlement, caravan, party, out errorKey)) return false;
 
             int now = Find.TickManager.TicksGame;
             job.assignedPawns = party;

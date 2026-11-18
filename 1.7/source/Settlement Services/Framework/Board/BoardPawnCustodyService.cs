@@ -12,15 +12,17 @@ namespace Settlement_Services.Framework.Board
 {
     internal static class BoardPawnCustodyService
     {
-        internal static bool TryDispatch(SettlementServicesWorldComponent domain, Caravan caravan, IReadOnlyList<Pawn> pawns, out string errorKey)
+        internal static bool TryDispatch(SettlementServicesWorldComponent domain, Settlement settlement, Caravan caravan, IReadOnlyList<Pawn> pawns, out string errorKey)
         {
             errorKey = null;
             var ctx = new ServiceJobContext(domain, null);
             PlanetTile tile = caravan.Tile;
             Caravan current = caravan;
             var touched = new List<Pawn>();
+            ParkedVehicleCaravanGuard parkedCaravan = ParkedVehicleCaravanGuard.Capture(caravan, pawns.ToList(), settlement);
 
-            if (!CaravanCustodyCargoTransfer.TryPrepare(caravan, pawns.ToList(), out CaravanCustodyCargoTransfer cargo, out errorKey))
+            if (!CaravanCustodyCargoTransfer.TryPrepare(caravan, pawns.ToList(), out CaravanCustodyCargoTransfer cargo, out errorKey,
+                intendedSettlement: settlement, allowVehicleParking: true))
                 return false;
 
             foreach (Pawn pawn in pawns)
@@ -38,6 +40,15 @@ namespace Settlement_Services.Framework.Board
                     SupportLog.Error($"Board dispatch: {pawn.LabelShort} changed faction while entering custody; restoring player ownership.");
                     pawn.SetFaction(Faction.OfPlayer);
                 }
+            }
+
+            if (!parkedCaravan.IsIntact(current))
+            {
+                SupportLog.Error("Board dispatch: the parked vehicle caravan changed while taking custody; restoring the workers.");
+                Rollback(ctx, ref current, touched, tile);
+                cargo.Rollback();
+                errorKey = "SettlementServices.Error.TargetCouldNotBeDetached";
+                return false;
             }
 
             if (current != null && !current.Destroyed && current.PawnsListForReading.Count == 0) current.Destroy();
