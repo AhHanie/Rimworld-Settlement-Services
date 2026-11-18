@@ -481,4 +481,94 @@
     </rulePack>
   </RulePackDef>
 
+  <RulePackDef>
+    <defName>SettlementBoardJob_FirebreakClearing_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Firebreak crew wanted at [SETTLEMENT]</li>
+        <li>r_title->Clearing a path against the flames</li>
+        <li>r_title->Protecting [SETTLEMENT] from wildfire</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->Dry brush has crept close to [SETTLEMENT], and the locals fear the next fire.</li>
+        <li>sb_opener->[SETTLEMENT] needs a clear boundary before the season turns hotter.</li>
+        <li>sb_need->They want hands to cut back the growth and build barriers where sparks could spread.</li>
+        <li>sb_need->The work calls for people who know plants and can put up a sturdy barrier.</li>
+        <li>sb_closer->Tools and building materials will be supplied.</li>
+        <li>sb_closer->Payment is due when the firebreak is complete.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_MachineMaintenance_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Workshop machines need repair</li>
+        <li>r_title->Mechanics wanted at [SETTLEMENT]</li>
+        <li>r_title->Keeping the workshops running</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->The workshops at [SETTLEMENT] are losing time to worn machinery.</li>
+        <li>sb_opener->Several machines in [SETTLEMENT] have begun to fail at once.</li>
+        <li>sb_need->They need a capable craftsperson to diagnose faults and repair the machines.</li>
+        <li>sb_need->A careful thinker and a skilled mechanic could get production moving again.</li>
+        <li>sb_closer->Replacement parts are provided by the settlement.</li>
+        <li>sb_closer->The reward is paid after the machines pass inspection.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_StrayHerdRecovery_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Missing herd near [SETTLEMENT]</li>
+        <li>r_title->Herders wanted to find strays</li>
+        <li>r_title->Bring the animals home</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->A gate was left open at [SETTLEMENT], and part of the herd wandered away.</li>
+        <li>sb_opener->Livestock from [SETTLEMENT] have scattered into the surrounding country.</li>
+        <li>sb_need->They want trackers to follow the signs and handlers to bring the animals back calmly.</li>
+        <li>sb_need->A patient herder may be able to recover the missing stock alone.</li>
+        <li>sb_closer->Every animal returned is worth keeping to the settlement.</li>
+        <li>sb_closer->The agreed reward is waiting when the herd comes home.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_QuarantineInspection_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Quarantine inspection at [SETTLEMENT]</li>
+        <li>r_title->Healers needed for an outbreak</li>
+        <li>r_title->Tracing a sickness</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->Several people in [SETTLEMENT] have fallen ill with the same symptoms.</li>
+        <li>sb_opener->[SETTLEMENT] has isolated its sick, but needs help deciding what to do next.</li>
+        <li>sb_need->They need examinations, careful records and a workable quarantine plan.</li>
+        <li>sb_need->A skilled healer can inspect the patients and advise the local carers.</li>
+        <li>sb_closer->The settlement will provide medicine and a place to work.</li>
+        <li>sb_closer->The pay reflects the risk of entering the quarantine area.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>SettlementBoardJob_DisputeMediation_Flavor</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_title->Mediator wanted at [SETTLEMENT]</li>
+        <li>r_title->Settle a local dispute</li>
+        <li>r_title->Two sides need a fair hearing</li>
+        <li>r_flavor->[sb_opener] [sb_need] [sb_closer]</li>
+        <li>sb_opener->A disagreement in [SETTLEMENT] has grown beyond what its elders can settle.</li>
+        <li>sb_opener->Two families in [SETTLEMENT] tell different stories about the same bargain.</li>
+        <li>sb_need->They want someone to hear both sides, examine the record and guide a compromise.</li>
+        <li>sb_need->A persuasive outsider could help the parties reach an agreement.</li>
+        <li>sb_closer->Both sides have agreed to pay for an impartial hearing.</li>
+        <li>sb_closer->The fee is held until the talks are finished.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
 </Defs>

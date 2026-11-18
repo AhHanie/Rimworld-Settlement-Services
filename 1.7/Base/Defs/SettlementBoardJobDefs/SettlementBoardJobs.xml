@@ -822,4 +822,198 @@
     </patterns>
   </Settlement_Services.Framework.Defs.SettlementBoardJobDef>
 
+<Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+    <defName>SettlementBoardJob_FirebreakClearing</defName>
+    <label>firebreak clearing</label>
+    <description>Clearing vegetation and building barriers to protect a settlement from wildfire.</description>
+    <selectionWeight>0.65</selectionWeight>
+    <durationDays>2~4</durationDays>
+    <difficultyBias>0.05</difficultyBias>
+    <rewardMultiplier>1.05</rewardMultiplier>
+    <flavorRulePack>SettlementBoardJob_FirebreakClearing_Flavor</flavorRulePack>
+    <patterns>
+      <li>
+        <kind>Mixed</kind>
+        <weight>2</weight>
+        <minPartySize>2</minPartySize>
+        <maxPartySize>3</maxPartySize>
+        <skills>
+          <li>
+            <skill>Plants</skill>
+            <requiredWorkTags>PlantWork</requiredWorkTags>
+          </li>
+          <li>
+            <skill>Construction</skill>
+            <requiredWorkTags>Constructing</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+    </patterns>
+  </Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+
+  <Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+    <defName>SettlementBoardJob_MachineMaintenance</defName>
+    <label>machine maintenance</label>
+    <description>Diagnosing and repairing worn machinery in a settlement's workshops.</description>
+    <selectionWeight>0.6</selectionWeight>
+    <durationDays>2~4</durationDays>
+    <difficultyBias>0.1</difficultyBias>
+    <rewardMultiplier>1.1</rewardMultiplier>
+    <minTechLevel>Industrial</minTechLevel>
+    <flavorRulePack>SettlementBoardJob_MachineMaintenance_Flavor</flavorRulePack>
+    <patterns>
+      <li>
+        <kind>Mixed</kind>
+        <weight>2</weight>
+        <minPartySize>2</minPartySize>
+        <maxPartySize>2</maxPartySize>
+        <skills>
+          <li>
+            <skill>Crafting</skill>
+            <requiredWorkTags>Crafting</requiredWorkTags>
+          </li>
+          <li>
+            <skill>Intellectual</skill>
+            <requiredWorkTags>Intellectual</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+      <li>
+        <kind>Specialist</kind>
+        <weight>1</weight>
+        <minPartySize>1</minPartySize>
+        <maxPartySize>1</maxPartySize>
+        <skills>
+          <li>
+            <skill>Crafting</skill>
+            <requiredWorkTags>Crafting</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+    </patterns>
+  </Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+
+  <Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+    <defName>SettlementBoardJob_StrayHerdRecovery</defName>
+    <label>stray herd recovery</label>
+    <description>Tracking missing livestock and bringing the animals safely home.</description>
+    <selectionWeight>0.7</selectionWeight>
+    <durationDays>1~3</durationDays>
+    <difficultyBias>0</difficultyBias>
+    <rewardMultiplier>1</rewardMultiplier>
+    <flavorRulePack>SettlementBoardJob_StrayHerdRecovery_Flavor</flavorRulePack>
+    <patterns>
+      <li>
+        <kind>Mixed</kind>
+        <weight>2</weight>
+        <minPartySize>2</minPartySize>
+        <maxPartySize>3</maxPartySize>
+        <skills>
+          <li>
+            <skill>Animals</skill>
+            <requiredWorkTags>Animals</requiredWorkTags>
+          </li>
+          <li>
+            <skill>Plants</skill>
+            <requiredWorkTags>PlantWork</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+      <li>
+        <kind>Specialist</kind>
+        <weight>1</weight>
+        <minPartySize>1</minPartySize>
+        <maxPartySize>1</maxPartySize>
+        <skills>
+          <li>
+            <skill>Animals</skill>
+            <requiredWorkTags>Animals</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+    </patterns>
+  </Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+
+  <Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+    <defName>SettlementBoardJob_QuarantineInspection</defName>
+    <label>quarantine inspection</label>
+    <description>Examining suspected infections and organizing a settlement's quarantine.</description>
+    <selectionWeight>0.55</selectionWeight>
+    <durationDays>1~3</durationDays>
+    <difficultyBias>0.1</difficultyBias>
+    <rewardMultiplier>1.15</rewardMultiplier>
+    <flavorRulePack>SettlementBoardJob_QuarantineInspection_Flavor</flavorRulePack>
+    <patterns>
+      <li>
+        <kind>Mixed</kind>
+        <weight>2</weight>
+        <minPartySize>2</minPartySize>
+        <maxPartySize>2</maxPartySize>
+        <skills>
+          <li>
+            <skill>Medicine</skill>
+            <requiredWorkTags>Caring</requiredWorkTags>
+          </li>
+          <li>
+            <skill>Intellectual</skill>
+            <requiredWorkTags>Intellectual</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+      <li>
+        <kind>Specialist</kind>
+        <weight>1</weight>
+        <minPartySize>1</minPartySize>
+        <maxPartySize>1</maxPartySize>
+        <skills>
+          <li>
+            <skill>Medicine</skill>
+            <requiredWorkTags>Caring</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+    </patterns>
+  </Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+
+  <Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+    <defName>SettlementBoardJob_DisputeMediation</defName>
+    <label>dispute mediation</label>
+    <description>Hearing opposing accounts and helping a settlement resolve a local dispute.</description>
+    <selectionWeight>0.55</selectionWeight>
+    <durationDays>1~3</durationDays>
+    <difficultyBias>0.05</difficultyBias>
+    <rewardMultiplier>1.05</rewardMultiplier>
+    <flavorRulePack>SettlementBoardJob_DisputeMediation_Flavor</flavorRulePack>
+    <patterns>
+      <li>
+        <kind>Mixed</kind>
+        <weight>2</weight>
+        <minPartySize>2</minPartySize>
+        <maxPartySize>2</maxPartySize>
+        <skills>
+          <li>
+            <skill>Social</skill>
+            <requiredWorkTags>Social</requiredWorkTags>
+          </li>
+          <li>
+            <skill>Intellectual</skill>
+            <requiredWorkTags>Intellectual</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+      <li>
+        <kind>Specialist</kind>
+        <weight>1</weight>
+        <minPartySize>1</minPartySize>
+        <maxPartySize>1</maxPartySize>
+        <skills>
+          <li>
+            <skill>Social</skill>
+            <requiredWorkTags>Social</requiredWorkTags>
+          </li>
+        </skills>
+      </li>
+    </patterns>
+  </Settlement_Services.Framework.Defs.SettlementBoardJobDef>
+
 </Defs>
