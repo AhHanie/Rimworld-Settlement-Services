@@ -12,6 +12,7 @@ namespace Settlement_Services.Framework.Defs
         public Type workerClass;
 
         public bool disabled = false;
+        public bool enabledByDefault = true;
 
         public TechLevel requiredTechLevel = TechLevel.Undefined;
 

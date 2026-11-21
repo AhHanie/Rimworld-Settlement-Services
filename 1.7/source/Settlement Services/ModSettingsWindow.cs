@@ -1,8 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
 using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Pricing;
+using Settlement_Services.Framework.Defs;
+using Settlement_Services.Framework.Registry;
 using Settlement_Services.Framework.Specialty;
 using Settlement_Services.UI.Audio;
 
@@ -10,7 +15,11 @@ namespace Settlement_Services
 {
     public static class ModSettingsWindow
     {
+        private const float ServicesListMaxHeight = 300f;
+        private const float ServiceRowHeight = 32f;
+
         private static Vector2 scrollPosition = Vector2.zero;
+        private static Vector2 servicesScrollPosition = Vector2.zero;
 
         private static float contentHeight = 800f;
 
@@ -29,6 +38,8 @@ namespace Settlement_Services
             DrawStockSection(listing, settings);
             listing.GapLine();
             DrawSpecialtySection(listing, settings);
+            listing.GapLine();
+            DrawServicesSection(listing, settings);
             listing.GapLine();
             DrawDifficultySection(listing, settings);
             listing.GapLine();
@@ -150,6 +161,76 @@ namespace Settlement_Services
             int adjustedTwo = SettlementSpecialtyGenerator.ResolveCount(2, settings.specialtyCountOffset, int.MaxValue);
             int adjustedThree = SettlementSpecialtyGenerator.ResolveCount(3, settings.specialtyCountOffset, int.MaxValue);
             listing.Label("SettlementServices.Settings.SpecialtyPreview".Translate(adjustedOne, adjustedTwo, adjustedThree));
+        }
+
+        private static void DrawServicesSection(Listing_Standard listing, ModSettings settings)
+        {
+            Text.Font = GameFont.Medium;
+            listing.Label("SettlementServices.Settings.SectionServices".Translate());
+            Text.Font = GameFont.Small;
+            listing.Label("SettlementServices.Settings.ServicesNotice".Translate());
+
+            Rect resetAllRect = listing.GetRect(30f);
+            if (Widgets.ButtonText(resetAllRect.LeftPart(0.45f), "SettlementServices.Settings.ServicesResetAll".Translate()))
+                settings.ResetAllServicesEnabled();
+            listing.Gap(listing.verticalSpacing);
+
+            var services = SettlementServiceRegistry.AllConfigurable.ToList();
+            if (services.Count == 0) return;
+
+            float listWidth = listing.ColumnWidth - 20f;
+            float spacing = listing.verticalSpacing;
+            float rowStride = ServiceRowHeight + spacing;
+            var duplicateLabels = new HashSet<string>(services.GroupBy(d => (string)d.LabelCap, StringComparer.CurrentCulture)
+                .Where(g => g.Count() > 1).Select(g => g.Key), StringComparer.CurrentCulture);
+            var groups = services.GroupBy(d => d.category)
+                .OrderBy(g => g.Key?.order ?? int.MaxValue)
+                .ThenBy(g => g.Key == null ? "" : (string)g.Key.LabelCap, StringComparer.CurrentCulture)
+                .ThenBy(g => g.Key?.defName, StringComparer.Ordinal)
+                .Select(g =>
+                {
+                    string label = g.Key == null ? "SettlementServices.Settings.ServicesUncategorized".Translate() : g.Key.LabelCap;
+                    return new { Label = label, LabelHeight = Text.CalcHeight(label, listWidth), Services = g.ToList() };
+                })
+                .ToList();
+
+            float listHeight = groups.Sum(g => g.LabelHeight + spacing + g.Services.Count * rowStride);
+            Rect viewport = listing.GetRect(Mathf.Min(ServicesListMaxHeight, listHeight));
+            servicesScrollPosition.y = Mathf.Clamp(servicesScrollPosition.y, 0f, listHeight - viewport.height);
+            Widgets.BeginScrollView(viewport, ref servicesScrollPosition, new Rect(0f, 0f, listWidth, listHeight));
+            float y = 0f;
+            foreach (var group in groups)
+            {
+                Widgets.Label(new Rect(0f, y, listWidth, group.LabelHeight), group.Label);
+                y += group.LabelHeight + spacing;
+                foreach (SettlementServiceDef def in group.Services.OrderBy(d => (string)d.LabelCap, StringComparer.CurrentCulture)
+                    .ThenBy(d => d.defName, StringComparer.Ordinal))
+                {
+                    Rect row = new Rect(0f, y, listWidth, ServiceRowHeight);
+                    DrawServiceSettingRow(row, settings, def, duplicateLabels.Contains((string)def.LabelCap));
+                    y += rowStride;
+                }
+            }
+            Widgets.EndScrollView();
+        }
+
+        private static void DrawServiceSettingRow(Rect row, ModSettings settings, SettlementServiceDef def, bool duplicateLabel)
+        {
+            Rect checkboxRect = new Rect(row.x, row.y, row.width * 0.61f, row.height);
+            Rect stateRect = new Rect(checkboxRect.xMax + 4f, row.y, row.width * 0.19f, row.height);
+            Rect resetRect = new Rect(stateRect.xMax + 4f, row.y + 1f,
+                Math.Max(0f, row.xMax - stateRect.xMax - 4f), row.height - 2f);
+            bool enabled = settings.GetServiceEnabled(def);
+            Widgets.CheckboxLabeled(checkboxRect, def.LabelCap, ref enabled);
+            if (enabled != settings.GetServiceEnabled(def)) settings.SetServiceEnabled(def, enabled);
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Widgets.Label(stateRect, settings.HasServiceEnabledOverride(def)
+                ? "SettlementServices.Settings.ServiceOverride".Translate()
+                : "SettlementServices.Settings.ServiceDefault".Translate());
+            Text.Anchor = TextAnchor.UpperLeft;
+            if (Widgets.ButtonText(resetRect, "SettlementServices.Settings.ServiceReset".Translate()))
+                settings.ResetServiceEnabled(def);
+            if (duplicateLabel) TooltipHandler.TipRegion(checkboxRect, def.defName);
         }
 
         private static void DrawDifficultySection(Listing_Standard listing, ModSettings settings)

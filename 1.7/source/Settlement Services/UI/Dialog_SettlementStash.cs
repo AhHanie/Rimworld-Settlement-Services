@@ -32,10 +32,11 @@ namespace Settlement_Services.UI
 
         public override Vector2 InitialSize => new Vector2(900f, 760f);
 
-        public Dialog_SettlementStash(Settlement settlement, Caravan caravan)
+        public Dialog_SettlementStash(Settlement settlement, Caravan caravan, bool openActive = false)
         {
             this.settlement = settlement;
             this.caravan = caravan;
+            showActive = openActive;
             forcePause = true;
             absorbInputAroundWindow = true;
             doCloseX = true;
@@ -57,13 +58,16 @@ namespace Settlement_Services.UI
             if (Widgets.ButtonText(new Rect(168f, 38f, 180f, 30f), "SettlementServices.Stash.ActiveTabCount".Translate(activeCount)))
             { showActive = true; scroll = Vector2.zero; }
             string block = StashService.VisitBlock(settlement, caravan);
+            string newActionBlock = StashService.NewActionBlock(settlement, caravan);
             if (block != null)
                 Widgets.Label(new Rect(0f, 73f, inRect.width, 28f), block.Translate());
+            else if (newActionBlock != null)
+                Widgets.Label(new Rect(0f, 73f, inRect.width, 28f), newActionBlock.Translate());
             else
                 Widgets.Label(new Rect(0f, 73f, inRect.width, 28f), "SettlementServices.Stash.InPersonShort".Translate());
             Rect content = new Rect(0f, 106f, inRect.width, inRect.height - 106f);
-            if (showActive) DrawActive(content, domain, block);
-            else DrawDeposit(content, domain, block);
+            if (showActive) DrawActive(content, domain, block, newActionBlock);
+            else DrawDeposit(content, domain, newActionBlock);
         }
 
         private void DrawDeposit(Rect rect, SettlementServicesWorldComponent domain, string block)
@@ -134,9 +138,11 @@ namespace Settlement_Services.UI
             bool canDeposit = block == null && quoted && paymentSilver >= quote.total;
             bool wasEnabled = GUI.enabled;
             GUI.enabled = canDeposit;
-            bool clicked = Widgets.ButtonText(new Rect(rect.xMax - 190f, rect.yMax - 38f, 190f, 36f),
+            Rect depositButton = new Rect(rect.xMax - 190f, rect.yMax - 38f, 190f, 36f);
+            bool clicked = Widgets.ButtonText(depositButton,
                 "SettlementServices.Stash.Deposit".Translate());
             GUI.enabled = wasEnabled;
+            if (block != null) TooltipHandler.TipRegion(depositButton, block.Translate());
             if (clicked)
             {
                 List<StashSelection> snapshot = selected.ToList();
@@ -264,7 +270,7 @@ namespace Settlement_Services.UI
             input.buffer = count.ToString();
         }
 
-        private void DrawActive(Rect rect, SettlementServicesWorldComponent domain, string block)
+        private void DrawActive(Rect rect, SettlementServicesWorldComponent domain, string block, string newActionBlock)
         {
             List<StashContractRecord> stashes = domain.StashesForSettlement(settlement.ID);
             if (stashes.Count == 0)
@@ -322,10 +328,12 @@ namespace Settlement_Services.UI
                     input.count, false, out StashQuote quote);
                 Widgets.Label(new Rect(155f, actionY + 4f, view.width - 490f, 25f), quoted ?
                     "SettlementServices.Stash.ExtensionOffer".Translate(quote.total) : "SettlementServices.Stash.Error.Price".Translate());
-                if (Widgets.ButtonText(new Rect(view.width - 325f, actionY, 150f, 30f), "SettlementServices.Stash.Extend".Translate()))
+                Rect extendButton = new Rect(view.width - 325f, actionY, 150f, 30f);
+                if (newActionBlock != null) TooltipHandler.TipRegion(extendButton, newActionBlock.Translate());
+                if (Widgets.ButtonText(extendButton, "SettlementServices.Stash.Extend".Translate()))
                 {
                     int id = stash.stashId, added = input.count;
-                    if (block != null || !quoted) Reject(block ?? "SettlementServices.Stash.Error.Price");
+                    if (newActionBlock != null || !quoted) Reject(newActionBlock ?? "SettlementServices.Stash.Error.Price");
                     else Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation(
                         "SettlementServices.Stash.ConfirmExtension".Translate(added, quote.total),
                         () =>

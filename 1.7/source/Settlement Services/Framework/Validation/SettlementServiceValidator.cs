@@ -7,6 +7,7 @@ using Settlement_Services.Domain;
 using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Dto;
+using Settlement_Services.Framework.Registry;
 using Settlement_Services.Framework.Specialty;
 using Settlement_Services.Framework.Stock;
 
@@ -16,6 +17,9 @@ namespace Settlement_Services.Framework.Validation
     {
         public static bool Validate(SettlementServiceDef def, SettlementServiceRequest request, out string errorKey)
         {
+            if (!SettlementServiceRegistry.IsEnabled(def))
+            { errorKey = "SettlementServices.Error.ServiceDisabled"; return false; }
+
             Settlement settlement = request.settlement;
             Faction faction = settlement?.Faction;
 

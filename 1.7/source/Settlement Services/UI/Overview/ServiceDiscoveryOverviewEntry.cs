@@ -5,6 +5,7 @@ using RimWorld.Planet;
 using Settlement_Services.Domain;
 using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework.Defs;
+using Settlement_Services.Framework.Registry;
 using Settlement_Services.Framework.Specialty;
 using Verse;
 
@@ -30,7 +31,7 @@ namespace Settlement_Services.UI.Overview
             inPersonLabel = JoinLabels(inPersonServices);
             remoteLabel = JoinLabels(remoteServices);
 
-            specialties = settlement == null || (inPersonServices.Count == 0 && remoteServices.Count == 0)
+            specialties = settlement == null || discoveries == null || !discoveries.Any(d => d != null)
                 ? Array.Empty<SettlementSpecialtyDef>()
                 : SettlementSpecialtyService.PreviewSpecialties(settlement)
                     .GroupBy(s => s.defName)
@@ -47,10 +48,10 @@ namespace Settlement_Services.UI.Overview
 
         private static IReadOnlyList<SettlementServiceDef> ResolveServices(IReadOnlyList<DiscoveryRecord> discoveries, RequestChannel channel)
         {
-            return discoveries
+            return (discoveries ?? Array.Empty<DiscoveryRecord>())
                 .Where(d => d != null && d.discoveredVia == channel)
                 .Select(d => d.ResolveDef())
-                .Where(def => def != null)
+                .Where(SettlementServiceRegistry.IsEnabled)
                 .GroupBy(def => def.defName)
                 .Select(g => g.First())
                 .OrderBy(def => (string)def.LabelCap, StringComparer.CurrentCulture)

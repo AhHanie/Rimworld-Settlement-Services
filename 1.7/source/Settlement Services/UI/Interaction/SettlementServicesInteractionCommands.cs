@@ -9,6 +9,9 @@ using Settlement_Services.Framework;
 using Settlement_Services.Framework.Board;
 using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Custody;
+using Settlement_Services.Framework.Defs;
+using Settlement_Services.Framework.Registry;
+using Settlement_Services.Services.Stashing;
 
 namespace Settlement_Services.UI.Interaction
 {
@@ -24,6 +27,8 @@ namespace Settlement_Services.UI.Interaction
 
             Command_Action collectCommand = BuildCollectCommand(settlement, caravan);
             if (collectCommand != null) yield return collectCommand;
+            Command_Action stashRecovery = BuildStashRecoveryCommand(settlement, caravan);
+            if (stashRecovery != null) yield return stashRecovery;
         }
 
         internal static IEnumerable<FloatMenuOption> GetVisitFloatMenuOptions(Settlement settlement, Caravan caravan)
@@ -87,6 +92,26 @@ namespace Settlement_Services.UI.Interaction
             };
 
             if (!anyCollectible && firstBlockKey != null) command.Disable(firstBlockKey.Translate());
+            return command;
+        }
+
+        private static Command_Action BuildStashRecoveryCommand(Settlement settlement, Caravan caravan)
+        {
+            SettlementServicesWorldComponent domain = SettlementServicesWorldComponent.Current;
+            if (domain == null) return null;
+            domain.ExpireDueStashes();
+            if (domain.StashesForSettlement(settlement.ID).Count == 0) return null;
+            SettlementServiceDef stashDef = DefDatabase<SettlementServiceDef>.GetNamedSilentFail("SettlementService_Stash");
+            if (SettlementServiceRegistry.IsEnabled(stashDef)) return null;
+            var command = new Command_Action
+            {
+                defaultLabel = "SettlementServices.Command.StashRecovery".Translate(),
+                defaultDesc = "SettlementServices.Command.StashRecoveryDesc".Translate(),
+                icon = ServiceUITextures.CollectCommand,
+                action = () => Find.WindowStack.Add(new Dialog_SettlementStash(settlement, caravan, true)),
+            };
+            string block = StashService.VisitBlock(settlement, caravan);
+            if (block != null) command.Disable(block.Translate());
             return command;
         }
 

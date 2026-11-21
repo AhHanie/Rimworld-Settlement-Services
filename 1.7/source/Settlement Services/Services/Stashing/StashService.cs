@@ -8,6 +8,7 @@ using Settlement_Services.Domain;
 using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Defs;
+using Settlement_Services.Framework.Registry;
 using Settlement_Services.Framework.Validation;
 using Settlement_Services.UI;
 
@@ -95,8 +96,16 @@ namespace Settlement_Services.Services.Stashing
             string blocked = SettlementServicesCompatibilityRegistry.GetRequestBlockReason(settlement)
                 ?? EmpireTradePermitAccess.GetBlockReason(settlement, caravan);
             if (blocked != null) return blocked;
+            return null;
+        }
+
+        public static string NewActionBlock(Settlement settlement, Caravan caravan)
+        {
+            string visitBlock = VisitBlock(settlement, caravan);
+            if (visitBlock != null) return visitBlock;
             SettlementServiceDef def = DefDatabase<SettlementServiceDef>.GetNamedSilentFail("SettlementService_Stash");
-            if (def == null || !SettlementServiceValidator.StructuralEligibility(def, settlement, out blocked)
+            if (!SettlementServiceRegistry.IsEnabled(def)) return "SettlementServices.Error.ServiceDisabled";
+            if (!SettlementServiceValidator.StructuralEligibility(def, settlement, out string blocked)
                 || !SettlementServiceValidator.GoodwillMet(def, settlement, out blocked)) return blocked ?? InvalidKey;
             return null;
         }
@@ -108,7 +117,7 @@ namespace Settlement_Services.Services.Stashing
             SettlementServicesWorldComponent domain = SettlementServicesWorldComponent.Current;
             if (domain == null) { errorKey = InvalidKey; return false; }
             domain.ExpireDueStashes();
-            errorKey = VisitBlock(settlement, caravan);
+            errorKey = NewActionBlock(settlement, caravan);
             if (errorKey != null) return false;
             if (!ValidateSelections(domain, caravan, selections, out errorKey)) return false;
             if (!StashPricing.TryQuote(selections, days, true, out StashQuote quote)
@@ -159,7 +168,7 @@ namespace Settlement_Services.Services.Stashing
             SettlementServicesWorldComponent domain = SettlementServicesWorldComponent.Current;
             if (domain == null) { errorKey = InvalidKey; return false; }
             domain.ExpireDueStashes();
-            errorKey = VisitBlock(settlement, caravan);
+            errorKey = NewActionBlock(settlement, caravan);
             if (errorKey != null) return false;
             StashContractRecord stash = domain.GetStash(stashId);
             if (stash == null || stash.settlementWorldObjectId != settlement.ID || Find.TickManager.TicksGame >= stash.expiryTick)

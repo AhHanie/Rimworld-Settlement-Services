@@ -17,6 +17,16 @@
     <SettlementServices.Settings.StockQuantityMultiplier>Settlement stock multiplier: {0}</SettlementServices.Settings.StockQuantityMultiplier>
     <SettlementServices.Settings.StockQuantityMultiplier.Tooltip>Scales the capacity and per-refresh replenishment of the stock this mod's settlements hold, including mechanoid hiring stock. Refresh intervals, which goods are stocked, service input costs, and prices are unchanged, and vanilla trader inventories are not affected. 1× is the default balance. Stock that already exists is not topped up retroactively; it fills through future refreshes, and lowering the multiplier caps existing stock at the new limit.</SettlementServices.Settings.StockQuantityMultiplier.Tooltip>
     <SettlementServices.Settings.SectionSpecialties>Settlement specialties</SettlementServices.Settings.SectionSpecialties>
+    <SettlementServices.Settings.SectionServices>Services</SettlementServices.Settings.SectionServices>
+    <SettlementServices.Settings.ServicesNotice>These settings apply across all saves. Each service follows its XML default until you change it. Accepted jobs continue after a service is disabled.</SettlementServices.Settings.ServicesNotice>
+    <SettlementServices.Settings.ServicesResetAll>Reset all services to defaults</SettlementServices.Settings.ServicesResetAll>
+    <SettlementServices.Settings.ServicesUncategorized>Other services</SettlementServices.Settings.ServicesUncategorized>
+    <SettlementServices.Settings.ServiceDefault>XML default</SettlementServices.Settings.ServiceDefault>
+    <SettlementServices.Settings.ServiceOverride>Overridden</SettlementServices.Settings.ServiceOverride>
+    <SettlementServices.Settings.ServiceReset>Reset</SettlementServices.Settings.ServiceReset>
+    <SettlementServices.Error.ServiceDisabled>This service is disabled in mod settings.</SettlementServices.Error.ServiceDisabled>
+    <SettlementServices.Command.StashRecovery>Recover stashed items</SettlementServices.Command.StashRecovery>
+    <SettlementServices.Command.StashRecoveryDesc>View and collect items already held at this settlement.</SettlementServices.Command.StashRecoveryDesc>
     <SettlementServices.Settings.SpecialtiesNotice>These settings apply to all saves and only affect settlements that have not yet received their specialties, or whose owner changes. Settlements that already have specialties keep them. A settlement can never receive more specialties than it is eligible for, and with zero specialties, services that depend on a specialty are unavailable there.</SettlementServices.Settings.SpecialtiesNotice>
     <SettlementServices.Settings.SpecialtyCountOffset>Specialties added per settlement: {0}</SettlementServices.Settings.SpecialtyCountOffset>
     <SettlementServices.Settings.SpecialtyCountOffset.Tooltip>Added to the number of specialties a settlement starts with, after the chances below have decided that number. Negative values remove specialties, down to zero. 0 is the default balance.</SettlementServices.Settings.SpecialtyCountOffset.Tooltip>

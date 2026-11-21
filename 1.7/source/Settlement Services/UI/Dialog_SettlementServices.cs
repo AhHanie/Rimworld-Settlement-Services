@@ -95,6 +95,12 @@ namespace Settlement_Services.UI
 
         private void DrawServicesBody(Rect bodyRect)
         {
+            if (selectedCategory == null || !CategoryHasCandidates(selectedCategory))
+            {
+                selectedCategory = DefDatabase<ServiceCategoryDef>.AllDefsListForReading
+                    .Where(CategoryHasCandidates).OrderBy(c => c.order).FirstOrDefault();
+                serviceScroll = Vector2.zero;
+            }
             Rect categoryRect = new Rect(bodyRect.x, bodyRect.y, CategoryColumnWidth, bodyRect.height);
             Rect serviceRect = new Rect(ServiceColumnX, bodyRect.y, bodyRect.width - ServiceColumnX, bodyRect.height);
             DrawCategoryList(categoryRect);

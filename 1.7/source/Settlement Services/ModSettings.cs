@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 using Settlement_Services.Framework.Compatibility;
+using Settlement_Services.Framework.Defs;
 
 namespace Settlement_Services
 {
@@ -39,6 +40,30 @@ namespace Settlement_Services
         public Dictionary<string, float> difficultyMultiplierOverrides = new Dictionary<string, float>();
 
         public Dictionary<string, float> moodThoughtOverrides = new Dictionary<string, float>();
+
+        public Dictionary<string, bool> serviceEnabledOverrides = new Dictionary<string, bool>();
+
+        public bool GetServiceEnabled(SettlementServiceDef def) =>
+            def != null && (serviceEnabledOverrides != null && serviceEnabledOverrides.TryGetValue(def.defName, out bool enabled)
+                ? enabled : def.enabledByDefault);
+
+        public bool HasServiceEnabledOverride(SettlementServiceDef def) =>
+            def != null && serviceEnabledOverrides != null && serviceEnabledOverrides.ContainsKey(def.defName);
+
+        public void SetServiceEnabled(SettlementServiceDef def, bool enabled)
+        {
+            if (def == null) return;
+            if (serviceEnabledOverrides == null) serviceEnabledOverrides = new Dictionary<string, bool>();
+            if (enabled == def.enabledByDefault) serviceEnabledOverrides.Remove(def.defName);
+            else serviceEnabledOverrides[def.defName] = enabled;
+        }
+
+        public void ResetServiceEnabled(SettlementServiceDef def)
+        {
+            if (def != null) serviceEnabledOverrides?.Remove(def.defName);
+        }
+
+        public void ResetAllServicesEnabled() => serviceEnabledOverrides?.Clear();
 
         public float serviceEventFrequencyPct = 1f;
 
@@ -84,6 +109,7 @@ namespace Settlement_Services
             Scribe_Values.Look(ref specialtyChanceTwoPct, "specialtyChanceTwoPct", DefaultSpecialtyChanceTwoPct);
             Scribe_Collections.Look(ref difficultyMultiplierOverrides, "difficultyMultiplierOverrides", LookMode.Value, LookMode.Value);
             Scribe_Collections.Look(ref moodThoughtOverrides, "moodThoughtOverrides", LookMode.Value, LookMode.Value);
+            Scribe_Collections.Look(ref serviceEnabledOverrides, "serviceEnabledOverrides", LookMode.Value, LookMode.Value);
             Scribe_Values.Look(ref serviceEventFrequencyPct, "serviceEventFrequencyPct", 1f);
             Scribe_Values.Look(ref goodwillDiscountScalePct, "goodwillDiscountScalePct", 1f);
             Scribe_Values.Look(ref investmentCostScalePct, "investmentCostScalePct", 1f);
@@ -106,6 +132,7 @@ namespace Settlement_Services
 
             if (difficultyMultiplierOverrides == null) difficultyMultiplierOverrides = new Dictionary<string, float>();
             if (moodThoughtOverrides == null) moodThoughtOverrides = new Dictionary<string, float>();
+            if (serviceEnabledOverrides == null) serviceEnabledOverrides = new Dictionary<string, bool>();
             if (compatibilitySettings == null) compatibilitySettings = new CompatibilitySettingsStore();
 
             if (commissionPickerOnlyVanillaItems)

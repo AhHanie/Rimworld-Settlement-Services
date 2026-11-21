@@ -80,7 +80,7 @@ namespace Settlement_Services.UI
             foreach (string serviceDefName in mods.relevantServiceDefNames)
             {
                 SettlementServiceDef service = DefDatabase<SettlementServiceDef>.GetNamedSilentFail(serviceDefName);
-                if (service == null) continue;
+                if (!SettlementServiceRegistry.IsEnabled(service)) continue;
 
                 AppendModifierBlock(sb, service.LabelCap, mods);
             }

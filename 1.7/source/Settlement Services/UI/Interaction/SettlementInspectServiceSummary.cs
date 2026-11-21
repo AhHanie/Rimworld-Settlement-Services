@@ -4,6 +4,7 @@ using Verse;
 using Settlement_Services.Domain;
 using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework.Defs;
+using Settlement_Services.Framework.Registry;
 
 namespace Settlement_Services.UI.Interaction
 {
@@ -54,7 +55,7 @@ namespace Settlement_Services.UI.Interaction
                 if (record == null || record.discoveredVia != channel) continue;
 
                 SettlementServiceDef def = record.ResolveDef();
-                if (def != null && seen.Add(def)) result.Add(def);
+                if (SettlementServiceRegistry.IsEnabled(def) && seen.Add(def)) result.Add(def);
             }
             return result;
         }
