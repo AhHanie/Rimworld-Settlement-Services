@@ -182,7 +182,12 @@ namespace Settlement_Services.Framework
             if (request.podDelivery != null && request.podDelivery.enabled)
             {
                 if (!ServicePodDeliveryPlanner.TryBuildPlan(def, request, units, out podPlan, out errorKey)) { quote = null; return false; }
-                ServicePodDeliveryPlanner.ApplyToQuote(quote, podPlan);
+                if (!ServicePodDeliveryPlanner.TryApplyToQuote(quote, podPlan))
+                {
+                    quote = null;
+                    errorKey = ServicePodDeliveryPlanner.UnavailableKey;
+                    return false;
+                }
             }
 
             if (includeInputPlan) inputPlan = new ServiceInputPlan { stockConsumed = stockConsumed, playerSuppliedConsumed = playerSuppliedConsumed, specialStockReservations = specialStockReservations };

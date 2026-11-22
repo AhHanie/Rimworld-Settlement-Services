@@ -98,6 +98,7 @@ namespace Settlement_Services.Domain
             Scribe_Collections.Look(ref hiringTransits, "hiringTransits", LookMode.Deep);
             Scribe_Collections.Look(ref pendingHomeDeliveries, "pendingHomeDeliveries", LookMode.Deep);
             Scribe_Deep.Look(ref compatibilityWorldState, "compatibilityWorldState");
+            ExposeTransportContracts();
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
@@ -200,6 +201,7 @@ namespace Settlement_Services.Domain
             if (!EnsureLoadReconciled()) return;
             EnsureBoardReconciled();
             TickStashes();
+            TickTransportContracts();
             FlushPendingHomeSilverRefunds();
             FlushPendingHomeDeliveries();
             PruneResolvedJobs();
@@ -217,6 +219,7 @@ namespace Settlement_Services.Domain
 
         private void FlushPendingHomeSilverRefunds()
         {
+            FlushTransportHomeSilverRefunds();
             if (pendingHomeSilverRefunds.Count == 0) return;
 
             for (int i = pendingHomeSilverRefunds.Count - 1; i >= 0; i--)
@@ -237,7 +240,11 @@ namespace Settlement_Services.Domain
 
             for (int i = pendingHomeDeliveries.Count - 1; i >= 0; i--)
             {
-                if (TargetCustodyService.TryDeliverHome(pendingHomeDeliveries[i]))
+                TargetSnapshot delivery = pendingHomeDeliveries[i];
+                bool delivered = delivery.transportContractId > 0
+                    ? Find.TickManager.TicksGame % 60 == 0 && Services.Transport.TransportArrival.TryDeliverQueuedHome(delivery.liveThing, itemCustody)
+                    : TargetCustodyService.TryDeliverHome(delivery);
+                if (delivered)
                     pendingHomeDeliveries.RemoveAt(i);
             }
         }
@@ -319,6 +326,7 @@ namespace Settlement_Services.Domain
             ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, hiringTransitCustody);
             ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, animalVendorCustody);
             ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, growthVatCustody);
+            if (transportContracts != null) outChildren.AddRange(transportContracts);
         }
 
 

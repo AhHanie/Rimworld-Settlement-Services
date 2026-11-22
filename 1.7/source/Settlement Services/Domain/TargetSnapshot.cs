@@ -23,6 +23,7 @@ namespace Settlement_Services.Domain
         public string snapshotLabel;
         public string snapshotDefName;
         public QualityCategory? snapshotQuality;
+        internal int transportContractId;
 
         public void ExposeData()
         {
@@ -31,6 +32,7 @@ namespace Settlement_Services.Domain
             Scribe_Values.Look(ref snapshotLabel, "snapshotLabel");
             Scribe_Values.Look(ref snapshotDefName, "snapshotDefName");
             Scribe_Values.Look(ref snapshotQuality, "snapshotQuality");
+            Scribe_Values.Look(ref transportContractId, "transportContractId");
         }
 
         public bool IsResolvable => liveThing != null && !liveThing.Destroyed;

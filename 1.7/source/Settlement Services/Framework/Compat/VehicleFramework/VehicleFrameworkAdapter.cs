@@ -62,10 +62,22 @@ namespace Settlement_Services.Framework.Compat.VehicleFramework
 
         public static bool IsVehicle(Thing thing) => VehiclePawnType != null && VehiclePawnType.IsInstanceOfType(thing);
 
+        internal static bool IsVehiclePawn(Thing thing)
+        {
+            EnsureResolved();
+            return vehiclePawnType?.IsInstanceOfType(thing) == true;
+        }
+
+        internal static bool IsVehicleCaravan(Caravan caravan)
+        {
+            EnsureResolved();
+            return vehicleCaravanType?.IsInstanceOfType(caravan) == true;
+        }
+
         public static bool IsStationaryVehicleCaravan(Caravan caravan)
         {
             EnsureResolved();
-            if (resolveFailed || caravan == null || vehicleCaravanType == null || !vehicleCaravanType.IsInstanceOfType(caravan)
+            if (caravan == null || vehicleCaravanType == null || !vehicleCaravanType.IsInstanceOfType(caravan)
                 || vehiclePatherField == null || vehiclePatherMovingProp == null) return false;
 
             try

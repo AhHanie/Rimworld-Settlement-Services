@@ -13,6 +13,7 @@ using Settlement_Services.Framework.Registry;
 using Settlement_Services.Framework.Specialty;
 using Settlement_Services.UI.JobBoard;
 using Settlement_Services.Services.Stashing;
+using Settlement_Services.Services.Transport;
 
 namespace Settlement_Services.UI
 {
@@ -319,6 +320,13 @@ namespace Settlement_Services.UI
 
         private void OpenDetail(SettlementServiceDef def)
         {
+            if (def.Worker is TransportServiceWorker)
+            {
+                if (contextTemplate.channel == RequestChannel.InPerson && contextTemplate.caravan != null
+                    && !Find.WindowStack.IsOpen<Dialog_SettlementTransport>())
+                    Find.WindowStack.Add(new Dialog_SettlementTransport(contextTemplate.settlement, contextTemplate.caravan, this));
+                return;
+            }
             if (def.Worker is StashServiceWorker)
             {
                 if (contextTemplate.channel == RequestChannel.InPerson && contextTemplate.caravan != null

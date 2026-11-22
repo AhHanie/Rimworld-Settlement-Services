@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <WorldObjectDef>
+    <defName>SettlementTransport_PodFlight</defName>
+    <label>chartered transport pod</label>
+    <worldObjectClass>Settlement_Services.Services.Transport.SettlementTransportFlight</worldObjectClass>
+    <texture>World/WorldObjects/TravelingTransportPods</texture>
+    <useDynamicDrawer>true</useDynamicDrawer>
+    <expandingIcon>true</expandingIcon>
+    <expandingIconTexture>World/WorldObjects/Expanding/TravelingTransportPods</expandingIconTexture>
+    <expandingIconPriority>60</expandingIconPriority>
+    <expandMore>true</expandMore>
+    <fullyExpandedInSpace>true</fullyExpandedInSpace>
+    <canHaveMap>false</canHaveMap>
+    <validLaunchTarget>false</validLaunchTarget>
+  </WorldObjectDef>
+  <WorldObjectDef>
+    <defName>SettlementTransport_PodMarker</defName>
+    <label>landing transport pod</label>
+    <worldObjectClass>Settlement_Services.Services.Transport.SettlementTransportMarker</worldObjectClass>
+    <texture>World/WorldObjects/Expanding/TravelingTransportPods</texture>
+    <useDynamicDrawer>true</useDynamicDrawer>
+    <selectable>false</selectable>
+    <canHaveMap>false</canHaveMap>
+    <validLaunchTarget>false</validLaunchTarget>
+  </WorldObjectDef>
+  <ThingDef ParentName="ActiveDropPod">
+    <defName>SettlementTransport_ActivePod</defName>
+    <thingClass>Settlement_Services.Services.Transport.SettlementTransportPod</thingClass>
+  </ThingDef>
+  <ThingDef ParentName="DropPodIncoming">
+    <defName>SettlementTransport_IncomingPod</defName>
+    <thingClass>Settlement_Services.Services.Transport.SettlementTransportIncomingPod</thingClass>
+  </ThingDef>
+</Defs>

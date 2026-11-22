@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_Transport</defName>
+    <category>SettlementService_Logistics</category>
+    <label>transport</label>
+    <description>Hire a transport pod or passenger shuttle to fly selected caravan members and cargo to another tile or a loaded map. The settlement supplies the vehicle and fuel.</description>
+    <workerClass>Settlement_Services.Services.Transport.TransportServiceWorker</workerClass>
+    <requiredTechLevel>Industrial</requiredTechLevel>
+    <minimumCost>0</minimumCost>
+    <wealthScale>0.01</wealthScale>
+    <difficultyScaling>false</difficultyScaling>
+    <duration>0</duration>
+    <eventChancePct>0</eventChancePct>
+    <targetRule>None</targetRule>
+    <allowRemoteDiscovery>false</allowRemoteDiscovery>
+    <allowRemoteRequest>false</allowRemoteRequest>
+    <iconTexPath>SettlementServices/UI/Icons/shuttle</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+</Defs>

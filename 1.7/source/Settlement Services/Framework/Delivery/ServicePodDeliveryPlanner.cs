@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -24,6 +25,7 @@ namespace Settlement_Services.Framework.Delivery
     {
         public int podCount;
         public int baseFeePerPod;
+        public int materialFeePerPod;
         public int fuelFeePerPod;
         public float massBound;
         public int maxRange;
@@ -33,8 +35,9 @@ namespace Settlement_Services.Framework.Delivery
         public IntVec3 cell;
 
         public int BaseFeeTotal => podCount * baseFeePerPod;
+        public int MaterialFeeTotal => podCount * materialFeePerPod;
         public int FuelFeeTotal => podCount * fuelFeePerPod;
-        public int TotalFee => BaseFeeTotal + FuelFeeTotal;
+        public int TotalFee => BaseFeeTotal + MaterialFeeTotal + FuelFeeTotal;
     }
 
     internal static class ServicePodDeliveryPlanner
@@ -50,6 +53,7 @@ namespace Settlement_Services.Framework.Delivery
         internal const string RequiresSilverKey = "SettlementServices.Error.PodDeliveryRequiresSilver";
         internal const string QuoteChangedKey = "SettlementServices.Error.PodDeliveryQuoteChanged";
         internal const string LineItemPodKey = "SettlementServices.LineItem.PodDelivery";
+        internal const string LineItemMaterialsKey = "SettlementServices.LineItem.PodDeliveryMaterials";
         internal const string LineItemFuelKey = "SettlementServices.LineItem.PodDeliveryFuel";
 
         private const float PodFeeFractionOfMarketValue = 0.2f;
@@ -156,12 +160,18 @@ namespace Settlement_Services.Framework.Delivery
             int maxRange = MaxLaunchDistance(specs, destination.Tile.Layer);
             if (distance < 0 || distance == int.MaxValue || distance > maxRange) { errorKey = OutOfRangeKey; return false; }
 
+            if (!TransportPodPricing.TryGetMaterialCost(out int materialFee)) { errorKey = UnavailableKey; return false; }
             float fuel = FuelNeededForDistance(specs, distance, destination.Tile.Layer);
+            double baseFee = Math.Max(1d, Math.Round(specs.podMarketValue * PodFeeFractionOfMarketValue));
+            double fuelFee = Math.Max(0d, Math.Round(fuel * specs.fuelMarketValue));
+            double totalFee = podCount * (baseFee + materialFee + fuelFee);
+            if (!double.IsFinite(totalFee) || totalFee > int.MaxValue) { errorKey = UnavailableKey; return false; }
             plan = new ServicePodDeliveryPlan
             {
                 podCount = podCount,
-                baseFeePerPod = Mathf.Max(1, Mathf.RoundToInt(specs.podMarketValue * PodFeeFractionOfMarketValue)),
-                fuelFeePerPod = Mathf.Max(0, Mathf.RoundToInt(fuel * specs.fuelMarketValue)),
+                baseFeePerPod = (int)baseFee,
+                materialFeePerPod = materialFee,
+                fuelFeePerPod = (int)fuelFee,
                 massBound = total.TotalMass,
                 maxRange = maxRange,
                 distance = distance,
@@ -173,9 +183,11 @@ namespace Settlement_Services.Framework.Delivery
             return true;
         }
 
-        internal static void ApplyToQuote(SettlementServiceQuote quote, ServicePodDeliveryPlan plan)
+        internal static bool TryApplyToQuote(SettlementServiceQuote quote, ServicePodDeliveryPlan plan)
         {
+            if (plan.TotalFee > int.MaxValue - quote.totalCost) return false;
             quote.lineItems.Add(new ServiceLineItem(LineItemPodKey, plan.BaseFeeTotal, false, plan.podCount.ToString()));
+            if (plan.MaterialFeeTotal > 0) quote.lineItems.Add(new ServiceLineItem(LineItemMaterialsKey, plan.MaterialFeeTotal));
             if (plan.FuelFeeTotal > 0) quote.lineItems.Add(new ServiceLineItem(LineItemFuelKey, plan.FuelFeeTotal));
             quote.totalCost += plan.TotalFee;
             quote.podCount = plan.podCount;
@@ -183,6 +195,7 @@ namespace Settlement_Services.Framework.Delivery
             quote.podMassBound = plan.massBound;
             quote.podMaxRange = plan.maxRange;
             quote.podDistance = plan.distance;
+            return true;
         }
 
         internal static bool TryCountPods(List<float> unsplittable, float splittableMass, float capacity, out int podCount)

@@ -13,7 +13,7 @@ namespace Settlement_Services.Framework.Custody
             SettlementServicesWorldComponent domain = SettlementServicesWorldComponent.Current;
             if (domain == null) return __result;
 
-            if (!domain.HasCustodyHeldFreeColonist() && !domain.HasBoardHeldFreeColonist()) return __result;
+            if (!domain.HasCustodyHeldFreeColonist() && !domain.HasBoardHeldFreeColonist() && !domain.HasTransportHeldFreeColonist()) return __result;
 
             __instance.gameEnding = false;
             return __result > 0 ? __result : 1;

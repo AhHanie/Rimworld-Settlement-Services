@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <SettlementServices.Transport.Title>Transport from {0}</SettlementServices.Transport.Title>
+  <SettlementServices.Transport.Pod>Transport pod</SettlementServices.Transport.Pod>
+  <SettlementServices.Transport.Shuttle>Passenger shuttle</SettlementServices.Transport.Shuttle>
+  <SettlementServices.Transport.ChooseDestination>Choose destination</SettlementServices.Transport.ChooseDestination>
+  <SettlementServices.Transport.NoDestination>No destination selected</SettlementServices.Transport.NoDestination>
+  <SettlementServices.Transport.MapDestination>{0} landing cell ({1}, {2})</SettlementServices.Transport.MapDestination>
+  <SettlementServices.Transport.ChooseCellAgain>Choose a safe landing cell for this vehicle.</SettlementServices.Transport.ChooseCellAgain>
+  <SettlementServices.Transport.TileDestination>World tile {0}</SettlementServices.Transport.TileDestination>
+  <SettlementServices.Transport.SettlementDestination>Outside {0}</SettlementServices.Transport.SettlementDestination>
+  <SettlementServices.Transport.Passengers>Passengers</SettlementServices.Transport.Passengers>
+  <SettlementServices.Transport.Cargo>Loose cargo</SettlementServices.Transport.Cargo>
+  <SettlementServices.Transport.PassengerMass>{0} kg including personal gear ({1} items)</SettlementServices.Transport.PassengerMass>
+  <SettlementServices.Transport.AvailableStack>{0} available · {1}</SettlementServices.Transport.AvailableStack>
+  <SettlementServices.Transport.SelectionUnavailable>Selection no longer available</SettlementServices.Transport.SelectionUnavailable>
+  <SettlementServices.Transport.NoPassengers>No eligible passengers in this caravan.</SettlementServices.Transport.NoPassengers>
+  <SettlementServices.Transport.NoCargo>No eligible loose cargo in this caravan.</SettlementServices.Transport.NoCargo>
+  <SettlementServices.Transport.All>All</SettlementServices.Transport.All>
+  <SettlementServices.Transport.Clear>Clear</SettlementServices.Transport.Clear>
+  <SettlementServices.Transport.Load>Load {0} / {1} kg · {2} silver available for payment</SettlementServices.Transport.Load>
+  <SettlementServices.Transport.Route>Distance {0} tiles · Maximum range {1} tiles</SettlementServices.Transport.Route>
+  <SettlementServices.Transport.BaseFare>Base fare   {0} silver</SettlementServices.Transport.BaseFare>
+  <SettlementServices.Transport.MaterialFare>Pod materials   {0} silver</SettlementServices.Transport.MaterialFare>
+  <SettlementServices.Transport.WealthFare>Wealth surcharge   {0} silver</SettlementServices.Transport.WealthFare>
+  <SettlementServices.Transport.FuelFare>Fuel ({0} units)   {1} silver</SettlementServices.Transport.FuelFare>
+  <SettlementServices.Transport.Total>Total   {0} silver</SettlementServices.Transport.Total>
+  <SettlementServices.Transport.Confirm>Pay and dispatch</SettlementServices.Transport.Confirm>
+  <SettlementServices.Transport.AbandonedCargoWarning>All passengers are leaving. Unselected cargo left in the caravan will be lost.</SettlementServices.Transport.AbandonedCargoWarning>
+  <SettlementServices.Transport.AbandonedCargoCount>{0} × {1}</SettlementServices.Transport.AbandonedCargoCount>
+  <SettlementServices.Transport.ConfirmAbandonedCargo>Pay {0} silver and dispatch? The following cargo will be permanently lost.\n\n{1}</SettlementServices.Transport.ConfirmAbandonedCargo>
+  <SettlementServices.Transport.PickTile>Select a destination tile.</SettlementServices.Transport.PickTile>
+  <SettlementServices.Transport.PickCell>Select a clear, unroofed landing cell.</SettlementServices.Transport.PickCell>
+  <SettlementServices.Transport.LandOnMap>Land on the map at {0}</SettlementServices.Transport.LandOnMap>
+  <SettlementServices.Transport.LandOnWorld>Land outside and form a caravan</SettlementServices.Transport.LandOnWorld>
+  <SettlementServices.Transport.Dispatched>{0} departed. The caravan paid {1} silver.</SettlementServices.Transport.Dispatched>
+  <SettlementServices.Transport.Arrived>Your chartered transport delivered its passengers and cargo.</SettlementServices.Transport.Arrived>
+  <SettlementServices.Transport.PartialArrival>Your chartered transport arrived. The remaining load will be recovered separately.</SettlementServices.Transport.PartialArrival>
+  <SettlementServices.Transport.DivertedCell>The booked landing cell is blocked. Your chartered transport is landing nearby at ({0}, {1}).</SettlementServices.Transport.DivertedCell>
+  <SettlementServices.Transport.DivertedWorld>The local landing is unavailable. Your chartered transport is landing on the booked world tile.</SettlementServices.Transport.DivertedWorld>
+  <SettlementServices.Transport.Error.DedicatedDialog>Book transport in the visiting caravan’s Transport window.</SettlementServices.Transport.Error.DedicatedDialog>
+  <SettlementServices.Transport.Error.Provider>Transport requires a live NPC settlement as its provider.</SettlementServices.Transport.Error.Provider>
+  <SettlementServices.Transport.Error.ShuttleTech>Hiring a shuttle requires a Spacer or more advanced provider.</SettlementServices.Transport.Error.ShuttleTech>
+  <SettlementServices.Transport.Error.Odyssey>Hiring a passenger shuttle requires Odyssey.</SettlementServices.Transport.Error.Odyssey>
+  <SettlementServices.Transport.Error.VehicleDefs>The vehicle or fuel definitions are unavailable or invalid.</SettlementServices.Transport.Error.VehicleDefs>
+  <SettlementServices.Transport.Error.Destination>Choose a supported destination on the provider’s planetary layer, away from the provider tile.</SettlementServices.Transport.Error.Destination>
+  <SettlementServices.Transport.Error.Jammer>A signal jammer is required to reach this destination.</SettlementServices.Transport.Error.Jammer>
+  <SettlementServices.Transport.Error.Range>This destination is outside the vehicle’s outbound range.</SettlementServices.Transport.Error.Range>
+  <SettlementServices.Transport.Error.Landing>Choose a safe, clear landing cell for this vehicle.</SettlementServices.Transport.Error.Landing>
+  <SettlementServices.Transport.Error.Manifest>Some selected passengers or cargo are no longer available. Update the manifest.</SettlementServices.Transport.Error.Manifest>
+  <SettlementServices.Transport.Error.Empty>Select at least one passenger or cargo stack.</SettlementServices.Transport.Error.Empty>
+  <SettlementServices.Transport.Error.Capacity>The selected load exceeds this vehicle’s capacity.</SettlementServices.Transport.Error.Capacity>
+  <SettlementServices.Transport.Error.DestinationOwner>Include a capable colonist to form a caravan at this destination.</SettlementServices.Transport.Error.DestinationOwner>
+  <SettlementServices.Transport.Error.NoCarrier>No arriving passenger can hold the selected loose cargo.</SettlementServices.Transport.Error.NoCarrier>
+  <SettlementServices.Transport.Error.Remainder>Include the departing passengers’ remaining loose cargo or leave a capable pawn behind to carry it.</SettlementServices.Transport.Error.Remainder>
+  <SettlementServices.Transport.Error.Transfer>Transport dispatch failed. No fare was charged.</SettlementServices.Transport.Error.Transfer>
+  <SettlementServices.Transport.Error.Changed>The booking changed. Review the current manifest and price, then confirm again.</SettlementServices.Transport.Error.Changed>
+  <SettlementServices.Transport.Recovery.Origin>Transport returned the remaining load to the origin caravan ({0}).</SettlementServices.Transport.Recovery.Origin>
+  <SettlementServices.Transport.Recovery.Home>Transport queued the remaining load for safe delivery to a home map ({0}).</SettlementServices.Transport.Recovery.Home>
+  <SettlementServices.Transport.Recovery.Held>Settlement Services is holding the remaining load for recovery ({0}).</SettlementServices.Transport.Recovery.Held>
+  <SettlementServices.Transport.Recovery.Missing>The transport was interrupted. There was no remaining load in its custody.</SettlementServices.Transport.Recovery.Missing>
+  <SettlementServices.Transport.Recovery.Refunded>The full fare of {0} silver was refunded to the origin caravan.</SettlementServices.Transport.Recovery.Refunded>
+  <SettlementServices.Transport.Recovery.RefundQueued>The full fare of {0} silver is being refunded. Any remainder will be delivered to a home map.</SettlementServices.Transport.Recovery.RefundQueued>
+  <SettlementServices.Transport.Recovery.Unpaid>No fare was charged.</SettlementServices.Transport.Recovery.Unpaid>
+  <SettlementServices.Transport.Recovery.FareRetained>The {0} silver fare was retained because part of the load arrived.</SettlementServices.Transport.Recovery.FareRetained>
+  <SettlementServices.LineItem.PodDeliveryMaterials>Transport pod materials</SettlementServices.LineItem.PodDeliveryMaterials>
+</LanguageData>
