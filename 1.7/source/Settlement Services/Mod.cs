@@ -9,6 +9,7 @@ using Verse;
 using Settlement_Services.Framework.Compatibility;
 using Settlement_Services.Framework.Registry;
 using Settlement_Services.Services.Hospitality;
+using Settlement_Services.Services.Land;
 
 namespace Settlement_Services
 {
@@ -24,6 +25,7 @@ namespace Settlement_Services
             ModSettings settings = GetSettings<ModSettings>();
             MoodThoughtCatalog.Apply(settings);
             new Harmony("sk.settlementservices").PatchAll();
+            LandPlotPatches.Install();
             SettlementServiceRegistry.ValidateAll();
             Settlement_Services.Framework.Events.ServiceEventRegistry.ValidateAll();
             HospitalityPackageRegistry.ValidateAll();

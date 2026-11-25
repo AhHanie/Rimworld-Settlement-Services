@@ -2,6 +2,25 @@
 <Defs>
 
   <Settlement_Services.Framework.Defs.SettlementServiceDef>
+    <defName>SettlementService_LandPlot</defName>
+    <category>SettlementService_Commerce</category>
+    <label>settlement land</label>
+    <description>Buy or rent a private plot for building, growing crops, and storing goods. Visit with a surface caravan to enter or renew a lease.</description>
+    <workerClass>Settlement_Services.Services.Land.LandPlotServiceWorker</workerClass>
+    <requiredTechLevel>Neolithic</requiredTechLevel>
+    <minimumCost>10000</minimumCost>
+    <wealthScale>0.05</wealthScale>
+    <difficultyScaling>false</difficultyScaling>
+    <duration>0</duration>
+    <eventChancePct>0</eventChancePct>
+    <targetRule>None</targetRule>
+    <batchMode>None</batchMode>
+    <allowRemoteDiscovery>false</allowRemoteDiscovery>
+    <allowRemoteRequest>false</allowRemoteRequest>
+    <iconTexPath>SettlementServices/UI/Icons/land</iconTexPath>
+  </Settlement_Services.Framework.Defs.SettlementServiceDef>
+
+  <Settlement_Services.Framework.Defs.SettlementServiceDef>
     <defName>SettlementService_Stash</defName>
     <category>SettlementService_Commerce</category>
     <label>item stashing</label>

@@ -6,13 +6,15 @@ using Settlement_Services.Framework.Stock;
 using Settlement_Services.Framework.Validation;
 using Settlement_Services.Framework.Workers;
 using Settlement_Services.Framework.Workers.Results;
+using Settlement_Services.Services.Land;
 
 namespace Settlement_Services.UI
 {
     public static class ServiceCandidacyService
     {
         public static bool IsCandidate(SettlementServiceDef def, Settlement settlement) =>
-            SettlementServiceValidator.StructuralEligibility(def, settlement, out _);
+            (def.Worker is not LandPlotServiceWorker || LandPlotService.EligibleHost(settlement))
+            && SettlementServiceValidator.StructuralEligibility(def, settlement, out _);
 
         public static bool TryGetUnavailableReason(SettlementServiceDef def, Settlement settlement, out string reasonKey) =>
             TryGetUnavailableReason(def, settlement, null, out reasonKey);

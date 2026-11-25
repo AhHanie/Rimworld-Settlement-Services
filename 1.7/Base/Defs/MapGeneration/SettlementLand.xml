@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <BiomeDef>
+    <defName>SettlementServices_LandBiome</defName>
+    <label>settlement land</label>
+    <description>Cleared soil on a private settlement plot.</description>
+    <generatesNaturally>false</generatesNaturally>
+    <canBuildBase>false</canBuildBase>
+    <canAutoChoose>false</canAutoChoose>
+    <hasVirtualPlants>false</hasVirtualPlants>
+    <wildAnimalsCanWanderInto>false</wildAnimalsCanWanderInto>
+    <baseWeatherCommonalities>
+      <Clear>1</Clear>
+    </baseWeatherCommonalities>
+  </BiomeDef>
+  <WorldObjectDef>
+    <defName>SettlementServices_LandMap</defName>
+    <label>settlement land</label>
+    <worldObjectClass>Settlement_Services.Services.Land.SettlementLandMapParent</worldObjectClass>
+    <canBePlayerHome>false</canBePlayerHome>
+    <treatAsPlayerHome>false</treatAsPlayerHome>
+    <selectable>false</selectable>
+    <validLaunchTarget>false</validLaunchTarget>
+  </WorldObjectDef>
+  <MapGeneratorDef>
+    <defName>SettlementServices_LandMap</defName>
+    <genSteps>
+      <li>ElevationFertility</li>
+      <li>RocksFromGrid</li>
+      <li>Terrain</li>
+      <li>Plants</li>
+      <li>RockChunks</li>
+      <li>Snow</li>
+      <li>SettlementServices_LandTerrain</li>
+    </genSteps>
+    <defaultUnderGridTerrain>Soil</defaultUnderGridTerrain>
+    <disableCallAid>true</disableCallAid>
+    <ignoreAreaRevealedLetter>true</ignoreAreaRevealedLetter>
+    <pocketMapProperties>
+      <biome>SettlementServices_LandBiome</biome>
+      <temperature>21</temperature>
+      <destroyOnParentMapAbandoned>false</destroyOnParentMapAbandoned>
+      <canLaunchGravship>false</canLaunchGravship>
+      <canBeCleaned>true</canBeCleaned>
+    </pocketMapProperties>
+  </MapGeneratorDef>
+  <GenStepDef>
+    <defName>SettlementServices_LandTerrain</defName>
+    <order>1500</order>
+    <genStep Class="Settlement_Services.Services.Land.GenStep_SettlementLand" />
+  </GenStepDef>
+</Defs>

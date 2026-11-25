@@ -15,6 +15,7 @@ namespace Settlement_Services.Framework.SettlementLifecycle
             SettlementServicesWorldComponent domain = SettlementServicesWorldComponent.Current;
             if (domain == null) return;
 
+            domain.NotifyLandHostDestroyed(settlement.ID);
             SettlementServiceOrchestrator.HandleSettlementDestroyed(domain, settlement.ID, settlement.Tile);
             BoardJobCoordinator.HandleSettlementDestroyed(domain, settlement.ID, settlement.Tile);
         }

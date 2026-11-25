@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <SettlementServices.Land.ManageHost>Settlement land at {0}</SettlementServices.Land.ManageHost>
+  <SettlementServices.Land.ManageDesc>View your plot, renew a rental, or enter with this caravan.</SettlementServices.Land.ManageDesc>
+  <SettlementServices.Land.Offer>Buy a permanent plot or prepay a rental. You can enter after payment.</SettlementServices.Land.Offer>
+  <SettlementServices.Land.Size>Plot size: {0} × {0}</SettlementServices.Land.Size>
+  <SettlementServices.Land.Days>Rental term in days: {0}</SettlementServices.Land.Days>
+  <SettlementServices.Land.Silver>Available caravan silver: {0}</SettlementServices.Land.Silver>
+  <SettlementServices.Land.DailyRate>Daily rent: {0} silver</SettlementServices.Land.DailyRate>
+  <SettlementServices.Land.PaidThrough>Paid through: {0}</SettlementServices.Land.PaidThrough>
+  <SettlementServices.Land.GraceThrough>Grace ends: {0}</SettlementServices.Land.GraceThrough>
+  <SettlementServices.Land.RenewThrough>New paid-through time: {0}</SettlementServices.Land.RenewThrough>
+  <SettlementServices.Land.LocalTime>{0}, {1}:{2}</SettlementServices.Land.LocalTime>
+  <SettlementServices.Land.WorldTick>world tick {0}</SettlementServices.Land.WorldTick>
+  <SettlementServices.Land.Buy>Buy for {0} silver</SettlementServices.Land.Buy>
+  <SettlementServices.Land.Rent>Rent for {0} silver</SettlementServices.Land.Rent>
+  <SettlementServices.Land.Renew>Renew for {0} silver</SettlementServices.Land.Renew>
+  <SettlementServices.Land.Owned>You own this plot.</SettlementServices.Land.Owned>
+  <SettlementServices.Land.Rented>This plot is rented.</SettlementServices.Land.Rented>
+  <SettlementServices.Land.Recovery>Recovery only. Pack and remove your belongings.</SettlementServices.Land.Recovery>
+  <SettlementServices.Land.Closed>This plot is awaiting reclamation.</SettlementServices.Land.Closed>
+  <SettlementServices.Land.Enter>Enter plot</SettlementServices.Land.Enter>
+  <SettlementServices.Land.ViewPlot>View settlement land</SettlementServices.Land.ViewPlot>
+  <SettlementServices.Land.ViewPlotDesc>Switch to the plot map to see your buildings, goods, and any pawns there.</SettlementServices.Land.ViewPlotDesc>
+  <SettlementServices.Land.FormPlotCaravan>Form caravan from plot</SettlementServices.Land.FormPlotCaravan>
+  <SettlementServices.Land.Recover>Recover belongings</SettlementServices.Land.Recover>
+  <SettlementServices.Land.RecoverOrphan>Recover plot {0}</SettlementServices.Land.RecoverOrphan>
+  <SettlementServices.Land.RecoverOrphanDesc>Enter this plot to pack and return its belongings. The contract could not be recovered.</SettlementServices.Land.RecoverOrphanDesc>
+  <SettlementServices.Land.LeaveDesc>Leave settlement land. Choose who and what to take, then reform a stopped caravan near the host.</SettlementServices.Land.LeaveDesc>
+  <SettlementServices.Land.Relinquish>Relinquish plot</SettlementServices.Land.Relinquish>
+  <SettlementServices.Land.RelinquishConfirm>Relinquish this plot permanently? Any remaining pawns will be evacuated. Structures and goods left on the plot will be lost.</SettlementServices.Land.RelinquishConfirm>
+  <SettlementServices.Land.BuyConfirm>Buy a permanent {0} × {0} plot for {1} silver? Your caravan will remain at the settlement until you choose to enter.</SettlementServices.Land.BuyConfirm>
+  <SettlementServices.Land.RentConfirm>Pay {2} silver for {1} day(s) on a {0} × {0} plot? Rent is paid through {3}. You have {4} days of grace, until {5}, to renew or remove belongings. Living pawns and their inventories will be evacuated at reclamation. Structures and other goods left behind will be lost.</SettlementServices.Land.RentConfirm>
+  <SettlementServices.Land.PaymentAccepted>Settlement land payment accepted.</SettlementServices.Land.PaymentAccepted>
+  <SettlementServices.Land.Invalid>This settlement land request is no longer valid.</SettlementServices.Land.Invalid>
+  <SettlementServices.Land.Changed>The plot or its lease changed. Review the updated offer.</SettlementServices.Land.Changed>
+  <SettlementServices.Land.PriceChanged>The land price changed. Review the updated offer and confirm again.</SettlementServices.Land.PriceChanged>
+  <SettlementServices.Land.PriceUnavailable>A silver price is unavailable for this offer.</SettlementServices.Land.PriceUnavailable>
+  <SettlementServices.Land.Unavailable>Settlement land is unavailable because a required game hook or definition could not load.</SettlementServices.Land.Unavailable>
+  <SettlementServices.Land.HostIneligible>Settlement land is available at eligible humanlike surface settlements.</SettlementServices.Land.HostIneligible>
+  <SettlementServices.Land.MapLimit>There are too many maps loaded to acquire or generate a new plot. Existing maps remain accessible.</SettlementServices.Land.MapLimit>
+  <SettlementServices.Land.StandardCaravan>Settlement land requires a standard surface caravan without a vehicle or shuttle.</SettlementServices.Land.StandardCaravan>
+  <SettlementServices.Land.RecordError>This plot's saved record needs repair. Its existing property is protected from reclamation.</SettlementServices.Land.RecordError>
+  <SettlementServices.Land.EmptyRecovery>This plot has no map or belongings to recover.</SettlementServices.Land.EmptyRecovery>
+  <SettlementServices.Land.GenerationFailed>The plot map could not be generated. Your entitlement is still on record.</SettlementServices.Land.GenerationFailed>
+  <SettlementServices.Land.PaymentFailed>The settlement could not complete this payment.</SettlementServices.Land.PaymentFailed>
+  <SettlementServices.Land.ArrivalBlocked>There are too few safe cells for the whole caravan to enter.</SettlementServices.Land.ArrivalBlocked>
+  <SettlementServices.Land.EntryFailed>The caravan could not enter the plot. Check the caravan and plot before trying again.</SettlementServices.Land.EntryFailed>
+  <SettlementServices.Land.RecoveryOrders>Construction and new zoning orders are suspended during recovery.</SettlementServices.Land.RecoveryOrders>
+  <SettlementServices.Land.KeepArrivalClear>Keep the paved caravan arrival area clear of blocking structures.</SettlementServices.Land.KeepArrivalClear>
+  <SettlementServices.Land.NoDepartureTile>No passable surface tile is available for this caravan.</SettlementServices.Land.NoDepartureTile>
+  <SettlementServices.Land.NoOccupants>There are no living pawns on this plot.</SettlementServices.Land.NoOccupants>
+  <SettlementServices.Land.EmergencyConfirm>Evacuate the plot? Pawns will keep their gear and inventories. They will form or join a caravan if possible, or be queued for delivery to a player home.</SettlementServices.Land.EmergencyConfirm>
+  <SettlementServices.Land.EvacuationFailed>Some pawns could not be moved safely. The plot is still available for recovery.</SettlementServices.Land.EvacuationFailed>
+  <SettlementServices.Land.DedicatedDialog>Use the settlement land dialog to manage this service.</SettlementServices.Land.DedicatedDialog>
+  <SettlementServices.Land.UnknownHost>Unknown settlement</SettlementServices.Land.UnknownHost>
+  <SettlementServices.Land.WarningTitle>Settlement land rent due soon</SettlementServices.Land.WarningTitle>
+  <SettlementServices.Land.WarningBody>Rent for plot {0} at {1} is paid through {2}. Visit the settlement to renew.</SettlementServices.Land.WarningBody>
+  <SettlementServices.Land.ExpiredTitle>Settlement land rent expired</SettlementServices.Land.ExpiredTitle>
+  <SettlementServices.Land.ExpiredBody>Rent for plot {0} at {1} expired. You can renew or remove belongings until {2}. Construction and new zoning are suspended.</SettlementServices.Land.ExpiredBody>
+  <SettlementServices.Land.ReclaimedTitle>Settlement land reclaimed</SettlementServices.Land.ReclaimedTitle>
+  <SettlementServices.Land.ReclaimedBody>Plot {0} at {1} has been reclaimed. Any living pawns were evacuated with their inventories. The remaining property included {2} haulable stacks and {3} buildings.</SettlementServices.Land.ReclaimedBody>
+  <SettlementServices.Land.HostLostTitle>Settlement land host lost</SettlementServices.Land.HostLostTitle>
+  <SettlementServices.Land.HostLostBody>{1}, the host of plot {0}, is gone. Use the plot command with a caravan at the former settlement tile or its nearest passable recovery tile. Existing rental deadlines still apply.</SettlementServices.Land.HostLostBody>
+</LanguageData>

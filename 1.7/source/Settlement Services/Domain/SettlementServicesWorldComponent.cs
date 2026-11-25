@@ -85,6 +85,7 @@ namespace Settlement_Services.Domain
             Scribe_Values.Look(ref nextJobId, "nextJobId", 1);
             Scribe_Values.Look(ref nextStashId, "nextStashId", 1);
             Scribe_Collections.Look(ref stashes, "stashes", LookMode.Deep);
+            ExposeLandPlots();
             Scribe_Collections.Look(ref settlementRecords, "settlementRecords", LookMode.Deep);
             Scribe_Collections.Look(ref jobs, "jobs", LookMode.Deep);
             Scribe_Values.Look(ref nextBoardJobId, "nextBoardJobId", 1);
@@ -145,6 +146,7 @@ namespace Settlement_Services.Domain
 
             loadedSchemaVersion = SchemaVersion.Current;
             ReconcileStashes();
+            ReconcileLandPlots();
             SettlementServicesReconciler.Reconcile(this);
             RebuildIndexes();
         }
@@ -164,6 +166,7 @@ namespace Settlement_Services.Domain
                 }
                 RebuildIndexes();
                 ReconcileStashes();
+                ReconcileLandPlots();
                 ReconcileGrowthVats();
 
                 if (loadedSchemaVersion < SchemaVersion.Current)

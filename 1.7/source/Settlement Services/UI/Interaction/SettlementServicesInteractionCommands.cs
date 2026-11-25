@@ -12,6 +12,7 @@ using Settlement_Services.Framework.Custody;
 using Settlement_Services.Framework.Defs;
 using Settlement_Services.Framework.Registry;
 using Settlement_Services.Services.Stashing;
+using Settlement_Services.Services.Land;
 
 namespace Settlement_Services.UI.Interaction
 {
@@ -29,6 +30,8 @@ namespace Settlement_Services.UI.Interaction
             if (collectCommand != null) yield return collectCommand;
             Command_Action stashRecovery = BuildStashRecoveryCommand(settlement, caravan);
             if (stashRecovery != null) yield return stashRecovery;
+            Command_Action landRecovery = LandPlotCommands.AtVisitedSettlement(settlement, caravan);
+            if (landRecovery != null) yield return landRecovery;
         }
 
         internal static IEnumerable<FloatMenuOption> GetVisitFloatMenuOptions(Settlement settlement, Caravan caravan)
