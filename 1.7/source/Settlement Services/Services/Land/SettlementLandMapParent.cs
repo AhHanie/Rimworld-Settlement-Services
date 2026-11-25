@@ -41,7 +41,12 @@ namespace Settlement_Services.Services.Land
                 || LandPlotService.HostOrdersBlocked(plot);
         }
 
-        internal void InvalidateOccupancy() => occupancyDirty = true;
+        internal void InvalidateOccupancy()
+        {
+            occupancyDirty = true;
+            if (Current.ProgramState == ProgramState.Playing && Find.UIRoot is UIRoot_Play root)
+                root.mapUI?.colonistBar?.MarkColonistsDirty();
+        }
 
         internal int PlantClock(int now) => vacantSince < 0 ? now : vacantSince;
 

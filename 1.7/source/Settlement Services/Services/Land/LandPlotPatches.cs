@@ -44,7 +44,7 @@ namespace Settlement_Services.Services.Land
 
             Patch(typeof(PlaySettings), nameof(PlaySettings.DoPlaySettingsGlobalControls), nameof(ShowDeparture), true);
             Patch(typeof(Caravan), nameof(Caravan.GetGizmos), nameof(ShowRecovery), true);
-            InstallOccupiedPlotHighlight(harmony);
+            InstallUiInfixes(harmony);
             try
             {
                 dialogMap = AccessTools.FieldRefAccess<Dialog_FormCaravan, Map>("map");
@@ -120,24 +120,31 @@ namespace Settlement_Services.Services.Land
                     + string.Join(", ", failures));
         }
 
-        private static void InstallOccupiedPlotHighlight(Harmony harmony)
+        private static void InstallUiInfixes(Harmony harmony)
         {
-            try
+            Install(typeof(ExpandableWorldObjectsUtility), nameof(ExpandableWorldObjectsUtility.ExpandableWorldObjectsOnGUI),
+                nameof(HighlightOccupiedPlot), () => new InnerTarget(
+                    AccessTools.Property(typeof(MapParent), nameof(MapParent.HasMap)), InnerTargetKind.Getter));
+            Install(typeof(ColonistBar), "CheckRecacheEntries", nameof(HideVacantPlots),
+                () => new InnerTarget(AccessTools.Method(typeof(List<Map>), nameof(List<Map>.AddRange))));
+
+            void Install(Type type, string name, string postfix, Func<InnerTarget> target)
             {
-                var drawIcons = AccessTools.Method(typeof(ExpandableWorldObjectsUtility),
-                    nameof(ExpandableWorldObjectsUtility.ExpandableWorldObjectsOnGUI));
-                var highlight = new HarmonyMethod(typeof(LandPlotPatches), nameof(HighlightOccupiedPlot))
+                try
                 {
-                    innerTarget = new InnerTarget(AccessTools.Property(typeof(MapParent), nameof(MapParent.HasMap)),
-                        InnerTargetKind.Getter)
-                };
-                harmony.CreateProcessor(drawIcons).AddInnerPostfix(highlight).Patch();
-            }
-            catch (Exception ex)
-            {
-                SupportLog.Error($"Settlement land could not install the occupied plot highlight: {ex}");
+                    var original = AccessTools.Method(type, name);
+                    var patch = new HarmonyMethod(typeof(LandPlotPatches), postfix) { innerTarget = target() };
+                    harmony.CreateProcessor(original).AddInnerPostfix(patch).Patch();
+                }
+                catch (Exception ex)
+                {
+                    SupportLog.Error($"Settlement land could not patch {type.Name}.{name}: {ex}");
+                }
             }
         }
+
+        private static void HideVacantPlots(List<Map> __instance) =>
+            __instance.RemoveAll(SettlementLandMapParent.Frozen);
 
         private static void HighlightOccupiedPlot(MapParent __instance, ref bool __result)
         {
