@@ -128,6 +128,18 @@ namespace Settlement_Services.UI
             }
             if (entryBlock != null) listing.Label(entryBlock.Translate());
 
+            if (!plot.rented && !plot.hostLost && settlement is { Destroyed: false })
+            {
+                listing.GapLine();
+                string saleBlock = LandPlotService.SaleBlock(settlement, caravan, plot);
+                if (LandPlotPolicy.TrySaleQuote(plot, out int amount))
+                {
+                    if (Button(listing, "Sell", saleBlock, amount.ToString("N0"))) ConfirmSale(plot, amount);
+                    if (saleBlock == LandPlotService.SaleBlockedOccupants) listing.Label(saleBlock.Translate());
+                }
+                else listing.Label((saleBlock ?? LandPlotService.Key + "PriceUnavailable").Translate());
+            }
+
             if (plot.rented && !plot.Due(now) && !plot.hostLost && !plot.recoveryError)
             {
                 listing.GapLine();
@@ -194,6 +206,28 @@ namespace Settlement_Services.UI
                 if (error != null) LandPlotService.Reject(error);
                 else Messages.Message((LandPlotService.Key + "PaymentAccepted").Translate(), MessageTypeDefOf.TaskCompletion, historical: false);
             }));
+        }
+
+        private void ConfirmSale(LandPlotRecord plot, int amount)
+        {
+            int plotSide = plot.side;
+            bool plotBunker = plot.bunkerInterior;
+            SettlementLandMapParent parent = plot.parent;
+            Map map = plot.Map;
+            string formattedAmount = amount.ToString("N0");
+            string key = map == null ? "SaleConfirm" : "SaleConfirmGenerated";
+            string confirmation = (LandPlotService.Key + key).Translate(settlement.LabelCap, plotSide, formattedAmount);
+
+            bool submitted = false;
+            Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation(confirmation, () =>
+            {
+                if (submitted || !Find.WindowStack.IsOpen(this)) return;
+                submitted = true;
+                string error = LandPlotService.ConfirmSale(settlement, caravan, plot, plotSide, plotBunker, parent, map, amount);
+                if (error != null) LandPlotService.Reject(error);
+                else Messages.Message((LandPlotService.Key + "SaleCompleted").Translate(formattedAmount),
+                    MessageTypeDefOf.TaskCompletion, historical: false);
+            }, destructive: true));
         }
 
         private static string LayoutLine(bool bunkerInterior) => (LandPlotService.Key + "Layout").Translate(

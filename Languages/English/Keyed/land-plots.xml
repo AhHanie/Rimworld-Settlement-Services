@@ -21,6 +21,7 @@
   <SettlementServices.Land.Buy>Buy for {0} silver</SettlementServices.Land.Buy>
   <SettlementServices.Land.Rent>Rent for {0} silver</SettlementServices.Land.Rent>
   <SettlementServices.Land.Renew>Renew for {0} silver</SettlementServices.Land.Renew>
+  <SettlementServices.Land.Sell>Sell for {0} silver</SettlementServices.Land.Sell>
   <SettlementServices.Land.Owned>You own this plot.</SettlementServices.Land.Owned>
   <SettlementServices.Land.Rented>This plot is rented.</SettlementServices.Land.Rented>
   <SettlementServices.Land.Recovery>Recovery only. Pack and remove your belongings.</SettlementServices.Land.Recovery>
@@ -38,6 +39,13 @@
   <SettlementServices.Land.BuyConfirm>Buy a permanent {0} × {0} plot for {1} silver? Your caravan will remain at the settlement until you choose to enter.</SettlementServices.Land.BuyConfirm>
   <SettlementServices.Land.RentConfirm>Pay {2} silver for {1} day(s) on a {0} × {0} plot? Rent is paid through {3}. You have {4} days of grace, until {5}, to renew or remove belongings. Living pawns and their inventories will be evacuated at reclamation. Structures and other goods left behind will be lost.</SettlementServices.Land.RentConfirm>
   <SettlementServices.Land.PaymentAccepted>Settlement land payment accepted.</SettlementServices.Land.PaymentAccepted>
+  <SettlementServices.Land.SaleConfirm>Sell your {1} × {1} plot at {0} for {2} silver? Your caravan will receive the silver and you will give up ownership of the plot.</SettlementServices.Land.SaleConfirm>
+  <SettlementServices.Land.SaleConfirmGenerated>Sell your {1} × {1} plot at {0} for {2} silver? Your caravan will receive the silver. All buildings, terrain improvements, and goods left on the plot go with the land and are permanently lost to you.</SettlementServices.Land.SaleConfirmGenerated>
+  <SettlementServices.Land.SaleCompleted>Your caravan received {0} silver for the plot.</SettlementServices.Land.SaleCompleted>
+  <SettlementServices.Land.SaleBlockedOccupants>Remove all living pawns from the plot before selling it.</SettlementServices.Land.SaleBlockedOccupants>
+  <SettlementServices.Land.SaleBlockedBusy>Wait for packing or transfers to finish before selling the plot.</SettlementServices.Land.SaleBlockedBusy>
+  <SettlementServices.Land.SaleBlockedDependentMap>Resolve the connected pocket map before selling this plot.</SettlementServices.Land.SaleBlockedDependentMap>
+  <SettlementServices.Land.SaleFailed>The settlement could not complete the sale. You still own the plot.</SettlementServices.Land.SaleFailed>
   <SettlementServices.Land.Invalid>This settlement land request is no longer valid.</SettlementServices.Land.Invalid>
   <SettlementServices.Land.Changed>The plot or its lease changed. Review the updated offer.</SettlementServices.Land.Changed>
   <SettlementServices.Land.PriceChanged>The land price changed. Review the updated offer and confirm again.</SettlementServices.Land.PriceChanged>

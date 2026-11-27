@@ -25,6 +25,12 @@ namespace Settlement_Services.Services.Land
         internal static SettlementLandMapParent For(Map map) => map?.Parent as SettlementLandMapParent;
         internal static bool IsPlot(Map map) => For(map) != null;
 
+        internal bool MatchesPlot(LandPlotRecord plot) => plotId == plot.id && (hostId < 0 || hostId == plot.hostId);
+
+        internal bool MatchesPlotMap(LandPlotRecord plot, Map map) => MatchesPlot(plot)
+            && map is { Disposed: false, IsPocketMap: true } && map.Parent == this
+            && map.Size.x == plot.side && map.Size.z == plot.side;
+
         internal static bool Frozen(Map map)
         {
             var parent = For(map);

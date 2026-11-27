@@ -14,7 +14,7 @@ using Verse;
 
 namespace Settlement_Services.Services.Land
 {
-    internal static class LandPlotService
+    internal static partial class LandPlotService
     {
         internal const string Key = "SettlementServices.Land.";
         internal const string Invalid = Key + "Invalid";
@@ -56,8 +56,10 @@ namespace Settlement_Services.Services.Land
             return null;
         }
 
-        internal static string TransactionBlock(Settlement settlement, Caravan caravan, LandPlotRecord expected, bool bunkerInterior)
+        private static string VisitTransactionBlock(Settlement settlement, Caravan caravan,
+            out SettlementServicesWorldComponent domain)
         {
+            domain = null;
             if (!LandPlotPatches.Ready) return PatchFailure;
             if (settlement == null || settlement.Destroyed || WorldObjectLookup.ResolveSettlement(settlement.ID) != settlement)
                 return MissingHost;
@@ -74,8 +76,15 @@ namespace Settlement_Services.Services.Land
             if (!SettlementServiceValidator.StructuralEligibility(Def, settlement, out blocked)
                 || !SettlementServiceValidator.GoodwillMet(Def, settlement, out blocked)) return blocked ?? Invalid;
 
-            var domain = SettlementServicesWorldComponent.Current;
+            domain = SettlementServicesWorldComponent.Current;
             if (domain == null || !domain.LandPlotsReady) return Invalid;
+            return null;
+        }
+
+        internal static string TransactionBlock(Settlement settlement, Caravan caravan, LandPlotRecord expected, bool bunkerInterior)
+        {
+            string blocked = VisitTransactionBlock(settlement, caravan, out var domain);
+            if (blocked != null) return blocked;
             if (domain.LandPlotAtHost(settlement.ID) != expected) return Key + "Changed";
             if (expected != null)
             {

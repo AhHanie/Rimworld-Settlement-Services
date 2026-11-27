@@ -1,6 +1,7 @@
 using System;
 using RimWorld;
 using RimWorld.Planet;
+using Settlement_Services.Domain.Records;
 using Settlement_Services.Framework.Pricing;
 using Verse;
 
@@ -32,6 +33,14 @@ namespace Settlement_Services.Services.Land
 
             int daily = (int)dailyPrice;
             quote = (checked(daily * RentalDaysPerPurchase), daily, checked(daily * days));
+            return true;
+        }
+
+        internal static bool TrySaleQuote(LandPlotRecord plot, out int amount)
+        {
+            amount = 0;
+            if (!TryQuote(plot.side, 1, out var quote)) return false;
+            amount = (int)((3L * quote.Purchase + 2L) / 4L);
             return true;
         }
 

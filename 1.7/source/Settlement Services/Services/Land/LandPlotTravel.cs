@@ -196,7 +196,7 @@ namespace Settlement_Services.Services.Land
             }
         }
 
-        internal static bool TryRemoveMap(SettlementLandMapParent parent)
+        internal static bool TryRemoveMap(SettlementLandMapParent parent, Action<Exception> reportError = null)
         {
             Map map = parent.Map;
             try
@@ -209,7 +209,8 @@ namespace Settlement_Services.Services.Land
             }
             catch (Exception ex)
             {
-                SupportLog.Error($"Land plot {parent.plotId} teardown failed for parent {parent.ID} and map {map?.uniqueID}: {ex}");
+                if (reportError != null) reportError(ex);
+                else SupportLog.Error($"Land plot {parent.plotId} teardown failed for parent {parent.ID} and map {map?.uniqueID}: {ex}");
             }
             if (parent.Map != null) return false;
             Find.World.pocketMaps.Remove(parent);

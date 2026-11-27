@@ -26,8 +26,7 @@ namespace Settlement_Services.Domain
             if (!LandPlotsReady) return null;
             if (landPlotsByParent.TryGetValue(parent, out var plot)) return plot;
             // First entry attaches a new parent after the entitlement was already registered.
-            plot = landPlots.FirstOrDefault(candidate => candidate.parent == parent && candidate.id == parent.plotId
-                && (parent.hostId < 0 || parent.hostId == candidate.hostId));
+            plot = landPlots.FirstOrDefault(candidate => candidate.parent == parent && parent.MatchesPlot(candidate));
             if (plot != null) landPlotsByParent.Add(parent, plot);
             return plot;
         }
@@ -120,11 +119,9 @@ namespace Settlement_Services.Domain
                 if (plot.rented && plot.paidThrough > 0 && plot.graceThrough == 0)
                     plot.graceThrough = LandPlotPolicy.GraceThrough(plot.paidThrough);
 
-                bool linked = plot.parent != null && plot.parent.plotId == plot.id
-                    && (plot.parent.hostId < 0 || plot.parent.hostId == plot.hostId);
+                bool linked = plot.parent?.MatchesPlot(plot) == true;
                 bool validMap = linked && parentsById[plot.id].Count() == 1
-                    && registered.Contains(plot.parent) && plot.Map is Map map && map.IsPocketMap
-                    && map.Size.x == plot.side && map.Size.z == plot.side;
+                    && registered.Contains(plot.parent) && plot.parent.MatchesPlotMap(plot, plot.Map);
                 if (validMap) plot.generated = true;
                 if (plot.id <= 0 || plot.hostId < 0 || !LandPlotPolicy.ValidSide(plot.side)
                     || byId[plot.id].Count() != 1 || byHost[plot.hostId].Count() != 1
