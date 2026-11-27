@@ -37,7 +37,11 @@ namespace Settlement_Services.UI
         private const int MaxDisplayedCrafterWorkloads = 6;
         private const float CapacityStripGap = 4f;
 
-        public override Vector2 InitialSize => new Vector2(700f, 620f);
+        private static readonly Vector2 DefaultSize = new Vector2(700f, 620f);
+
+        public override Vector2 InitialSize => craftingEligibleRecipes != null
+            ? ServiceWindowSizing.MainClampedToScreen
+            : DefaultSize;
 
         public Dialog_ServiceRequestDetail(ServiceRequestSession session)
         {
@@ -79,7 +83,9 @@ namespace Settlement_Services.UI
             listing.maxOneColumn = true;
             listing.Begin(contentRect);
 
+            if (isCrafting) Text.Font = GameFont.Medium;
             listing.Label(session.def.LabelCap);
+            Text.Font = GameFont.Small;
             listing.Label(session.def.description);
             listing.GapLine();
 
@@ -252,6 +258,8 @@ namespace Settlement_Services.UI
                         : recipe.FixedOutputStuff;
 
                     Rect row = listing.GetRect(28f);
+                    if ((lines.Count - 1 - i) % 2 == 0) Widgets.DrawAltRect(row);
+                    Widgets.DrawHighlightIfMouseover(row);
                     Rect iconRect = new Rect(row.x, row.y, 28f, 28f);
                     Def iconDef = recipe.Kind == CraftingRecipeKind.Vanilla ? (Def)recipe.VanillaRecipeDef : recipe.primaryOutput;
                     Widgets.DefIcon(iconRect, iconDef, stuff, drawPlaceholder: true);
@@ -264,8 +272,9 @@ namespace Settlement_Services.UI
                     Rect labelRect = new Rect(iconRect.xMax + 6f, row.y, row.width - 28f - 6f - 28f, row.height);
                     TextAnchor prevAnchor = Text.Anchor;
                     Text.Anchor = TextAnchor.MiddleLeft;
-                    Widgets.Label(labelRect, label);
+                    Widgets.LabelEllipses(labelRect, label);
                     Text.Anchor = prevAnchor;
+                    TooltipHandler.TipRegion(labelRect, label);
 
                     Rect removeRect = new Rect(row.xMax - 24f, row.y, 24f, 24f);
                     if (Widgets.ButtonText(removeRect, "-")) lines.RemoveAt(i);
@@ -466,22 +475,27 @@ namespace Settlement_Services.UI
 
             listing.Label("SettlementServices.Label.ProductionPlan".Translate());
 
+            var operationCells = new List<ServiceLineGridCell>();
             foreach (CraftingProductionOperation op in intermediateOperations)
             {
                 RecipeNode node = CraftingRecipeDependencyIndex.NodeFor(op.Identity);
-                string label = node?.recipe?.primaryOutput != null ? node.recipe.primaryOutput.LabelCap.ToString() : op.recipeDefName;
-                listing.Label("SettlementServices.Label.IntermediateOperation".Translate(label, op.executions));
+                ThingDef output = node?.recipe?.primaryOutput;
+                string label = output != null ? output.LabelCap.ToString() : op.recipeDefName;
+                operationCells.Add(new ServiceLineGridCell("SettlementServices.Label.IntermediateOperation".Translate(label, op.executions), output));
             }
+            ServiceLineGrid.Draw(listing, operationCells, 260f, 3, 26f);
 
             if (plan.rawMaterials.Count > 0)
             {
                 listing.Label("SettlementServices.Label.RawMaterials".Translate());
+                var rawCells = new List<ServiceLineGridCell>();
                 foreach (CraftingMaterialRequirement raw in plan.rawMaterials)
                 {
                     ThingDef thingDef = DefDatabase<ThingDef>.GetNamedSilentFail(raw.thingDefName);
                     string label = thingDef != null ? thingDef.LabelCap.ToString() : raw.thingDefName;
-                    listing.Label("SettlementServices.Label.RawMaterialLine".Translate(label, raw.amount));
+                    rawCells.Add(new ServiceLineGridCell("SettlementServices.Label.RawMaterialLine".Translate(label, raw.amount), thingDef));
                 }
+                ServiceLineGrid.Draw(listing, rawCells, 200f, 3, 26f);
             }
 
             listing.Gap();
@@ -508,8 +522,10 @@ namespace Settlement_Services.UI
             Rect iconRect = new Rect(rowRect.x, rowRect.y, 28f, 28f);
             Widgets.DefIcon(iconRect, row.thingDef, drawPlaceholder: true);
 
-            Rect labelRect = new Rect(iconRect.xMax + 6f, rowRect.y, 130f, rowRect.height);
-            Rect infoRect = new Rect(labelRect.xMax + 6f, rowRect.y, 150f, rowRect.height);
+            float labelWidth = Mathf.Max(130f, rowRect.width * 0.26f);
+            float infoWidth = Mathf.Max(150f, rowRect.width * 0.24f);
+            Rect labelRect = new Rect(iconRect.xMax + 6f, rowRect.y, labelWidth, rowRect.height);
+            Rect infoRect = new Rect(labelRect.xMax + 6f, rowRect.y, infoWidth, rowRect.height);
             Rect minusRect = new Rect(infoRect.xMax + 6f, rowRect.y, 24f, 24f);
             Rect amountRect = new Rect(minusRect.xMax + 2f, rowRect.y, 36f, 24f);
             Rect plusRect = new Rect(amountRect.xMax + 2f, rowRect.y, 24f, 24f);
@@ -517,8 +533,12 @@ namespace Settlement_Services.UI
 
             TextAnchor prevAnchor = Text.Anchor;
             Text.Anchor = TextAnchor.MiddleLeft;
-            Widgets.Label(labelRect, row.thingDef.LabelCap);
-            Widgets.Label(infoRect, "SettlementServices.Label.CraftingMaterialRequiredCarried".Translate(row.required, row.carried));
+            bool prevWordWrap = Text.WordWrap;
+            Text.WordWrap = false;
+            Widgets.LabelEllipses(labelRect, row.thingDef.LabelCap);
+            Widgets.LabelEllipses(infoRect, "SettlementServices.Label.CraftingMaterialRequiredCarried".Translate(row.required, row.carried));
+            Text.WordWrap = prevWordWrap;
+            TooltipHandler.TipRegion(labelRect, row.thingDef.LabelCap);
             Widgets.Label(settlementRect, row.blocking
                 ? "SettlementServices.Label.CraftingMaterialAdditionalNeeded".Translate()
                 : "SettlementServices.Label.CraftingMaterialSettlementSupplies".Translate(row.settlementSupplied));
@@ -649,14 +669,19 @@ namespace Settlement_Services.UI
 
             int highestAssignedWorkTicks = staffedPlan.assignedCrafterWorkTicks.Count > 0 ? staffedPlan.assignedCrafterWorkTicks.Max() : 0;
 
-            listing.Label("SettlementServices.Label.CraftingAssignedCrafters".Translate(staffedPlan.crafterCount));
-            listing.Label("SettlementServices.Label.CraftingLongestWorkload".Translate(highestAssignedWorkTicks.ToStringTicksToPeriod()));
-            listing.Label("SettlementServices.Label.CraftingBilledCrafterDays".Translate(staffedPlan.billedCrafterDays));
+            ServiceLineGrid.Draw(listing, new List<ServiceLineGridCell>
+            {
+                new ServiceLineGridCell("SettlementServices.Label.CraftingAssignedCrafters".Translate(staffedPlan.crafterCount)),
+                new ServiceLineGridCell("SettlementServices.Label.CraftingLongestWorkload".Translate(highestAssignedWorkTicks.ToStringTicksToPeriod())),
+                new ServiceLineGridCell("SettlementServices.Label.CraftingBilledCrafterDays".Translate(staffedPlan.billedCrafterDays))
+            }, 250f, 3, Text.LineHeight + 2f);
 
             if (staffedPlan.crafterCount > 1 && staffedPlan.crafterCount <= MaxDisplayedCrafterWorkloads)
             {
+                var workloadCells = new List<ServiceLineGridCell>();
                 for (int i = 0; i < staffedPlan.assignedCrafterWorkTicks.Count; i++)
-                    listing.Label("SettlementServices.Label.CrafterWorkloadLine".Translate(i + 1, staffedPlan.assignedCrafterWorkTicks[i].ToStringTicksToPeriod()));
+                    workloadCells.Add(new ServiceLineGridCell("SettlementServices.Label.CrafterWorkloadLine".Translate(i + 1, staffedPlan.assignedCrafterWorkTicks[i].ToStringTicksToPeriod())));
+                ServiceLineGrid.Draw(listing, workloadCells, 220f, 3, Text.LineHeight + 2f);
             }
 
             listing.Gap();

@@ -40,7 +40,7 @@ namespace Settlement_Services.UI
         private ServiceCategoryDef selectedCategory;
         private Vector2 categoryScroll, serviceScroll;
 
-        public override Vector2 InitialSize => new Vector2(900f, 760f);
+        public override Vector2 InitialSize => ServiceWindowSizing.Main;
         public Settlement Settlement => contextTemplate.settlement;
 
         public Dialog_SettlementServices(ServiceRequestSession session)

@@ -21,6 +21,10 @@ namespace Settlement_Services.UI
             this.onAdd = onAdd;
         }
 
+        public override Vector2 InitialSize => ServiceWindowSizing.MainClampedToScreen;
+
+        protected override float ListHeightFraction => 0.5f;
+
         protected override string Title => "SettlementServices.Label.AddCommissionItemTitle".Translate();
 
         protected override string ItemLabel(CraftingCommissionRecipe item) => item.label;

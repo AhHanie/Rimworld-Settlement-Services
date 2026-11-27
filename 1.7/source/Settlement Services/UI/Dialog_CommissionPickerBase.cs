@@ -46,6 +46,8 @@ namespace Settlement_Services.UI
 
         public override Vector2 InitialSize => new Vector2(Mathf.Min(560f, Verse.UI.screenWidth), Mathf.Min(720f, Verse.UI.screenHeight));
 
+        protected virtual float ListHeightFraction => 0.45f;
+
         protected abstract string Title { get; }
         protected abstract string ItemLabel(T item);
         protected abstract void DrawRowIcon(Rect rect, T item);
@@ -91,7 +93,7 @@ namespace Settlement_Services.UI
 
             float listTop = controlsRect.yMax + 4f;
             float available = inRect.height - listTop - ButtonHeight - 18f;
-            float listHeight = Mathf.Clamp(available * 0.45f, 72f, 300f);
+            float listHeight = Mathf.Clamp(available * ListHeightFraction, 72f, 300f);
             Rect listRect = new Rect(inRect.x, listTop, inRect.width, listHeight);
             DrawList(listRect);
 
