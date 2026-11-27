@@ -11,6 +11,7 @@ namespace Settlement_Services.Domain.Records
         public string hostLabel;
         public PlanetTile hostTile = PlanetTile.Invalid;
         public int side;
+        public bool bunkerInterior;
         public bool rented;
         public long createdTick;
         public long paidThrough;
@@ -34,6 +35,7 @@ namespace Settlement_Services.Domain.Records
             Scribe_Values.Look(ref hostLabel, "hostLabel");
             Scribe_Values.Look(ref hostTile, "hostTile", PlanetTile.Invalid);
             Scribe_Values.Look(ref side, "side");
+            Scribe_Values.Look(ref bunkerInterior, "bunkerInterior", false);
             Scribe_Values.Look(ref rented, "rented");
             Scribe_Values.Look(ref createdTick, "createdTick");
             Scribe_Values.Look(ref paidThrough, "paidThrough");

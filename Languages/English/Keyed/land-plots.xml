@@ -3,6 +3,12 @@
   <SettlementServices.Land.ManageHost>Settlement land at {0}</SettlementServices.Land.ManageHost>
   <SettlementServices.Land.ManageDesc>View your plot, renew a rental, or enter with this caravan.</SettlementServices.Land.ManageDesc>
   <SettlementServices.Land.Offer>Buy a permanent plot or prepay a rental. You can enter after payment.</SettlementServices.Land.Offer>
+  <SettlementServices.Land.BunkerOption>Bunker interior</SettlementServices.Land.BunkerOption>
+  <SettlementServices.Land.BunkerOptionTip>Start with an enclosed room under a removable constructed roof. The granite perimeter takes one tile on each side, leaving an 8 by 8 interior on a 10 by 10 plot. Larger bunkers also have roof support columns.</SettlementServices.Land.BunkerOptionTip>
+  <SettlementServices.Land.Layout>Layout: {0}</SettlementServices.Land.Layout>
+  <SettlementServices.Land.LayoutOutdoor>Outdoor land</SettlementServices.Land.LayoutOutdoor>
+  <SettlementServices.Land.LayoutBunker>Bunker interior</SettlementServices.Land.LayoutBunker>
+  <SettlementServices.Land.BunkerUnavailable>The bunker layout is unavailable because its map generator could not load.</SettlementServices.Land.BunkerUnavailable>
   <SettlementServices.Land.Size>Plot size: {0} × {0}</SettlementServices.Land.Size>
   <SettlementServices.Land.Days>Rental term in days: {0}</SettlementServices.Land.Days>
   <SettlementServices.Land.Silver>Available caravan silver: {0}</SettlementServices.Land.Silver>

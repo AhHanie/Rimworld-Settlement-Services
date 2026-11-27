@@ -10,10 +10,19 @@ namespace Settlement_Services.Services.Land
 {
     internal static class LandPlotEnvironment
     {
+        private static bool IsBunker(Map map) => map?.generatorDef?.defName == LandPlotService.BunkerGeneratorName
+            && SettlementLandMapParent.IsPlot(map);
+
         internal static void Prepare(Map map)
         {
             var parent = SettlementLandMapParent.For(map);
-            if (parent == null || Find.WorldGrid == null) return;
+            if (parent == null) return;
+            if (IsBunker(map))
+            {
+                map.pocketTileInfo ??= new Tile { PrimaryBiome = map.generatorDef.pocketMapProperties.biome };
+                return;
+            }
+            if (Find.WorldGrid == null) return;
 
             PlanetTile tile = parent.departureTile;
             if (!LandPlotTravel.TileExists(tile))
@@ -85,13 +94,13 @@ namespace Settlement_Services.Services.Land
 
         internal static void OutdoorTemperature(Map map, ref float result)
         {
-            if (TryGetTile(map, out PlanetTile tile))
+            if (!IsBunker(map) && TryGetTile(map, out PlanetTile tile))
                 result = map.Biome.constantOutdoorTemperature ?? Find.World.tileTemperatures.GetOutdoorTemp(tile);
         }
 
         internal static void SeasonalTemperature(Map map, ref float result)
         {
-            if (TryGetTile(map, out PlanetTile tile))
+            if (!IsBunker(map) && TryGetTile(map, out PlanetTile tile))
                 result = map.Biome.constantOutdoorTemperature ?? Find.World.tileTemperatures.GetSeasonalTemp(tile);
         }
 

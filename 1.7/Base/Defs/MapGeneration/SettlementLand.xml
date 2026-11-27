@@ -49,4 +49,27 @@
     <order>1500</order>
     <genStep Class="Settlement_Services.Services.Land.GenStep_SettlementLand" />
   </GenStepDef>
+  <MapGeneratorDef>
+    <defName>SettlementServices_LandBunker</defName>
+    <genSteps>
+      <li>SettlementServices_LandBunkerInterior</li>
+    </genSteps>
+    <isUnderground>true</isUnderground>
+    <roofDef>RoofConstructed</roofDef>
+    <defaultUnderGridTerrain>Granite_RoughHewn</defaultUnderGridTerrain>
+    <disableCallAid>true</disableCallAid>
+    <ignoreAreaRevealedLetter>true</ignoreAreaRevealedLetter>
+    <pocketMapProperties>
+      <biome>SettlementServices_LandBiome</biome>
+      <temperature>21</temperature>
+      <destroyOnParentMapAbandoned>false</destroyOnParentMapAbandoned>
+      <canLaunchGravship>false</canLaunchGravship>
+      <canBeCleaned>true</canBeCleaned>
+    </pocketMapProperties>
+  </MapGeneratorDef>
+  <GenStepDef>
+    <defName>SettlementServices_LandBunkerInterior</defName>
+    <order>1500</order>
+    <genStep Class="Settlement_Services.Services.Land.GenStep_SettlementLandBunker" />
+  </GenStepDef>
 </Defs>

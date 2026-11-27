@@ -42,13 +42,13 @@ namespace Settlement_Services.Domain
             Scribe_Collections.Look(ref landPlots, "landPlots", LookMode.Deep);
         }
 
-        internal LandPlotRecord AddLandPlot(Settlement host, int side, bool rented, long paidThrough)
+        internal LandPlotRecord AddLandPlot(Settlement host, int side, bool bunkerInterior, bool rented, long paidThrough)
         {
             if (nextLandPlotId <= 0 || nextLandPlotId == int.MaxValue) throw new OverflowException("Land plot ID exhausted");
             var plot = new LandPlotRecord
             {
                 id = nextLandPlotId++, hostId = host.ID, hostLabel = host.LabelCap, hostTile = host.Tile,
-                side = side, rented = rented, createdTick = LandPlotPolicy.Now,
+                side = side, bunkerInterior = bunkerInterior, rented = rented, createdTick = LandPlotPolicy.Now,
                 paidThrough = paidThrough, graceThrough = rented ? LandPlotPolicy.GraceThrough(paidThrough) : 0,
                 warned = rented && paidThrough - LandPlotPolicy.Now <= GenDate.TicksPerDay
             };

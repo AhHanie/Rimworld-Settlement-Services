@@ -18,6 +18,7 @@ namespace Settlement_Services.UI
         private readonly Window servicesWindow;
         private int side = LandPlotPolicy.MinSide;
         private int days = 1;
+        private bool bunkerInterior;
 
         public Dialog_SettlementLand(Settlement settlement, Caravan caravan, Window servicesWindow = null)
         {
@@ -36,7 +37,7 @@ namespace Settlement_Services.UI
             SetWindowOptions();
         }
 
-        public override Vector2 InitialSize => new Vector2(575f, 535f);
+        public override Vector2 InitialSize => new Vector2(575f, 565f);
 
         private void SetWindowOptions()
         {
@@ -74,17 +75,23 @@ namespace Settlement_Services.UI
             side = StepSlider(listing, "Size", side, LandPlotPolicy.MinSide, LandPlotPolicy.MaxSide);
             days = StepSlider(listing, "Days", days, 1, LandPlotPolicy.MaxRentalDays);
 
-            string blocked = LandPlotService.TransactionBlock(settlement, caravan, null);
             long silver = ShowSilver(listing, domain);
-            if (!LandPlotPolicy.TryQuote(side, days, out var quote))
+            bool hasQuote = LandPlotPolicy.TryQuote(side, days, out var quote);
+            if (hasQuote)
+            {
+                listing.Label((LandPlotService.Key + "DailyRate").Translate(quote.DailyRent.ToString("N0")));
+                listing.Label((LandPlotService.Key + "PaidThrough").Translate(LandPlotPolicy.LocalTime(
+                    LandPlotService.QuoteDeadline(null, days), settlement.Tile)));
+            }
+            listing.CheckboxLabeled((LandPlotService.Key + "BunkerOption").Translate(), ref bunkerInterior,
+                (LandPlotService.Key + "BunkerOptionTip").Translate());
+            if (!hasQuote)
             {
                 listing.Label((LandPlotService.Key + "PriceUnavailable").Translate());
                 return;
             }
 
-            listing.Label((LandPlotService.Key + "DailyRate").Translate(quote.DailyRent.ToString("N0")));
-            listing.Label((LandPlotService.Key + "PaidThrough").Translate(LandPlotPolicy.LocalTime(
-                LandPlotService.QuoteDeadline(null, days), settlement.Tile)));
+            string blocked = LandPlotService.TransactionBlock(settlement, caravan, null, bunkerInterior);
             listing.Gap();
             if (Button(listing, "Buy", blocked ?? (silver < quote.Purchase ? LandPlotService.SilverShort : null), quote.Purchase.ToString("N0")))
                 ConfirmPayment(null, false, quote.Purchase);
@@ -97,6 +104,7 @@ namespace Settlement_Services.UI
         {
             long now = LandPlotPolicy.Now;
             listing.Label((LandPlotService.Key + "Size").Translate(plot.side));
+            listing.Label(LayoutLine(plot.bunkerInterior));
             string status = plot.recoveryError ? "RecordError" : plot.Due(now) ? "Closed"
                 : plot.RecoveryOnly(now) ? "Recovery" : plot.rented ? "Rented" : "Owned";
             listing.Label((LandPlotService.Key + status).Translate());
@@ -134,7 +142,7 @@ namespace Settlement_Services.UI
                 listing.Label((LandPlotService.Key + "DailyRate").Translate(quote.DailyRent.ToString("N0")));
                 listing.Label((LandPlotService.Key + "RenewThrough").Translate(
                     LandPlotPolicy.LocalTime(LandPlotService.QuoteDeadline(plot, days), plot.hostTile)));
-                string renewal = LandPlotService.TransactionBlock(settlement, caravan, plot);
+                string renewal = LandPlotService.TransactionBlock(settlement, caravan, plot, plot.bunkerInterior);
                 if (Button(listing, "Renew", renewal ?? (silver < quote.Rent ? LandPlotService.SilverShort : null), quote.Rent.ToString("N0")))
                     ConfirmPayment(plot, true, quote.Rent);
                 if (renewal != null) listing.Label(renewal.Translate());
@@ -161,6 +169,7 @@ namespace Settlement_Services.UI
         private void ConfirmPayment(LandPlotRecord plot, bool rent, int total)
         {
             int selectedSide = plot?.side ?? side;
+            bool selectedBunker = plot?.bunkerInterior ?? bunkerInterior;
             int selectedDays = days;
             long expectedDeadline = plot?.paidThrough ?? 0;
             PlanetTile tile = plot?.hostTile ?? settlement.Tile;
@@ -173,17 +182,22 @@ namespace Settlement_Services.UI
                     LandPlotPolicy.LocalTime(LandPlotPolicy.GraceThrough(paid), tile));
             }
             else confirmation = (LandPlotService.Key + "BuyConfirm").Translate(selectedSide, total.ToString("N0"));
+            if (plot == null) confirmation += "\n\n" + LayoutLine(selectedBunker);
 
             bool submitted = false;
             Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation(confirmation, () =>
             {
                 if (submitted || !Find.WindowStack.IsOpen(this)) return;
                 submitted = true;
-                string error = LandPlotService.Confirm(settlement, caravan, plot, expectedDeadline, selectedSide, rent, selectedDays, total);
+                string error = LandPlotService.Confirm(settlement, caravan, plot, expectedDeadline, selectedSide,
+                    selectedBunker, rent, selectedDays, total);
                 if (error != null) LandPlotService.Reject(error);
                 else Messages.Message((LandPlotService.Key + "PaymentAccepted").Translate(), MessageTypeDefOf.TaskCompletion, historical: false);
             }));
         }
+
+        private static string LayoutLine(bool bunkerInterior) => (LandPlotService.Key + "Layout").Translate(
+            (LandPlotService.Key + (bunkerInterior ? "LayoutBunker" : "LayoutOutdoor")).Translate());
 
         private static int StepSlider(Listing_Standard listing, string key, int value, int min, int max)
         {

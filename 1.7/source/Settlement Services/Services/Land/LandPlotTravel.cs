@@ -56,7 +56,7 @@ namespace Settlement_Services.Services.Land
                 if (!LandPlotService.CanEnterNormally(plot, host, caravan))
                     return LandPlotService.Key + "EmptyRecovery";
                 if (Find.Maps.Count >= LandPlotPolicy.LoadedMapLimit) return LandPlotService.MapLimit;
-                if (LandPlotService.Generator == null || LandPlotService.ParentDef == null) return LandPlotService.PatchFailure;
+                return LandPlotService.GenerationBlock(plot.bunkerInterior);
             }
             return null;
         }
@@ -155,13 +155,15 @@ namespace Settlement_Services.Services.Land
             SettlementLandMapParent parent = null;
             try
             {
+                MapGeneratorDef generator = LandPlotService.GeneratorFor(plot.bunkerInterior)
+                    ?? throw new InvalidOperationException("The land map generator is unavailable.");
                 parent = (SettlementLandMapParent)WorldObjectMaker.MakeWorldObject(LandPlotService.ParentDef);
                 parent.plotId = plot.id;
                 parent.hostId = plot.hostId;
                 parent.departureTile = plot.hostTile;
                 parent.Tile = PlanetTile.Invalid;
                 parent.SetFaction(Faction.OfPlayer);
-                parent.mapGenerator = LandPlotService.Generator;
+                parent.mapGenerator = generator;
                 parent.transfers++;
                 Map map = MapGenerator.GenerateMap(new IntVec3(plot.side, 1, plot.side), parent,
                     parent.mapGenerator, isPocketMap: true);

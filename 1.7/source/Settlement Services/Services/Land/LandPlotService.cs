@@ -22,11 +22,20 @@ namespace Settlement_Services.Services.Land
         internal const string PatchFailure = Key + "Unavailable";
         internal const string MissingHost = "SettlementServices.Error.SettlementNoLongerExists";
         internal const string SilverShort = "SettlementServices.Error.InsufficientCaravanSilver";
+        internal const string BunkerGeneratorName = "SettlementServices_LandBunker";
         private const string MapDefName = "SettlementServices_LandMap";
 
         internal static SettlementServiceDef Def => DefDatabase<SettlementServiceDef>.GetNamedSilentFail("SettlementService_LandPlot");
         internal static WorldObjectDef ParentDef => DefDatabase<WorldObjectDef>.GetNamedSilentFail(MapDefName);
-        internal static MapGeneratorDef Generator => DefDatabase<MapGeneratorDef>.GetNamedSilentFail(MapDefName);
+        internal static MapGeneratorDef GeneratorFor(bool bunkerInterior) =>
+            DefDatabase<MapGeneratorDef>.GetNamedSilentFail(bunkerInterior ? BunkerGeneratorName : MapDefName);
+
+        internal static string GenerationBlock(bool bunkerInterior)
+        {
+            if (ParentDef == null) return PatchFailure;
+            if (GeneratorFor(bunkerInterior) != null) return null;
+            return bunkerInterior ? Key + "BunkerUnavailable" : PatchFailure;
+        }
 
         internal static bool EligibleHost(Settlement settlement) =>
             settlement?.Faction is Faction faction && faction != Faction.OfPlayer && faction.def.humanlikeFaction
@@ -47,7 +56,7 @@ namespace Settlement_Services.Services.Land
             return null;
         }
 
-        internal static string TransactionBlock(Settlement settlement, Caravan caravan, LandPlotRecord expected)
+        internal static string TransactionBlock(Settlement settlement, Caravan caravan, LandPlotRecord expected, bool bunkerInterior)
         {
             if (!LandPlotPatches.Ready) return PatchFailure;
             if (settlement == null || settlement.Destroyed || WorldObjectLookup.ResolveSettlement(settlement.ID) != settlement)
@@ -78,17 +87,18 @@ namespace Settlement_Services.Services.Land
                 if (Find.World.pocketMaps.OfType<SettlementLandMapParent>().Any(parent => parent.hostId == settlement.ID))
                     return Key + "RecordError";
                 if (Find.Maps.Count >= LandPlotPolicy.LoadedMapLimit) return MapLimit;
-                if (ParentDef == null || Generator == null) return PatchFailure;
+                return GenerationBlock(bunkerInterior);
             }
             return null;
         }
 
         internal static string Confirm(Settlement settlement, Caravan caravan, LandPlotRecord expected,
-            long expectedDeadline, int side, bool rent, int days, int expectedPrice)
+            long expectedDeadline, int side, bool bunkerInterior, bool rent, int days, int expectedPrice)
         {
-            string blocked = TransactionBlock(settlement, caravan, expected);
+            string blocked = TransactionBlock(settlement, caravan, expected, bunkerInterior);
             if (blocked != null) return blocked;
-            if (expected != null && (expected.paidThrough != expectedDeadline || expected.side != side || !rent))
+            if (expected != null && (expected.paidThrough != expectedDeadline || expected.side != side
+                || expected.bunkerInterior != bunkerInterior || !rent))
                 return Key + "Changed";
             if (!LandPlotPolicy.TryQuote(side, rent ? days : 1, out var quote)) return Key + "PriceUnavailable";
 
@@ -107,7 +117,7 @@ namespace Settlement_Services.Services.Land
                 if (!escrow.Stage(price)) return Key + "PaymentFailed";
                 try
                 {
-                    if (expected == null) added = domain.AddLandPlot(settlement, side, rent, paid);
+                    if (expected == null) added = domain.AddLandPlot(settlement, side, bunkerInterior, rent, paid);
                     else domain.SetLandPlotTerm(expected, paid);
                     escrow.Commit();
                 }
