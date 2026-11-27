@@ -17,8 +17,8 @@
     <SettlementServices.Settings.StockQuantityMultiplier>Settlement stock multiplier: {0}</SettlementServices.Settings.StockQuantityMultiplier>
     <SettlementServices.Settings.StockQuantityMultiplier.Tooltip>Scales the capacity and per-refresh replenishment of the stock this mod's settlements hold, including mechanoid hiring stock. Refresh intervals, which goods are stocked, service input costs, and prices are unchanged, and vanilla trader inventories are not affected. 1× is the default balance. Stock that already exists is not topped up retroactively; it fills through future refreshes, and lowering the multiplier caps existing stock at the new limit.</SettlementServices.Settings.StockQuantityMultiplier.Tooltip>
     <SettlementServices.Settings.SectionSpecialties>Settlement specialties</SettlementServices.Settings.SectionSpecialties>
-    <SettlementServices.Settings.SectionServices>Services</SettlementServices.Settings.SectionServices>
-    <SettlementServices.Settings.ServicesNotice>These settings apply across all saves. Each service follows its XML default until you change it. Accepted jobs continue after a service is disabled.</SettlementServices.Settings.ServicesNotice>
+    <SettlementServices.Settings.SectionServices>Enable or disable services</SettlementServices.Settings.SectionServices>
+    <SettlementServices.Settings.ServicesNotice>Check a service to enable it or uncheck it to disable it. These settings apply to all saves. Each service uses its default setting until you change it. Accepted jobs continue even if you disable the service.</SettlementServices.Settings.ServicesNotice>
     <SettlementServices.Settings.ServicesResetAll>Reset all services to defaults</SettlementServices.Settings.ServicesResetAll>
     <SettlementServices.Settings.ServicesUncategorized>Other services</SettlementServices.Settings.ServicesUncategorized>
     <SettlementServices.Settings.ServiceDefault>XML default</SettlementServices.Settings.ServiceDefault>
