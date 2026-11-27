@@ -57,7 +57,7 @@ namespace Settlement_Services.Services.Land
             && Find.World.pocketMaps.Count(other => other == parent) == 1;
 
         internal static string ConfirmSale(Settlement settlement, Caravan caravan, LandPlotRecord plot,
-            int side, bool bunkerInterior, SettlementLandMapParent parent, Map map, int expectedPrice)
+            int width, int length, bool bunkerInterior, SettlementLandMapParent parent, Map map, int expectedPrice)
         {
             if (plot == null) return Key + "Changed";
             if (!salesInProgress.Add(plot)) return SaleBlockedBusy;
@@ -71,7 +71,7 @@ namespace Settlement_Services.Services.Land
             {
                 string blocked = SaleContractBlock(settlement, caravan, plot, out domain);
                 if (blocked != null) return blocked;
-                if (plot.side != side || plot.bunkerInterior != bunkerInterior || plot.parent != parent
+                if (plot.width != width || plot.length != length || plot.bunkerInterior != bunkerInterior || plot.parent != parent
                     || plot.Map != map || plot.generated != (map != null)) return Key + "Changed";
                 return SalePlotBlock(plot, map);
             }

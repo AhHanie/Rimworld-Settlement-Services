@@ -102,17 +102,22 @@ namespace Settlement_Services.Services.Land
         }
 
         internal static string Confirm(Settlement settlement, Caravan caravan, LandPlotRecord expected,
-            long expectedDeadline, int side, bool bunkerInterior, bool rent, int days, int expectedPrice)
+            long expectedDeadline, int width, int length, bool bunkerInterior, bool rent, int days, int expectedPrice)
         {
             string blocked = TransactionBlock(settlement, caravan, expected, bunkerInterior);
             if (blocked != null) return blocked;
-            if (expected != null && (expected.paidThrough != expectedDeadline || expected.side != side
+            if (expected != null && (expected.paidThrough != expectedDeadline || expected.width != width || expected.length != length
                 || expected.bunkerInterior != bunkerInterior || !rent))
                 return Key + "Changed";
-            if (!LandPlotPolicy.TryQuote(side, rent ? days : 1, out var quote)) return Key + "PriceUnavailable";
+            int price;
+            if (rent)
+            {
+                if (!LandPlotPolicy.TryRentalQuote(width, length, days, out var quote)) return Key + "PriceUnavailable";
+                price = quote.Total;
+            }
+            else if (!LandPlotPolicy.TryPurchaseQuote(width, length, out price)) return Key + "PriceUnavailable";
 
             var domain = SettlementServicesWorldComponent.Current;
-            int price = rent ? quote.Rent : quote.Purchase;
             if (price != expectedPrice) return Key + "PriceChanged";
             if (LandPlotSilverHold.Available(domain, caravan) < price) return SilverShort;
             long paid = rent ? QuoteDeadline(expected, days) : 0;
@@ -126,7 +131,7 @@ namespace Settlement_Services.Services.Land
                 if (!escrow.Stage(price)) return Key + "PaymentFailed";
                 try
                 {
-                    if (expected == null) added = domain.AddLandPlot(settlement, side, bunkerInterior, rent, paid);
+                    if (expected == null) added = domain.AddLandPlot(settlement, width, length, bunkerInterior, rent, paid);
                     else domain.SetLandPlotTerm(expected, paid);
                     escrow.Commit();
                 }

@@ -3,6 +3,8 @@
   <SettlementServices.Land.ManageHost>Settlement land at {0}</SettlementServices.Land.ManageHost>
   <SettlementServices.Land.ManageDesc>View your plot, renew a rental, or enter with this caravan.</SettlementServices.Land.ManageDesc>
   <SettlementServices.Land.Offer>Buy a permanent plot or prepay a rental. You can enter after payment.</SettlementServices.Land.Offer>
+  <SettlementServices.Land.RentTab>Rent</SettlementServices.Land.RentTab>
+  <SettlementServices.Land.BuyTab>Buy</SettlementServices.Land.BuyTab>
   <SettlementServices.Land.BunkerOption>Bunker interior</SettlementServices.Land.BunkerOption>
   <SettlementServices.Land.BunkerOptionTip>Start with an enclosed room under a removable constructed roof. The granite perimeter takes one tile on each side, leaving an 8 by 8 interior on a 10 by 10 plot. Larger bunkers also have roof support columns.</SettlementServices.Land.BunkerOptionTip>
   <SettlementServices.Land.Layout>Layout: {0}</SettlementServices.Land.Layout>
@@ -10,6 +12,9 @@
   <SettlementServices.Land.LayoutBunker>Bunker interior</SettlementServices.Land.LayoutBunker>
   <SettlementServices.Land.BunkerUnavailable>The bunker layout is unavailable because its map generator could not load.</SettlementServices.Land.BunkerUnavailable>
   <SettlementServices.Land.Size>Plot size: {0} × {0}</SettlementServices.Land.Size>
+  <SettlementServices.Land.Width>Width (cells): {0}</SettlementServices.Land.Width>
+  <SettlementServices.Land.Length>Length (cells): {0}</SettlementServices.Land.Length>
+  <SettlementServices.Land.Dimensions>Plot size: {0} × {1}</SettlementServices.Land.Dimensions>
   <SettlementServices.Land.Days>Rental term in days: {0}</SettlementServices.Land.Days>
   <SettlementServices.Land.Silver>Available caravan silver: {0}</SettlementServices.Land.Silver>
   <SettlementServices.Land.DailyRate>Daily rent: {0} silver</SettlementServices.Land.DailyRate>
@@ -37,10 +42,14 @@
   <SettlementServices.Land.Relinquish>Relinquish plot</SettlementServices.Land.Relinquish>
   <SettlementServices.Land.RelinquishConfirm>Relinquish this plot permanently? Any remaining pawns will be evacuated. Structures and goods left on the plot will be lost.</SettlementServices.Land.RelinquishConfirm>
   <SettlementServices.Land.BuyConfirm>Buy a permanent {0} × {0} plot for {1} silver? Your caravan will remain at the settlement until you choose to enter.</SettlementServices.Land.BuyConfirm>
+  <SettlementServices.Land.BuyConfirmDimensions>Buy a permanent {0} × {1} plot for {2} silver? Your caravan will remain at the settlement until you choose to enter.</SettlementServices.Land.BuyConfirmDimensions>
   <SettlementServices.Land.RentConfirm>Pay {2} silver for {1} day(s) on a {0} × {0} plot? Rent is paid through {3}. You have {4} days of grace, until {5}, to renew or remove belongings. Living pawns and their inventories will be evacuated at reclamation. Structures and other goods left behind will be lost.</SettlementServices.Land.RentConfirm>
+  <SettlementServices.Land.RentConfirmDimensions>Pay {3} silver for {2} day(s) on a {0} × {1} plot? Rent is paid through {4}. You have {5} days of grace, until {6}, to renew or remove belongings. Living pawns and their inventories will be evacuated at reclamation. Structures and other goods left behind will be lost.</SettlementServices.Land.RentConfirmDimensions>
   <SettlementServices.Land.PaymentAccepted>Settlement land payment accepted.</SettlementServices.Land.PaymentAccepted>
   <SettlementServices.Land.SaleConfirm>Sell your {1} × {1} plot at {0} for {2} silver? Your caravan will receive the silver and you will give up ownership of the plot.</SettlementServices.Land.SaleConfirm>
   <SettlementServices.Land.SaleConfirmGenerated>Sell your {1} × {1} plot at {0} for {2} silver? Your caravan will receive the silver. All buildings, terrain improvements, and goods left on the plot go with the land and are permanently lost to you.</SettlementServices.Land.SaleConfirmGenerated>
+  <SettlementServices.Land.SaleConfirmDimensions>Sell your {1} × {2} plot at {0} for {3} silver? Your caravan will receive the silver and you will give up ownership of the plot.</SettlementServices.Land.SaleConfirmDimensions>
+  <SettlementServices.Land.SaleConfirmGeneratedDimensions>Sell your {1} × {2} plot at {0} for {3} silver? Your caravan will receive the silver. All buildings, terrain improvements, and goods left on the plot go with the land and are permanently lost to you.</SettlementServices.Land.SaleConfirmGeneratedDimensions>
   <SettlementServices.Land.SaleCompleted>Your caravan received {0} silver for the plot.</SettlementServices.Land.SaleCompleted>
   <SettlementServices.Land.SaleBlockedOccupants>Remove all living pawns from the plot before selling it.</SettlementServices.Land.SaleBlockedOccupants>
   <SettlementServices.Land.SaleBlockedBusy>Wait for packing or transfers to finish before selling the plot.</SettlementServices.Land.SaleBlockedBusy>

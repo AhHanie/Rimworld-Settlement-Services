@@ -41,13 +41,13 @@ namespace Settlement_Services.Domain
             Scribe_Collections.Look(ref landPlots, "landPlots", LookMode.Deep);
         }
 
-        internal LandPlotRecord AddLandPlot(Settlement host, int side, bool bunkerInterior, bool rented, long paidThrough)
+        internal LandPlotRecord AddLandPlot(Settlement host, int width, int length, bool bunkerInterior, bool rented, long paidThrough)
         {
             if (nextLandPlotId <= 0 || nextLandPlotId == int.MaxValue) throw new OverflowException("Land plot ID exhausted");
             var plot = new LandPlotRecord
             {
                 id = nextLandPlotId++, hostId = host.ID, hostLabel = host.LabelCap, hostTile = host.Tile,
-                side = side, bunkerInterior = bunkerInterior, rented = rented, createdTick = LandPlotPolicy.Now,
+                width = width, length = length, bunkerInterior = bunkerInterior, rented = rented, createdTick = LandPlotPolicy.Now,
                 paidThrough = paidThrough, graceThrough = rented ? LandPlotPolicy.GraceThrough(paidThrough) : 0,
                 warned = rented && paidThrough - LandPlotPolicy.Now <= GenDate.TicksPerDay
             };
@@ -123,7 +123,7 @@ namespace Settlement_Services.Domain
                 bool validMap = linked && parentsById[plot.id].Count() == 1
                     && registered.Contains(plot.parent) && plot.parent.MatchesPlotMap(plot, plot.Map);
                 if (validMap) plot.generated = true;
-                if (plot.id <= 0 || plot.hostId < 0 || !LandPlotPolicy.ValidSide(plot.side)
+                if (plot.id <= 0 || plot.hostId < 0 || !LandPlotPolicy.ValidDimensions(plot.width, plot.length)
                     || byId[plot.id].Count() != 1 || byHost[plot.hostId].Count() != 1
                     || (plot.rented && (plot.paidThrough <= 0 || plot.graceThrough <= plot.paidThrough))
                     || ((plot.parent != null || plot.generated || parentsById.Contains(plot.id)) && !validMap))

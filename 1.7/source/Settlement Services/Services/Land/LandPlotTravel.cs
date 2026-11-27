@@ -165,9 +165,9 @@ namespace Settlement_Services.Services.Land
                 parent.SetFaction(Faction.OfPlayer);
                 parent.mapGenerator = generator;
                 parent.transfers++;
-                Map map = MapGenerator.GenerateMap(new IntVec3(plot.side, 1, plot.side), parent,
+                Map map = MapGenerator.GenerateMap(new IntVec3(plot.width, 1, plot.length), parent,
                     parent.mapGenerator, isPocketMap: true);
-                if (map == null || parent.Map != map || !parent.terrainGenerated)
+                if (!parent.MatchesPlotMap(plot, map) || parent.Map != map || !parent.terrainGenerated)
                     throw new InvalidOperationException("Land map generation did not complete.");
                 Find.World.pocketMaps.Add(parent);
                 plot.parent = parent;

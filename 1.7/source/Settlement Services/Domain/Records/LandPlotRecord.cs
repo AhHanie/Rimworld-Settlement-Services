@@ -10,7 +10,8 @@ namespace Settlement_Services.Domain.Records
         public int hostId = -1;
         public string hostLabel;
         public PlanetTile hostTile = PlanetTile.Invalid;
-        public int side;
+        public int width;
+        public int length;
         public bool bunkerInterior;
         public bool rented;
         public long createdTick;
@@ -34,7 +35,18 @@ namespace Settlement_Services.Domain.Records
             Scribe_Values.Look(ref hostId, "hostId", -1);
             Scribe_Values.Look(ref hostLabel, "hostLabel");
             Scribe_Values.Look(ref hostTile, "hostTile", PlanetTile.Invalid);
-            Scribe_Values.Look(ref side, "side");
+            if (Scribe.mode == LoadSaveMode.LoadingVars && Scribe.loader.curXmlParent["width"] == null
+                && Scribe.loader.curXmlParent["length"] == null)
+            {
+                int side = 0;
+                Scribe_Values.Look(ref side, "side");
+                width = length = side;
+            }
+            else
+            {
+                Scribe_Values.Look(ref width, "width", forceSave: true);
+                Scribe_Values.Look(ref length, "length", forceSave: true);
+            }
             Scribe_Values.Look(ref bunkerInterior, "bunkerInterior", false);
             Scribe_Values.Look(ref rented, "rented");
             Scribe_Values.Look(ref createdTick, "createdTick");

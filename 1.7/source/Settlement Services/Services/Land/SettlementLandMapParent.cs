@@ -29,7 +29,7 @@ namespace Settlement_Services.Services.Land
 
         internal bool MatchesPlotMap(LandPlotRecord plot, Map map) => MatchesPlot(plot)
             && map is { Disposed: false, IsPocketMap: true } && map.Parent == this
-            && map.Size.x == plot.side && map.Size.z == plot.side;
+            && map.Size.x == plot.width && map.Size.z == plot.length;
 
         internal static bool Frozen(Map map)
         {

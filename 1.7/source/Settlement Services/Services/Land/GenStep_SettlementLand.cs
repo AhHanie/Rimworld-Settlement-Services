@@ -13,7 +13,9 @@ namespace Settlement_Services.Services.Land
         {
             TerrainDef paving = DefDatabase<TerrainDef>.GetNamed("PavedTile");
             CellRect arrival = SettlementLandMapParent.ArrivalArea(map);
-            CellRect clearing = CellRect.CenteredOn(map.Center, Math.Max(2, map.Size.x / 5));
+            int xRadius = Math.Max(2, map.Size.x / 5);
+            int zRadius = Math.Max(2, map.Size.z / 5);
+            CellRect clearing = CellRect.CenteredOn(map.Center, 2 * xRadius + 1, 2 * zRadius + 1).ClipInsideMap(map);
             TerrainDef dryTerrain = map.Biome.terrainsByFertility.Select(threshold => threshold.terrain)
                 .FirstOrDefault(Buildable) ?? TerrainDefOf.Soil;
 
